@@ -17,7 +17,8 @@
     "bootstrap-vue": "^2.0.0-rc.2",
     "crypto": "^1.0.1",
     "font-awesome": "^4.7.0",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vuex-persist": "^1.1.4"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

@@ -1,7 +1,10 @@
 <template>
-  <div>
+  <div style="height: calc(100%)">
     <navbar></navbar>
-    <sidebar style="height: calc(100%)"></sidebar>
+    <sidebar style="height: calc(100% - 45px)"></sidebar>
+    <div>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 <script>

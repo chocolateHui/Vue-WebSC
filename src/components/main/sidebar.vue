@@ -12,7 +12,7 @@
         <span class="menu-text"> 宴会订单列表 </span>
       </b-nav-item>
       <b-nav-item>
-        <i class="menu-icon fa fa-clock-o fa-rotate-180 fa-fw"></i>
+        <i class="menu-icon fa fa-clock-o fa-rotate-90 fa-fw"></i>
         <span class="menu-text"> 新建宴会问询 </span>
       </b-nav-item>
       <b-nav-item>
@@ -32,7 +32,7 @@
         <span class="menu-text"> 基础信息维护 </span>
       </b-nav-item>
     </b-nav>
-    <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+    <div class="sidebar-toggle sidebar-collapse">
       <i id="sidebar-toggle-icon" class="fa fa-angle-double-left" data-icon1="fa fa-angle-double-left" data-icon2="fa fa-angle-double-right"></i>
     </div>
   </div>
@@ -81,6 +81,25 @@
   overflow: hidden;
   position: relative;
   border: 0 solid;
+}
+.sidebar .sidebar-toggle{
+  content: "";
+  display: block;
+  border-top: 1px solid #BBB;
+  border-bottom: 1px solid #BBB;
+}
+.sidebar .sidebar-toggle>.fa{
+  margin: 2px 0;
+  padding: 0 5px;
+  line-height: 18px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 100%;
+  border: 1px solid #BBB;
+  position: relative;
+  color: #AAA;
+  background-color: #FFF;
+  text-align: center;
 }
 .nav-list{
   box-sizing: border-box;

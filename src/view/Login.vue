@@ -19,7 +19,7 @@
                         <b-input-group-text slot="append">
                           <i class="appendicon fa fa-user"></i>
                         </b-input-group-text>
-                        <b-form-input id="userinput" :value="username" @input="updatevalue" @click.native="userclick" maxlength="10" placeholder="请输入用户名"></b-form-input>
+                        <b-form-input id="userinput" :value="username" @input="setUsername" @click.native="userclick" maxlength="10" placeholder="请输入用户名"></b-form-input>
                       </b-input-group>
                       <label class="errorlabel" v-show="userErrorShow">用户名不能为空!</label>
                     </label>
@@ -28,7 +28,7 @@
                         <b-input-group-text slot="append">
                           <i class="appendicon fa fa-lock"></i>
                         </b-input-group-text>
-                        <b-form-input type="password" :value="password" id="pwdinput" @input="setPassword" @keyup.native.13="login" maxlength="16" placeholder="请输入密码"></b-form-input>
+                        <b-form-input type="password" v-model="password" id="pwdinput" @keyup.native.13="login" maxlength="16" placeholder="请输入密码"></b-form-input>
                       </b-input-group>
                       <label class="errorlabel" v-show="passwordErrorShow">{{loginerror}}</label>
                     </label>
@@ -67,11 +67,11 @@
     import hotelDiv from  '../components/login/hoteldiv.vue'
 
     var logindata = {
+        password :'',
         hotelShow:false,
         userErrorShow:false,
         passwordErrorShow:false,
         hotelErrorShow:false,
-        imgUrl: '/static/SCweb-index-09.png'
     };
     export default {
         name: 'Login',
@@ -82,7 +82,6 @@
             ...mapGetters([
                 'groupid',
                 'username',
-                'password',
                 'hotel',
                 'hotels',
                 'empno',
@@ -91,10 +90,10 @@
         },
         methods:{
             ...mapMutations([
-                'setPassword', // 将 `this.increment()` 映射为 `this.$store.commit('increment')`
+                'setUsername',
             ]),
             updatevalue:function (value) {
-                this.$store.commit('setUsername',value.toUpperCase())
+                this.password = value;
             },
             hotelclick:function () {
                 if(!this.hotelShow) {
@@ -138,7 +137,7 @@
                     this.$store.dispatch('encrypttoken',this.username).then(() => {
                         //获取工号信息,完成后进行路由
                         this.$store.dispatch('getsysempno',this.$store.getters.signature).then(() => {
-                            console.log(this.empno)
+                          this.password = ''
                           this.$router.push({name:"main"})
                         })
                     })

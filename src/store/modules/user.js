@@ -17,14 +17,15 @@ const axiosinstance = axios.create({
 // initial state
 const state = {
   groupid: 'G000001',
-  username: localStorage.getItem('sc_username'),
-  password: '',
+  username: '',
   hotel: {
-    hotelid: localStorage.getItem('sc_hotelid'),
-    descript: localStorage.getItem('sc_hoteldes')
+    hotelid : '',
+    descript : '',
+    descript1: ''
   },
   hotels: [],
-  empno: {}
+  empno: {
+  }
 }
 
 // getters
@@ -32,8 +33,6 @@ const getters = {
   groupid: groupid => state.groupid,
 
   username: state => state.username,
-
-  password: state => state.password,
 
   hotel: state => state.hotel,
 
@@ -65,9 +64,6 @@ const actions = {
         username: state.username.toUpperCase()
       }).then(function (response) {
         if (response.status === 200) {
-          window.localStorage.setItem('sc_username', state.username)
-          window.localStorage.setItem('sc_hotelid', state.hotel.hotelid)
-          window.localStorage.setItem('sc_hoteldes', state.hotel.descript)
           store.commit('setEmpno', response.data)
         }
         resolve()
@@ -83,10 +79,7 @@ const mutations = {
     state.groupid = groupid
   },
   setUsername (state, username) {
-    state.username = username
-  },
-  setPassword (state, password) {
-    state.password = password
+    state.username = username.toUpperCase()
   },
   setHotel (state, hotel) {
     state.hotel = hotel
