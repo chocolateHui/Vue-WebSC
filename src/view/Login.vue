@@ -138,9 +138,11 @@
                         //获取工号信息,完成后进行路由
                         this.$store.dispatch('getsysempno',this.$store.getters.signature).then(() => {
                           this.password = ''
-                          this.$router.push({name:"main"})
+                          this.$router.push({path:"/main"})
                         })
                     })
+                }).catch(function () {
+
                 })
             }
         },

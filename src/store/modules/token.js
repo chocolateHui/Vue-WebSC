@@ -59,11 +59,12 @@ const actions = {
             store.commit('setLoginerror', '')
             store.commit('setToken', response.data.token)
             store.commit('setSecretkey', secret.substr(0, 16))
+            resolve()
           } else {
             store.commit('setLoginerror', response.data.errorMessage)
+            reject()
           }
         }
-        resolve()
       })
     })
   }

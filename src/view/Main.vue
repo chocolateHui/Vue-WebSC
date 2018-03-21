@@ -3,7 +3,12 @@
     <navbar></navbar>
     <sidebar style="height: calc(100% - 45px)"></sidebar>
     <div>
-      <router-view></router-view>
+      <b-tabs ref="maintabs" small card v-model="activeIndex">
+        <!-- Render Tabs -->
+        <b-tab ref="tab" @click="tabClick" :active="false" :title="`Tab ${i.name}`" v-for="i in mainRoutes" :key="i.name">
+          <router-view></router-view>
+        </b-tab>
+      </b-tabs>
     </div>
   </div>
 </template>
@@ -23,19 +28,43 @@
       ...mapGetters([
         'groupid',
         'hotel',
-        'hotels',
-        'empno'
-      ])
+        'empno',
+        'mainRoutes',
+      ]),
+      activeIndex:{
+        get () {
+          return this.$store.getters.activeIndex
+        },
+        set (value) {
+          this.$store.commit('set_active_index', value)
+        }
+      }
     },
     methods: {
       ...mapMutations([
-        'setPassword' // 将 `this.increment()` 映射为 `this.$store.commit('increment')`
+        'delete_tabs'
       ]),
-      updatevalue: function (value) {
-        this.$store.commit('setUsername', value.toUpperCase())
-      },
-      logout: function () {
-        this.$router.push({name:"login"})
+      tabClick: function () {
+        let routeinfo = this.mainRoutes[this.activeIndex];
+        this.$router.push({path: routeinfo.route});
+      }
+    },
+    watch: {
+      '$route'(to) {
+        let flag = false;
+        for (let option of this.mainRoutes) {
+          if (option.name === to.name) {
+            flag = true;
+            this.$store.commit('set_active_index', this.mainRoutes.indexOf(option));
+            break
+          }
+        }
+        if (!flag) {
+          this.$store.commit('add_tabs', {route: to.path, name: to.name});
+          this.$nextTick(function(){
+            this.$store.commit('set_active_index', this.mainRoutes.length-1);
+          })
+        }
       }
     },
     components: {

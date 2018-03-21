@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import token from './modules/token'
 import user from './modules/user'
+import maintab from './modules/maintab'
 import VuexPersistence from 'vuex-persist'
 
 Vue.use(Vuex)
@@ -23,7 +24,8 @@ const vuexLocal = new VuexPersistence({
 const store = new Vuex.Store({
   modules: {
     token,
-    user
+    user,
+    maintab
   },
   plugins: [vuexLocal.plugin],
   mutations: {

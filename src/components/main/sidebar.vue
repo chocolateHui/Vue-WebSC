@@ -7,29 +7,29 @@
       </div>
     </div>
     <b-nav vertical>
-      <b-nav-item>
+      <b-nav-item :to="menus[0].route">
         <i class="menu-icon fa fa-list fa-fw"></i>
-        <span class="menu-text"> 宴会订单列表 </span>
+        <span class="menu-text">{{menus[0].name}}</span>
       </b-nav-item>
-      <b-nav-item>
+      <b-nav-item :to="menus[1].route">
         <i class="menu-icon fa fa-clock-o fa-rotate-90 fa-fw"></i>
-        <span class="menu-text"> 新建宴会问询 </span>
+        <span class="menu-text">{{menus[1].name}}</span>
       </b-nav-item>
-      <b-nav-item>
+      <b-nav-item :to="menus[2].route">
         <i class="menu-icon fa fa-registered fa-fw"></i>
-        <span class="menu-text"> 新建宴会预订 </span>
+        <span class="menu-text">{{menus[2].name}}</span>
       </b-nav-item>
-      <b-nav-item>
+      <b-nav-item :to="menus[3].route">
         <i class="menu-icon fa fa-th fa-fw"></i>
-        <span class="menu-text"> 宴会场地分布 </span>
+        <span class="menu-text">{{menus[3].name}}</span>
       </b-nav-item>
-      <b-nav-item>
+      <b-nav-item :to="menus[4].route">
         <i class="menu-icon fa fa-calendar fa-fw"></i>
-        <span class="menu-text"> 销售活动日历 </span>
+        <span class="menu-text">{{menus[4].name}}</span>
       </b-nav-item>
-      <b-nav-item>
+      <b-nav-item :to="menus[5].route">
         <i class="menu-icon fa fa-cog fa-fw"></i>
-        <span class="menu-text"> 基础信息维护 </span>
+        <span class="menu-text">{{menus[5].name}}</span>
       </b-nav-item>
     </b-nav>
     <div class="sidebar-toggle sidebar-collapse">
@@ -47,17 +47,28 @@
 
   export default {
     name: 'sidebar',
+    data :function () {
+      return {
+        menus: [
+          { route: '/main/caterList', name: '宴会预订列表'},
+          { route: '/main/newQuery', name: '新建宴会问询'},
+          { route: '/main/newReserve', name: '新建宴会预订'},
+          { route: '/main/placeDistribution', name: '宴会场地分布'},
+          { route: '/main/saleDiary', name: '销售活动日历'},
+          { route: '/main/maint', name: '基础代码维护'}
+        ]
+      }
+    },
     computed: {
       ...mapGetters([
-        'groupid',
-        'hotel'
+        'mainRoutes',
+        'activeIndex'
       ])
     },
     methods: {
       ...mapMutations([
-      ]),
-      logout: function () {
-      }
+        'add_tabs'
+      ])
     }
   }
 </script>

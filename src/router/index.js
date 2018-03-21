@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 const login = () => import(/* webpackChunkName: "group-login" */ '../view/Login.vue')
 const main = () => import(/* webpackChunkName: "group-main" */ '../view/Main.vue')
+const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Template.vue')
 
 Vue.use(Router)
 
@@ -15,25 +16,42 @@ export default new Router({
     },
     {
       path: '/main',
-      name: 'main',
       component: main,
       children: [
         // 当 /main 匹配成功，
         // DashBoard 会被渲染在 main 的 <router-view> 中
-        // { path: '', component: DashBoard }
+        { path: '',name: '首页', component: Template },
         // ...其他子路由
-        // {
-        //   // 当 /user/:id/profile 匹配成功，
-        //   // UserProfile 会被渲染在 User 的 <router-view> 中
-        //   path: 'profile',
-        //   component: UserProfile
-        // },
-        // {
-        //   // 当 /user/:id/posts 匹配成功
-        //   // UserPosts 会被渲染在 User 的 <router-view> 中
-        //   path: 'posts',
-        //   component: UserPosts
-        // }
+        {
+          path: '/main/caterList',
+          name: '宴会预订列表',
+          component: Template
+        },
+        {
+          path: '/main/newQuery',
+          name: '新建宴会问询',
+          component: Template
+        },
+        {
+          path: '/main/newReserve',
+          name: '新建宴会预订',
+          component: Template
+        },
+        {
+          path: '/main/placeDistribution',
+          name: '宴会场地分布',
+          component: Template
+        },
+        {
+          path: '/main/saleDiary',
+          name: '销售活动日历',
+          component: Template
+        },
+        {
+          path: '/main/maint',
+          name: '基础代码维护',
+          component: Template
+        },
       ]
     },
     {
