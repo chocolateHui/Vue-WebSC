@@ -69,7 +69,19 @@
       ...mapMutations([
         'add_tabs'
       ])
-    }
+    },
+    mounted () {
+      // 刷新时以当前路由做为tab加入tabs
+      if (this.$route.path !== '/main') {
+        this.$store.commit('add_tabs', {route: this.$route.path , name: this.$route.name });
+        this.$nextTick(function(){
+          this.$store.commit('set_active_index', this.mainRoutes.length-1);
+        })
+      } else {
+        this.$store.commit('set_active_index', 0);
+        this.$router.push('/main');
+      }
+    },
   }
 </script>
 <style>

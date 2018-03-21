@@ -14,11 +14,7 @@ const state = {
 const getters = {
   mainRoutes: state => state.mainRoutes,
 
-  activeIndex: state => state.activeIndex,
-
-  getRouteByName: (state) => (name) => {
-    return state.mainRoutes.find(routeinfo => routeinfo.name === name)
-  }
+  activeIndex: state => state.activeIndex
 }
 
 // actions
@@ -46,7 +42,6 @@ const mutations = {
   // 设置当前激活的tab
   set_active_index (state, index) {
     state.activeIndex = index;
-    console.log(index);
   }
 }
 

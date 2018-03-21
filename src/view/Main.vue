@@ -5,7 +5,7 @@
     <div>
       <b-tabs ref="maintabs" small card v-model="activeIndex">
         <!-- Render Tabs -->
-        <b-tab ref="tab" @click="tabClick" :active="false" :title="`Tab ${i.name}`" v-for="i in mainRoutes" :key="i.name">
+        <b-tab ref="tab" @click="tabClick" :title="`Tab ${i.name}`" v-for="i in mainRoutes" :key="i.name">
           <router-view></router-view>
         </b-tab>
       </b-tabs>
@@ -61,6 +61,7 @@
         }
         if (!flag) {
           this.$store.commit('add_tabs', {route: to.path, name: to.name});
+          //等待渲染完毕后调用设置当前页方法
           this.$nextTick(function(){
             this.$store.commit('set_active_index', this.mainRoutes.length-1);
           })
