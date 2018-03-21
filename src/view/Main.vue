@@ -50,6 +50,7 @@
       }
     },
     watch: {
+      //路由监听,侧边栏进行路由跳转后在这里新增tab页,把路由目标转到新的tab页上
       '$route'(to) {
         let flag = false;
         for (let option of this.mainRoutes) {
