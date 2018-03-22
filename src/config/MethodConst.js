@@ -174,6 +174,8 @@ const methodinfo = {
  系统相关接口
  */
   auth: '/userauth',
-  getloginhotellist: '/getloginhotellist'
+  getloginhotellist: '/getloginhotellist',
+
+  url :'http://10.1.1.171:8083/'
 }
 module.exports = exports = methodinfo

@@ -1,20 +1,17 @@
 <template>
   <div id="login">
-    <b-container>
-      <div style="position:absolute;top:50px;left:50px"><img src="/static/SCweb-index-09.png" style="width:118px;height:35px"></div>
-      <b-container style="padding-top:125px">
+      <div class="logo"><img src="/static/SCweb-index-09.png"></div>
+      <b-container>
         <b-row>
-          <b-col sm="10" class="col-sm-offset-1">
-            <div style="width: 375px;margin: 0 auto">
-              <div class="center">
-                <h1 style="font-size: 2rem"><span class="white">西软宴会与销售系统</span></h1>
+          <b-col sm="4" class="col-sm-offset-1">
+              <div>
+                <h1 class="titletext">西软宴会与销售系统</h1>
               </div>
-              <div class="space-6"></div>
-              <div class="position-relative">
+              <div style="position: relative">
                 <div class="widget-body" style="border-radius:5px;background: white">
                   <div style="padding: 12px">
-                    <div style="font-size:1.5rem;color:#4C8FBD;padding-bottom:5px">用户登录</div>
-                    <label class="block clearfix">
+                    <div class="login-title">用户登录</div>
+                    <label class="block">
                       <b-input-group>
                         <b-input-group-text slot="append">
                           <i class="appendicon fa fa-user"></i>
@@ -23,7 +20,7 @@
                       </b-input-group>
                       <label class="errorlabel" v-show="userErrorShow">用户名不能为空!</label>
                     </label>
-                    <label class="block clearfix">
+                    <label class="block">
                       <b-input-group>
                         <b-input-group-text slot="append">
                           <i class="appendicon fa fa-lock"></i>
@@ -32,7 +29,7 @@
                       </b-input-group>
                       <label class="errorlabel" v-show="passwordErrorShow">{{loginerror}}</label>
                     </label>
-                    <label class="block clearfix">
+                    <label class="block">
                       <b-input-group>
                         <b-input-group-text slot="append">
                           <i class="appendicon fa fa-toggle-down" @click.native="hotelclick"></i>
@@ -41,19 +38,17 @@
                       </b-input-group>
                       <label class="errorlabel" v-show="hotelErrorShow">请先选择酒店!</label>
                     </label>
-                    <label class="block clearfix">
-                      <b-button class="login-button" id="loginbtn" @click="login">登录</b-button>
+                    <label class="block">
+                      <b-button class="login-button" @click="login">登录</b-button>
                     </label>
                   </div>
                   <hotelDiv id="hoteldiv" v-show="hotelShow">
                   </hotelDiv>
                 </div>
               </div>
-            </div>
           </b-col>
         </b-row>
       </b-container>
-    </b-container>
   </div>
 </template>
 <script>
@@ -61,8 +56,6 @@
     import Vue from 'vue'
     import { mapGetters, mapActions,mapMutations } from 'vuex'
     import 'font-awesome/css/font-awesome.css'
-    import '../css/login.css'
-
     //组件和参数
     import hotelDiv from  '../components/login/hoteldiv.vue'
 
@@ -157,12 +150,46 @@
     }
 </script>
 <style lang="scss">
-#login{height:calc(100%);background-image: url('/static/SCweb-index-05.png');background-size: cover}
-.col-sm-offset-1{margin-left: 8.333333%}
-.center{text-align: center}
-.white{color: #fff;}
-.appendicon{width: 20px}
-.block{width: 100%}
-.login-button{width: 100%;background:#ff7366}
-.errorlabel{color: red;padding-left: 5px}
+#login{
+  height:calc(100%);
+  background-image: url('/static/SCweb-index-05.png');
+  background-size: cover;
+
+  .logo{
+    position:absolute;
+    top:50px;
+    left:50px
+  }
+  .container{
+    padding-top:calc( (100vh - 300px)/2 )
+  }
+  .col-sm-offset-1{
+    width: 375px;
+    margin: 0 auto;
+  }
+  .appendicon{
+    width: 20px
+  }
+  .block{
+    width: 100%
+  }
+  .titletext
+  {
+    font-size: 2rem;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .login-title{
+    font-size:1.5rem;
+    color:#4C8FBD;
+    padding-bottom:5px
+  }
+  .login-button{
+    width: 100%;background:#ff7366
+  }
+  .errorlabel{
+    color: red;padding-left: 5px
+  }
+}
 </style>

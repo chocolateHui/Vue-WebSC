@@ -9,11 +9,11 @@
     <b-nav vertical>
       <b-nav-item :to="menu.route" :class="getselect(menu)"  v-for="menu in menus" :key="menu.route">
         <i class="menu-icon fa fa-fw" :class="menu.iconClass"></i>
-        <span class="menu-text">{{menu.name}}</span>
+        <span v-show="isClose" class="menu-text">{{menu.name}}</span>
       </b-nav-item>
     </b-nav>
-    <div class="sidebar-toggle sidebar-collapse">
-      <i id="sidebar-toggle-icon" class="fa fa-angle-double-left" data-icon1="fa fa-angle-double-left" data-icon2="fa fa-angle-double-right"></i>
+    <div class="sidebar-toggle sidebar-collapse" style="text-align: center">
+      <i @click="togglebar" class="fa" :class="toggleClass"></i>
     </div>
   </div>
 </template>
@@ -36,7 +36,9 @@
           { route: '/main/placeDistribution', name: '宴会场地分布',iconClass:"fa-th"},
           { route: '/main/saleDiary', name: '销售活动日历',iconClass:"fa-calendar"},
           { route: '/main/maint', name: '基础代码维护',iconClass:"fa-cog"}
-        ]
+        ],
+        isClose:true,
+        toggleClass:"fa-angle-double-left"
       }
     },
     computed: {
@@ -52,6 +54,14 @@
       getselect: function (menu) {
         if(this.$route.path===menu.route){
           return "active"
+        }
+      },
+      togglebar:function () {
+        this.isClose=!this.isClose;
+        if(this.isClose){
+          toggleClass = "fa-angle-double-right"
+        }else{
+          toggleClass = "fa-angle-double-left"
         }
       }
     },
@@ -75,7 +85,6 @@
     border-style: solid;
     border-color: #CCC;
     border-width: 0 1px 0 0;
-    width: 160px;
     float: left;
     position: static;
     padding-left: 0;

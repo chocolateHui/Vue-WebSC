@@ -6,7 +6,7 @@ import axios from 'axios'
 import methodinfo from '../../config/MethodConst.js'
 
 const axiosinstance = axios.create({
-  baseURL: 'http://10.1.1.171:8083/',
+  baseURL: methodinfo.url,
   timeout: 10000
 })
 

@@ -3,9 +3,13 @@
     <navbar></navbar>
     <sidebar style="height: calc(100% - 45px)"></sidebar>
     <div>
-      <b-tabs ref="maintabs" small card v-model="activeIndex">
+      <b-tabs id="tabs" small card v-model="activeIndex">
         <!-- Render Tabs -->
-        <b-tab ref="tab" @click="tabClick" :title="`Tab ${i.name}`" v-for="i in mainRoutes" :key="i.name">
+        <b-tab ref="tab" @click="tabClick" v-for="i in mainRoutes" :key="i.name">
+          <template slot="title">
+            <span>{{i.name}}</span>
+            <i class="fa fa-times fa-fw" v-show="i.route!=='/main'" @click="tabRemove(i)"></i>
+          </template>
           <router-view></router-view>
         </b-tab>
       </b-tabs>
@@ -47,6 +51,12 @@
       tabClick: function () {
         let routeinfo = this.mainRoutes[this.activeIndex];
         this.$router.push({path: routeinfo.route});
+      },
+      tabRemove: function (item) {
+        if(item.route==="/main"){
+          return
+        }
+        this.$store.commit('delete_tabs', item.route);
       }
     },
     watch: {
@@ -75,6 +85,13 @@
     }
   }
 </script>
-<style>
-
+<style lang="scss">
+#tabs{
+  .fa-fw{
+    font-size: 1rem;
+  }
+  i:hover,i:focus{
+    background-color: #e9ecef
+  }
+}
 </style>

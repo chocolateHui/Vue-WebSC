@@ -92,8 +92,10 @@
     li a{padding: 0 5px;padding-top: 1px;color: white}
     form li{
       border-right: 0.1rem solid #ffffff;
-      a i{
-        height: 42px;line-height: 42px;
+      a{
+        i{
+          height: 42px;line-height: 42px;
+        }
       }
       .fa{
         font-size: 1.2rem;color: white;width: 40px;text-align: center
