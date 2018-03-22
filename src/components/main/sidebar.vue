@@ -7,29 +7,9 @@
       </div>
     </div>
     <b-nav vertical>
-      <b-nav-item :to="menus[0].route">
-        <i class="menu-icon fa fa-list fa-fw"></i>
-        <span class="menu-text">{{menus[0].name}}</span>
-      </b-nav-item>
-      <b-nav-item :to="menus[1].route">
-        <i class="menu-icon fa fa-clock-o fa-rotate-90 fa-fw"></i>
-        <span class="menu-text">{{menus[1].name}}</span>
-      </b-nav-item>
-      <b-nav-item :to="menus[2].route">
-        <i class="menu-icon fa fa-registered fa-fw"></i>
-        <span class="menu-text">{{menus[2].name}}</span>
-      </b-nav-item>
-      <b-nav-item :to="menus[3].route">
-        <i class="menu-icon fa fa-th fa-fw"></i>
-        <span class="menu-text">{{menus[3].name}}</span>
-      </b-nav-item>
-      <b-nav-item :to="menus[4].route">
-        <i class="menu-icon fa fa-calendar fa-fw"></i>
-        <span class="menu-text">{{menus[4].name}}</span>
-      </b-nav-item>
-      <b-nav-item :to="menus[5].route">
-        <i class="menu-icon fa fa-cog fa-fw"></i>
-        <span class="menu-text">{{menus[5].name}}</span>
+      <b-nav-item :to="menu.route" :class="getselect(menu)"  v-for="menu in menus" :key="menu.route">
+        <i class="menu-icon fa fa-fw" :class="menu.iconClass"></i>
+        <span class="menu-text">{{menu.name}}</span>
       </b-nav-item>
     </b-nav>
     <div class="sidebar-toggle sidebar-collapse">
@@ -50,12 +30,12 @@
     data :function () {
       return {
         menus: [
-          { route: '/main/caterList', name: '宴会预订列表'},
-          { route: '/main/newQuery', name: '新建宴会问询'},
-          { route: '/main/newReserve', name: '新建宴会预订'},
-          { route: '/main/placeDistribution', name: '宴会场地分布'},
-          { route: '/main/saleDiary', name: '销售活动日历'},
-          { route: '/main/maint', name: '基础代码维护'}
+          { route: '/main/caterList', name: '宴会预订列表',iconClass:"fa-list"},
+          { route: '/main/newQuery', name: '新建宴会问询',iconClass:"fa-clock-o fa-rotate-90"},
+          { route: '/main/newReserve', name: '新建宴会预订',iconClass:"fa-registered"},
+          { route: '/main/placeDistribution', name: '宴会场地分布',iconClass:"fa-th"},
+          { route: '/main/saleDiary', name: '销售活动日历',iconClass:"fa-calendar"},
+          { route: '/main/maint', name: '基础代码维护',iconClass:"fa-cog"}
         ]
       }
     },
@@ -68,7 +48,12 @@
     methods: {
       ...mapMutations([
         'add_tabs'
-      ])
+      ]),
+      getselect: function (menu) {
+        if(this.$route.path===menu.route){
+          return "active"
+        }
+      }
     },
     mounted () {
       // 刷新时以当前路由做为tab加入tabs
@@ -84,7 +69,7 @@
     },
   }
 </script>
-<style>
+<style lang="scss">
 .sidebar{
   background-color: #f2f2f2;
   border-style: solid;
@@ -108,8 +93,8 @@
 .sidebar .sidebar-toggle{
   content: "";
   display: block;
-  border-top: 1px solid #BBB;
-  border-bottom: 1px solid #BBB;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
 }
 .sidebar .sidebar-toggle>.fa{
   margin: 2px 0;
@@ -124,19 +109,20 @@
   background-color: #FFF;
   text-align: center;
 }
-.nav-list{
+.nav{
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.nav-list .li{
+.nav-item{
   display: block;
   position: relative;
   float: none;
   padding: 0;
   border-style: solid;
   border-width: 1px 0 0;
+  border-color: #e5e5e5;
 }
 .menu-icon{
     display: inline-block;

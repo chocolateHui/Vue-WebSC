@@ -35,7 +35,7 @@
     }
   }
 </script>
-<style>
+<style lang="scss">
     .hotelitem{padding: 5px 10px;cursor: pointer}
 .li-background{color:#549af7;background-color:#ddd}
 </style>

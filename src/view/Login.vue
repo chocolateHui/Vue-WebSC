@@ -156,7 +156,7 @@
         }
     }
 </script>
-<style>
+<style lang="scss">
 #login{height:calc(100%);background-image: url('/static/SCweb-index-05.png');background-size: cover}
 .col-sm-offset-1{margin-left: 8.333333%}
 .center{text-align: center}

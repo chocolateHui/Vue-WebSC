@@ -55,6 +55,6 @@
         }
     }
 </script>
-<style>
+<style lang="scss">
 .hotel-div{top: 0; right: -260px;width: 250px; margin: 0 !important; z-index: 1000; position: absolute;background-color: white;border-radius:5px}
 </style>

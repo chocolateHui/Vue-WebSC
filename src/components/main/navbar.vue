@@ -68,19 +68,39 @@
     }
   }
 </script>
-<style>
-  .nav-user-photo{margin: 0 auto;
-    border-radius: 100%;
-    border: 2px solid #FFF;
-    max-width: 40px;}
-  .b-class{color:#FFF!important;font-size:1.25em!important;font-weight: bold;display:inline-block;vertical-align:middle}
-  #navbar li a{padding: 0 5px;padding-top: 1px;color: white}
-  #navbar form li{border-right: 0.1rem solid #ffffff}
-  #navbar form li a i{height: 42px;line-height: 42px;}
-  #navbar form li .fa{font-size: 1.2rem;color: white;width: 40px;text-align: center}
-  .dropdown-item{color: black!important;}
-  .user-info{font-size: 0.8rem;
-    color: white;
-    text-align: left;
-    line-height: 15px;}
+<style lang="scss">
+  #navbar{
+    .nav-user-photo{
+      margin: 0 auto;
+      border-radius: 100%;
+      border: 2px solid #FFF;
+      max-width: 40px;
+    }
+    .user-info{
+      font-size: 0.8rem;
+      color: white;
+      text-align: left;
+      line-height: 15px;
+    }
+    .b-class{
+      color:#FFF!important;
+      font-size:1.25em!important;
+      font-weight: bold;
+      display:inline-block;
+      vertical-align:middle
+    }
+    li a{padding: 0 5px;padding-top: 1px;color: white}
+    form li{
+      border-right: 0.1rem solid #ffffff;
+      a i{
+        height: 42px;line-height: 42px;
+      }
+      .fa{
+        font-size: 1.2rem;color: white;width: 40px;text-align: center
+      }
+    }
+    .dropdown-item{
+      color: black!important;
+    }
+  }
 </style>

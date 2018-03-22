@@ -14,7 +14,7 @@
     }
   }
 </script>
-<style>
+<style lang="scss">
   .router-template {
     color: #000;
     font-size: 20px;
