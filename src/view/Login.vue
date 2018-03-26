@@ -150,6 +150,8 @@
     }
 </script>
 <style lang="scss">
+  @import "../css/color";
+
 #login{
   height:calc(100%);
   background-image: url('/static/SCweb-index-05.png');
@@ -176,7 +178,7 @@
   .titletext
   {
     font-size: 2rem;
-    color: #fff;
+    color: white;
     text-align: center;
     margin-bottom: 10px;
   }
@@ -186,10 +188,13 @@
     padding-bottom:5px
   }
   .login-button{
-    width: 100%;background:#ff7366
+    width: 100%;
+    background:$color11
   }
   .errorlabel{
-    color: red;padding-left: 5px
+    font-size: 0.9rem;
+    color: red;
+    padding-left: 5px
   }
 }
 </style>

@@ -35,6 +35,7 @@
           { route: '/main/newReserve', name: '新建宴会预订',iconClass:"fa-registered"},
           { route: '/main/placeDistribution', name: '宴会场地分布',iconClass:"fa-th"},
           { route: '/main/saleDiary', name: '销售活动日历',iconClass:"fa-calendar"},
+          { route: '/main/report', name: '报表专家',iconClass:"fa-list-alt"},
           { route: '/main/maint', name: '基础代码维护',iconClass:"fa-cog"}
         ],
         isClose:true,
