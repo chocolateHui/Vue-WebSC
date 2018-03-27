@@ -1,5 +1,5 @@
 <template>
-  <div id="sidebar">
+  <div id="sidebar" :style="{height: screenHeight + 'px'}">
     <div class="sidebar-shortcuts">
       <div style="padding:0 15px">
         <div id="oneday" class="oneday" style="font-size:14px!important;"></div>
@@ -39,7 +39,8 @@
           { route: '/main/maint', name: '基础代码维护',iconClass:"fa-cog"}
         ],
         isClose:true,
-        toggleClass:"fa-angle-double-left"
+        toggleClass:"fa-angle-double-left",
+        screenHeight: document.body.clientHeight-45,//减去header的60px
       }
     },
     computed: {
@@ -59,11 +60,12 @@
       },
       togglebar:function () {
         this.isClose=!this.isClose;
-        if(this.isClose){
-          toggleClass = "fa-angle-double-right"
+        if(!this.isClose){
+          this.toggleClass = "fa-angle-double-right"
         }else{
-          toggleClass = "fa-angle-double-left"
+          this.toggleClass = "fa-angle-double-left"
         }
+        this.$emit("barclose",this.isClose);
       }
     },
     mounted () {
@@ -87,7 +89,8 @@
     border-color: #CCC;
     border-width: 0 1px 0 0;
     float: left;
-    position: static;
+    height: auto;
+    position: relative;
     padding-left: 0;
     padding-right: 0;
     .sidebar-shortcuts{

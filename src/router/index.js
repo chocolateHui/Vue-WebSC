@@ -4,6 +4,8 @@ import Router from 'vue-router'
 const login = () => import(/* webpackChunkName: "group-login" */ '../view/Login.vue')
 const main = () => import(/* webpackChunkName: "group-main" */ '../view/Main.vue')
 const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Template.vue')
+const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
+const Lossstatistics = () => import(/* webpackChunkName: "group-main" */ '../view/report/Lossstatistics.vue')
 
 Vue.use(Router)
 
@@ -46,6 +48,16 @@ export default new Router({
           path: '/main/saleDiary',
           name: '销售活动日历',
           component: Template
+        },
+        {
+          path: '/main/report',
+          name: '报表专家',
+          component: report
+        },
+        {
+          path: '/main/lostreport',
+          name: '订单流失统计',
+          component: Lossstatistics
         },
         {
           path: '/main/maint',

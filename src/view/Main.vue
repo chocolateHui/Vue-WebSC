@@ -1,16 +1,16 @@
 <template>
-  <div style="height: calc(100%)">
+  <div id="scmain">
     <navbar></navbar>
-    <sidebar style="height: calc(100% - 45px)"></sidebar>
-    <div>
-      <b-tabs id="tabs" small card v-model="activeIndex">
+    <sidebar @barclose="barclose"></sidebar>
+    <div :style="mainstyle">
+      <b-tabs id="tabs" card v-model="activeIndex">
         <!-- Render Tabs -->
         <b-tab ref="tab" @click="tabClick" v-for="i in mainRoutes" :key="i.name">
           <template slot="title">
             <span>{{i.name}}</span>
-            <i class="fa fa-times fa-fw" v-show="i.route!=='/main'" @click="tabRemove(i)"></i>
+            <b v-show="i.route!=='/main'" @click="tabRemove(i)">X</b>
           </template>
-          <router-view></router-view>
+          <router-view :style="{height: screenHeight + 'px'}"></router-view>
         </b-tab>
       </b-tabs>
     </div>
@@ -28,6 +28,14 @@
 
   export default {
     name: 'Main',
+    data() {
+      return {
+        mainstyle:{
+          'margin-left':"148px"
+        },
+        screenHeight: document.body.clientHeight-120,//减去header的60px
+      }
+    },
     computed: {
       ...mapGetters([
         'groupid',
@@ -57,6 +65,18 @@
           return
         }
         this.$store.commit('delete_tabs', item.route);
+      },
+      barclose:function (isclose) {
+        console.log(isclose)
+        if(isclose){
+          this.mainstyle= {
+            'margin-left':"148px"
+          }
+        }else{
+          this.mainstyle= {
+            'margin-left':"60px"
+          }
+        }
       }
     },
     watch: {
@@ -86,12 +106,25 @@
   }
 </script>
 <style lang="scss">
-#tabs{
-  .fa-fw{
-    font-size: 1rem;
+  #scmain{
+    height: calc(100%);
+    #tabs{
+      .fa-fw{
+        font-size: 1rem;
+      }
+      .card-header{
+        padding: 0.3rem 1.25rem 0.75rem;
+      }
+      b{
+        border-radius: 100%;
+        padding: 0 4px;
+      }
+      b:hover,b:focus{
+        background-color: #e9ecef
+      }
+      .tab-content{
+        overflow-y: auto;
+      }
+    }
   }
-  i:hover,i:focus{
-    background-color: #e9ecef
-  }
-}
 </style>

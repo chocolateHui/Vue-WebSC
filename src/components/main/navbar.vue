@@ -73,7 +73,7 @@
     .nav-user-photo{
       margin: 0 auto;
       border-radius: 100%;
-      border: 2px solid #FFF;
+      border: 2px solid white;
       max-width: 40px;
     }
     .user-info{
@@ -83,7 +83,7 @@
       line-height: 15px;
     }
     .b-class{
-      color:#FFF!important;
+      color:white!important;
       font-size:1.25em!important;
       font-weight: bold;
       display:inline-block;
@@ -91,7 +91,7 @@
     }
     li a{padding: 0 5px;padding-top: 1px;color: white}
     form li{
-      border-right: 0.1rem solid #ffffff;
+      border-right: 0.1rem solid white;
       a{
         i{
           height: 42px;line-height: 42px;
