@@ -5,7 +5,8 @@ const login = () => import(/* webpackChunkName: "group-login" */ '../view/Login.
 const main = () => import(/* webpackChunkName: "group-main" */ '../view/Main.vue')
 const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Template.vue')
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
-const Lossstatistics = () => import(/* webpackChunkName: "group-main" */ '../view/report/Lossstatistics.vue')
+const Maint = () => import(/* webpackChunkName: "group-main" */ '../view/Maint.vue')
+const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
 
 Vue.use(Router)
 
@@ -62,7 +63,7 @@ export default new Router({
         {
           path: '/main/maint',
           name: '基础代码维护',
-          component: Template
+          component: Maint
         },
       ]
     },
