@@ -10,7 +10,10 @@
             <span>{{i.name}}</span>
             <b v-show="i.route!=='/main'" @click="tabRemove(i)">X</b>
           </template>
-          <router-view :style="{height: screenHeight + 'px'}"></router-view>
+          <keep-alive>
+            <router-view :style="{height: screenHeight + 'px'}" v-if="$route.meta.keepAlive"></router-view>
+          </keep-alive>
+          <router-view :style="{height: screenHeight + 'px'}" v-if="!$route.meta.keepAlive"></router-view>
         </b-tab>
       </b-tabs>
     </div>
@@ -33,7 +36,7 @@
         mainstyle:{
           'margin-left':"148px"
         },
-        screenHeight: document.body.clientHeight-120,//减去header的60px
+        screenHeight: document.body.clientHeight-105,//减去header的60px
       }
     },
     computed: {
@@ -109,6 +112,9 @@
   #scmain{
     height: calc(100%);
     #tabs{
+      .card-body{
+        padding-bottom: 0;
+      }
       .fa-fw{
         font-size: 1rem;
       }
