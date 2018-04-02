@@ -25,6 +25,12 @@
             </el-select>
           </b-form-group>
         </b-col>
+        <b-col sm="4" class="my-1">
+          <b-form-group class="mb-0">
+            <b-button variant="primary">查询</b-button>
+            <b-button variant="success">导出</b-button>
+          </b-form-group>
+        </b-col>
       </b-row>
       <caption v-if="!value6">请选择报表开始和结束日期</caption>
       <caption v-else>销售员:{{saleid}}</caption>
@@ -107,7 +113,7 @@
           label: '北京烤鸭'
         }],
         value6: '',
-        tableHeight: document.body.clientHeight-195,//减去header的60px
+        tableHeight: document.body.clientHeight-190,//减去header的60px
       }
     },
     computed: {
@@ -129,11 +135,11 @@
     .el-date-editor .el-range-separator{
       padding: 0;
     }
-    .container-fluid{
-      padding: 0;
-    }
     caption{
       caption-side: top;width: 100%
+    }
+    .btn{
+      width: 100px;
     }
     .table{
       border-color: #dee2e6;
@@ -141,11 +147,17 @@
         border-color: #dee2e6;
       }
     }
+    .el-input__inner{
+      height: 36px;
+    }
     .el-table td, .el-table th{
       padding: 0;
     }
     .el-table .caret-wrapper{
       width: 20px;
+    }
+    .row{
+      margin-right: 0;
     }
   }
 </style>

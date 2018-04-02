@@ -7,7 +7,8 @@ const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Temp
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
 const Maint = () => import(/* webpackChunkName: "group-main" */ '../view/Maint.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
-
+const Hotelinfo = () => import(/* webpackChunkName: "group-report" */ '../view/maint/hotelinfo.vue')
+const Empnoinfo = () => import(/* webpackChunkName: "group-report" */ '../view/maint/empnoinfo.vue')
 Vue.use(Router)
 
 export default new Router({
@@ -89,8 +90,46 @@ export default new Router({
           name: '基础代码维护',
           component: Maint,
           meta: {
-            keepAlive: false // 不需要被缓存
-          }
+            keepAlive: true // 需要被缓存
+          },
+          children: [
+            // ...维护子路由
+            {
+              path: '/main/maint/hotelinfo',
+              name: '酒店信息',
+              component: Hotelinfo
+            },
+            {
+              path: '/main/maint/empnoinfo',
+              name: '用户管理',
+              component: Empnoinfo
+            },
+            {
+              path: '/main/maint/hoteldept',
+              name: '岗位设置',
+              component: Hotelinfo
+            },
+            {
+              path: '/main/maint/sysoption',
+              name: '系统参数',
+              component: Hotelinfo
+            },
+            {
+              path: '/main/maint/pccode',
+              name: '宴会营业点',
+              component: Hotelinfo
+            },
+            {
+              path: '/main/maint/item',
+              name: '宴会项目',
+              component: Hotelinfo
+            },
+            {
+              path: '/main/maint/basecode',
+              name: '基础代码',
+              component: Hotelinfo
+            }
+          ]
         },
       ]
     },

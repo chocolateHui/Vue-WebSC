@@ -85,6 +85,9 @@
     watch: {
       //路由监听,侧边栏进行路由跳转后在这里新增tab页,把路由目标转到新的tab页上
       '$route'(to) {
+        if(to.path.indexOf("/maint/")>0){
+          return;
+        }
         let flag = false;
         for (let option of this.mainRoutes) {
           if (option.name === to.name) {
@@ -112,8 +115,11 @@
   #scmain{
     height: calc(100%);
     #tabs{
+      .container-fluid{
+        padding: 0;
+      }
       .card-body{
-        padding-bottom: 0;
+        padding: 0.5rem;
       }
       .fa-fw{
         font-size: 1rem;
