@@ -37,5 +37,9 @@
     height: 80px;
     float: left;
   }
+  .card-deck{
+    margin-right: 0;
+    margin-left: 0;
+  }
 }
 </style>

@@ -118,7 +118,7 @@
                     this.hotelErrorShow = false;
                 }
 
-                var tokenparam = {
+                let tokenparam = {
                     groupid:this.groupid,
                     hotelid:this.hotel.hotelid,
                     username:this.username,
@@ -127,9 +127,10 @@
                 //获取token
                 this.$store.dispatch('gettoken',tokenparam).then(() => {
                     //加密token
-                    this.$store.dispatch('encrypttoken',this.username).then(() => {
+                    this.$store.dispatch('encrypttoken').then(() => {
                         //获取工号信息,完成后进行路由
                         this.$store.dispatch('getsysempno',this.$store.getters.signature).then(() => {
+                          this.$store.dispatch('getAllSysoption')
                           this.password = ''
                           this.$router.push({path:"/main"})
                         })

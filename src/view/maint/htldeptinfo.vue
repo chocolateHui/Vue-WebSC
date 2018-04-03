@@ -1,6 +1,6 @@
 <!-- 模板组件，用于模拟不同路由下的组件显示 -->
 <template>
-  <div id="empnoinfo">
+  <div id="htldeptinfo">
     <b-container fluid>
       <b-row>
         <b-col sm="4" class="my-1">
@@ -50,9 +50,9 @@
                   <b-form-group label="工号:"
                                 horizontal>
                     <b-form-input  type="text"
-                                  v-model="props.row.empno"
-                                  required
-                                  placeholder="Enter name">
+                                   v-model="props.row.empno"
+                                   required
+                                   placeholder="Enter name">
                     </b-form-input>
                   </b-form-group>
                   <b-form-group label="姓名:"

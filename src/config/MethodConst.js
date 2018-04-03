@@ -25,6 +25,8 @@ const methodinfo = {
   getsystemcode: '/PUB/pubcode/getsystemcode',
   // 获取系统参数
   getsysoption: '/PUB/sysoption/getsysoption',
+  // 获取系统参数列表
+  getsysoptionlist: '/PUB/sysoption/getsysoptionlist',
   // 获取销售员列表
   getsaleidlist: '/PUB/saleid/getsaleidlist',
 

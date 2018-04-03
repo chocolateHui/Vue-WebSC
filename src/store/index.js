@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import token from './modules/token'
 import user from './modules/user'
 import maintab from './modules/maintab'
+import sysoption from './modules/sysoption'
 import VuexPersistence from 'vuex-persist'
 
 Vue.use(Vuex)
@@ -25,7 +26,8 @@ const store = new Vuex.Store({
   modules: {
     token,
     user,
-    maintab
+    maintab,
+    sysoption
   },
   plugins: [vuexLocal.plugin],
   mutations: {

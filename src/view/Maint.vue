@@ -15,7 +15,7 @@
         <el-tree
           :style="{height: treeHeight + 'px'}"
           class="filter-tree"
-          :data="data2"
+          :data="maintTree"
           :props="defaultProps"
           @node-click="NodeClick"
           :filter-node-method="filterNode"
@@ -37,14 +37,11 @@
       return {
         treeHeight: document.body.clientHeight-140,//减去header的60px
         filterText: '',
-        data2: [{
+        maintTree: [{
           label: '基础信息',
           children: [{
             label: '用户管理',
             route:'/main/maint/empnoinfo'
-          }, {
-            label: '岗位设置',
-            route:'/main/maint/hoteldept'
           }, {
             label: '酒店信息维护',
             route:'/main/maint/hotelinfo'
@@ -108,6 +105,14 @@
       },
       NodeClick(data){
         this.$router.push({path:data.route})
+      }
+    },
+    mounted ()  {
+      if(!this.$store.getters.hotel.sign){
+        this.maintTree[0].children.splice(1,0,{
+          label: '岗位设置',
+          route:'/main/maint/hoteldept'
+        });
       }
     }
   };
