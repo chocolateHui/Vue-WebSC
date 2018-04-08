@@ -13,13 +13,7 @@ const debug = process.env.NODE_ENV !== 'production'
 const vuexLocal = new VuexPersistence({
   strictMode :debug,
   storage: window.localStorage,
-  filter: (mutation) => (
-    mutation.type === 'setEmpno' ||
-    mutation.type === 'setToken' ||
-    mutation.type === 'setHotel' ||
-    mutation.type === 'setSecretkey'
-  ),
-  modules: ['token', 'user']
+  modules: ['token', 'user','sysoption']
 })
 
 const store = new Vuex.Store({

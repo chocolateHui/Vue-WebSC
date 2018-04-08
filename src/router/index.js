@@ -7,8 +7,9 @@ const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Temp
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
 const Maint = () => import(/* webpackChunkName: "group-main" */ '../view/Maint.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
-const Hotelinfo = () => import(/* webpackChunkName: "group-report" */ '../view/maint/hotelinfo.vue')
-const Empnoinfo = () => import(/* webpackChunkName: "group-report" */ '../view/maint/empnoinfo.vue')
+const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfo.vue')
+const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
+const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 Vue.use(Router)
 
 export default new Router({
@@ -112,7 +113,7 @@ export default new Router({
             {
               path: '/main/maint/sysoption',
               name: '系统参数',
-              component: Hotelinfo
+              component: Sysoption
             },
             {
               path: '/main/maint/pccode',

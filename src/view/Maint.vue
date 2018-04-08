@@ -3,9 +3,6 @@
   <b-container id="maint" fluid>
     <b-row no-gutters>
       <b-col cols="2">
-        <!--<div style="padding: 4px;">-->
-          <!---->
-        <!--</div>-->
         <b-input-group>
           <b-input-group-text slot="append">
             <i class="fa fa-search"></i>
@@ -18,12 +15,13 @@
           :data="maintTree"
           :props="defaultProps"
           @node-click="NodeClick"
+          default-expand-all
           :filter-node-method="filterNode"
           ref="tree2">
         </el-tree>
       </b-col>
       <b-col cols="10">
-        <b-container>
+        <b-container :style="{height: bodyHeight + 'px'}">
           <router-view></router-view>
         </b-container>
       </b-col>
@@ -35,7 +33,8 @@
   export default {
     data() {
       return {
-        treeHeight: document.body.clientHeight-140,//减去header的60px
+        treeHeight: document.body.clientHeight-140,
+        bodyHeight: document.body.clientHeight-100,
         filterText: '',
         maintTree: [{
           label: '基础信息',
@@ -120,6 +119,9 @@
 <style lang="scss">
 
   #maint{
+    .container{
+      overflow-y: auto;
+    }
     .col-2{
       padding-right: 0.5rem;
     }
