@@ -147,6 +147,7 @@
             <b-button type="submit" @click="submitempno(props.row)" variant="primary">保存</b-button>
             <b-button type="submit" variant="primary">修改密码</b-button>
             <b-button type="submit" variant="primary">解锁</b-button>
+            <b-button v-b-modal.logmodal type="submit" variant="primary">日志</b-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -165,11 +166,17 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <b-modal id="logmodal" title="操作日志">
+        <sysLog></sysLog>
+      </b-modal>
     </b-container>
   </div>
 </template>
 
 <script>
+  import sysLog from  '../../components/syslog.vue'
+
   const items = [
     {  age: 40,empno:'FOX', empname:  '销售员1',email:'',sex:'1' },
     {  age: 21,empno:'TEST1', empname: '销售员1',email:'' ,sex:'1'},
@@ -228,6 +235,9 @@
           }
         }
       }
+    },
+    components: {
+      sysLog
     }
   }
 </script>
@@ -259,6 +269,9 @@
     }
     .row{
       margin-right: 0;
+    }
+    #logmodal{
+      .modal-dialog{min-width: 700px}
     }
   }
 </style>

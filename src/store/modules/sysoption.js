@@ -31,7 +31,7 @@ const state = {
 
 // getters
 const getters = {
-  eventDepDate: groupid => state.eventDepDate,
+  eventDepDate: state => state.eventDepDate,
 
   eventWaitingLimit: state => state.eventWaitingLimit,
 
@@ -41,7 +41,7 @@ const getters = {
 
   scPmsType: state => state.scPmsType,
 
-  scPmsUrl: groupid => state.scPmsUrl,
+  scPmsUrl: state => state.scPmsUrl,
 
   scPosType: state => state.scPosType,
 
@@ -51,7 +51,7 @@ const getters = {
 
   scMessageUrl: state => state.scMessageUrl,
 
-  scEoSigntime: groupid => state.scEoSigntime
+  scEoSigntime: state => state.scEoSigntime
 }
 
 // actions
