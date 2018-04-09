@@ -64,7 +64,11 @@ const actions = {
         username: state.username.toUpperCase()
       }).then(function (response) {
         if (response.status === 200) {
-          store.commit('setEmpno', response.data)
+          if(response.data.errorCode!=='0'){
+            reject(response.data.errorMessage)
+          }else{
+            store.commit('setEmpno', response.data)
+          }
         }
         resolve()
       })
@@ -88,6 +92,8 @@ const mutations = {
     state.hotels = hotels
   },
   setEmpno (state, empno) {
+    delete empno.password;
+    delete empno.md5;
     state.empno = empno
   }
 }

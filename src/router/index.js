@@ -88,13 +88,16 @@ const router =new Router({
         },
         {
           path: '/main/maint',
-          name: '基础代码维护',
           component: Maint,
           meta: {
             keepAlive: true // 需要被缓存
           },
           children: [
-            // ...维护子路由
+            {
+              path: '',
+              name: '基础代码维护',
+              component: Hotelinfo
+            },
             {
               path: '/main/maint/hotelinfo',
               name: '酒店信息',

@@ -39,11 +39,11 @@
         maintTree: [{
           label: '基础信息',
           children: [{
+            label: '酒店信息',
+            route:'/main/maint/hotelinfo'
+          }, {
             label: '用户管理',
             route:'/main/maint/empnoinfo'
-          }, {
-            label: '酒店信息维护',
-            route:'/main/maint/hotelinfo'
           }, {
             label: '系统参数',
             route:'/main/maint/sysoption'
