@@ -6,7 +6,7 @@
         ref = "logtable"
         :data="searchitems"
         border
-        style="width: 100%" :max-height="tableHeight">
+        style="width: 100%">
         <el-table-column type="expand">
           <template slot-scope="props">
             <b-card>

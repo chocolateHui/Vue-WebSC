@@ -13,6 +13,7 @@ const axiosinstance = axios.create({
 // initial state
 const state = {
   token: null,
+  tokentime:null,
   signature: null,
   secretkey: '',
   loginerror: ''
@@ -21,6 +22,8 @@ const state = {
 // getters
 const getters = {
   token: state => state.token,
+
+  tokentime: state => state.tokentime,
 
   signature: state => state.signature,
 
@@ -76,6 +79,7 @@ const actions = {
 const mutations = {
   setToken (state, token) {
     state.token = token
+    state.tokentime = new Date().getTime();
   },
   setSecretkey (state, secretkey) {
     state.secretkey = secretkey

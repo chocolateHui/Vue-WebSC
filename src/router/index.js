@@ -12,7 +12,7 @@ const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/ma
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 Vue.use(Router)
 
-export default new Router({
+const router =new Router({
   routes: [
     {
       path: '/login',
@@ -144,3 +144,33 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.path.indexOf("/login")<0) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (!router.app.$store.getters.token) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    }else {
+      let tokentime = router.app.$store.getters.tokentime;
+      let now = new Date().getTime();
+      let timelong =  parseInt(now - tokentime) / 1000 / 60;
+      if(!tokentime||timelong>=8){
+        next({
+          path: '/login',
+          query: { redirect: to.fullPath }
+        })
+      }else{
+        next()
+      }
+    }
+  } else {
+    next() // 确保一定要调用 next()
+  }
+})
+
+
+export default router
