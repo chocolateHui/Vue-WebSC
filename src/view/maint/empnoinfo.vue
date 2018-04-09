@@ -266,6 +266,7 @@
     }
     .el-table__expanded-cell{
       padding: 5px!important;
+      box-shadow: 1px 5px 5px #dee2e6;
     }
     .row{
       margin-right: 0;

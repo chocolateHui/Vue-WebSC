@@ -7,7 +7,7 @@ const state = {
   mainRoutes: [
     {route: '/main',name:'首页'}
   ],
-  activeIndex: 0
+  activeIndex: '首页'
 }
 
 // getters
@@ -29,19 +29,12 @@ const mutations = {
     state.mainRoutes.push(data);
   },
   // 删除tabs
-  delete_tabs (state, route) {
-    let index = 0;
-    for (let option of state.mainRoutes) {
-      if (option.route === route) {
-        break;
-      }
-      index++;
-    }
+  delete_tabs (state, index) {
     state.mainRoutes.splice(index, 1);
   },
   // 设置当前激活的tab
-  set_active_index (state, index) {
-    state.activeIndex = index;
+  set_active_index (state, name) {
+    state.activeIndex = name;
   }
 }
 

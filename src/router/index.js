@@ -160,7 +160,7 @@ router.beforeEach((to, from, next) => {
     }else {
       let tokentime = router.app.$store.getters.tokentime;
       let now = new Date().getTime();
-      let timelong =  parseInt(now - tokentime) / 1000 / 60;
+      let timelong =  parseInt(now - tokentime) / 1000 / 60 /60;
       if(!tokentime||timelong>=8){
         next({
           path: '/login',

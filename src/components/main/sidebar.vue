@@ -73,10 +73,10 @@
       if (this.$route.path !== '/main') {
         this.$store.commit('add_tabs', {route: this.$route.path , name: this.$route.name });
         this.$nextTick(function(){
-          this.$store.commit('set_active_index', this.mainRoutes.length-1);
+          this.$store.commit('set_active_index', this.$route.name);
         })
       } else {
-        this.$store.commit('set_active_index', 0);
+        this.$store.commit('set_active_index', '首页');
         this.$router.push('/main');
       }
     },
