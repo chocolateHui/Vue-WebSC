@@ -10,7 +10,10 @@
             <span>{{i.name}}</span>
             <b v-show="i.route!=='/main'" @click="tabRemove(i)">X</b>
           </template>
-          <router-view :style="{height: screenHeight + 'px'}"></router-view>
+          <keep-alive>
+            <router-view :style="{height: screenHeight + 'px'}" v-if="$route.meta.keepAlive"></router-view>
+          </keep-alive>
+          <router-view :style="{height: screenHeight + 'px'}" v-if="!$route.meta.keepAlive"></router-view>
         </b-tab>
       </b-tabs>
     </div>
@@ -33,7 +36,7 @@
         mainstyle:{
           'margin-left':"148px"
         },
-        screenHeight: document.body.clientHeight-120,//减去header的60px
+        screenHeight: document.body.clientHeight-105,//减去header的60px
       }
     },
     computed: {
@@ -82,6 +85,9 @@
     watch: {
       //路由监听,侧边栏进行路由跳转后在这里新增tab页,把路由目标转到新的tab页上
       '$route'(to) {
+        if(to.path.indexOf("/maint/")>0){
+          return;
+        }
         let flag = false;
         for (let option of this.mainRoutes) {
           if (option.name === to.name) {
@@ -109,6 +115,12 @@
   #scmain{
     height: calc(100%);
     #tabs{
+      .container-fluid{
+        padding: 0;
+      }
+      .card-body{
+        padding: 0.5rem;
+      }
       .fa-fw{
         font-size: 1rem;
       }

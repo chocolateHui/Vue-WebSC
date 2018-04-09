@@ -1,9 +1,9 @@
 /**
  * Created by lsj on 2018/3/9.
  */
-import crypto from 'crypto'
 import axios from 'axios'
 import methodinfo from '../../config/MethodConst.js'
+import CryptoJS  from 'crypto-js'
 
 const axiosinstance = axios.create({
   baseURL: methodinfo.url,
@@ -29,21 +29,23 @@ const getters = {
 
 // actions
 const actions = {
-  encrypttoken: function (store, username) {
+  encrypttoken: function (store) {
     return new Promise((resolve, reject) => {
+      let username = store.getters.username;
       let time = new Date().getTime()
-      let cipher = crypto.createCipheriv('aes-128-cbc', state.secretkey, state.secretkey)
-      let crypted = cipher.update(username + 0 + time + state.token, 'utf8', 'binary')
-      crypted += cipher.final('binary')
-      crypted = Buffer.from(crypted, 'binary').toString('base64')
-      store.commit('setSignature', crypted)
+      let content = username + 0 + time + state.token;
+      let key = CryptoJS.enc.Latin1.parse(state.secretkey);
+      let encrypted = CryptoJS.AES.encrypt(content, key,{
+        iv:key,
+        mode:CryptoJS.mode.CBC,
+        padding:CryptoJS.pad.Pkcs7});
+      store.commit('setSignature', encrypted.toString())
       resolve()
     })
   },
   gettoken: function (store, tokenparam) {
-    let md5 = crypto.createHash('md5')
-    md5.update(tokenparam.password)
-    let secret = md5.digest('hex')
+    let password = tokenparam.password;
+    let secret = CryptoJS.MD5(password).toString();
     return new Promise((resolve, reject) => {
       axiosinstance.get(methodinfo.auth, {
         params: {
