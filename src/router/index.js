@@ -4,6 +4,7 @@ import Router from 'vue-router'
 const login = () => import(/* webpackChunkName: "group-login" */ '../view/Login.vue')
 const main = () => import(/* webpackChunkName: "group-main" */ '../view/Main.vue')
 const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Template.vue')
+const index = () => import(/* webpackChunkName: "group-main" */ '../view/Index.vue')
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-main" */ '../view/report/Lossstatistics.vue')
 
@@ -22,7 +23,7 @@ export default new Router({
       children: [
         // 当 /main 匹配成功，
         // DashBoard 会被渲染在 main 的 <router-view> 中
-        { path: '',name: '首页', component: Template },
+        { path: '',name: '首页', component: index },
         // ...其他子路由
         {
           path: '/main/caterList',

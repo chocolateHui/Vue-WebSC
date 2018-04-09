@@ -176,6 +176,6 @@ const methodinfo = {
   auth: '/userauth',
   getloginhotellist: '/getloginhotellist',
 
-  url :'http://10.1.1.171:8083/'
+  url :'http://172.10.60.61:8083/'
 }
 module.exports = exports = methodinfo

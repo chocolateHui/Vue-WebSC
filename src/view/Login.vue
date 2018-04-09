@@ -149,7 +149,7 @@
         }
     }
 </script>
-<style lang="scss">
+<style lang="scss"  type="text/scss">
   @import "../css/color";
 
 #login{
