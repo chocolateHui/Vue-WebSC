@@ -149,6 +149,7 @@ const router =new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  router.app.$store.commit("set_loading",true);
   if (to.path.indexOf("/login")<0) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
@@ -173,6 +174,10 @@ router.beforeEach((to, from, next) => {
   } else {
     next() // 确保一定要调用 next()
   }
+})
+
+router.afterEach((to, from) => {
+  router.app.$store.commit("set_loading",false);
 })
 
 

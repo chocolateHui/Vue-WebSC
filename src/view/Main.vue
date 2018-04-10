@@ -9,10 +9,15 @@
           v-for="(item , index) in mainRoutes"
           :label="item.name"
           :name="item.name">
-          <keep-alive>
-            <router-view :style="{height: screenHeight + 'px'}" v-if="$route.meta.keepAlive"></router-view>
-          </keep-alive>
-          <router-view :style="{height: screenHeight + 'px'}" v-if="!$route.meta.keepAlive"></router-view>
+          <div v-if="isLoading">
+            <loading></loading>
+          </div>
+          <div v-if="!isLoading">
+            <keep-alive>
+              <router-view :style="{height: screenHeight + 'px'}" v-if="$route.meta.keepAlive"></router-view>
+            </keep-alive>
+            <router-view :style="{height: screenHeight + 'px'}" v-if="!$route.meta.keepAlive"></router-view>
+          </div>
         </el-tab-pane>
       </el-tabs>
       <!--<b-tabs id="tabs" card v-model="activeIndex">-->
@@ -38,6 +43,7 @@
   import 'font-awesome/css/font-awesome.css'
   import navbar from '../components/main/navbar.vue'
   import sidebar from '../components/main/sidebar.vue'
+  import loading from '../components/loading.vue'
   // 组件和参数
 
   export default {
@@ -56,6 +62,7 @@
         'hotel',
         'empno',
         'mainRoutes',
+        'isLoading'
       ]),
       activeIndex:{
         get () {
@@ -133,7 +140,8 @@
     },
     components: {
       sidebar,
-      navbar
+      navbar,
+      loading
     }
   }
 </script>

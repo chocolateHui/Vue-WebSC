@@ -22,7 +22,12 @@
       </b-col>
       <b-col cols="10">
         <b-container :style="{height: bodyHeight + 'px'}">
-          <router-view></router-view>
+          <div v-if="isLoading">
+            <loading></loading>
+          </div>
+          <div v-if="!isLoading">
+            <router-view></router-view>
+          </div>
         </b-container>
       </b-col>
     </b-row>
@@ -30,6 +35,9 @@
 </template>
 
 <script>
+  import loading from '../components/loading.vue'
+  import { mapGetters} from 'vuex'
+
   export default {
     data() {
       return {
@@ -91,6 +99,11 @@
         }
       };
     },
+    computed: {
+      ...mapGetters([
+        'isLoading'
+      ]),
+    },
     watch: {
       filterText(val) {
         this.$refs.tree2.filter(val);
@@ -113,6 +126,9 @@
           route:'/main/maint/hoteldept'
         });
       }
+    },
+    components: {
+      loading
     }
   };
 </script>
