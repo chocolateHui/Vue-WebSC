@@ -41,8 +41,8 @@
   export default {
     data() {
       return {
-        treeHeight: document.body.clientHeight-140,
-        bodyHeight: document.body.clientHeight-100,
+        treeHeight: document.body.clientHeight-150,
+        bodyHeight: document.body.clientHeight-110,
         filterText: '',
         maintTree: [{
           label: '基础信息',
