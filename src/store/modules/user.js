@@ -1,19 +1,9 @@
 /**
  * Created by lsj on 2018/3/9.
  */
-import axios from 'axios'
 import methodinfo from '../../config/MethodConst.js'
+import axiosinstance from '../../common/axiosinstance'
 
-const axiosinstance = axios.create({
-  baseURL: methodinfo.url,
-  timeout: 10000,
-  headers: {
-    type: 'APP',
-    nonce: 0,
-    loc: 'zh_CN',
-    'Content-type': 'application/json;charset=utf-8'
-  }
-})
 // initial state
 const state = {
   groupid: 'G000001',
@@ -57,7 +47,6 @@ const actions = {
   },
   getsysempno: function (store, token) {
     return new Promise((resolve, reject) => {
-      axiosinstance.defaults.headers.common['username'] = state.username.toUpperCase()
       axiosinstance.defaults.headers.common['signature'] = token
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
       axiosinstance.post(methodinfo.getempnoinfo, {

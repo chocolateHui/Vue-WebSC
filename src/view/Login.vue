@@ -130,6 +130,7 @@
                     this.$store.dispatch('encrypttoken').then(() => {
                         //获取工号信息,完成后进行路由
                         this.$store.dispatch('getsysempno',this.$store.getters.signature).then(() => {
+                          this.$http.defaults.headers.common['username'] = this.username
                           this.$store.dispatch('getAllSysoption')
                           this.password = ''
                           this.$router.push({path:"/main"})

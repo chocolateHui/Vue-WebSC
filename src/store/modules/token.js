@@ -1,14 +1,8 @@
 /**
  * Created by lsj on 2018/3/9.
  */
-import axios from 'axios'
-import methodinfo from '../../config/MethodConst.js'
 import CryptoJS  from 'crypto-js'
-
-const axiosinstance = axios.create({
-  baseURL: methodinfo.url,
-  timeout: 10000
-})
+import axiosinstance from '../../common/axiosinstance'
 
 // initial state
 const state = {
