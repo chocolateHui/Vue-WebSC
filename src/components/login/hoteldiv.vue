@@ -12,6 +12,8 @@
 <script>
     import hotelList from  './hotelList.vue'
     import { mapGetters, mapActions,mapMutations } from 'vuex'
+    import pinyin from 'pinyin'
+
 
     export default {
         name: 'hotelDiv',
@@ -35,8 +37,9 @@
                             return true;
                         } else if (item.descript.indexOf(search) >= 0) {
                             return true;
-                        } else {
-                            return false;
+                        }else {
+                          let pydes = pinyin(item.descript,{style:pinyin.STYLE_FIRST_LETTER}).toString().replace(new RegExp(/(,)/g),'').toUpperCase();
+                          return pydes.indexOf(search) >= 0;
                         }
                     });
                 }

@@ -7,6 +7,7 @@
         <b-col sm="4" class="my-1">
           <el-date-picker
             v-model="reportdate"
+            value-format="yyyy-MM-dd"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -33,7 +34,11 @@
         </b-col>
       </b-row>
       <caption v-if="!reportdate">请选择报表开始和结束日期</caption>
-      <caption v-else>销售员:{{saleid}}</caption>
+      <caption v-else>
+        <span>开始日期:{{reportdate[0]}}</span>
+        <span> 结束日期:{{reportdate[1]}}</span>
+        <span>销售员:{{saleid}}</span>
+      </caption>
       <el-table
         :data="searchitems"
         border
@@ -144,7 +149,10 @@
       padding: 0;
     }
     caption{
-      caption-side: top;width: 100%
+      caption-side: top;width: 100%;
+      span{
+        padding-left:5px
+    }
     }
     .btn{
       width: 100px;

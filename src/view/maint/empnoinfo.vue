@@ -225,7 +225,7 @@
       submitempno:function (row) {
         console.log(row.toSource());
       },
-      deleteempno:function () {
+      deleteempno:function (row) {
         this.$confirm("是否要删除该员工信息？","提示")
       },
       expandChange:function (row, expandedRows) {
