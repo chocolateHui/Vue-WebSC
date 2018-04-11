@@ -3,7 +3,7 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
-import { DatePicker,Select,Option,Tree,Table,TableColumn,Tabs,TabPane} from 'element-ui';
+import { DatePicker,Select,Option,Tree,Table,TableColumn,Tabs,TabPane,Message,MessageBox} from 'element-ui';
 
 import './css/font.scss'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -20,6 +20,9 @@ Vue.use(TableColumn)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.config.productionTip = false
+Vue.prototype.$message = Message;
+Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.$confirm = MessageBox.confirm;
 
 let sc = new Vue({
   el: '#app',

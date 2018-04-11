@@ -68,26 +68,18 @@
 </script>
 <style lang="scss">
   #syslog{
-    /*.el-date-editor .el-range-separator{*/
-      /*padding: 0;*/
-    /*}*/
-    /*.btn{*/
-      /*width: 100px;*/
-    /*}*/
-    .table{
-      border-color: #dee2e6;
-      th{
+    .el-table{
+      td, th{
         border-color: #dee2e6;
+        padding: 0;
       }
-    }
-    .el-table td, .el-table th{
-      padding: 0;
-    }
-    .el-table .caret-wrapper{
-      width: 20px;
+      .caret-wrapper{
+        width: 20px;
+      }
     }
     .el-table__expanded-cell{
       padding: 5px!important;
+      box-shadow: 0 !important;
     }
     .row{
       margin-right: 0;

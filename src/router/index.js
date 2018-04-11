@@ -4,6 +4,7 @@ import Router from 'vue-router'
 const login = () => import(/* webpackChunkName: "group-login" */ '../view/Login.vue')
 const main = () => import(/* webpackChunkName: "group-main" */ '../view/Main.vue')
 const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Template.vue')
+const EOShare = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/EOShare.vue')
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
 const Maint = () => import(/* webpackChunkName: "group-main" */ '../view/Maint.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
@@ -49,7 +50,31 @@ const router =new Router({
         {
           path: '/main/newReserve',
           name: '新建宴会预订',
+          component: EOShare,
+          meta: {
+            keepAlive: true // 需要被缓存
+          }
+        },
+        {
+          path: '/main/catering/cateringInfo',
+          name: '宴会预订详情',
           component: Template,
+          meta: {
+            keepAlive: true // 需要被缓存
+          }
+        },
+        {
+          path: '/main/catering/eventItem',
+          name: '宴会事务项目',
+          component: Template,
+          meta: {
+            keepAlive: true // 需要被缓存
+          }
+        },
+        {
+          path: '/main/EOShare',
+          name: '宴会预订EO单',
+          component: EOShare,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -149,6 +174,7 @@ const router =new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(new Date().getTime())
   router.app.$store.commit("set_loading",true);
   if (to.path.indexOf("/login")<0) {
     // this route requires auth, check if logged in
@@ -177,6 +203,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
+  console.log(new Date().getTime())
   router.app.$store.commit("set_loading",false);
 })
 

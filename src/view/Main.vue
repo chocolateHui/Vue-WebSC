@@ -118,7 +118,7 @@
     watch: {
       //路由监听,侧边栏进行路由跳转后在这里新增tab页,把路由目标转到新的tab页上
       '$route'(to) {
-        if(to.path.indexOf("/maint/")>0){
+        if(to.path.indexOf("/maint/")>0||to.path.indexOf("/catering/")>0){
           return;
         }
         let flag = false;

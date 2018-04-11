@@ -36,6 +36,7 @@
         </b-col>
       </b-row>
       <el-table
+        id = "empnotable"
         ref = "empnotable"
         :row-key="getRowKeys"
         @expand-change = "expandChange"
@@ -162,12 +163,12 @@
           <template slot-scope="scope">
             <b-button
               size="mini"
-              type="danger">删除</b-button>
+              type="danger" @click="deleteempno()">删除</b-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <b-modal id="logmodal" title="操作日志">
+      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
         <sysLog></sysLog>
       </b-modal>
     </b-container>
@@ -224,6 +225,9 @@
       submitempno:function (row) {
         console.log(row.toSource());
       },
+      deleteempno:function () {
+        this.$confirm("是否要删除该员工信息？","提示")
+      },
       expandChange:function (row, expandedRows) {
         if(expandedRows.length>1){
           let index = 0;
@@ -249,30 +253,27 @@
     .btn{
       width: 100px;
     }
-    .table{
-      border-color: #dee2e6;
-      th{
+    #empnotable{
+      table{
         border-color: #dee2e6;
+        th,td{
+          padding: 0;
+          border-color: #dee2e6;
+        }
       }
-    }
-    .el-input__inner{
-      height: 36px;
-    }
-    .el-table td, .el-table th{
-      padding: 0;
-    }
-    .el-table .caret-wrapper{
-      width: 20px;
-    }
-    .el-table__expanded-cell{
-      padding: 5px!important;
-      box-shadow: 1px 5px 5px #dee2e6;
+      .el-input__inner{
+        height: 36px;
+      }
+      .el-table .caret-wrapper{
+        width: 20px;
+      }
+      .el-table__expanded-cell{
+        padding: 5px!important;
+        box-shadow: 1px 5px 5px #dee2e6;
+      }
     }
     .row{
       margin-right: 0;
-    }
-    #logmodal{
-      .modal-dialog{min-width: 700px}
     }
   }
 </style>
