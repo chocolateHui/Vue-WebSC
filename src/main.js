@@ -3,10 +3,11 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
-import { DatePicker,Select,Option,Tree,Table,TableColumn,Tabs,TabPane,Message,MessageBox} from 'element-ui';
+import { DatePicker,Select,Option,Tree,Table,TableColumn,Tabs,TabPane,Message,MessageBox,Upload,Dialog} from 'element-ui';
 import axiosinstance from '../src/common/axiosinstance'
 
 import './css/font.scss'
+import './css/color.scss'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'element-ui/lib/theme-chalk/index.css';
@@ -20,6 +21,8 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Upload)
+Vue.use(Dialog)
 Vue.config.productionTip = false
 Vue.prototype.$message = Message;
 Vue.prototype.$alert = MessageBox.alert;
