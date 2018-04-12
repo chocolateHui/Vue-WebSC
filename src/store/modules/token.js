@@ -1,18 +1,14 @@
 /**
  * Created by lsj on 2018/3/9.
  */
-import axios from 'axios'
-import methodinfo from '../../config/MethodConst.js'
 import CryptoJS  from 'crypto-js'
-
-const axiosinstance = axios.create({
-  baseURL: methodinfo.url,
-  timeout: 10000
-})
+import axiosinstance from '../../common/axiosinstance'
+import methodinfo from '../../config/MethodConst.js'
 
 // initial state
 const state = {
   token: null,
+  tokentime:null,
   signature: null,
   secretkey: '',
   loginerror: ''
@@ -21,6 +17,8 @@ const state = {
 // getters
 const getters = {
   token: state => state.token,
+
+  tokentime: state => state.tokentime,
 
   signature: state => state.signature,
 
@@ -76,6 +74,7 @@ const actions = {
 const mutations = {
   setToken (state, token) {
     state.token = token
+    state.tokentime = new Date().getTime();
   },
   setSecretkey (state, secretkey) {
     state.secretkey = secretkey

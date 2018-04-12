@@ -4,7 +4,7 @@ import Router from 'vue-router'
 const login = () => import(/* webpackChunkName: "group-login" */ '../view/Login.vue')
 const main = () => import(/* webpackChunkName: "group-main" */ '../view/Main.vue')
 const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Template.vue')
-const index = () => import(/* webpackChunkName: "group-main" */ '../view/Index.vue')
+const EOShare = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/EOShare.vue')
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
 const Maint = () => import(/* webpackChunkName: "group-main" */ '../view/Maint.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
@@ -13,7 +13,7 @@ const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/ma
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 Vue.use(Router)
 
-export default new Router({
+const router =new Router({
   routes: [
     {
       path: '/login',
@@ -26,7 +26,6 @@ export default new Router({
       children: [
         // 当 /main 匹配成功，
         // DashBoard 会被渲染在 main 的 <router-view> 中
-        { path: '',name: '首页', component: index },
         { path: '',name: '首页', component: Template,
           meta: {
             keepAlive: false // 需要被缓存
@@ -51,7 +50,31 @@ export default new Router({
         {
           path: '/main/newReserve',
           name: '新建宴会预订',
+          component: EOShare,
+          meta: {
+            keepAlive: true // 需要被缓存
+          }
+        },
+        {
+          path: '/main/catering/cateringInfo',
+          name: '宴会预订详情',
           component: Template,
+          meta: {
+            keepAlive: true // 需要被缓存
+          }
+        },
+        {
+          path: '/main/catering/eventItem',
+          name: '宴会事务项目',
+          component: Template,
+          meta: {
+            keepAlive: true // 需要被缓存
+          }
+        },
+        {
+          path: '/main/EOShare',
+          name: '宴会预订EO单',
+          component: EOShare,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -90,13 +113,16 @@ export default new Router({
         },
         {
           path: '/main/maint',
-          name: '基础代码维护',
           component: Maint,
           meta: {
             keepAlive: true // 需要被缓存
           },
           children: [
-            // ...维护子路由
+            {
+              path: '',
+              name: '基础代码维护',
+              component: Hotelinfo
+            },
             {
               path: '/main/maint/hotelinfo',
               name: '酒店信息',
@@ -146,3 +172,40 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  console.log(new Date().getTime())
+  router.app.$store.commit("set_loading",true);
+  if (to.path.indexOf("/login")<0) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (!router.app.$store.getters.token) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    }else {
+      let tokentime = router.app.$store.getters.tokentime;
+      let now = new Date().getTime();
+      let timelong =  parseInt(now - tokentime) / 1000 / 60 /60;
+      if(!tokentime||timelong>=8){
+        next({
+          path: '/login',
+          query: { redirect: to.fullPath }
+        })
+      }else{
+        next()
+      }
+    }
+  } else {
+    next() // 确保一定要调用 next()
+  }
+})
+
+router.afterEach((to, from) => {
+  console.log(new Date().getTime())
+  router.app.$store.commit("set_loading",false);
+})
+
+
+export default router

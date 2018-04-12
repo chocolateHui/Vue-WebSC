@@ -1,19 +1,9 @@
 /**
  * Created by lsj on 2018/4/2.
  */
-import axios from 'axios'
 import methodinfo from '../../config/MethodConst.js'
+import axiosinstance from '../../common/axiosinstance'
 
-const axiosinstance = axios.create({
-  baseURL: methodinfo.url,
-  timeout: 10000,
-  headers: {
-    type: 'APP',
-    nonce: 0,
-    loc: 'zh_CN',
-    'Content-type': 'application/json;charset=utf-8'
-  }
-})
 // initial state
 const state = {
   eventDepDate: {},
@@ -58,7 +48,6 @@ const getters = {
 const actions = {
   getAllSysoption: function (store) {
     store.dispatch('encrypttoken').then(() => {
-      axiosinstance.defaults.headers.common['username'] = store.getters.username
       axiosinstance.defaults.headers.common['signature'] = store.getters.signature
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
       axiosinstance.post(methodinfo.getsysoptionlist, {

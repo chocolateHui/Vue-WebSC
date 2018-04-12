@@ -22,7 +22,12 @@
       </b-col>
       <b-col cols="10">
         <b-container :style="{height: bodyHeight + 'px'}">
-          <router-view></router-view>
+          <div v-if="isLoading">
+            <loading></loading>
+          </div>
+          <div v-if="!isLoading">
+            <router-view></router-view>
+          </div>
         </b-container>
       </b-col>
     </b-row>
@@ -30,20 +35,23 @@
 </template>
 
 <script>
+  import loading from '../components/loading.vue'
+  import { mapGetters} from 'vuex'
+
   export default {
     data() {
       return {
-        treeHeight: document.body.clientHeight-140,
-        bodyHeight: document.body.clientHeight-100,
+        treeHeight: document.body.clientHeight-150,
+        bodyHeight: document.body.clientHeight-110,
         filterText: '',
         maintTree: [{
           label: '基础信息',
           children: [{
+            label: '酒店信息',
+            route:'/main/maint/hotelinfo'
+          }, {
             label: '用户管理',
             route:'/main/maint/empnoinfo'
-          }, {
-            label: '酒店信息维护',
-            route:'/main/maint/hotelinfo'
           }, {
             label: '系统参数',
             route:'/main/maint/sysoption'
@@ -91,6 +99,11 @@
         }
       };
     },
+    computed: {
+      ...mapGetters([
+        'isLoading'
+      ]),
+    },
     watch: {
       filterText(val) {
         this.$refs.tree2.filter(val);
@@ -113,6 +126,9 @@
           route:'/main/maint/hoteldept'
         });
       }
+    },
+    components: {
+      loading
     }
   };
 </script>

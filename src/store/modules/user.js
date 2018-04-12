@@ -1,19 +1,9 @@
 /**
  * Created by lsj on 2018/3/9.
  */
-import axios from 'axios'
 import methodinfo from '../../config/MethodConst.js'
+import axiosinstance from '../../common/axiosinstance'
 
-const axiosinstance = axios.create({
-  baseURL: methodinfo.url,
-  timeout: 10000,
-  headers: {
-    type: 'APP',
-    nonce: 0,
-    loc: 'zh_CN',
-    'Content-type': 'application/json;charset=utf-8'
-  }
-})
 // initial state
 const state = {
   groupid: 'G000001',
@@ -57,14 +47,18 @@ const actions = {
   },
   getsysempno: function (store, token) {
     return new Promise((resolve, reject) => {
-      axiosinstance.defaults.headers.common['username'] = state.username.toUpperCase()
+      axiosinstance.defaults.headers.common['username'] = state.username
       axiosinstance.defaults.headers.common['signature'] = token
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
       axiosinstance.post(methodinfo.getempnoinfo, {
-        username: state.username.toUpperCase()
+        username: state.username
       }).then(function (response) {
         if (response.status === 200) {
-          store.commit('setEmpno', response.data)
+          if(response.data.errorCode!=='0'){
+            reject(response.data.errorMessage)
+          }else{
+            store.commit('setEmpno', response.data)
+          }
         }
         resolve()
       })
@@ -88,6 +82,8 @@ const mutations = {
     state.hotels = hotels
   },
   setEmpno (state, empno) {
+    delete empno.password;
+    delete empno.md5;
     state.empno = empno
   }
 }
