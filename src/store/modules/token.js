@@ -3,6 +3,7 @@
  */
 import CryptoJS  from 'crypto-js'
 import axiosinstance from '../../common/axiosinstance'
+import methodinfo from '../../config/MethodConst.js'
 
 // initial state
 const state = {
