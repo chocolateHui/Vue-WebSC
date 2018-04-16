@@ -73,7 +73,7 @@ const mutations = {
     state.groupid = groupid
   },
   setUsername (state, username) {
-    state.username = username.toUpperCase()
+    state.username = (username+'').toUpperCase()
   },
   setHotel (state, hotel) {
     state.hotel = hotel

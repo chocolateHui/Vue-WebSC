@@ -80,7 +80,7 @@
         </b-row>
         <b-row class="img-row">
           <el-upload
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="https://files.foxhis.com/action?method=upload&groupid=G000001&access=FOXHIS.WOP"
             list-type="picture-card"
             :file-list="fileList2"
             :on-preview="handlePictureCardPreview"
@@ -172,11 +172,11 @@
     .expand-col{
       background-color: #f2f2f2;
       .row{
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
         background-color: white;
         .col-sm-6{
-          padding-top: 0.5rem;
+          padding-top: 1rem;
         }
       }
     }

@@ -89,7 +89,6 @@
         if(name==="首页"){
           return
         }
-        //查找对应tab位置，如果是最后一个则将路由设置倒数第二个上
         let index = 0;
         for (let option of this.mainRoutes) {
           if (option.name === name) {
@@ -97,8 +96,17 @@
           }
           index++;
         }
-        if(index === this.mainRoutes.length-1){
-          this.$router.push({path: this.mainRoutes[index-1].route});
+        //查找对应tab位置，如果是最后一个则将路由设置倒数第二个上,如果是当前标签则路由到下一个
+        if(this.activeIndex===name){
+          if(index === this.mainRoutes.length-1){
+            this.$router.push({path: this.mainRoutes[index-1].route});
+          }else{
+            this.$router.push({path: this.mainRoutes[index+1].route});
+          }
+        }else{
+          if(index === this.mainRoutes.length-1){
+            this.$router.push({path: this.mainRoutes[index-1].route});
+          }
         }
         this.$store.commit('delete_tabs', index);
       },
