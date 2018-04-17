@@ -85,8 +85,6 @@
               return this.$store.getters.username
             },
             set (value) {
-              console.log(value)
-
               this.$store.commit('setUsername', value)
             }
           }
