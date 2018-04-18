@@ -80,9 +80,10 @@
         </b-row>
         <b-row class="img-row">
           <el-upload
-            action="https://files.foxhis.com/action?method=upload&groupid=G000001&access=FOXHIS.WOP"
+            :action="fileserver"
             list-type="picture-card"
             :file-list="fileList2"
+            :http-request="fileupload"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove">
             <i class="el-icon-plus"></i>
@@ -103,6 +104,9 @@
   </div>
 </template>
 <script>
+  import axios from 'axios'
+
+  const fileserver = "https://files.foxhis.com/FoxhisFileServer/action?groupid=C0000001&access=dsajlkda1";
   const items = [
     {code: '1001', cby: '宴会厅'},
     {code: '1002', cby: '会议室'},
@@ -117,10 +121,11 @@
       return {
         items: items,
         fildes: fildes,
+        fileserver:fileserver,
         expand: {},
         eloptions: [],
-        fileList2: [{name: 'food.jpeg', url: 'http://photocdn.sohu.com/20140124/Img394127291.jpg'},
-          {name: 'food2.jpeg', url: 'http://photocdn.sohu.com/20140124/Img394127298.jpg'}],
+        fileList2: [{name: 'xr.png', url: 'https://files.foxhis.com/FoxhisFileServer/image/C0000001/target/xr.png?token=71DFD83564CD06366DA6C6E35496B61D'},
+          {name: 'logo.png', url: 'https://files.foxhis.com/FoxhisFileServer/image/C0000001/target/logo.png?token=71DFD83564CD06366DA6C6E35496B61D'}],
         dialogImageUrl: '',
         dialogVisible: false
       }
@@ -137,11 +142,42 @@
     },
     methods: {
       handleRemove(file, fileList) {
-        console.log(file, fileList);
+        console.log(file.name);
+        let url = this.fileserver +'&method=delete';
+        let config = {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+        // 添加请求头
+        axios.post(url, {filename:'target/'+file.name},config)
+          .then(response => {
+            console.log(response)
+          }).catch(response => {
+          console.log(response)
+        })
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
+      },
+      fileupload(action){
+        let param = new FormData() // 创建form对象
+        param.append('topath', 'target') // 添加form表单中其他数据
+        param.append('file', action.file, action.file.name) // 通过append向form对象添加数据
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        let url = this.fileserver +'&method=upload';
+        // 添加请求头
+        axios.post(url, param, config)
+          .then(response => {
+            console.log(response)
+          }).catch(response => {
+          console.log(response)
+        })
       }
     }
   }
