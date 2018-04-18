@@ -107,6 +107,7 @@
   import axios from 'axios'
 
   const fileserver = "https://files.foxhis.com/FoxhisFileServer/action?groupid=C0000001&access=dsajlkda1";
+  const filetoken = "71DFD83564CD06366DA6C6E35496B61D";
   const items = [
     {code: '1001', cby: '宴会厅'},
     {code: '1002', cby: '会议室'},
@@ -124,7 +125,7 @@
         fileserver:fileserver,
         expand: {},
         eloptions: [],
-        fileList2: [{name: 'xr.png', url: 'https://files.foxhis.com/FoxhisFileServer/image/C0000001/target/xr.png?token=71DFD83564CD06366DA6C6E35496B61D'},
+        fileList2: [{name: 'xr.png', url: 'https://files.foxhis.com/FoxhisFileServer/image/C0000001/target/xr.png'+'?token='+filetoken},
           {name: 'logo.png', url: 'https://files.foxhis.com/FoxhisFileServer/image/C0000001/target/logo.png?token=71DFD83564CD06366DA6C6E35496B61D'}],
         dialogImageUrl: '',
         dialogVisible: false
@@ -143,14 +144,14 @@
     methods: {
       handleRemove(file, fileList) {
         console.log(file.name);
-        let url = this.fileserver +'&method=delete';
+        let url = this.fileserver +'&method=delete&filename=target/'+file.name;
         let config = {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         }
         // 添加请求头
-        axios.post(url, {filename:'target/'+file.name},config)
+        axios.post(url, {},config)
           .then(response => {
             console.log(response)
           }).catch(response => {
@@ -174,7 +175,7 @@
         // 添加请求头
         axios.post(url, param, config)
           .then(response => {
-            console.log(response)
+            console.log(response.data)
           }).catch(response => {
           console.log(response)
         })
