@@ -27,7 +27,7 @@
           <a>{{empno.empname}}</a>
           </span>
           </template>
-          <b-dropdown-item>
+          <b-dropdown-item v-b-modal.passmodal>
             <i class="fa fa-cog" style="color: black"></i>
             修改密码
           </b-dropdown-item>
@@ -39,6 +39,41 @@
         </b-nav-item-dropdown>
       </b-nav>
     </b-navbar>
+    <b-modal id="passmodal" ref="passmodal" @hidden="modalhidden" size="sm" title="修改密码" hide-footer>
+      <div>
+        <b-form @submit="onSubmit" v-if="show">
+          <b-form-group label="用户名" horizontal>
+            <b-form-input :value="empno.empname" disabled>
+            </b-form-input>
+          </b-form-group>
+          <b-form-group label="旧密码" horizontal>
+            <b-form-input type="password"
+                          v-model="oldpassword"
+                          required>
+            </b-form-input>
+          </b-form-group>
+          <b-form-group label="新密码:" horizontal>
+            <b-form-input type="password"
+                          v-model="newpassword"
+                          required>
+            </b-form-input>
+          </b-form-group>
+          <b-form-group label="确认密码:" horizontal>
+            <b-form-input type="password"
+                          v-model="confirmpassword"
+                          required>
+            </b-form-input>
+          </b-form-group>
+          <b-row>
+            <b-col sm="3">
+            </b-col>
+            <b-col>
+              <b-button type="submit" variant="primary">提交</b-button>
+            </b-col>
+          </b-row>
+        </b-form>
+      </div>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -46,11 +81,19 @@
   import vue from 'vue'
   import { mapGetters, mapMutations } from 'vuex'
   import 'font-awesome/css/font-awesome.css'
-
+  import methodinfo from '../../config/MethodConst.js'
   // 组件和参数
 
   export default {
     name: 'navbar',
+    data () {
+      return {
+        oldpassword:'',
+        newpassword:'',
+        confirmpassword:'',
+        show:true
+      }
+    },
     computed: {
       ...mapGetters([
         'groupid',
@@ -59,11 +102,45 @@
       ])
     },
     methods: {
-      ...mapMutations([
-        'setPassword' // 将 `this.increment()` 映射为 `this.$store.commit('increment')`
-      ]),
       logout: function () {
         this.$router.push({name:"login"})
+      },
+      onSubmit: function () {
+        if (this.newpassword !== this.confirmpassword) {
+          this.$alert('两次密码输入不一致,请检查!');
+          return;
+        }
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.modifypassword, {
+            username: this.empno.empno,
+            newpassword: this.newpassword,
+            oldpassword: this.oldpassword
+          }).then((response) => {
+            if (response.data.errorCode === '0') {
+              this.$message({message:"修改成功",type: 'success'});
+              let tokenparam = {
+                groupid: this.$store.getters.groupid,
+                hotelid: this.hotel.hotelid,
+                username: this.empno.empno,
+                password: this.newpassword
+              };
+              this.$store.dispatch('gettoken', tokenparam);
+              this.$refs.passmodal.hide();
+            }else{
+              this.$alert(response.data.errorMessage,"修改失败",{type: 'error'})
+            }
+          })
+        })
+      },
+      modalhidden:function () {
+        console.log(this.oldpassword);
+        this.oldpassword='';
+        this.newpassword='';
+        this.confirmpassword='';
+        this.show=false;
+        this.$nextTick(() => { this.show = true });
       }
     }
   }
@@ -103,6 +180,12 @@
     }
     .dropdown-item{
       color: black!important;
+    }
+  }
+
+  #passmodal{
+    .btn{
+      width: 100px;
     }
   }
 </style>

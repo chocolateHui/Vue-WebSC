@@ -20,19 +20,6 @@
           </div>
         </el-tab-pane>
       </el-tabs>
-      <!--<b-tabs id="tabs" card v-model="activeIndex">-->
-        <!--&lt;!&ndash; Render Tabs &ndash;&gt;-->
-        <!--<b-tab ref="tab" @click="tabClick" v-for="i in mainRoutes" :key="i.name">-->
-          <!--<template slot="title">-->
-            <!--<span>{{i.name}}</span>-->
-            <!--<span @click="tabRemove(i)" class="el-icon-close"></span>-->
-          <!--</template>-->
-          <!--<keep-alive>-->
-            <!--<router-view :style="{height: screenHeight + 'px'}" v-if="$route.meta.keepAlive"></router-view>-->
-          <!--</keep-alive>-->
-          <!--<router-view :style="{height: screenHeight + 'px'}" v-if="!$route.meta.keepAlive"></router-view>-->
-        <!--</b-tab>-->
-      <!--</b-tabs>-->
     </div>
   </div>
 </template>
