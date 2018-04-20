@@ -1,10 +1,21 @@
 <template>
   <div id="sidebar" :style="{height: screenHeight + 'px'}">
     <div class="sidebar-shortcuts">
-      <div style="padding:0 15px">
+      <div id="calendar" style="padding:0 15px">
         <div id="oneday" class="oneday" style="font-size:14px!important;"></div>
         <div id="oneyear" class="oneyear" style="font-size:12px!important;"></div>
       </div>
+      <!--<b-popover target="calendar"-->
+                 <!--placement="right"-->
+                 <!--triggers="click">-->
+        <!--<div>-->
+        <!--</div>-->
+      <!--</b-popover>-->
+      <calendar
+        :value="now"
+        :format="dateformat"
+        :has-input="false"
+      ></calendar>
     </div>
     <b-nav vertical>
       <b-nav-item :to="menu.route" :class="getselect(menu)"  v-for="menu in menus" :key="menu.route">
@@ -22,13 +33,15 @@
   import vue from 'vue'
   import { mapGetters, mapMutations } from 'vuex'
   import 'font-awesome/css/font-awesome.css'
-
+  import Calendar from 'vue2-slot-calendar';
   // 组件和参数
 
   export default {
     name: 'sidebar',
     data :function () {
       return {
+        now:new Date(),
+        dateformat:'yyyy-MM-dd',
         menus: [
           { route: '/main/caterList', name: '宴会预订列表',iconClass:"fa-list"},
           { route: '/main/newQuery', name: '新建宴会问询',iconClass:"fa-clock-o fa-rotate-90"},
@@ -80,6 +93,9 @@
         this.$router.push('/main');
       }
     },
+    components: {
+      Calendar
+    }
   }
 </script>
 <style lang="scss">
