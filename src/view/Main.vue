@@ -38,7 +38,7 @@
     data() {
       return {
         mainstyle:{
-          'margin-left':"148px"
+          'margin-left':"150px"
         },
         screenHeight: document.body.clientHeight-105,//减去header的60px
       }
@@ -101,11 +101,11 @@
         console.log(isclose)
         if(isclose){
           this.mainstyle= {
-            'margin-left':"148px"
+            'margin-left':"150px"
           }
         }else{
           this.mainstyle= {
-            'margin-left':"60px"
+            'margin-left':"50px"
           }
         }
       }
@@ -153,6 +153,13 @@
       .fa-fw{
         font-size: 1rem;
       }
+    }
+    .el-tabs{
+      padding-top: 4px;
+    }
+    .el-tabs__item{
+      height: 36px;
+      line-height: 36px;
     }
   }
 </style>

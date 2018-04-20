@@ -7,7 +7,7 @@
       </div>
     </div>
     <b-nav vertical>
-      <b-nav-item :to="menu.route" :class="getselect(menu)"  v-for="menu in menus" :key="menu.route">
+      <b-nav-item :to="menu.route" :class="getselect(menu)"  v-for="menu in menus" :key="menu.route" :style="{width: navwidth + 'px'}">
         <i class="menu-icon fa fa-fw" :class="menu.iconClass"></i>
         <span v-show="isClose" class="menu-text">{{menu.name}}</span>
       </b-nav-item>
@@ -39,6 +39,7 @@
         date:'',
         lunardate :'',
         dateshow:true,
+
         calendar:{
           zero:true,
           value:[new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate()], //默认日期
@@ -55,7 +56,8 @@
         ],
         isClose:true,
         toggleClass:"fa-angle-double-left",
-        screenHeight: document.body.clientHeight-45,//减去header的60px
+        screenHeight: document.body.clientHeight+145,//减去header的60px
+        navwidth:150
       }
     },
     computed: {
@@ -71,6 +73,10 @@
       getselect: function (menu) {
         if(this.$route.path===menu.route){
           return "active"
+        }else{
+          if(this.$route.path.indexOf('/maint/')>0&&menu.route==='/main/maint'){
+            return "active"
+          }
         }
       },
       togglebar:function () {
@@ -78,7 +84,9 @@
         this.isClose=!this.isClose;
         if(!this.isClose){
           this.toggleClass = "fa-angle-double-right"
+          this.navwidth = 50
         }else{
+          this.navwidth = 150
           this.toggleClass = "fa-angle-double-left"
         }
         this.$emit("barclose",this.isClose);
@@ -128,7 +136,6 @@
       border: 0 solid;
     }
     .sidebar-toggle{
-      content: "";
       display: block;
       border-top: 1px solid #e5e5e5;
       border-bottom: 1px solid #e5e5e5;
@@ -151,6 +158,52 @@
       margin: 0;
       padding: 0;
       list-style: none;
+      li:hover:before{
+        content: "";
+        position: absolute;
+        top: -1px;
+        left: 0;
+        z-index: 1;
+        height: 41px;
+        width: 3px;
+        max-width: 3px;
+        overflow: hidden;
+        background-color: #629cc9;
+      }
+      li.active:after{
+        display: block;
+        content: "";
+        position: absolute;
+        right: -2px;
+        top: -1px;
+        bottom: 0;
+        z-index: 1;
+        border: solid;
+        border-width: 0 2px 0 0;
+        border-color: #2b7dbc;
+      }
+      li:hover {
+        a {
+          background-color: #FFF;
+          color: #266cad
+        }
+      }
+      .active{
+        a{
+          background-color: #FFF;
+          color: #266cad
+        }
+        a:after {
+          display: block;
+          content: "";
+          position: absolute;
+          right: 0;
+          top: 4px;
+          border:solid transparent;
+          border-width: 14px 10px;
+          border-right-color: #2b7dbc
+        }
+      }
     }
     .nav-item{
       display: block;
@@ -160,6 +213,13 @@
       border-style: solid;
       border-width: 1px 0 0;
       border-color: #e5e5e5;
+      a{
+        padding: 10px;
+        background-color: #f8f8f8;
+        height: 39px;
+        font-size: 0.9rem;
+        color: #585858;
+      }
     }
     .menu-icon{
       display: inline-block;
