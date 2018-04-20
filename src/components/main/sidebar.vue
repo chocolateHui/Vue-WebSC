@@ -1,21 +1,10 @@
 <template>
   <div id="sidebar" :style="{height: screenHeight + 'px'}">
-    <div class="sidebar-shortcuts">
-      <div id="calendar" style="padding:0 15px">
-        <div id="oneday" class="oneday" style="font-size:14px!important;"></div>
-        <div id="oneyear" class="oneyear" style="font-size:12px!important;"></div>
+    <div class="sidebar-shortcuts" @click="openCalendar">
+      <div id="calendar" v-show="dateshow">
+        <div id="day" class="day">{{date}}</div>
+        <div id="lunar" class="lunar">农历:{{lunardate}}</div>
       </div>
-      <!--<b-popover target="calendar"-->
-                 <!--placement="right"-->
-                 <!--triggers="click">-->
-        <!--<div>-->
-        <!--</div>-->
-      <!--</b-popover>-->
-      <calendar
-        :value="now"
-        :format="dateformat"
-        :has-input="false"
-      ></calendar>
     </div>
     <b-nav vertical>
       <b-nav-item :to="menu.route" :class="getselect(menu)"  v-for="menu in menus" :key="menu.route">
@@ -26,6 +15,11 @@
     <div class="sidebar-toggle sidebar-collapse" style="text-align: center">
       <i @click="togglebar" class="fa" :class="toggleClass"></i>
     </div>
+    <b-modal ref="calendarModal" title="日历" hide-footer>
+      <div class="calendar-dialog-body">
+        <calendar :zero="calendar.zero" :lunar="calendar.lunar" :value="calendar.value"></calendar>
+      </div>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -33,15 +27,23 @@
   import vue from 'vue'
   import { mapGetters, mapMutations } from 'vuex'
   import 'font-awesome/css/font-awesome.css'
-  import Calendar from 'vue2-slot-calendar';
+  import calendar from './calendar.vue'
+  import calendarjs from './calendar'
+  import formatDate from '../../common/date'
   // 组件和参数
 
   export default {
     name: 'sidebar',
     data :function () {
       return {
-        now:new Date(),
-        dateformat:'yyyy-MM-dd',
+        date:'',
+        lunardate :'',
+        dateshow:true,
+        calendar:{
+          zero:true,
+          value:[new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate()], //默认日期
+          lunar:true
+        },
         menus: [
           { route: '/main/caterList', name: '宴会预订列表',iconClass:"fa-list"},
           { route: '/main/newQuery', name: '新建宴会问询',iconClass:"fa-clock-o fa-rotate-90"},
@@ -72,6 +74,7 @@
         }
       },
       togglebar:function () {
+        this.dateshow = !this.dateshow;
         this.isClose=!this.isClose;
         if(!this.isClose){
           this.toggleClass = "fa-angle-double-right"
@@ -79,9 +82,15 @@
           this.toggleClass = "fa-angle-double-left"
         }
         this.$emit("barclose",this.isClose);
+      },
+      openCalendar(){
+        this.$refs.calendarModal.show();
       }
     },
     mounted () {
+      this.date= formatDate(new Date(),"yyyy年MM月dd日");
+      let lunarinfo= calendarjs.solar2lunar(new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate());
+      this.lunardate = lunarinfo.IMonthCn+lunarinfo.IDayCn
       // 刷新时以当前路由做为tab加入tabs
       if (this.$route.path !== '/main') {
         this.$store.commit('add_tabs', {route: this.$route.path , name: this.$route.name });
@@ -94,7 +103,7 @@
       }
     },
     components: {
-      Calendar
+      calendar
     }
   }
 </script>
@@ -160,6 +169,16 @@
       text-align: center;
       font-size: 1.4rem;
       font-weight: normal;
+    }
+    .calendar-dialog-body{
+      background: #fff;
+      padding:20px;
+      border: 1px solid #eee;
+      border-radius: 2px;
+    }
+    .lunar{
+      font-size: 0.9rem;
+      color: #888888;
     }
   }
 </style>
