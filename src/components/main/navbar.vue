@@ -13,12 +13,16 @@
           <b-nav-item @click="setFullscreen" style="background-color:#555555!important;">
             <i class="fa" :class="ScreenClass"></i>
           </b-nav-item>
-          <b-nav-item id="messageItem" style="background-color:#00c486!important;">
+          <b-nav-item v-popover:msgpop style="background-color:#00c486!important;">
             <i class="fa fa-bell">
               <b-badge variant="danger" v-show="message">14</b-badge>
             </i>
           </b-nav-item>
-          <b-popover target="messageItem" placement="bottom" title="消息">
+          <el-popover
+            ref="msgpop"
+            placement="bottom"
+            title="消息"
+            trigger="click">
             <b-list-group>
               <b-list-group-item href="#">This is a default list group item</b-list-group-item>
               <b-list-group-item href="#" variant="primary">This is a primary list group item</b-list-group-item>
@@ -30,7 +34,7 @@
               <b-list-group-item href="#" variant="light">This is a light list group item</b-list-group-item>
               <b-list-group-item href="#" variant="dark">This is a dark list group item</b-list-group-item>
             </b-list-group>
-          </b-popover>
+          </el-popover>
           <b-nav-item v-b-modal.aboutmodal style="background-color:#1e9ec6!important;">
             <i class="fa fa-tasks"></i>
           </b-nav-item>

@@ -3,7 +3,7 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
-import { Badge,DatePicker,Select,Option,Tree,Table,TableColumn,Tabs,TabPane,Message,MessageBox,Upload,Dialog} from 'element-ui';
+import { Badge,DatePicker,Select,Option,Tree,Table,TableColumn,Tabs,TabPane,Message,MessageBox,Upload,Dialog,Popover} from 'element-ui';
 import axiosinstance from '../src/common/axiosinstance'
 import Stomp from 'stompjs'
 
@@ -25,6 +25,7 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Upload)
 Vue.use(Dialog)
+Vue.use(Popover)
 Vue.config.productionTip = false
 Vue.prototype.$message = Message;
 Vue.prototype.$alert = MessageBox.alert;
