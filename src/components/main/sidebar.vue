@@ -103,6 +103,11 @@
       if (this.$route.path !== '/main') {
         this.$store.commit('add_tabs', {route: this.$route.path , name: this.$route.name });
         this.$nextTick(function(){
+          if(this.$route.name==='新建宴会问询'){
+            this.$store.commit('setCatersta', 'Q');
+          }else if(this.$route.name==='新建宴会预订'){
+            this.$store.commit('setCatersta', 'R');
+          }
           this.$store.commit('set_active_index', this.$route.name);
         })
       } else {

@@ -3,7 +3,7 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
-import { Badge,DatePicker,Select,Option,Tree,Table,TableColumn,Tabs,TabPane,Message,MessageBox,Upload,Dialog,Popover} from 'element-ui';
+import { Input,Badge,DatePicker,Select,Option,Tree,Table,TableColumn,Tabs,TabPane,Message,MessageBox,Upload,Dialog,Popover} from 'element-ui';
 import axiosinstance from '../src/common/axiosinstance'
 import Stomp from 'stompjs'
 
@@ -16,6 +16,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(BootstrapVue)
 Vue.use(Badge)
 Vue.use(DatePicker)
+Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Tree)

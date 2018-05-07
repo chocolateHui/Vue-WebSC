@@ -1,4 +1,3 @@
-<!-- 模板组件，用于模拟不同路由下的组件显示 -->
 <template>
   <div id="empnoinfo">
     <b-container fluid>
@@ -178,7 +177,8 @@
 <script>
   import sysLog from  '../../components/syslog.vue'
   import placeexpand from '../maint/placeexpand.vue'
-  const items = [
+
+  var items = [
     {  age: 40,empno:'FOX', empname:  '销售员1',email:'',sex:'1' },
     {  age: 21,empno:'TEST1', empname: '销售员1',email:'' ,sex:'1'},
     {  age: 9,empno:'TEST2', empname: 'Mini',email:'',sex:'2'},
@@ -208,7 +208,6 @@
         getRowKeys(row) {
           return row.empno;
         },
-        // 要展开的行，数值的元素是row的key值
         tableHeight: document.body.clientHeight-140,//减去header的60px
       }
     },
@@ -239,6 +238,11 @@
           }
         }
       }
+    },
+    beforeRouteEnter  (to, from, next) {
+      console.log(items)
+      console.log(to)
+      next()
     },
     components: {
       sysLog,
