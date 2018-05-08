@@ -4,6 +4,8 @@ import Router from 'vue-router'
 const login = () => import(/* webpackChunkName: "group-login" */ '../view/Login.vue')
 const main = () => import(/* webpackChunkName: "group-main" */ '../view/Main.vue')
 const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Template.vue')
+const NewCatering = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/NewCatering.vue')
+const CateringInfo = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/CateringInfo.vue')
 const EOShare = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/EOShare.vue')
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
 const Maint = () => import(/* webpackChunkName: "group-main" */ '../view/Maint.vue')
@@ -45,7 +47,7 @@ const router =new Router({
         {
           path: '/main/newQuery',
           name: '新建宴会问询',
-          component: Template,
+          component: NewCatering,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -53,18 +55,19 @@ const router =new Router({
         {
           path: '/main/newReserve',
           name: '新建宴会预订',
-          component: EOShare,
+          component: NewCatering,
           meta: {
             keepAlive: true // 需要被缓存
           }
         },
         {
-          path: '/main/catering/cateringInfo',
+          path: '/main/catering/cateringInfo/:caterid',
           name: '宴会预订详情',
-          component: Template,
+          component: CateringInfo,
           meta: {
             keepAlive: true // 需要被缓存
-          }
+          },
+          props:true
         },
         {
           path: '/main/catering/eventItem',
@@ -111,7 +114,7 @@ const router =new Router({
           name: '订单流失统计',
           component: Lossstatistics,
           meta: {
-            keepAlive: true // 需要被缓存
+            keepAlive: false // 需要被缓存
           }
         },
         {
@@ -177,7 +180,6 @@ const router =new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(new Date().getTime())
   router.app.$store.commit("set_loading",true);
   if (to.path.indexOf("/login")<0) {
     // this route requires auth, check if logged in
@@ -206,7 +208,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  console.log(new Date().getTime())
   router.app.$store.commit("set_loading",false);
 })
 

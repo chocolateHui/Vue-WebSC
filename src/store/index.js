@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import token from './modules/token'
 import user from './modules/user'
+import catering from './modules/catering'
 import maintab from './modules/maintab'
 import sysoption from './modules/sysoption'
 import VuexPersistence from 'vuex-persist'
@@ -21,7 +22,8 @@ const store = new Vuex.Store({
     token,
     user,
     maintab,
-    sysoption
+    sysoption,
+    catering
   },
   plugins: [vuexLocal.plugin],
   mutations: {

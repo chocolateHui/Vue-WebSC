@@ -1,5 +1,5 @@
 <template>
-  <div id="syslog">
+  <div id="signleplace">
     <b-container fluid>
       <el-table
         ref = "logtable"
@@ -28,15 +28,13 @@
   </div>
 </template>
 <script>
-  const items = [
-    {  code: 'FOX',cby:'FOX', changed:  '2018-04-08 12:00:00',items:'工号,姓名',logdata:[{item:'工号',newval:'FOX',oldval:'FOX1',},{item:'姓名',newval:'FOX',oldval:'FOX1'}] },
-    {  code: 'FOX',cby:'TEST1', changed: '2018-04-08 13:00:00',items:'工号,姓名',logdata:[{item:'工号',newval:'TEST1',oldval:'FOX',},{item:'姓名',newval:'FOX',oldval:'FOX1'}] },
-  ]
+  const items = []
   const fildes = [
-    {  prop: 'code', label:  '代码',width:'100' },
-    {  prop: 'cby', label:  '操作员',width:'100',sortable:true,showTip:true},
-    {  prop: 'changed', label:  '操作时间',width:'160',sortable:true,showTip:true},
-    {  prop: 'items', label:  '项目',width:'',sortable:true,showTip:true }
+    {  prop: 'code', label:  '代码',width:'100',sortable:true },
+    {  prop: 'descript', label:  '场地名称',width:'',sortable:true,showTip:true},
+    {  prop: 'descript1', label:  '英文名称',width:'100',sortable:true,showTip:true},
+    {  prop: 'pccodedes', label:  '营业点',width:'160',sortable:true,showTip:true},
+    {  prop: 'kind', label:  '类别',width:'100',sortable:true,showTip:true }
   ]
 
   export default {
@@ -66,7 +64,7 @@
   }
 </script>
 <style lang="scss">
-  #syslog{
+  #signleplace{
     .el-table{
       td, th{
         border-color: #dee2e6;
@@ -75,6 +73,9 @@
       .caret-wrapper{
         width: 20px;
       }
+    }
+    .el-pagination{
+      float: right;
     }
     .el-table__expanded-cell{
       padding: 5px!important;

@@ -16,7 +16,7 @@
                         <b-input-group-text slot="append">
                           <i class="appendicon fa fa-user"></i>
                         </b-input-group-text>
-                        <b-form-input id="userinput" :value="username" @input="setUsername" @click.native="userclick" maxlength="10" placeholder="请输入用户名"></b-form-input>
+                        <Numberinput id="userinput" v-model="username" @click.native="userclick" text="请输入用户名"></Numberinput>
                       </b-input-group>
                       <label class="errorlabel" v-show="userErrorShow">用户名不能为空!</label>
                     </label>
@@ -58,6 +58,7 @@
     import 'font-awesome/css/font-awesome.css'
     //组件和参数
     import hotelDiv from  '../components/login/hoteldiv.vue'
+    import Numberinput from '../components/FormatInput.vue'
 
     var logindata = {
         password :'',
@@ -74,12 +75,19 @@
         computed:{
             ...mapGetters([
                 'groupid',
-                'username',
                 'hotel',
                 'hotels',
                 'empno',
                 'loginerror'
-            ])
+            ]),
+          username:{
+            get () {
+              return this.$store.getters.username
+            },
+            set (value) {
+              this.$store.commit('setUsername', value)
+            }
+          }
         },
         methods:{
             ...mapMutations([
@@ -131,11 +139,6 @@
                         //获取工号信息,完成后进行路由
                         this.$store.dispatch('getsysempno',this.$store.getters.signature).then(() => {
                           this.$http.defaults.headers.common['username'] = this.username
-//                          this.$http.defaults.headers.common['signature'] = store.getters.signature
-//                          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-//                          this.$http.post(methodinfo.getempnoinfo, {
-//                            username: state.username.toUpperCase()
-//                          })
                           this.$store.dispatch('getAllSysoption')
                           this.password = ''
                           this.$router.push({path:"/main"})
@@ -152,7 +155,8 @@
             }
         },
         components: {
-            hotelDiv
+            hotelDiv,
+            Numberinput
         }
     }
 </script>
@@ -163,6 +167,11 @@
   height:calc(100%);
   background-image: url('/static/SCweb-index-05.png');
   background-size: cover;
+
+  #userinput{
+    ime-mode:disabled;
+    text-transform:uppercase;
+  }
 
   .logo{
     position:absolute;

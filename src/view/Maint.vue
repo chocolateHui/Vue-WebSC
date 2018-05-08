@@ -16,6 +16,7 @@
           :props="defaultProps"
           @node-click="NodeClick"
           default-expand-all
+          highlight-current
           :filter-node-method="filterNode"
           ref="tree2">
         </el-tree>

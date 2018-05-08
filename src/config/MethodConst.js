@@ -13,6 +13,10 @@ const methodinfo = {
   getempnohotellist: '/PUB/sysempno/getempnohotellist',
   // 获取工号详情
   getempnoinfo: '/PUB/sysempno/getempnoinfo',
+  // 获取工号列表
+  getempnolist: '/PUB/sysempno/getempnolist',
+  // 更新工号信息
+  savesysempno: '/PUB/sysempno/savesysempno',
   // 获取站点信息
   getpcidstatus: '/PUB/station/getpcidstatus',
   // 获取基础代码列表

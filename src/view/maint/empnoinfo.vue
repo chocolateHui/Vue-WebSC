@@ -1,4 +1,3 @@
-<!-- 模板组件，用于模拟不同路由下的组件显示 -->
 <template>
   <div id="empnoinfo">
     <b-container fluid>
@@ -169,7 +168,7 @@
       </el-table>
 
       <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
-        <sysLog></sysLog>
+        <placeexpand></placeexpand>
       </b-modal>
     </b-container>
   </div>
@@ -177,8 +176,9 @@
 
 <script>
   import sysLog from  '../../components/syslog.vue'
+  import placeexpand from '../maint/placeexpand.vue'
 
-  const items = [
+  var items = [
     {  age: 40,empno:'FOX', empname:  '销售员1',email:'',sex:'1' },
     {  age: 21,empno:'TEST1', empname: '销售员1',email:'' ,sex:'1'},
     {  age: 9,empno:'TEST2', empname: 'Mini',email:'',sex:'2'},
@@ -208,7 +208,6 @@
         getRowKeys(row) {
           return row.empno;
         },
-        // 要展开的行，数值的元素是row的key值
         tableHeight: document.body.clientHeight-140,//减去header的60px
       }
     },
@@ -240,8 +239,14 @@
         }
       }
     },
+    beforeRouteEnter  (to, from, next) {
+      console.log(items)
+      console.log(to)
+      next()
+    },
     components: {
-      sysLog
+      sysLog,
+      placeexpand
     }
   }
 </script>
@@ -253,6 +258,9 @@
     .btn{
       width: 100px;
     }
+    .el-input__inner{
+      height: 36px;
+    }
     #empnotable{
       table{
         border-color: #dee2e6;
@@ -260,9 +268,6 @@
           padding: 0;
           border-color: #dee2e6;
         }
-      }
-      .el-input__inner{
-        height: 36px;
       }
       .el-table .caret-wrapper{
         width: 20px;

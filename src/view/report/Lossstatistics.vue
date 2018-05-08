@@ -28,18 +28,20 @@
         </b-col>
         <b-col sm="4" class="my-1">
           <b-form-group class="mb-0">
-            <b-button variant="primary">查询</b-button>
+            <b-button @click="getreportdata" variant="primary">查询</b-button>
             <b-button @click="exportexcel" variant="success">导出</b-button>
           </b-form-group>
         </b-col>
       </b-row>
-      <caption v-if="!reportdate">请选择报表开始和结束日期</caption>
-      <caption v-else>
+      <label v-if="!reportdate">请选择报表开始和结束日期</label>
+      <label v-else>
         <span>开始日期:{{reportdate[0]}}</span>
         <span> 结束日期:{{reportdate[1]}}</span>
         <span>销售员:{{saleid}}</span>
-      </caption>
+      </label>
       <el-table
+        id="datatable"
+        ref="datatable"
         :data="searchitems"
         border
         show-summary
@@ -59,23 +61,11 @@
 
 <script>
   import XLSX from 'xlsx'
+  import methodinfo from '../../config/MethodConst'
 
-  const items = [
-    {  caterid: 40, name:  '销售员1' },
-    {  caterid: 21, name: '销售员1' },
-    {  caterid: 9, name: 'Mini'},
-    {  caterid: 89, name: 'Geneva' },
-    {  caterid: 38, name: 'Jami' },
-    {  caterid: 27, name: 'Essie' },
-    {  caterid: 40, name: 'Thor' },
-    {  caterid: 87, name: 'Larsen'},
-    {  caterid: 26, name: 'Mitzi' },
-    {  caterid: 22, name: 'Genevieve' },
-    {  caterid: 38, name: 'John' },
-    {  caterid: 29, name: 'Dick' }
-  ]
+  var items = []
   const fildes = [
-    {  prop: 'caterid', label:  '订单编号',width:'120',sortable:true },
+    {  prop: 'caterid', label:  '订单编号',width:'138',sortable:true },
     {  prop: 'name', label:  '订单名称',width:'',sortable:true,showTip:true},
     {  prop: 'cusnodes', label:  '协议单位',width:'',sortable:true,showTip:true},
     {  prop: 'eventid', label:  '事务ID',width:'90',sortable:true },
@@ -84,14 +74,13 @@
     {  prop: 'osta', label:  '原状态',width:'90',sortable:true },
     {  prop: 'reason', label:  '取消理由',width:'100',sortable:true },
     {  prop: 'saleid', label:  '销售员',width:'90',sortable:true },
-    {  prop: 'cby', label:  '操作员',width:'80' },
-    {  prop: 'changed', label:  '操作时间',width:'80' },
+    {  prop: 'cby', label:  '操作员',width:'80' }
   ]
 
   export default {
     data () {
       return {
-        items: items,
+        items:[],
         fildes :fildes,
         totalRows: items.length,
         sortBy: null,
@@ -139,6 +128,27 @@
         XLSX.utils.book_append_sheet(new_workbook, worksheet, "Sheet1");
         /* generate file and force a download*/
         XLSX.writeFile(new_workbook, "sheetjs.xlsx");
+      },
+      getdata(){
+        this.$http.defaults.headers.common['username'] = this.$store.getters.username
+        this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+        this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+        this.$http.post(methodinfo.getcateringlist, {
+          sta: '0,1,2,3,X'
+        }).then((response)=>  {
+          if (response.data.errorCode==='0') {
+            this.items = response.data.caterings;
+            console.log(this.$refs.datatable.store)
+            this.$refs.datatable.store.commit('setData', this.items);
+          }
+        })
+      },
+      getreportdata(){
+        this.items=[
+          {  caterid: 40, name:  '销售员1' },
+          {  caterid: 21, name: '销售员1' },
+          {  caterid: 9, name: 'Mini'}
+        ]
       }
     }
   }
