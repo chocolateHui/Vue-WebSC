@@ -1,0 +1,502 @@
+<!-- 模板组件，用于模拟不同路由下的组件显示 -->
+<template>
+  <div id="CaterListpanel" class="router-template2">
+    <div class="template-wrap2" >
+      <el-tabs type="border-card" class="width100 height100" @tab-click="tabClick">
+
+
+        <el-tab-pane label="当前宴会订单">
+
+          <b-row>
+            <b-col>
+              <b-form inline>
+
+                <b-form-checkbox v-model="allSelected"
+                                 :indeterminate="indeterminate"
+                                 aria-describedby="flavours"
+                                 aria-controls="flavours"
+                                 @change="toggleAll"
+                >
+                  {{ allSelected ? '所有' : '所有' }}
+                </b-form-checkbox>
+                <b-form-checkbox-group
+                  v-model="selected"
+                  name="flavs"
+                  :options="flavours"
+                  class="ml-4"
+                ></b-form-checkbox-group>
+              </b-form>
+            </b-col>
+            <b-col>
+              <i class="fa fa-refresh refresh" aria-hidden="true"></i>
+            </b-col>
+          </b-row>
+          <b-row>
+            <el-table
+              :data="searchitems"
+              border
+              stripe
+              max-height="470"
+              style="width: 100%">
+              <el-table-column
+                v-for="item in fildes"
+                :prop="item.prop"
+                :label="item.label"
+                :width="item.width"
+                :sortable="item.sortable"
+                :show-overflow-tooltip="item.showTip" :key="item.prop">
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                width="120">
+                <template slot-scope="scope">
+                  <b-form inline class="paddingleft0 paddingbottom0">
+                    <b-button
+                      size="sm"
+                      variant="primary" @click="deleteempno()">编</b-button>
+                    <b-button
+                      size="sm"
+                       variant="warning" @click="deleteempno()">同</b-button>
+                    <b-button
+                      size="sm"
+                     @click="deleteempno()">备</b-button>
+                  </b-form>
+                </template>
+              </el-table-column>
+            </el-table>
+          </b-row>
+
+
+
+
+        </el-tab-pane>
+        <el-tab-pane label="历史宴会订单">
+          <b-row>
+            <b-col>
+              <b-form inline>
+
+                <b-form-checkbox v-model="HallSelected"
+                                 :indeterminate="Hindeterminate"
+                                 aria-describedby="jflavours"
+                                 aria-controls="flavours"
+                                 @change="HtoggleAll"
+                >
+                  {{ HallSelected ? '所有' : '所有' }}
+                </b-form-checkbox>
+                <b-form-checkbox-group
+                  v-model="Hselected"
+                  name="Hflavs"
+                  :options="flavours"
+                  class="ml-4"
+                ></b-form-checkbox-group>
+              </b-form>
+            </b-col>
+            <b-col>
+              <i class="fa fa-refresh refresh" aria-hidden="true"></i>
+            </b-col>
+          </b-row>
+          <b-row>
+            <el-table
+              :data="searchHitems"
+              border
+              stripe
+              max-height="470"
+              style="width: 100%">
+              <el-table-column
+                v-for="item in fildes"
+                :prop="item.prop"
+                :label="item.label"
+                :width="item.width"
+                :sortable="item.sortable"
+                :show-overflow-tooltip="item.showTip" :key="item.prop">
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                width="55">
+                <template slot-scope="scope">
+                  <b-form inline class="paddingleft0 paddingbottom0">
+                    <b-button
+                      size="sm"
+                      variant="primary" @click="deleteempno()">编</b-button>
+                  </b-form>
+                </template>
+              </el-table-column>
+            </el-table>
+          </b-row>
+        </el-tab-pane>
+        <el-tab-pane disabled>
+          <span slot="label">
+               <el-date-picker
+                 v-model="timechose"
+                 value-format="yyyy-MM-dd"
+                 type="daterange"
+                 range-separator="至"
+                 start-placeholder="开始日期"
+                 end-placeholder="结束日期">
+                        </el-date-picker>
+          </span>
+
+        </el-tab-pane>
+        <el-tab-pane disabled>
+          <span slot="label">
+              <el-select v-model="arrdep" placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+          </span>
+
+        </el-tab-pane>
+
+      </el-tabs>
+
+    </div>
+  </div>
+</template>
+
+<script>
+  import {datevalid}  from '../common/date.js'
+  import methodinfo from '../config/MethodConst.js'
+  import 'font-awesome/css/font-awesome.css'
+
+
+  const fildes = [
+    {  prop: 'caterid', label:  '账号',width:'160',sortable:true,showTip: true},
+    {  prop: 'name', label:  '宴会名称',width:'',sortable:true,showTip: true},
+    {  prop: 'stades', label:  '状态',width:'',sortable:true,showTip: true},
+    {  prop: 'eventnum', label:  '事务数',width:'',sortable:true ,showTip: true},
+    {  prop: 'arr', label:  '到达时间',width:'',sortable:true,showTip: true },
+    {  prop: 'dep', label:  '离开时间',width:'',sortable:true,showTip: true},
+    {  prop: 'blockid', label:  '团队账号',width:'120',sortable:true,showTip: true },
+    {  prop: 'contactor', label:  '联系人',width:'',sortable:true,showTip: true },
+    {  prop: 'cusno_des', label:  '协议单位',width:'',sortable:true,showTip: true},
+    {  prop: 'remark', label:  '备注',width:'',sortable:true }
+  ]
+
+  export default {
+
+    data () {
+
+      return {
+        options: [{
+          value: '1',
+          label: '按到达时间'
+        }, {
+          value: '2',
+          label: '按离开时间'
+        }],
+        fildes :fildes,
+        tableData: [],
+        HtableData: [],
+        timechose:"",
+        arrdep:"1",
+        flavours: [
+          {text: '问询', value: 'Q'},
+          {text: '预订', value: '1'},
+          {text: '确认', value: '2'},
+          {text: '登记', value: '3'},
+          {text: '结账', value: 'O'},
+          {text: '取消', value: '0'},
+        ],
+        selected: ["1","2","3"],
+        allSelected: false,
+        indeterminate: true,
+        Hselected: ["1","2","3"],
+        HallSelected: false,
+        Hindeterminate: true,
+        ishistory:""
+      }
+    },
+    mounted() {
+      this.gettable1data();
+    },
+    methods: {
+      toggleAll (checked) {
+        if(checked){
+          this.selected =  [];
+          for(let key of this.flavours){
+            this.selected.push(key.value)
+          }
+        }
+        else{
+          this.selected =  [];
+        }
+        console.log(this.selected);
+      },
+      HtoggleAll (checked) {
+        if(checked){
+          this.Hselected =  [];
+          for(let key of this.flavours){
+            this.Hselected.push(key.value)
+          }
+        }
+        else{
+          this.Hselected =  [];
+        }
+      },
+      tabClick(targetName) {
+        console.log(targetName.paneName);
+        if(targetName.paneName=="0"){
+          if(this.ishistory==="H"){
+            this.timechose = "";
+          }
+          this.gettable1data();
+          this.ishistory="";
+        }
+        if(targetName.paneName=="1"){
+          if(this.ishistory===""){
+            this.timechose = "";
+          }
+          this.getHtable1data();
+          this.ishistory = "H";
+        }
+
+      },
+      gettable1data(){
+        var sta = this.selected.slice(0).toString();
+        this.getNowcateringlist(sta);
+
+      },
+      getHtable1data(){
+        var sta = this.Hselected.slice(0).toString();
+        this.getHcateringlist(sta);
+
+      },
+      getHcateringlist(sta){
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.gethistorycateringlist, {
+            sta:sta
+          }).then((response)=> {
+            if (response.status === 200) {
+              this.HtableData = [];
+              if(typeof(response.data.caterings) != "undefined"){
+                for(let caterings of response.data.caterings){
+                  var types = {};
+                  types["caterid"]=caterings.caterid;
+                  types["name"]=caterings.name;
+                  types["stades"]=caterings.stades;
+                  types["eventnum"]=caterings.eventnum;
+                  types["arr"]=caterings.arr.substring(0,10);
+                  types["dep"]=caterings.dep.substring(0,10);
+                  types["blockid"]=caterings.blockid;
+                  types["contactor"]=caterings.contactor;
+                  types["cusno_des"]=caterings.cusno_des;
+                  types["remark"]=caterings.remark;
+                  this.HtableData.push(types);
+                }
+                // this.tableData3 = response.data.caterings;
+              }
+
+            }
+          })
+        })
+      },
+      getNowcateringlist(sta){
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.getcateringlist, {
+            sta:sta
+          }).then((response)=> {
+            if (response.status === 200) {
+              this.tableData = [];
+              if(typeof(response.data.caterings) != "undefined"){
+                for(let caterings of response.data.caterings){
+                  var types = {};
+                  types["caterid"]=caterings.caterid;
+                  types["name"]=caterings.name;
+                  types["stades"]=caterings.stades;
+                  types["eventnum"]=caterings.eventnum;
+                  types["arr"]=caterings.arr.substring(0,10);
+                  types["dep"]=caterings.dep.substring(0,10);
+                  types["blockid"]=caterings.blockid;
+                  types["contactor"]=caterings.contactor;
+                  types["cusno_des"]=caterings.cusno_des;
+                  types["remark"]=caterings.remark;
+                  this.tableData.push(types);
+                }
+                // this.tableData3 = response.data.caterings;
+              }
+
+            }
+          })
+        })
+      },
+    },
+    computed: {
+      searchitems:function () {
+        if(!this.timechose){
+          return this.tableData;
+        }else{
+          return this.tableData.filter( tableData => {
+            var btime = this.timechose.slice(0)[0];
+            var etime = this.timechose.slice(0)[1];
+            if(this.arrdep=="1"){
+              if (datevalid(btime,tableData.arr)&&datevalid(tableData.arr,etime)){
+                return tableData;
+              }
+            }
+            else{
+              if (datevalid(btime,tableData.dep)&&datevalid(tableData.dep,etime)){
+                return tableData;
+              }
+            }
+          });
+        }
+      },
+      searchHitems:function () {
+        if(!this.timechose){
+          return this.HtableData;
+        }else{
+          return this.HtableData.filter( HtableData => {
+            var btime = this.timechose.slice(0)[0];
+            var etime = this.timechose.slice(0)[1];
+            if(this.arrdep=="1"){
+              if (datevalid(btime,HtableData.arr)&&datevalid(HtableData.arr,etime)){
+                return HtableData;
+              }
+            }
+            else{
+              if (datevalid(btime,HtableData.dep)&&datevalid(HtableData.dep,etime)){
+                return HtableData;
+              }
+            }
+          });
+        }
+      }
+    },
+    watch: {
+      selected(newVal, oldVal) {
+        if (newVal.length === 0) {
+          this.indeterminate = false
+          this.allSelected = false
+        } else if (newVal.length === this.flavours.length) {
+          this.indeterminate = false
+          this.allSelected = true
+        } else {
+          this.indeterminate = true
+          this.allSelected = false
+        }
+        var sta = newVal.slice(0).toString();
+        this.timechose = "";
+        this.getNowcateringlist(sta);
+
+      },
+      Hselected(newVal, oldVal) {
+        if (newVal.length === 0) {
+          this.Hindeterminate = false
+          this.HallSelected = false
+        } else if (newVal.length === this.flavours.length) {
+          this.Hindeterminate = false
+          this.HallSelected = true
+        } else {
+          this.Hindeterminate = true
+          this.HallSelected = false
+        }
+        console.log(newVal);
+        var sta = newVal.slice(0).toString();
+        this.getHcateringlist(sta);
+      }
+    }
+
+
+  }
+</script>
+<style lang="scss"  type="text/scss">
+  #CaterListpanel{
+    .router-template2 {
+      color: #000;
+      font-size: 15px;
+      font-weight: 400;
+      height: 100%;
+    }
+    .template-wrap2 {
+      height: 100%;
+      display: flex;
+      flex-flow: row wrap;
+      align-items: left;
+    }
+    .width100{
+      width: 100%;
+    }
+    .width99{
+      width: 99%;
+    }
+
+    .height100{
+      height: 100%;
+    }
+
+    .paddingleft0{
+      padding-left: 0px!important;
+    }
+    .paddingbottom0{
+      padding-bottom:  0px!important;
+    }
+    .marginbottom15{
+      margin-bottom: 15px;
+    }
+    .card-header {
+      padding: 0.3rem 1.25rem 0.3rem!important;
+    }
+    .container {
+      width: 100%!important;
+      max-width: 99%!important;
+      padding-right: 0px;
+      padding-left: 0px;
+      margin-right: 0px;
+      margin-left: 0px;
+    }
+    .refresh {
+      float: right;
+      padding-top: 4px;
+    }
+    .is-disabled {
+      float: right;
+      border: none;
+      padding-right: 5px;
+      padding-left: 5px;
+    }
+    .el-date-editor .el-range-separator {
+      padding: 0 5px;
+      line-height: 32px;
+      width: 7%;
+      color: #303133;
+    }
+    .el-tabs__nav {
+      float: none;
+    }
+    .form-inline {
+      padding-bottom: 10px;
+      padding-left: 15px;
+      width: 100%;
+    }
+    table{
+      border-color: #dee2e6;
+      th,td{
+        padding: 0;
+        border-color: #dee2e6;
+      }
+      .el-input__inner{
+        height: 36px;
+      }
+      .el-table .caret-wrapper{
+        width: 20px;
+      }
+      .el-table__expanded-cell{
+        padding: 5px!important;
+        box-shadow: 1px 5px 5px #dee2e6;
+      }
+    }
+
+
+  }
+
+</style>

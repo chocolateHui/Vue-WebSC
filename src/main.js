@@ -3,9 +3,9 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
-import { DatePicker,Select,Option,Tree,Table,TableColumn} from 'element-ui';
+import { DatePicker,Select,Option,Tree,Table,TableColumn,Tabs,TabPane,Message,MessageBox,Input} from 'element-ui';
+import axiosinstance from '../src/common/axiosinstance'
 import echarts from 'echarts'
-import { DatePicker,Select,Option,Tree,Table,TableColumn} from 'element-ui';
 
 import './css/font.scss'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -19,7 +19,16 @@ Vue.use(Option)
 Vue.use(Tree)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Input)
+// Vue.use(Checkbox)
+// Vue.use(CheckboxGroup)
 Vue.config.productionTip = false
+Vue.prototype.$message = Message;
+Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.$confirm = MessageBox.confirm;
+Vue.prototype.$http = axiosinstance;
 Vue.prototype.$echarts = echarts
 
 let sc = new Vue({

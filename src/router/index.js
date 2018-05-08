@@ -11,6 +11,9 @@ const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../v
 const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfo.vue')
 const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
+const index = () => import(/* webpackChunkName: "group-main" */ '../view/Index.vue')
+const caterList = () => import(/* webpackChunkName: "group-main" */ '../view/CaterList.vue')
+const pccodeinfo = () => import(/* webpackChunkName: "group-main" */ '../view/maint/pccodeinfo.vue')
 Vue.use(Router)
 
 const router =new Router({
@@ -26,7 +29,7 @@ const router =new Router({
       children: [
         // 当 /main 匹配成功，
         // DashBoard 会被渲染在 main 的 <router-view> 中
-        { path: '',name: '首页', component: Template,
+        { path: '',name: '首页', component: index,
           meta: {
             keepAlive: false // 需要被缓存
           } },
@@ -34,7 +37,7 @@ const router =new Router({
         {
           path: '/main/caterList',
           name: '宴会预订列表',
-          component: Template,
+          component: caterList,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -146,7 +149,7 @@ const router =new Router({
             {
               path: '/main/maint/pccode',
               name: '宴会营业点',
-              component: Hotelinfo
+              component: pccodeinfo
             },
             {
               path: '/main/maint/item',

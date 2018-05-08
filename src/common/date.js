@@ -21,3 +21,9 @@ export function formatDate (date, fmt) {
 function padLeftZero (str) {
   return ('00' + str).substr(str.length)
 }
+
+export function datevalid(begindate,enddate) {
+  var begin = new Date(begindate.replace(/-/g,"/"));
+  var end = new Date(enddate.replace(/-/g,"/"));
+  return begin <= end;
+}
