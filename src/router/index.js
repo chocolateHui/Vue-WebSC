@@ -75,12 +75,13 @@ const router =new Router({
           }
         },
         {
-          path: '/main/EOShare',
+          path: '/main/EOShare/:caterid',
           name: '宴会预订EO单',
           component: EOShare,
           meta: {
-            keepAlive: true // 需要被缓存
-          }
+            keepAlive: false // 需要被缓存
+          },
+          props:true
         },
         {
           path: '/main/placeDistribution',

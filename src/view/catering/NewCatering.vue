@@ -39,9 +39,12 @@
               this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
               this.$http.post(methodinfo.newcatering, localcatering).then(function (response) {
                 if (response.data.errorCode === '0') {
-                  console.log(response.data)
                   let caterid = response.data.caterid;
                   _this.$refs.newevent.batchSaveEvent(caterid).then(() => {
+                    _this.$message({
+                      message: '宴会保存成功!',
+                      type: 'success'
+                    })
                     _this.$router.push({ name: '宴会预订详情', params: { caterid: caterid }});
                   });
                 }else{

@@ -129,8 +129,13 @@
       },
       handleCurrentChange(val) {
         if(!this.pageChange){
-          this.currentRow = val;
-          this.currentplace = val.descript;
+          if(val){
+            this.currentRow = val;
+            this.currentplace = val.descript;
+          }else{
+            this.currentRow = {};
+            this.currentplace = '';
+          }
         }else{
           this.pageChange = false;
         }
@@ -194,6 +199,10 @@
         }
       },
       placeConfirm(){
+        if(!this.currentRow){
+          this.$alert("请选择一个场地!")
+          return
+        }
         this.$emit('placeConfirm',this.currentRow)
         this.$root.$emit('bv::hide::modal','singleplacemodal')
       },
@@ -203,7 +212,9 @@
     },
     watch:{
       placelist(val,oldval){
-        this.items = val;
+        if(val){
+          this.items = val;
+        }
       },
       eventbdate(val,oldval){
       }
@@ -228,10 +239,6 @@
     .pagination{
       float: right;
       padding: 5px 10px;
-    }
-    .el-table__expanded-cell{
-      padding: 5px!important;
-      box-shadow: 0 !important;
     }
     .row{
       margin-right: 0;

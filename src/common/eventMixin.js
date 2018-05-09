@@ -26,7 +26,8 @@ const eventMixin = {
       this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
       this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
       this.$http.post(methodinfo.getbasecodelist, {
-        cat: 'sc_event_type'
+        cat: 'sc_event_type',
+        halt:"F"
       }).then(function (response) {
         if (response.data.errorCode==='0') {
           for(let option of response.data.basecodes){
@@ -46,7 +47,8 @@ const eventMixin = {
         }
       })
       this.$http.post(methodinfo.getbasecodelist, {
-        cat: 'sc_event_degree'
+        cat: 'sc_event_degree',
+        halt:"F"
       }).then(function (response) {
         if (response.data.errorCode==='0') {
           for(let option of response.data.basecodes){
@@ -55,7 +57,8 @@ const eventMixin = {
         }
       })
       this.$http.post(methodinfo.getbasecodelist, {
-        cat: 'sc_time_unit'
+        cat: 'sc_time_unit',
+        halt:"F"
       }).then(function (response) {
         if (response.data.errorCode==='0') {
           for(let option of response.data.basecodes){
@@ -64,7 +67,8 @@ const eventMixin = {
         }
       })
       this.$http.post(methodinfo.getbasecodelist, {
-        cat: 'layout'
+        cat: 'layout',
+        halt:"F"
       }).then(function (response) {
         if (response.data.errorCode==='0') {
           for(let option of response.data.basecodes){

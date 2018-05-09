@@ -10,7 +10,9 @@ const state = {
   catersta:'Q',
   catering: {},
   eventlist:[],
-  placelist:[]
+  eventstas:'1,2,3,W,Q',
+  placelist:[],
+  reasonlist:[]
 }
 
 // getters
@@ -23,7 +25,11 @@ const getters = {
 
   eventlist:state => state.eventlist,
 
+  eventstas:state => state.eventstas,
+
   placelist:state => state.placelist,
+
+  reasonlist:state => state.reasonlist,
 }
 
 // actions
@@ -58,7 +64,7 @@ const actions = {
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
     axiosinstance.post(methodinfo.geteventlist, {
       caterid: state.caterid,
-      sta:'1,2,I,W,Q'
+      sta:state.eventstas,
     }).then(function (response) {
       if (response.data.errorCode==='0') {
         store.commit('setEventlist', response.data.events)
@@ -73,6 +79,19 @@ const actions = {
     }).then(function (response) {
       if (response.data.errorCode==='0') {
         store.commit('setPlacelist', response.data.places)
+      }
+    })
+  },
+  getReasonList(store){
+    axiosinstance.defaults.headers.common['username'] = store.getters.username
+    axiosinstance.defaults.headers.common['signature'] = store.getters.signature
+    axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
+    axiosinstance.post(methodinfo.getbasecodelist, {
+      cat:"sc_cancel_reason",
+      halt:"F"
+    }).then(function (response) {
+      if (response.data.errorCode==='0') {
+        store.commit('setReasonList', response.data.basecodes)
       }
     })
   }
@@ -94,8 +113,14 @@ const mutations = {
   setEventlist (state, eventlist) {
     state.eventlist = eventlist
   },
+  setEventstas (state, eventstas) {
+    state.eventstas = eventstas
+  },
   setPlacelist (state, placelist) {
     state.placelist = placelist
+  },
+  setReasonList (state, reasonlist) {
+    state.reasonlist = reasonlist
   }
 }
 
