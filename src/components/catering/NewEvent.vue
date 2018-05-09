@@ -10,7 +10,7 @@
           <b-col sm="4" class="my-1"></b-col>
           <b-col sm="1" class="my-1 icondiv">
             <a>
-              <i v-b-toggle="'newevent'" v-show="toggleshow" @click="toggleclick" class="fa toggleclass" :class="toggleclass"></i>
+              <i v-b-toggle.newevent v-show="toggleshow" class="fa toggleclass" :class="toggleclass"></i>
             </a>
           </b-col>
         </b-row>
@@ -202,6 +202,9 @@
   import { mapGetters, mapMutations } from 'vuex'
   import 'font-awesome/css/font-awesome.css'
   import methodinfo from '../../config/MethodConst.js'
+  import {dateValid} from '../../common/date'
+  import eventMixin from '../../common/eventMixin'
+  //其他组件
   import FormatInput from '../FormatInput.vue'
   import MultiPlace from './MultiPlace.vue'
   import {TimePicker} from 'iview'
@@ -222,26 +225,22 @@
         stdunit:'',
         flagselected:[],
         flagoptions: [
-          { value: '1', text: '有噪音' },
-          { value: '2', text: '不计收入' },
-          { value: '3', text: '共享' }
+          { value: 'noise', text: '有噪音' },
+          { value: 'income', text: '不计收入' },
+          { value: 'share', text: '共享' }
         ],
         staoptions:[
           { code: 'Q', descript: '问询' },
           { code: '1', descript: '预订' }
         ],
-        timeoptions:[],
-        typeoptions:[],
-        priceoptions:[],
-        layoutoptions:[],
-        degreeoptions:[],
         toggleclass:'fa-chevron-up',
         isClear:false,
         priceread:true,
         editable:false,
         datepickerOptions: {
           disabledDate(time) {
-            return time.getTime() < Date.now();
+            let now =new Date(new Date() - 24 * 60 * 60 * 1000)
+            return time.getTime() <now;
           }
         }
       }
@@ -263,102 +262,107 @@
         'event'
       ])
     },
+    mixins: [eventMixin],
     created(){
-      //界面生成时加载数据
-      let degrees = this.degreeoptions;
-      let timeunits = this.timeoptions;
-      let lyaouts = this.layoutoptions;
-      let types = this.typeoptions;
-      let priceitems = this.priceoptions;
-
-      this.$store.dispatch('encrypttoken').then(() => {
-        this.$http.defaults.headers.common['username'] = this.$store.getters.username
-        this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-        this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-        this.$http.post(methodinfo.getbasecodelist, {
-          cat: 'sc_event_type'
-        }).then(function (response) {
-          if (response.data.errorCode==='0') {
-            for(let option of response.data.basecodes){
-              if(option.exts2==='0'){
-                option.cycle = '无'
-              }else if(option.exts2==='1'){
-                option.cycle = '月'
-              }else if(option.exts2==='2'){
-                option.cycle = '季'
-              }else if(option.exts2==='3'){
-                option.cycle = '半年'
-              }else if(option.exts2==='4'){
-                option.cycle = '年'
-              }
-              types.push(option)
-            }
-          }
-        })
-        this.$http.post(methodinfo.getbasecodelist, {
-          cat: 'sc_event_degree'
-        }).then(function (response) {
-          if (response.data.errorCode==='0') {
-            for(let option of response.data.basecodes){
-              degrees.push(option)
-            }
-          }
-        })
-        this.$http.post(methodinfo.getbasecodelist, {
-          cat: 'sc_time_unit'
-        }).then(function (response) {
-          if (response.data.errorCode==='0') {
-            for(let option of response.data.basecodes){
-              timeunits.push(option)
-            }
-          }
-        })
-        this.$http.post(methodinfo.getbasecodelist, {
-          cat: 'layout'
-        }).then(function (response) {
-          if (response.data.errorCode==='0') {
-            for(let option of response.data.basecodes){
-              lyaouts.push(option)
-            }
-          }
-        })
-        this.$http.post(methodinfo.getitemlist, {
-          type: '4'
-        }).then(function (response) {
-          if (response.data.errorCode==='0') {
-            for(let option of response.data.items){
-              priceitems.push(option)
-            }
-          }
-        })
-      })
+      if(this.catersta==='1'||this.catersta==='Q'){
+        this.$set(this.newEvent,'sta',this.catersta)
+      }
+      if(this.catersta==='2'){
+        this.staoptions.push({ code: '2', descript: '确认' });
+      }
     },
     methods: {
       eventCheck(catering){
-        let newEvent = this.newEvent;
-        if(newEvent.code||this.eventbdate[0]){
-          console.log(newEvent)
-          if(!newEvent.descript){
-            this.$alert("事务名称不允许为空!")
-          }else if(!newEvent.type){
-            this.$alert("事务类别不允许为空!")
-          }else if(!this.eventbdate[0]){
-            this.$alert("事务日期不允许为空!")
-          }else if(!this.eventtime[0]){
-            this.$alert("事务时间不允许为空!")
-          }else if(this.eventtime[0]===this.eventtime[1]){
-            this.$alert("事务开始时间和结束时间相同,请修改!")
-          }else if(!newEvent.sta){
-            this.$alert("事务状态不允许为空!")
-          }else if(!newEvent.code){
-            this.$alert("事务场地不允许为空!")
+        return new Promise((resolve, reject) => {
+          let _this=this;
+          let newEvent = this.newEvent;
+          if(newEvent.code||this.eventbdate[0]){
+            if(!newEvent.descript){
+              this.$alert("事务名称不允许为空!")
+              resolve(false)
+            }else if(!newEvent.type){
+              this.$alert("事务类别不允许为空!")
+              resolve(false)
+            }else if(!this.eventbdate[0]){
+              this.$alert("事务日期不允许为空!")
+              resolve(false)
+            }else if(!this.eventtime[0]){
+              this.$alert("事务时间不允许为空!")
+              resolve(false)
+            }else if(this.eventtime[0]===this.eventtime[1]){
+              this.$alert("事务开始时间和结束时间相同,请修改!")
+              resolve(false)
+            }else if(!newEvent.sta){
+              this.$alert("事务状态不允许为空!")
+              resolve(false)
+            }else if(!newEvent.code){
+              this.$alert("事务场地不允许为空!")
+              resolve(false)
+            }else if(!dateValid(this.eventbdate[1],catering.dep)){
+              this.$alert("事务日期不允许晚于宴会离开日期!")
+              resolve(false)
+            }
+            this.newEvent.begindate = this.eventbdate[0];
+            this.newEvent.enddate = this.eventbdate[1];
+            this.newEvent.begintime = this.eventtime[0];
+            this.newEvent.endtime = this.eventtime[1];
+            if(this.flagselected.indexOf('noise')>=0){
+              this.newEvent.flag2="T"
+            }else{
+              this.newEvent.flag2="F"
+            }
+            if(this.flagselected.indexOf('income')>=0){
+              this.newEvent.flag3="T"
+            }else{
+              this.newEvent.flag3="F"
+            }
+            if(this.flagselected.indexOf('share')>=0){
+              this.newEvent.share="T"
+            }else{
+              this.newEvent.share="F"
+            }
+            this.$store.dispatch('encrypttoken').then(() => {
+              this.$http.defaults.headers.common['username'] = this.$store.getters.username
+              this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+              this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+              this.$http.post(methodinfo.checkevent, newEvent).then(function (response) {
+                if (response.data.errorCode === '0') {
+                  resolve(true)
+                }else if(response.data.errorCode === '2000'){
+                  _this.$confirm(response.data.errorMessage).then(() =>{
+                    resolve(true)
+                  }).catch(() =>{
+                    resolve(false)
+                  })
+                }else{
+                  _this.$alert(response.data.errorMessage)
+                  resolve(false)
+                }
+              }).catch(function () {
+                resolve(false)
+              })
+            })
+          }else{
+            resolve(true)
           }
-        }else{
-          return true;
-        }
-        console.log(catering)
-        return false;
-
+        })
+      },
+      batchSaveEvent(caterid){
+        return new Promise((resolve, reject) => {
+          if(this.newEvent.code||this.eventbdate[0]){
+            let commitEvent = Object.assign({},this.newEvent)
+            commitEvent.caterid = caterid;
+            let eventplaces = this.newEvent.code.split(",");
+            for(let code of eventplaces){
+              console.log(code);
+              commitEvent.code = code;
+              this.$http.post(methodinfo.newbatchevent, commitEvent)
+            }
+            resolve()
+          }else{
+            resolve()
+          }
+        })
       },
       priceChange(val){
         for(let option of this.priceoptions){
@@ -388,14 +392,6 @@
           }
         }
       },
-      toggleclick(){
-        if(!this.eventshow){
-          this.toggleclass = "fa-chevron-down";
-        }else{
-          this.toggleclass = "fa-chevron-up";
-        }
-        this.eventshow=!this.eventshow;
-      },
       placeshow(){
         if(!this.isClear){
           this.$refs.multiplacemodal.show();
@@ -422,11 +418,13 @@
         this.$set(this.newEvent,'codedes',eventcodedes);
       }
     },
-
     components: {
       FormatInput,
       TimePicker,
       MultiPlace
+    },
+    watch:{
+
     }
   }
 </script>
@@ -473,6 +471,11 @@
     }
     .el-icon-date,.fa{
       color: #fcac6f;
+    }
+    .toggleclass{
+      float: right;
+      font-size: 20px;
+      cursor: pointer;
     }
     #eventmain{
       .fa{

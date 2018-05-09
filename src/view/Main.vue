@@ -41,6 +41,7 @@
           'margin-left':"150px"
         },
         screenHeight: document.body.clientHeight-105,//减去header的60px
+        isTabChange:false
       }
     },
     computed: {
@@ -65,6 +66,7 @@
         'delete_tabs'
       ]),
       tabClick: function () {
+        this.isTabChange = true;
         for (let option of this.mainRoutes) {
           if (option.name === this.activeIndex) {
             this.$router.push({path: option.route});
@@ -119,18 +121,20 @@
         if(to.name==='新建宴会问询'){
           this.$store.commit('setCatersta', 'Q');
         }else if(to.name==='新建宴会预订'){
-          this.$store.commit('setCatersta', 'R');
+          this.$store.commit('setCatersta', '1');
         }
 
-        if(to.path.indexOf("/catering/")>0){
-          let index = 0;
-          for (let option of this.mainRoutes) {
-            if (option.name === this.activeIndex) {
-              break;
+        if(!this.isTabChange){
+          if(to.path.indexOf("/catering/")>0){
+            let index = 0;
+            for (let option of this.mainRoutes) {
+              if (option.name === this.activeIndex) {
+                break;
+              }
+              index++;
             }
-            index++;
+            this.$store.commit('delete_tabs', index);
           }
-          this.$store.commit('delete_tabs', index);
         }
 
         let flag = false;
@@ -148,6 +152,7 @@
             this.$store.commit('set_active_index', to.name);
           })
         }
+        this.isTabChange = false;
       }
     },
     components: {
