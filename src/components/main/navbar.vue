@@ -96,6 +96,17 @@
 
     <b-modal id="aboutmodal" ref="aboutmodal" title="关于西软云宴会销售系统" hide-footer>
       <b-container fluid>
+        <div>
+          <p class="p-style version"><strong>Ver 1.2.0</strong></p>
+          <p class="p-style font">本产品使用权属于：</p>
+          <p class="p-style">{{hotel.descript}}</p>
+          <p class="p-style">本软件为杭州西软信息技术有限公司所有，受到著作权法和国际公约的保护。未经杭州西软信息技术有限公司许可，任何单位及个人均不得复制、传播本程序的部分或全部，否则可能遭到严厉的法律诉讼及制裁。</p>
+          <p class="p-style">请访问我们的网站，他将提供给您最新的软件版本信息，和周到的用户服务！</p>
+          <p class="p-style">Copyright@   1993-2018 杭州西软信息技术有限公司</p>
+          <p class="p-style">杭州文一西路1218号恒生科技园28号楼 0571-88231188</p>
+          <p class="p-style"><a href="http://www.foxhis.com">http://www.foxhis.com</a></p>
+          <p class="p-style">保持联系，携手共进。</p>
+        </div>
       </b-container>
     </b-modal>
   </div>

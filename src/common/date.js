@@ -1,4 +1,4 @@
-export default function formatDate (date, fmt) {
+export function formatDate (date, fmt) {
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
   }
@@ -16,6 +16,13 @@ export default function formatDate (date, fmt) {
     }
   }
   return fmt
+}
+
+export function dateValid(begindate,enddate) {
+
+  let begin = new Date(begindate.replace(/-/g,"/"));
+  let end = new Date(enddate.replace(/-/g,"/"));
+  return begin <= end;
 }
 
 function padLeftZero (str) {

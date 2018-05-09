@@ -4,6 +4,7 @@
       id = "eventtable"
       ref = "eventtable"
       :row-key="getRowKeys"
+      :expand-row-keys="expandRows"
       @expand-change = "expandChange"
       :data="eventlist"
       border
@@ -24,9 +25,9 @@
                   <el-select v-model="expandevent.type">
                     <el-option
                       v-for="item in typeoptions"
-                      :key="item.value"
-                      :label="item.text"
-                      :value="item.value">
+                      :key="item.code"
+                      :label="item.descript"
+                      :value="item.code">
                     </el-option>
                   </el-select>
                 </b-form-group>
@@ -38,6 +39,7 @@
                     v-model="expandevent.bdate"
                     value-format="yyyy-MM-dd"
                     type="date"
+                    :clearable="editable"
                     :editable="editable"
                     :picker-options="datepickerOptions">
                   </el-date-picker>
@@ -46,12 +48,12 @@
               <b-col class="main-col4">
                 <b-form-group label="时段|" :label-cols="2" horizontal>
                   <TimePicker :steps="[1, 10, 15]" v-model="eventtime" format="HH:mm" type="timerange"></TimePicker>
-                  <el-select v-model="stdunit" class="timeselect">
+                  <el-select v-model="stdunit" class="timeselect" @change="timeChange">
                     <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.text"
-                      :value="item.value">
+                      v-for="item in timeoptions"
+                      :key="item.code"
+                      :label="item.descript"
+                      :value="item.code">
                     </el-option>
                   </el-select>
                 </b-form-group>
@@ -61,17 +63,17 @@
                   <el-select v-model="expandevent.sta">
                     <el-option
                       v-for="item in staoptions"
-                      :key="item.value"
-                      :label="item.text"
-                      :value="item.value">
+                      :key="item.code"
+                      :label="item.descript"
+                      :value="item.code">
                     </el-option>
                   </el-select>
                 </b-form-group>
               </b-col>
               <b-col class="main-col3">
                 <b-form-group label="场地|" horizontal>
-                  <el-input class="modalinput" clearable readonly v-model="expandevent.codedes">
-                    <i slot="suffix" class="fa fa-list"></i>
+                  <el-input @click.native="placeshow" class="modalinput" readonly v-model="expandevent.codedes">
+                    <i slot="suffix" @click="placeClear" class="fa fa-list"></i>
                   </el-input>
                 </b-form-group>
               </b-col>
@@ -86,12 +88,14 @@
                         <b-form inline>
                           <b-form-input v-model="expandevent.price" class="priceinput" type="text"></b-form-input>
                           <span class="input-separator">/</span>
-                          <el-select v-model="expandevent.id" class="priceselect">
+                          <el-select @change="priceChange" v-model="expandevent.unit" class="priceselect">
                             <el-option
                               v-for="item in priceoptions"
-                              :key="item.value"
-                              :label="item.text"
-                              :value="item.value">
+                              :key="item.code"
+                              :label="item.descript"
+                              :value="item.code">
+                              <span style="float: left">{{ item.descript }}</span>
+                              <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.price }}</span>
                             </el-option>
                           </el-select>
                         </b-form>
@@ -122,9 +126,9 @@
                         <el-select class="sub-select" v-model="expandevent.layout">
                           <el-option
                             v-for="item in layoutoptions"
-                            :key="item.value"
-                            :label="item.text"
-                            :value="item.value">
+                            :key="item.code"
+                            :label="item.descript"
+                            :value="item.code">
                           </el-option>
                         </el-select>
                       </b-form-group>
@@ -143,9 +147,9 @@
                         <el-select class="sub-select" v-model="expandevent.degree">
                           <el-option
                             v-for="item in degreeoptions"
-                            :key="item.value"
-                            :label="item.text"
-                            :value="item.value">
+                            :key="item.code"
+                            :label="item.descript"
+                            :value="item.code">
                           </el-option>
                         </el-select>
                       </b-form-group>
@@ -177,10 +181,10 @@
               </b-col>
               <b-col sm="2" class="checkcol">
                 <b-form-group class="checkgroup">
-                  <b-form-checkbox-group stacked v-model="selected" :options="options">
+                  <b-form-checkbox-group stacked v-model="flagselected" :options="flagoptions">
                   </b-form-checkbox-group>
                 </b-form-group>
-                <b-button size="mini" @click="deleteempno()">完成</b-button>
+                <b-button size="mini" @click="checkEvent()" v-show="eventEditable">完成</b-button>
               </b-col>
             </b-row>
           </div>
@@ -197,7 +201,10 @@
       </el-table-column>
       <el-table-column label="操作" width="160">
         <template slot-scope="scope">
-          <b-button size="mini" type="danger" @click="deleteempno()">删除</b-button>
+          <b-button size="mini" class="Item-button image-btn" type="danger" ></b-button>
+          <b-button size="mini" class="Synchronization-button image-btn" type="danger" ></b-button>
+          <b-button size="mini" class="Journal-button image-btn" type="danger" ></b-button>
+          <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="cancelEvent(scope.row)"></b-button>
         </template>
       </el-table-column>
       <template slot="append">
@@ -207,6 +214,10 @@
         </b-row>
       </template>
     </el-table>
+
+    <b-modal id="singleplacemodal" ref="singleplacemodal" title="场地列表" size="lg" hide-footer>
+      <SinglePlace ref="SinglePlace" @placeConfirm="placeConfirm" :eventbdate="expandevent.bdate"></SinglePlace>
+    </b-modal>
 
     <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
     </b-modal>
@@ -219,79 +230,236 @@
   import { mapGetters, mapMutations } from 'vuex'
   import 'font-awesome/css/font-awesome.css'
   import methodinfo from '../../config/MethodConst.js'
+  import eventMixin from '../../common/eventMixin'
+  import {dateValid,formatDate} from '../../common/date'
+  //其他组件
   import FormatInput from '../FormatInput.vue'
+  import SinglePlace from './SinglePlace.vue'
   import {TimePicker} from 'iview'
   import sysLog from  '../../components/syslog.vue'
+  import '../../css/imgbtn.scss'
   import '../../css/iviewpicker.css'
   Vue.use(TimePicker)
 
   const fildes = [
     {  prop: 'eventid', label:  '事务ID',width:'160',sortable:true,"classname":"text-center" },
     {  prop: 'descript', label:  '事务名称',width:'',sortable:true,showTip:true},
+    {  prop: 'stades', label:  '状态',width:'75',sortable:true,showTip:true,"classname":"text-center"},
     {  prop: 'codedes', label:  '场地',width:'120',sortable:true,showTip:true,"classname":"text-center" },
     {  prop: 'bdate', label:  '日期',width:'100',sortable:true ,"classname":"text-center"},
     {  prop: 'begintime', label:  '开始',width:'75',sortable:true ,"classname":"text-center"},
     {  prop: 'endtime', label:  '结束',width:'75',sortable:true,"classname":"text-center" },
     {  prop: 'attnum', label:  '人数',width:'75',sortable:true,"classname":"text-right" },
-    {  prop: 'income', label:  '预测收入',width:'110',sortable:true ,"classname":"text-right"}
+    {  prop: 'income', label:  '预测收入',width:'100',sortable:true ,"classname":"text-right"}
   ]
 
   export default {
     data () {
       return {
         fildes :fildes,
-        expands:'',
+        expandRows:[],
         expandevent:{},
         eventtime:[],
         eventflags:[],
         stdunit:'',
         staoptions:[
-          { value: '1', text: '预订' },
-          { value: '2', text: '确认' },
-          { value: '3', text: '登记' }
+          { code: '1', descript: '预订' }
         ],
-        typeoptions:[
-
-        ],
-        options: [
-          { value: '1', text: '有噪音' },
-          { value: '2', text: '不计收入' },
-          { value: '3', text: '共享' }
+        flagselected:[],
+        flagoptions: [
+          { value: 'noise', text: '有噪音' },
+          { value: 'income', text: '不计收入' },
+          { value: 'share', text: '共享' }
         ],
         // 获取row的key值
         getRowKeys(row) {
           return row.eventid;
+        },
+        isClear:false,
+        editable:false,
+        eventEditable:true,
+        datepickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now();
+          }
         }
       }
+    },
+    mounted(){
+      console.log(this.degreeoptions)
     },
     computed: {
       ...mapGetters([
         'caterid',
+        'catering',
         'eventlist'
       ])
     },
+    mixins: [eventMixin],
     methods: {
-      deleteempno:function (row) {
-        this.$confirm("是否要删除该员工信息？","提示")
+      checkEvent(){
+        if(!this.expandevent.descript){
+          this.$alert("事务名称不允许为空!")
+        }else if(this.eventtime[0]===this.eventtime[1]){
+          this.$alert("事务开始时间和结束时间相同,请修改!")
+        }else if(!dateValid(this.expandevent.bdate,this.catering.dep)){
+          this.$alert("事务日期不允许晚于宴会离开日期!")
+        }else{
+          this.expandevent.begintime = this.eventtime[0];
+          this.expandevent.endtime = this.eventtime[1];
+          if(this.flagselected.indexOf('noise')>=0){
+            this.expandevent.flag2="T"
+          }else{
+            this.expandevent.flag2="F"
+          }
+          if(this.flagselected.indexOf('income')>=0){
+            this.expandevent.flag3="T"
+          }else{
+            this.expandevent.flag3="F"
+          }
+          if(this.flagselected.indexOf('share')>=0){
+            this.expandevent.share="T"
+          }else{
+            this.expandevent.share="F"
+          }
+          let event = this.expandevent;
+          event.begindate = event.bdate;
+          event.enddate = event.bdate;
+          let _this=this;
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+            this.$http.post(methodinfo.checkevent, event).then(function (response) {
+              if (response.data.errorCode === '0') {
+                _this.updateEvent();
+              }else if(response.data.errorCode === '2000'){
+                _this.$confirm(response.data.errorMessage).then(() =>{
+                  _this.updateEvent();
+                })
+              }else{
+                _this.$alert(response.data.errorMessage)
+              }
+            }).catch(function () {
+              _this.$alert("事务校验请求异常!")
+            })
+          })
+        }
       },
-      expandChange:function (row, expandedRows) {
-        this.eventtime.push(row.begintime,row.endtime)
+      updateEvent(){
+        let _this=this;
+        this.$http.defaults.headers.common['username'] = this.$store.getters.username
+        this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+        this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+        this.$http.post(methodinfo.updateevent, this.expandevent).then(function (response) {
+          if (response.data.errorCode === '0') {
+            _this.$message('事务保存成功')
+            _this.$store.dispatch("getEventList")
+            _this.$refs.eventtable.toggleRowExpansion(_this.expandevent);
+          }
+        })
+      },
+      cancelEvent(row){
+        let now = new Date(new Date() - 24 * 60 * 60 * 1000);
+        let eventdate = new Date(row.bdate.replace(/-/g,"/"));
+        if(now >eventdate){
+          this.$alert('本日之前的事务不允许取消!')
+        }else{
+          this.$confirm("是否要取消所选事务?","提示").then(()=>{
+          }).catch(()=>{
+
+          })
+        }
+      },
+      eventCanEdit(){
+        let now = new Date(new Date() - 24 * 60 * 60 * 1000);
+        let eventdate = new Date(this.expandevent.bdate.replace(/-/g,"/"));
+
+        this.eventEditable =now <=eventdate;
+      },
+      expandChange:function (row,expandRows) {
+        this.eventtime=[];
+        this.eventtime.push(row.begintime,row.endtime);
+        this.flagselected = [];
         this.expandevent=Object.assign({},row);
-        if(expandedRows.length>1){
-          let index = 0;
-          for (let expandrow of expandedRows) {
-            if (expandrow.eventid !== row.eventid) {
-              expandedRows.splice(index, 1);
-            }
-            index++;
+        if(this.expandevent.flag2==='T'){
+          this.flagselected.push("noise")
+        }
+        if(this.expandevent.flag3==='T'){
+          this.flagselected.push("income")
+        }
+        if(this.expandevent.share==='T'){
+          this.flagselected.push("share")
+        }
+
+        this.eventCanEdit();
+
+        this.expandRows=[];
+        if(expandRows.length>0){
+          this.expandRows.push(row.eventid);
+        }
+        this.$refs.SinglePlace.resetPlace(this.expandevent.code);
+        if(this.expandevent.sta==="W"){
+          this.staoptions = [{ code: '1', descript: '预订' },{ code: 'W', descript: '候补' }];
+        }else if(this.expandevent.sta==="2"){
+          this.staoptions = [{ code: '1', descript: '预订' },{ code: '2', descript: '确认' }];
+        }else if(this.expandevent.sta==="3"){
+          this.staoptions = [{ code: '3', descript: '登记' }];
+        }else if(this.expandevent.sta==="0"){
+          this.staoptions = [{ code: '1', descript: '预订' },{ code: '0', descript: '取消' }];
+        }else{
+          this.staoptions = [{ code: '1', descript: '预订' }];
+        }
+      },
+      priceChange(val){
+        for(let option of this.priceoptions){
+          if(option.code===val){
+            this.priceread = option.price !== 0.00;
+            this.expandevent.price = option.price;
+            this.expandevent.id = option.id;
+            this.expandevent.unit = option.descript;
+            return;
           }
         }
+      },
+      timeChange(val){
+        for(let option of this.timeoptions){
+          if(option.code===val){
+            if(option.exts1){
+              this.$set(this.eventtime,0,option.exts1)
+            }else{
+              this.$set(this.eventtime,0,'00:00')
+            }
+            if(option.exts2){
+              this.$set(this.eventtime,1,option.exts2)
+            }else{
+              this.$set(this.eventtime,1,'00:00')
+            }
+            return;
+          }
+        }
+      },
+      placeshow(){
+        if(!this.isClear){
+          this.$refs.singleplacemodal.show();
+        }else{
+          this.isClear =false;
+        }
+      },
+      placeClear(){
+        this.isClear = true;
+        this.$refs.SinglePlace.clearSelect();
+      },
+      placeConfirm(currentRow){
+        this.$set(this.expandevent,'code',currentRow.tableno);
+        this.$set(this.expandevent,'codedes',currentRow.descript);
       }
     },
     components: {
       sysLog,
       FormatInput,
-      TimePicker
+      TimePicker,
+      SinglePlace
     }
   }
 </script>
@@ -303,9 +471,6 @@
     }
     .el-date-editor .el-range-separator{
       padding: 0;
-    }
-    .btn{
-      width: 100px;
     }
     .el-input__inner{
       height: 36px;
@@ -397,9 +562,6 @@
           .col-form-label{
             padding-left: 5px;
             padding-right: 0;
-          }
-          input{
-            height: 31.5px;
           }
         }
       }

@@ -40,11 +40,6 @@ const actions = {
           if (response.data.errorCode==='0') {
             store.commit('setCatering', response.data)
             let sta = response.data.sta;
-            if(sta==="1"){
-              sta="R"
-            }else if(sta==="2"){
-              sta="C"
-            }
             store.commit('setCatersta', sta)
             resolve();
           }else{
@@ -62,7 +57,8 @@ const actions = {
     axiosinstance.defaults.headers.common['signature'] = store.getters.signature
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
     axiosinstance.post(methodinfo.geteventlist, {
-      caterid: state.caterid
+      caterid: state.caterid,
+      sta:'1,2,I,W,Q'
     }).then(function (response) {
       if (response.data.errorCode==='0') {
         store.commit('setEventlist', response.data.events)
@@ -89,6 +85,7 @@ const mutations = {
     state.caterid = caterid
   },
   setCatersta (state, catersta) {
+    console.log(catersta)
     state.catersta = catersta
   },
   setCatering (state, catering) {

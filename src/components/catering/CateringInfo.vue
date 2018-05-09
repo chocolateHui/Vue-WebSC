@@ -19,7 +19,7 @@
         <b-row id="catermain">
           <b-col sm="1" class="my-1">
             <div class="Sta">
-              <label class="StaFont">{{catersta}}</label>
+              <label class="StaFont">{{staFont}}</label>
             </div>
           </b-col>
           <b-col sm="3" class="my-1">
@@ -68,7 +68,7 @@
                 <FormatInput type="number" maxlength="15" v-model="localcatering.contact_mobile"></FormatInput>
               </b-form-group>
               <b-form-group label="宴会类型:" horizontal>
-                <el-select v-model="localcatering.cater_type" placeholder="请选择">
+                <el-select v-model="localcatering.type" placeholder="请选择">
                   <el-option
                     v-for="item in typeOptions"
                     :key="item.code"
@@ -82,11 +82,14 @@
           <b-col sm="2" class="my-1">
             <div class="btndiv" v-if="!isNew">
               <div>
-                <b-button class="confirmbtn">确认</b-button>
-                <b-button class="cancelbtn">取消</b-button>
+                <transition mode="out-in">
+                  <b-button v-if="catersta==='Q'||catersta==='0'" key="reserve" class="reservebtn" @click="updateCatering('1')">预订</b-button>
+                  <b-button v-if="catersta==='1'" key="confirm" class="confirmbtn" @click="updateCatering('2')">确认</b-button>
+                </transition>
+                <b-button class="cancelbtn" :class="cancelWidth" @click="cancelCatering">取消</b-button>
               </div>
               <div>
-                <b-button class="savebtn">保存</b-button>
+                <b-button class="savebtn" @click="updateCatering">保存</b-button>
               </div>
             </div>
             <div class="btndiv" v-if="isNew">
@@ -154,22 +157,22 @@
   import { mapGetters, mapMutations } from 'vuex'
   import 'font-awesome/css/font-awesome.css'
   import methodinfo from '../../config/MethodConst.js'
-  import FormatInput from '../FormatInput.vue'
+  import {dateValid,formatDate} from '../../common/date'
+
   // 组件和参数
+  import FormatInput from '../FormatInput.vue'
 
   export default {
     name: 'CateringInfo',
     data () {
       return {
+        staFont:'R',
         caterdate:[],
         toggleclass:'fa-chevron-up',
         caterclose:false,
         editable:false,
-        localcatering:{},
-        datepickerOptions: {
-          disabledDate(time) {
-            return time.getTime() < Date.now();
-          }
+        localcatering:{
+          type:'1'
         },
         //宴会类型
         typeOptions: [
@@ -179,8 +182,7 @@
           { code: '4', descript: '其他' }
         ],
         //销售员列表
-        saleoptions:[
-        ]
+        saleoptions:[]
       }
     },
     props:{
@@ -195,7 +197,26 @@
         'catersta',
         'saleid',
         "catering"
-      ])
+      ]),
+      minDate() {
+        if(!this.isNew){
+          return new Date(this.localcatering.arr.replace(/-/g,"/"));
+        }else{
+          return new Date(new Date() - 24 * 60 * 60 * 1000)
+        }
+      },
+      datepickerOptions() {
+       return {
+         disabledDate:this.getDisableDate
+       }
+      },
+      cancelWidth(){
+        if(this.catersta==="2"){
+          return "maxbtnwidth";
+        }else{
+          return "cancelwidth";
+        }
+      }
     },
     methods: {
       saveCatering(){
@@ -206,7 +227,23 @@
           this.$alert("抵离日期不允许为空!")
           return;
         }
+        this.localcatering.sta = this.catersta;
+        this.localcatering.arr = this.caterdate[0];
+        this.localcatering.dep = this.caterdate[1];
         this.$emit('saveCatering',this.localcatering);
+      },
+      updateCatering(sta){
+        if(sta){
+          this.localcatering.sta = sta;
+          this.$store.commit("setCatersta",sta);
+        }
+        console.log(this.localcatering)
+      },
+      cancelCatering(){
+        this.$store.commit("setCatersta","0");
+      },
+      getDisableDate(time){
+        return time<this.minDate;
       },
       toggleclick(){
         if(!this.caterclose){
@@ -215,20 +252,42 @@
           this.toggleclass = "fa-chevron-up";
         }
         this.caterclose=!this.caterclose;
+      },
+      getStaFont(){
+        let val = this.catersta;
+        if(val==='1'){
+          this.staFont='R';
+        } else if(val==='2'){
+          this.staFont='C';
+        } else if(val==='3'){
+          this.staFont = "I";
+        } else if(val==='0'){
+          this.staFont = "X";
+        } else if(val==='Q'){
+          this.staFont = val;
+        } else{
+          this.staFont = val;
+        }
       }
     },
     components: {
       FormatInput
     },
     mounted(){
+      this.getStaFont();
     },
     watch: {
       catering(val,oldval){
-        if(val){
-          this.localcatering = Object.assign({},val);
-          this.caterdate = [];
-          this.caterdate.push(val.arr,val.dep)
+        if(!this.isNew){
+          if(val){
+            this.localcatering = Object.assign({},val);
+            this.caterdate = [];
+            this.caterdate.push(val.arr,val.dep)
+          }
         }
+      },
+      catersta(val,oldval){
+        this.getStaFont();
       }
     }
   }
@@ -334,13 +393,26 @@
       .btndiv{
         padding: 5px 0;
       }
+      .reservebtn{
+        width: 48.5%;
+        background-color: #FFB752;
+      }
       .confirmbtn{
         width: 48.5%;
         background-color: #FFB752;
       }
-      .cancelbtn{
+      .cancelwidth{
         width: 48.5%;
+      }
+      .maxbtnwidth{
+        width: 99%;
+      }
+      .cancelbtn{
         background-color: #2EC5FA;
+        transition:width 1s;
+        -moz-transition:width 1s; /* Firefox 4 */
+        -webkit-transition:width 1s; /* Safari and Chrome */
+        -o-transition:width 1s; /* Opera */
       }
       .savebtn {
         width: 99%;

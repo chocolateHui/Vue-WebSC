@@ -73,7 +73,6 @@
         pageChange:false,
         isunuse:false,
         usebtndes:'查看空闲场地',
-        eloptions: [],
         currentplace:'',
         currentselect:[],
         allselect:[],

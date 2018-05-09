@@ -45,10 +45,7 @@
       },
       getEvnetList(){
         this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch("getEventList").then(() => {
-          }).catch(function (errorMessage) {
-            this.$alert(errorMessage, "异常提示")
-          })
+          this.$store.dispatch("getEventList");
           this.$store.dispatch("getPlacelist");
         });
       }

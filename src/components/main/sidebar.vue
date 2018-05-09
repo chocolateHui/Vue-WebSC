@@ -29,7 +29,7 @@
   import 'font-awesome/css/font-awesome.css'
   import calendar from './calendar.vue'
   import calendarjs from './calendar'
-  import formatDate from '../../common/date'
+  import {formatDate} from '../../common/date'
   // 组件和参数
 
   export default {
@@ -101,13 +101,13 @@
       this.lunardate = lunarinfo.IMonthCn+lunarinfo.IDayCn
       // 刷新时以当前路由做为tab加入tabs
       if (this.$route.path !== '/main') {
+        if(this.$route.name==='新建宴会问询'){
+          this.$store.commit('setCatersta', 'Q');
+        }else if(this.$route.name==='新建宴会预订'){
+          this.$store.commit('setCatersta', '1');
+        }
         this.$store.commit('add_tabs', {route: this.$route.path , name: this.$route.name });
         this.$nextTick(function(){
-          if(this.$route.name==='新建宴会问询'){
-            this.$store.commit('setCatersta', 'Q');
-          }else if(this.$route.name==='新建宴会预订'){
-            this.$store.commit('setCatersta', 'R');
-          }
           this.$store.commit('set_active_index', this.$route.name);
         })
       } else {
