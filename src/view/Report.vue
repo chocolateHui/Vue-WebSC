@@ -20,8 +20,6 @@
           { route: '/main/lostreport', title: '订单流失统计',descript:"宴会预订列表"},
           { route: '/main/newQuery', title: '分类预测汇总报表',descript:"新建宴会问询"},
           { route: '/main/newReserve', title: '分类预测明细表',descript:"新建宴会预订"},
-          { route: '/main/placeDistribution', title: '场地利用率分析',descript:"宴会场地分布"},
-          { route: '/main/placeDistribution', title: '场地利用率分析',descript:"宴会场地分布"},
           { route: '/main/placeDistribution', title: '场地利用率分析',descript:"宴会场地分布"}
         ]
       };
