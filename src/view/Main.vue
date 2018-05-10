@@ -165,7 +165,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss"  type="text/scss">
   #scmain{
     height: calc(100%);
     #tab-首页{
