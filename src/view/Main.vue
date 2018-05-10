@@ -1,6 +1,6 @@
 <template>
   <div id="scmain">
-    <navbar></navbar>
+    <navbar @screenChange = "screenChange"></navbar>
     <sidebar @barclose="barclose"></sidebar>
     <div :style="mainstyle">
       <el-tabs v-model="activeIndex" type="card" closable @tab-click="tabClick" @tab-remove="tabRemove">
@@ -110,6 +110,10 @@
             'margin-left':"50px"
           }
         }
+      },
+      screenChange(){
+        this.screenHeight = document.body.clientHeight-105
+        console.log(this.screenHeight)
       }
     },
     watch: {

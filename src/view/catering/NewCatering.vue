@@ -25,7 +25,10 @@
       NewEvent
     },
     created(){
-
+      console.log(new Date().getTime())
+    },
+    mounted(){
+      console.log(new Date().getTime())
     },
     methods: {
       saveCatering(localcatering){

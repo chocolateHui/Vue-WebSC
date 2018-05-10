@@ -556,13 +556,13 @@
         padding-top: calc(0.375rem + 2px);
       }
       .numinput{
-        width: 12%;
+        flex:0 0 12%;
         div{
           padding: 0;
         }
       }
       .normalput {
-        width: 19%;
+        flex:0 0 19%;
         div {
           padding: 0;
         }

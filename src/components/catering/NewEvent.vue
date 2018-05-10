@@ -259,7 +259,8 @@
       ...mapGetters([
         'caterid',
         'catersta',
-        'catering'
+        'catering',
+        'defaulttype'
       ])
     },
     mixins: [eventMixin],
@@ -444,7 +445,12 @@
       },
       catering(val,oldval){
         if(val){
-          this.newEvent.descript = val.name;
+          this.$set(this.newEvent,'descript',val.name)
+        }
+      },
+      defaulttype(val){
+        if(val){
+          this.$set(this.newEvent,'type',val)
         }
       }
     }

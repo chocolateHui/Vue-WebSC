@@ -10,6 +10,7 @@ const state = {
   catersta: 'Q',
   catering: {},
   eventlist: [],
+  defaulttype: '',
   eventstas: '1,2,3,W,Q',
   roomlist: [],
   placelist: [],
@@ -25,6 +26,8 @@ const getters = {
   catering: state => state.catering,
 
   eventlist: state => state.eventlist,
+
+  defaulttype: state => state.defaulttype,
 
   eventstas: state => state.eventstas,
 
@@ -69,7 +72,9 @@ const actions = {
       sta: state.eventstas
     }).then(function (response) {
       if (response.data.errorCode === '0') {
-        store.commit('setEventlist', response.data.events)
+        let events = response.data.events
+        store.commit('setEventlist', events)
+        store.commit('setDefaulttype', events[events.length - 1].type)
       }
     })
   },
@@ -128,6 +133,9 @@ const mutations = {
   },
   setEventlist (state, eventlist) {
     state.eventlist = eventlist
+  },
+  setDefaulttype (state, defaulttype) {
+    state.defaulttype = defaulttype
   },
   setEventstas (state, eventstas) {
     state.eventstas = eventstas
