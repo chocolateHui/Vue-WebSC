@@ -3,14 +3,10 @@
   <div id="CaterListpanel" class="router-template2">
     <div class="template-wrap2" >
       <el-tabs type="border-card" class="width100 height100" @tab-click="tabClick">
-
-
         <el-tab-pane label="当前宴会订单">
-
           <b-row>
             <b-col>
               <b-form inline>
-
                 <b-form-checkbox v-model="allSelected"
                                  :indeterminate="indeterminate"
                                  aria-describedby="flavours"
@@ -148,20 +144,16 @@
                 </el-option>
               </el-select>
           </span>
-
         </el-tab-pane>
-
       </el-tabs>
-
     </div>
   </div>
 </template>
 
 <script>
-  import {datevalid}  from '../common/date.js'
+  import {dateValid}  from '../common/date.js'
   import methodinfo from '../config/MethodConst.js'
   import 'font-awesome/css/font-awesome.css'
-
 
   const fildes = [
     {  prop: 'caterid', label:  '账号',width:'160',sortable:true,showTip: true},
@@ -239,14 +231,14 @@
       },
       tabClick(targetName) {
         console.log(targetName.paneName);
-        if(targetName.paneName=="0"){
+        if(targetName.paneName==="0"){
           if(this.ishistory==="H"){
             this.timechose = "";
           }
           this.gettable1data();
           this.ishistory="";
         }
-        if(targetName.paneName=="1"){
+        if(targetName.paneName==="1"){
           if(this.ishistory===""){
             this.timechose = "";
           }
@@ -256,12 +248,12 @@
 
       },
       gettable1data(){
-        var sta = this.selected.slice(0).toString();
+        let sta = this.selected.slice(0).toString();
         this.getNowcateringlist(sta);
 
       },
       getHtable1data(){
-        var sta = this.Hselected.slice(0).toString();
+        let sta = this.Hselected.slice(0).toString();
         this.getHcateringlist(sta);
 
       },
@@ -275,9 +267,9 @@
           }).then((response)=> {
             if (response.status === 200) {
               this.HtableData = [];
-              if(typeof(response.data.caterings) != "undefined"){
+              if(typeof(response.data.caterings) !== "undefined"){
                 for(let caterings of response.data.caterings){
-                  var types = {};
+                  let types = {};
                   types["caterid"]=caterings.caterid;
                   types["name"]=caterings.name;
                   types["stades"]=caterings.stades;
@@ -307,9 +299,9 @@
           }).then((response)=> {
             if (response.status === 200) {
               this.tableData = [];
-              if(typeof(response.data.caterings) != "undefined"){
+              if(typeof(response.data.caterings) !== "undefined"){
                 for(let caterings of response.data.caterings){
-                  var types = {};
+                  let types = {};
                   types["caterid"]=caterings.caterid;
                   types["name"]=caterings.name;
                   types["stades"]=caterings.stades;
@@ -336,15 +328,15 @@
           return this.tableData;
         }else{
           return this.tableData.filter( tableData => {
-            var btime = this.timechose.slice(0)[0];
-            var etime = this.timechose.slice(0)[1];
-            if(this.arrdep=="1"){
-              if (datevalid(btime,tableData.arr)&&datevalid(tableData.arr,etime)){
+            let btime = this.timechose.slice(0)[0];
+            let etime = this.timechose.slice(0)[1];
+            if(this.arrdep==="1"){
+              if (dateValid(btime,tableData.arr)&&dateValid(tableData.arr,etime)){
                 return tableData;
               }
             }
             else{
-              if (datevalid(btime,tableData.dep)&&datevalid(tableData.dep,etime)){
+              if (dateValid(btime,tableData.dep)&&dateValid(tableData.dep,etime)){
                 return tableData;
               }
             }
@@ -356,15 +348,15 @@
           return this.HtableData;
         }else{
           return this.HtableData.filter( HtableData => {
-            var btime = this.timechose.slice(0)[0];
-            var etime = this.timechose.slice(0)[1];
-            if(this.arrdep=="1"){
-              if (datevalid(btime,HtableData.arr)&&datevalid(HtableData.arr,etime)){
+            let btime = this.timechose.slice(0)[0];
+            let etime = this.timechose.slice(0)[1];
+            if(this.arrdep==="1"){
+              if (dateValid(btime,HtableData.arr)&&dateValid(HtableData.arr,etime)){
                 return HtableData;
               }
             }
             else{
-              if (datevalid(btime,HtableData.dep)&&datevalid(HtableData.dep,etime)){
+              if (dateValid(btime,HtableData.dep)&&dateValid(HtableData.dep,etime)){
                 return HtableData;
               }
             }
@@ -384,7 +376,7 @@
           this.indeterminate = true
           this.allSelected = false
         }
-        var sta = newVal.slice(0).toString();
+        let sta = newVal.slice(0).toString();
         this.timechose = "";
         this.getNowcateringlist(sta);
 
@@ -400,12 +392,10 @@
           this.Hindeterminate = true
           this.HallSelected = false
         }
-        console.log(newVal);
-        var sta = newVal.slice(0).toString();
+        let sta = newVal.slice(0).toString();
         this.getHcateringlist(sta);
       }
     }
-
 
   }
 </script>

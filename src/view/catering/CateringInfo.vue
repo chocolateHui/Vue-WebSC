@@ -8,7 +8,7 @@
         <EventList :caterid="caterid"></EventList>
       </el-tab-pane>
       <el-tab-pane label="客房预留">
-        <EventList :caterid="caterid"></EventList>
+        <RoomInfo :caterid="caterid"></RoomInfo>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -21,6 +21,7 @@
   import CateringInfo from '../../components/catering/CateringInfo.vue'
   import NewEvent from '../../components/catering/NewEvent.vue'
   import EventList from '../../components/catering/EventList.vue'
+  import RoomInfo from '../../components/catering/RoomInfo.vue'
   import '../../css/font.scss'
 
   export default {
@@ -34,7 +35,8 @@
     components: {
       CateringInfo,
       NewEvent,
-      EventList
+      EventList,
+      RoomInfo
     },
     methods: {
       getCateringData(){
@@ -50,6 +52,7 @@
       getEvnetList(){
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch("getEventList");
+          this.$store.dispatch("getRoomList");
           this.$store.dispatch("getPlacelist");
           this.$store.dispatch("getReasonList");
         });

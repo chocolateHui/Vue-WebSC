@@ -1,6 +1,6 @@
 <template>
   <b-container fluid>
-    <b-collapse v-show="eventshow" id="newevent">
+    <b-collapse visible  v-show="eventshow" id="newevent">
       <b-card header-tag="header">
         <b-row slot="header">
           <b-col sm="1" class="my-1 eventtitle">

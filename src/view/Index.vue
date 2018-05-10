@@ -165,8 +165,6 @@
   import methodinfo from '../config/MethodConst.js'
   import 'font-awesome/css/font-awesome.css'
 
-
-
   export default {
 
     data () {
@@ -184,7 +182,6 @@
       }
     },
     mounted() {
-
 
       this.getlinedata();
       this.getpiedata();
@@ -562,8 +559,6 @@
         this.gettable3data();
       }
     }
-
-
 
   }
 </script>

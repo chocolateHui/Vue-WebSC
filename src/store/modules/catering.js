@@ -7,12 +7,13 @@ import axiosinstance from '../../common/axiosinstance'
 // initial state
 const state = {
   caterid: '',
-  catersta:'Q',
+  catersta: 'Q',
   catering: {},
-  eventlist:[],
-  eventstas:'1,2,3,W,Q',
-  placelist:[],
-  reasonlist:[]
+  eventlist: [],
+  eventstas: '1,2,3,W,Q',
+  roomlist: [],
+  placelist: [],
+  reasonlist: []
 }
 
 // getters
@@ -23,74 +24,89 @@ const getters = {
 
   catering: state => state.catering,
 
-  eventlist:state => state.eventlist,
+  eventlist: state => state.eventlist,
 
-  eventstas:state => state.eventstas,
+  eventstas: state => state.eventstas,
 
-  placelist:state => state.placelist,
+  roomlist: state => state.roomlist,
 
-  reasonlist:state => state.reasonlist,
+  placelist: state => state.placelist,
+
+  reasonlist: state => state.reasonlist
 }
 
 // actions
 const actions = {
-  getCateringInfo(store) {
+  getCateringInfo (store) {
     return new Promise((resolve, reject) => {
-      if(state.caterid){
+      if (state.caterid) {
         axiosinstance.defaults.headers.common['username'] = store.getters.username
         axiosinstance.defaults.headers.common['signature'] = store.getters.signature
         axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
         axiosinstance.post(methodinfo.getcateringinfo, {
           caterid: state.caterid
         }).then(function (response) {
-          if (response.data.errorCode==='0') {
+          if (response.data.errorCode === '0') {
             store.commit('setCatering', response.data)
-            let sta = response.data.sta;
+            let sta = response.data.sta
             store.commit('setCatersta', sta)
-            resolve();
-          }else{
-            reject(response.data.errorMessage);
+            resolve()
+          } else {
+            reject(response.data.errorMessage)
           }
         }).catch(function () {
-          reject("获取宴会订单信息异常!");
         })
       }
       resolve()
     })
   },
-  getEventList(store){
+  getEventList (store) {
     axiosinstance.defaults.headers.common['username'] = store.getters.username
     axiosinstance.defaults.headers.common['signature'] = store.getters.signature
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
     axiosinstance.post(methodinfo.geteventlist, {
       caterid: state.caterid,
-      sta:state.eventstas,
+      sta: state.eventstas
     }).then(function (response) {
-      if (response.data.errorCode==='0') {
+      if (response.data.errorCode === '0') {
         store.commit('setEventlist', response.data.events)
       }
     })
   },
-  getPlacelist(store){
+  getRoomList (store) {
+    if (state.catering.blockid) {
+      axiosinstance.defaults.headers.common['username'] = store.getters.username
+      axiosinstance.defaults.headers.common['signature'] = store.getters.signature
+      axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
+      axiosinstance.post(methodinfo.getMasterRsvsrc, {
+        blockid: state.catering.blockid
+      }).then(function (response) {
+        if (response.data.errorCode === '0') {
+          store.commit('setRoomlist', response.data.rsvsrcs)
+        }
+      })
+    }
+  },
+  getPlacelist (store) {
     axiosinstance.defaults.headers.common['username'] = store.getters.username
     axiosinstance.defaults.headers.common['signature'] = store.getters.signature
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
     axiosinstance.post(methodinfo.getplacelist, {
     }).then(function (response) {
-      if (response.data.errorCode==='0') {
+      if (response.data.errorCode === '0') {
         store.commit('setPlacelist', response.data.places)
       }
     })
   },
-  getReasonList(store){
+  getReasonList (store) {
     axiosinstance.defaults.headers.common['username'] = store.getters.username
     axiosinstance.defaults.headers.common['signature'] = store.getters.signature
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
     axiosinstance.post(methodinfo.getbasecodelist, {
-      cat:"sc_cancel_reason",
-      halt:"F"
+      cat: 'sc_cancel_reason',
+      halt: 'F'
     }).then(function (response) {
-      if (response.data.errorCode==='0') {
+      if (response.data.errorCode === '0') {
         store.commit('setReasonList', response.data.basecodes)
       }
     })
@@ -115,6 +131,9 @@ const mutations = {
   },
   setEventstas (state, eventstas) {
     state.eventstas = eventstas
+  },
+  setRoomlist (state, roomlist) {
+    state.roomlist = roomlist
   },
   setPlacelist (state, placelist) {
     state.placelist = placelist
