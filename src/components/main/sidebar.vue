@@ -28,7 +28,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import 'font-awesome/css/font-awesome.css'
   import calendar from './calendar.vue'
-  import calendarjs from './calendar'
+  import calendarjs from '../../common/calendar'
   import {formatDate} from '../../common/date'
   // 组件和参数
 

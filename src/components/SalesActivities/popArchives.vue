@@ -7,12 +7,22 @@
         <li><label>手机</label><input type="text" class="text_input" v-model="mobile" id="archivesphone"></li>
         <li><label>档案号</label><input type="text" class="text_input" v-model="no" id="archivesno"></li>
         <li><label>联系人</label><input type="text" class="text_input" v-model="contacter" id="archivesContacts"></li>
-        <li><label>销售员</label><div class="select" id="archivessale"><p @click="saleListShow" ref="refsales" :data-id="salesId">{{salesName}}</p><ol v-if="ifSales"><li @click="saleListHide(item)" v-for="item in popSalesList" :data-id="item.code">{{item.name}}</li></ol></div></li>
-        <li><label>类型</label><div class="select" id="archivestype" :class="{'bgSales': bgUnit}"><p @click="archTypeShow" ref="reftype" :data-id="archTypeId">{{archTypeName}}</p>
-          <ol v-if="ifTypeShow&&bgUnit"><li @click="archTypeHide(item)" :data-id="item.id" v-for="item in ifunit">{{item.name}}</li></ol>
-        </div></li>
+        <li><label>销售员</label>
+          <div class="select" id="archivessale"><p @click="saleListShow" ref="refsales" :data-id="salesId">{{salesName}}</p>
+            <ol v-if="ifSales">
+              <li @click="saleListHide(item)" v-for="item in popSalesList" :data-id="item.code">{{item.name}}</li>
+            </ol>
+          </div>
+        </li>
+        <li><label>类型</label>
+          <div class="select" id="archivestype" :class="{'bgSales': bgUnit}"><p @click="archTypeShow" ref="reftype" :data-id="archTypeId">{{archTypeName}}</p>
+            <ol v-if="ifTypeShow&&bgUnit">
+              <li @click="archTypeHide(item)" :data-id="item.id" v-for="item in ifunit">{{item.name}}</li>
+            </ol>
+          </div>
+        </li>
       </ul>
-      <input type="button" class="btn_query" @click="btnQuery" value="查询" />
+      <input type="button" class="btn_query" @click="btnQuery" value="查询"/>
     </div>
     <div class="list_archives">
       <h1>档案列表</h1>
@@ -50,156 +60,159 @@
         <li class="nav6">销售员</li>
       </ol>
       <ul>
-        <li v-if="cateringlist" v-for="caterList in cateringlist"><span class="nav1">{{caterList.name}}</span><span class="nav2">{{caterList.arr.substring(0,10)}}</span><span class="nav3">{{caterList.dep.substring(0,10)}}</span><span class="nav4">{{caterList.contact_mobile}}</span><span class="nav5">{{caterList.contactor}}</span><span class="nav6">{{caterList.saleid_name}}</span></li>
+        <li v-if="cateringlist" v-for="caterList in cateringlist"><span class="nav1">{{caterList.name}}</span><span class="nav2">{{caterList.arr.substring(0, 10)}}</span><span
+          class="nav3">{{caterList.dep.substring(0, 10)}}</span><span class="nav4">{{caterList.contact_mobile}}</span><span class="nav5">{{caterList.contactor}}</span><span
+          class="nav6">{{caterList.saleid_name}}</span></li>
       </ul>
     </div>
     <div class="tr"><input type="button" class="btn_ok" @click="archOk" value="确定"><input type="button" class="btn_quit" @click="archClose" value="退出"></div>
   </div>
 </template>
 <script>
-  import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
+  import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
+  import methodinfo from '../../config/MethodConst.js'
   import '../../css/SalesActivite.scss';
-    export default {
-        name: "pop-archives",
-      data(){
-          return{
-            archTypeName:'',
-            archTypeId:'',
-            salesAll:[{
-              "name":"所有",
-              "code":"",
-            }],
-            popSalesList:[],
-            ifSales:false,
-            salesId:'',
-            salesName:'',
-            bgUnit:false,
-            ifTypeShow:false,
-            proParam:{},
-            name:'',
-            mobile:'',
-            no:'',
-            contacter:'',
-            caterParam:{},
-            ifproCurrent:'',
-            proName:'',
-            proNo:'',
-          }
-      },
-      computed: {
-        ...mapGetters(['salelist']),
-        ...mapGetters(['profileslist']),
-        ...mapGetters(['cateringlist']),
-      },
-      created(){
-        this.archTypeName=this.ifunit[0].name
-        this.archTypeId=this.ifunit[0].id
-        if( this.archTypeId=='F'){
-          this.bgUnit=false
-        }else{
-          this.bgUnit=true
-        }
-        var salesList=this.salelist
-        this.popSalesList=this.salesAll.concat(salesList)
-        this.salesId=this.salesAll[0].code
-        this.salesName=this.salesAll[0].name
-      },
-      props:['ifunit'],
-      methods: {
-        chooseType:function (popType) {
-          this.$emit('btnChooseName', popType.proname,this.prono,this.archTypeId);
-        },
-        archClose: function () {
-          this.$emit('btnArchClose')
-        },
-        archOk: function () {
-          this.$emit('btnArchOk',this.ifproCurrent,this.proName,this.proNo,this.archTypeId)
-        },
-        /*档案搜索*/
-        btnQuery:function () {
-          if(this.mobile==''&&this.name==''&&this.no==''&&this.contacter==''){
-            this.$message({
-              message: "名称、手机号、档案号、联系人至少填写一个",
-              type: "warning"
-            });
-          }else{
-            this.proParam = {
-              saleid:this.salesId,
-              mobile:this.mobile,
-              no:this.no,
-              name:this.name,
-              contacter:this.contacter,
-              ischeck:"T",
-              type:this.archTypeId,
-            };
-            this.getProfilesList()
-          }
-        },
-        //预定历史搜索
-        getHistoryList:function (proList) {
-          this.proName=proList.proname
-          this.proNo=proList.prono
-          this.ifproCurrent=proList.prono
-          this.caterParam = {
-            no:proList.prono,
-          };
-          this.getCateringList()
-        },
-        getCateringList:function () {
-          this.$store.dispatch('encrypttoken').then(() => {
-            //获取工号信息,完成后进行路由
-            this.$store.dispatch('getcateringlist',this.caterParam).then(() => {
-            })
-          })
-        },
-        getProfilesList:function () {
-          this.$store.dispatch('encrypttoken').then(() => {
-            //获取工号信息,完成后进行路由
-            this.$store.dispatch('getProfiles',this.proParam).then(() => {
 
-            })
-          })
-        },
-        saleListShow:function () {
-          this.ifSales=true
-        },
-        saleListHide:function (item) {
-          this.salesId=item.code
-          this.salesName=item.name
-          this.ifSales = false
-        },
-        archTypeShow:function () {
-          this.ifTypeShow=true
-        },
-        archTypeHide:function (item) {
-          this.archTypeId=item.id
-          this.archTypeName=item.name
-          this.ifTypeShow = false
-        },
-      },
-      mounted:function () {
-        this.$store.commit("setProfilesNull")
-        document.addEventListener('click',(e)=>{
-          if(this.$refs.refsales){
-            if (!this.$refs.refsales.contains(e.target)) {
-              this.ifSales = false
-            }
-          }
-          if(this.$refs.reftype){
-            if (!this.$refs.reftype.contains(e.target)) {
-              this.ifTypeShow = false
-            }
-          }
-        })
+  export default {
+    name: "pop-archives",
+    data(){
+      return {
+        archTypeName: '',
+        archTypeId: '',
+        salesAll: [{
+          "name": "所有",
+          "code": "",
+        }],
+        popSalesList: [],
+        ifSales: false,
+        salesId: '',
+        salesName: '',
+        bgUnit: false,
+        ifTypeShow: false,
+        proParam: {},
+        name: '',
+        mobile: '',
+        no: '',
+        contacter: '',
+        caterParam: {},
+        ifproCurrent: '',
+        proName: '',
+        proNo: '',
+        cateringlist: []
       }
+    },
+    computed: {
+      ...mapGetters(['salelist']),
+      ...mapGetters(['profileslist'])
+    },
+    created(){
+      this.archTypeName = this.ifunit[0].name
+      this.archTypeId = this.ifunit[0].id
+      this.bgUnit = this.archTypeId !== 'F';
+      let salesList = this.salelist
+      this.popSalesList = this.salesAll.concat(salesList)
+      this.salesId = this.salesAll[0].code
+      this.salesName = this.salesAll[0].name
+    },
+    props: ['ifunit'],
+    methods: {
+      chooseType: function (popType) {
+        this.$emit('btnChooseName', popType.proname, this.prono, this.archTypeId);
+      },
+      archClose: function () {
+        this.$emit('btnArchClose')
+      },
+      archOk: function () {
+        this.$emit('btnArchOk', this.ifproCurrent, this.proName, this.proNo, this.archTypeId)
+      },
+      /*档案搜索*/
+      btnQuery: function () {
+        if (this.mobile === '' && this.name === '' && this.no === '' && this.contacter === '') {
+          this.$message({
+            message: "名称、手机号、档案号、联系人至少填写一个",
+            type: "warning"
+          });
+        } else {
+          this.proParam = {
+            saleid: this.salesId,
+            mobile: this.mobile,
+            no: this.no,
+            name: this.name,
+            contacter: this.contacter,
+            ischeck: "T",
+            type: this.archTypeId,
+          };
+          this.getProfilesList()
+        }
+      },
+      //预定历史搜索
+      getHistoryList: function (proList) {
+        this.proName = proList.proname
+        this.proNo = proList.prono
+        this.ifproCurrent = proList.prono
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.getcateringlist, {
+            no: proList.prono,
+          }).then(function (response) {
+            if (response.data.errorCode === '0') {
+              this.cateringlist =[];
+              if(response.data.caterings){
+                this.cateringlist = response.data.caterings;
+              }
+            }
+          })
+        })
+      },
+      getProfilesList: function () {
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch('getProfiles', this.proParam).then(() => {
+          })
+        })
+      },
+      saleListShow: function () {
+        this.ifSales = true
+      },
+      saleListHide: function (item) {
+        this.salesId = item.code
+        this.salesName = item.name
+        this.ifSales = false
+      },
+      archTypeShow: function () {
+        this.ifTypeShow = true
+      },
+      archTypeHide: function (item) {
+        this.archTypeId = item.id
+        this.archTypeName = item.name
+        this.ifTypeShow = false
+      },
+    },
+    mounted: function () {
+      this.$store.commit("setProfilesNull")
+      document.addEventListener('click', (e) => {
+        if (this.$refs.refsales) {
+          if (!this.$refs.refsales.contains(e.target)) {
+            this.ifSales = false
+          }
+        }
+        if (this.$refs.reftype) {
+          if (!this.$refs.reftype.contains(e.target)) {
+            this.ifTypeShow = false
+          }
+        }
+      })
     }
+  }
 </script>
 
 <style scoped lang="scss">
-.bgSales{
-  background: #ffffff !important;
-}
-  .proCurrent{
-    background: #e1edf7!important;
+  .bgSales {
+    background: #ffffff !important;
+  }
+
+  .proCurrent {
+    background: #e1edf7 !important;
   }
 </style>

@@ -273,7 +273,7 @@
 </template>
 
 <script>
-import calendar from './calendar.js'
+import calendar from '../../common/calendar.js'
 export default {
     props: {
         // 多选模式
