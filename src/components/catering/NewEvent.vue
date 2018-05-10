@@ -1,6 +1,6 @@
 <template>
   <b-container fluid>
-    <b-collapse visible  v-show="eventshow" id="newevent">
+    <b-collapse :visible="eventshow" id="newevent">
       <b-card header-tag="header">
         <b-row slot="header">
           <b-col sm="1" class="my-1 eventtitle">
@@ -362,7 +362,7 @@
               commitEvent.code = eventplaces[i];
               if(i===eventplaces.length-1){
                 this.$http.post(methodinfo.newbatchevent, commitEvent).then(()=>{
-                  _this.eventshow = false;
+                  _this.$root.$emit("bv::toggle::collapse","newevent")
                   resolve()
                 })
               }else{
