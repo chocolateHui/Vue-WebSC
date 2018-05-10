@@ -6,6 +6,7 @@ import catering from './modules/catering'
 import maintab from './modules/maintab'
 import sysoption from './modules/sysoption'
 import VuexPersistence from 'vuex-persist'
+import getsale from './modules/getsale'
 
 Vue.use(Vuex)
 
@@ -14,7 +15,7 @@ const debug = process.env.NODE_ENV !== 'production'
 const vuexLocal = new VuexPersistence({
   strictMode :debug,
   storage: window.localStorage,
-  modules: ['token', 'user','sysoption']
+  modules: ['token', 'user','sysoption','getsale']
 })
 
 const store = new Vuex.Store({
@@ -23,7 +24,8 @@ const store = new Vuex.Store({
     user,
     maintab,
     sysoption,
-    catering
+    catering,
+    getsale,
   },
   plugins: [vuexLocal.plugin],
   mutations: {

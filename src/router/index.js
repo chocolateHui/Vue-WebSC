@@ -13,6 +13,9 @@ const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../v
 const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfo.vue')
 const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
+const salesActivities = () => import(/* webpackChunkName: "child-main" */ '../view/SalesActivities.vue')
+const placeDistribution = () => import(/* webpackChunkName: "child-main" */ '../view/placeDistribution.vue')
+const placeList = () => import(/* webpackChunkName: "child-main" */ '../components/PlaceDistribution/placeList.vue')
 Vue.use(Router)
 
 const router =new Router({
@@ -85,7 +88,15 @@ const router =new Router({
         {
           path: '/main/placeDistribution',
           name: '宴会场地分布',
-          component: Template,
+          component: placeDistribution,
+          meta: {
+            keepAlive: true // 需要被缓存
+          }
+        },
+        {
+          path: '/main/placeList/:index?',
+          name: '宴会场地分布',
+          component: placeList,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -93,7 +104,7 @@ const router =new Router({
         {
           path: '/main/saleDiary',
           name: '销售活动日历',
-          component: Template,
+          component: salesActivities,
           meta: {
             keepAlive: true // 需要被缓存
           }
