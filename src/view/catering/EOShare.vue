@@ -216,6 +216,7 @@ export default {
       events:events
     }
   },
+  props:['caterid'],
   methods:{
     exportword:function () {
       let bytes = window.atob(docjson.doc);

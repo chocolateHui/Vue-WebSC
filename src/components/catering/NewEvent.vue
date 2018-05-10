@@ -259,17 +259,12 @@
       ...mapGetters([
         'caterid',
         'catersta',
-        'event'
+        'catering'
       ])
     },
     mixins: [eventMixin],
     created(){
-      if(this.catersta==='1'||this.catersta==='Q'){
-        this.$set(this.newEvent,'sta',this.catersta)
-      }
-      if(this.catersta==='2'){
-        this.staoptions.push({ code: '2', descript: '确认' });
-      }
+
     },
     methods: {
       eventCheck(catering){
@@ -280,28 +275,37 @@
             if(!newEvent.descript){
               this.$alert("事务名称不允许为空!")
               resolve(false)
+              return
             }else if(!newEvent.type){
               this.$alert("事务类别不允许为空!")
               resolve(false)
+              return
             }else if(!this.eventbdate[0]){
               this.$alert("事务日期不允许为空!")
               resolve(false)
+              return
             }else if(!this.eventtime[0]){
               this.$alert("事务时间不允许为空!")
               resolve(false)
+              return
             }else if(this.eventtime[0]===this.eventtime[1]){
               this.$alert("事务开始时间和结束时间相同,请修改!")
               resolve(false)
+              return
             }else if(!newEvent.sta){
               this.$alert("事务状态不允许为空!")
               resolve(false)
+              return
             }else if(!newEvent.code){
               this.$alert("事务场地不允许为空!")
               resolve(false)
+              return
             }else if(!dateValid(this.eventbdate[1],catering.dep)){
               this.$alert("事务日期不允许晚于宴会离开日期!")
               resolve(false)
+              return
             }
+            console.log(this.newEvent);
             this.newEvent.begindate = this.eventbdate[0];
             this.newEvent.enddate = this.eventbdate[1];
             this.newEvent.begintime = this.eventtime[0];
@@ -348,17 +352,23 @@
         })
       },
       batchSaveEvent(caterid){
+        let _this = this;
         return new Promise((resolve, reject) => {
           if(this.newEvent.code||this.eventbdate[0]){
-            let commitEvent = Object.assign({},this.newEvent)
-            commitEvent.caterid = caterid;
+            this.newEvent.caterid = caterid;
             let eventplaces = this.newEvent.code.split(",");
-            for(let code of eventplaces){
-              console.log(code);
-              commitEvent.code = code;
-              this.$http.post(methodinfo.newbatchevent, commitEvent)
+            for(let i =0;i < eventplaces.length;i++){
+              let commitEvent = Object.assign({},this.newEvent)
+              commitEvent.code = eventplaces[i];
+              if(i===eventplaces.length-1){
+                this.$http.post(methodinfo.newbatchevent, commitEvent).then(()=>{
+                  _this.$root.$emit("bv::toggle::collapse","newevent")
+                  resolve()
+                })
+              }else{
+                this.$http.post(methodinfo.newbatchevent, commitEvent)
+              }
             }
-            resolve()
           }else{
             resolve()
           }
@@ -424,7 +434,19 @@
       MultiPlace
     },
     watch:{
-
+      catersta(val, oldval){
+        if(this.catersta==='1'||this.catersta==='Q'){
+          this.$set(this.newEvent,'sta',this.catersta)
+        }
+        if(this.catersta==='2'){
+          this.staoptions.push({ code: '2', descript: '确认' });
+        }
+      },
+      catering(val,oldval){
+        if(val){
+          this.newEvent.descript = val.name;
+        }
+      }
     }
   }
 </script>

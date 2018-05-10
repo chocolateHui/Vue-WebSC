@@ -124,16 +124,19 @@
           this.$store.commit('setCatersta', '1');
         }
 
+        //如果是从新建宴会跳转到宴会详情，关闭新建界面
         if(!this.isTabChange){
           if(to.path.indexOf("/catering/")>0){
-            let index = 0;
-            for (let option of this.mainRoutes) {
-              if (option.name === this.activeIndex) {
-                break;
+            if(this.activeIndex==='新建宴会预订'||this.activeIndex==='新建宴会问询'){
+              let index = 0;
+              for (let option of this.mainRoutes) {
+                if (option.name === this.activeIndex) {
+                  break;
+                }
+                index++;
               }
-              index++;
+              this.$store.commit('delete_tabs', index);
             }
-            this.$store.commit('delete_tabs', index);
           }
         }
 
@@ -162,7 +165,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss"  type="text/scss">
   #scmain{
     height: calc(100%);
     #tab-首页{
