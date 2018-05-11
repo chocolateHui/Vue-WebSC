@@ -64,8 +64,8 @@
                 <label>{{item.time}}</label>
                 <p>
                   <span v-for="items in timeAll[indexdetail].content" >
-                    <span v-for="(infolist1,infoindex1) in placesinfo1" v-if="infolist1.tableno==placeitem.tableno">
-                        <span v-for="infolist in (placesinfo1[infoindex1].bdates)" v-if="timelist==infolist.bdate">
+                    <span v-for="(infolist1,infoindex1) in placesinfo" v-if="infolist1.tableno==placeitem.tableno">
+                        <span v-for="infolist in (placesinfo[infoindex1].bdates)" v-if="timelist==infolist.bdate">
                             <span v-for="typeitem in typeList" v-if="iftypelist||(typeitem==infolist.eventtype)">
                                <span v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta&&( (items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))"  :data-id="items.dataid" :data-it="items.datait"></span>
                             </span>
@@ -127,9 +127,6 @@
   </div>
   <new-choose v-if="ifNewChoose" :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>
   <div id="layer" v-if="ifNewChoose"></div>
-  <div v-if="isLoading">
-    <loading></loading>
-  </div>
 </div>
 </template>
 <script>
@@ -139,9 +136,11 @@
   import todayThings from '../components/PlaceDistribution/todayThings';
   import newChoose from '../components/PlaceDistribution/newChoose';
   import methodinfo from '../config/MethodConst.js'
-  import loading from '../components/loading.vue'
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
   import { GetLunarDay } from './../js/lun'
+
+  let loading
+
     export default {
         name: "place-distribution",
       data(){
@@ -201,7 +200,6 @@
             gettolist:[],
             placeinfoparam:{},
             basecodeslist:[],
-            placesinfo1:[],
             typeList:['1'],
             iftypelist:true,
             gettocurrent:'',
@@ -221,15 +219,14 @@
       components: {
         calendarLun,
         todayThings,
-        newChoose,
-        loading
+        newChoose
       },
       computed: {
         ...mapGetters(['placesinfo']),
         ...mapGetters(['isLoading']),
       },
       created(){
-          this.$store.commit("set_loading",true);
+        loading = this.$loading.service({fullscreen:true});
           for(var num=8;num<=22;num++) {
             if (num <= 12) {
               var dataId = num
@@ -267,6 +264,7 @@
               this.todayHour.push(num+':00')
             }
           }
+
       },
       methods: {
         getbasecodelist:function () {
@@ -319,6 +317,8 @@
                   }
                 }
                 this.getplacelist()
+                this.getplaceusedinfo()
+                this.gettoplacelist()
               }
             })
           })
@@ -336,8 +336,6 @@
                 if (response.data.errorCode=="0") {
                   _this.placeslist=response.data.places
                 }
-                this.getplaceusedinfo()
-                this.gettoplacelist()
               }
             })
           })
@@ -389,8 +387,7 @@
           this.$store.dispatch('encrypttoken').then(() => {
             //获取工号信息,完成后进行路由
             this.$store.dispatch('getplaceusedinfo',this.placeinfoparam).then(() => {
-              var info=this.placesinfo
-              this.placesinfo1=info
+              loading.close();
             })
           })
         },
@@ -711,7 +708,6 @@
       //   this.$store.commit("set_loading",false);
       // },
       mounted: function () {
-        this.$store.commit("set_loading",false)
         this.getbasecodelist()
         this.datatimeid=this.today()
         this.getpccodelist()

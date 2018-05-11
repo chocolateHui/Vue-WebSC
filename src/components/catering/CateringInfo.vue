@@ -369,6 +369,10 @@
         this.$router.push({name: '宴会预订EO单', params: { caterid: this.caterid }});
       },
       refreshData(){
+        const loading = this.$loading.service({fullscreen:true});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch('getCateringInfo');
           this.$store.dispatch('getEventList');

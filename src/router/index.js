@@ -23,6 +23,8 @@ const pccodeinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/m
 
 Vue.use(Router)
 
+let loadingInstance
+
 const router = new Router({
   routes: [
     {
@@ -199,7 +201,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   console.log(new Date().getTime())
-  router.app.$store.commit('set_loading', true)
+  loadingInstance = router.app.$loading.service({ fullscreen: true })
   if (to.path.indexOf('/login') < 0) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
@@ -228,7 +230,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
   console.log(new Date().getTime())
-  router.app.$store.commit('set_loading', false)
+  loadingInstance.close()
 })
 
 export default router
