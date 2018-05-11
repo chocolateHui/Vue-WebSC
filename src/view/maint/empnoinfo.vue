@@ -371,6 +371,7 @@
         this.hotelid = this.$store.state.user.hotel.hotelid;
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
+          // 获取营业点
           this.$http.post(methodinfo.gethotellist, {}).then((response) => {
             if (response.data.errorCode === "0") {
               this.gethotellist = response.data.hotels;
@@ -392,6 +393,7 @@
         })
       },
       getEmpnolist:function(){
+//        var _this = this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
           let param = {
@@ -406,6 +408,7 @@
             if (response.status === 200) {
               if (response.data.errorCode == "0") {
               this.getempnolist = response.data.empnos;
+                [ ...this.getempnolist1] = this.getempnolist
               }
             }
           });
