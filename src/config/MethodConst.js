@@ -1,10 +1,10 @@
 
 const methodinfo = {
   /*
-   *
-   * 工号相关接口
-   *
-   */
+     *
+     * 公共模块相关接口
+     *
+     */
 //  登录
   login: '/SC/reserve/sysempno/login',
   // 修改密码
@@ -180,7 +180,6 @@ const methodinfo = {
   /*
  代码维护相关
  */
-
   // 新增营业点
   newpccode: '/SC/reserve/scplacemaint/newpccode',
   // 批量更新场地信息
@@ -234,6 +233,6 @@ const methodinfo = {
   auth: '/userauth',
   getloginhotellist: '/getloginhotellist',
 
-  url: 'http://172.10.60.61:8083/'
+  url :'http://172.10.60.61:8083/'
 }
 module.exports = exports = methodinfo
