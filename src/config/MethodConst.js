@@ -15,10 +15,14 @@ const methodinfo = {
   getempnolist: '/PUB/sysempno/getempnolist',
   // 获取工号详情
   getempnoinfo: '/PUB/sysempno/getempnoinfo',
-  // 更新工号信息
-  savesysempno: '/PUB/sysempno/savesysempno',
   // 获取站点信息
   getpcidstatus: '/PUB/station/getpcidstatus',
+  // 获取基础代码列表
+  getbasecodelist: '/PUB/pubcode/getbasecodelist',
+  // 批量更新基础代码
+  updatebasecodes: '/PUB/pubcode/updatebasecodes',
+  // 删除基础代码
+  deletebasecode: '/PUB/pubcode/deletebasecode',
   // 获取系统代码列表
   getsystemcode: '/PUB/pubcode/getsystemcode',
   // 获取系统参数
@@ -27,36 +31,19 @@ const methodinfo = {
   getsysoptionlist: '/PUB/sysoption/getsysoptionlist',
   // 获取销售员列表
   getsaleidlist: '/PUB/saleid/getsaleidlist',
-  // 获取酒店信息
-  gethotel: '/PUB/hotelid/gethotel',
-  // 判断是否是新建酒店
-  getisnewhotel: '/PUB/hotelid/getisnewhotel',
-  // 获取子酒店
+// 获取酒店信息列表
   gethotellist: '/PUB/hotelid/gethotellist',
-  // 获取城市列表
-  getcntcode: '/PUB/syscode/getcntcode',
-  // 修改酒店
-  modifyhotel: '/PUB/hotelid/modifyhotel',
+  // 获取酒店编号查询条件
+  getcond: '/PUB/hotelid/getcond',
   // 获取岗位列表
   getdeptlist: '/PUB/authfunction/getdeptlist',
-  // 获取角色列表
+// 获取角色列表
   getjoblist: '/PUB/authfunction/getjoblist',
-  // 修改工号信息
-  modifyempnoinfo: '/PUB/sysempno/modifyempnoinfo',
-  // 删除工号
-  deleteempnoinfo: '/PUB/sysempno/deleteempnoinfo',
+
+
   /*
  SC业务相关接口
  */
-  /*
-  基础代码
-   */
-  // 获取基础代码列表
-  getbasecodelist: '/PUB/pubcode/getbasecodelist',
-  // 批量更新基础代码
-  updatebasecodes: '/PUB/pubcode/updatebasecodes',
-  // 删除基础代码
-  deletebasecode: '/PUB/pubcode/deletebasecode',
   /*
  宴会相关
  */
@@ -174,14 +161,6 @@ const methodinfo = {
   deletepccode: '/SC/reserve/scplacemaint/deletepccode',
   // 删除酒店场地信息
   deleteplace: '/SC/reserve/scplacemaint/deleteplace',
-  // 新增保存场地扩展属性
-  saveplaceexpandinfo: '/SC/reserve/scplacemaint/saveplaceexpandinfo',
-  // 获取酒店场地图片信息
-  getplacepicinfo: '/SC/reserve/scplacemaint/getplacepicinfo',
-  // 新增酒店场地图片信息
-  saveplacepicinfo: '/SC/reserve/scplacemaint/saveplacepicinfo',
-  // 删除酒店场地图片信息
-  deleteplacepicinfo: '/SC/reserve/scplacemaint/deleteplacepicinfo',
   // 新增项目类别
   savescitemclass: '/SC/reserve/scitemmaint/savescitemclass',
   // 更新项目类别
@@ -192,9 +171,6 @@ const methodinfo = {
   deletescitemclass: '/SC/reserve/scitemmaint/deletescitemclass',
   // 删除项目
   deletescitem: '/SC/reserve/scitemmaint/deletescitem',
-  // SC系统初始化
-  initscdata: '/SC/reserve/system/initscdata',
-
   /*
  接口相关
  */
@@ -213,6 +189,6 @@ const methodinfo = {
   auth: '/userauth',
   getloginhotellist: '/getloginhotellist',
 
-  url: 'http://172.10.60.61:8083/'
+  url :'http://172.10.60.61:8083/'
 }
 module.exports = exports = methodinfo
