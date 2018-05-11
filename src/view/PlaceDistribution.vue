@@ -269,7 +269,6 @@
           }
       },
       methods: {
-        // 查询事物
         getbasecodelist:function () {
           var _this=this
           this.$store.dispatch('encrypttoken').then(() => {
@@ -609,7 +608,7 @@
           }
         },
         listChange:function () {
-          this.$router.push({path:'/main/placeList/0'})
+          this.$router.push({name:'宴会事务列表'})
         },
         btnCheck:function (idx) {
           var check = this.headList[idx].checked;

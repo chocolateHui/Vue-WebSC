@@ -236,6 +236,11 @@
     </b-modal>
 
     <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+      <sysLog></sysLog>
+    </b-modal>
+
+    <b-modal id="remarkModal" size="lg" ref="remarkModal" title="宴会备注" hide-footer>
+      <!--<remark ref="caterRemark"></remark>-->
     </b-modal>
   </div>
 </template>
@@ -246,12 +251,12 @@
   import { mapGetters, mapMutations } from 'vuex'
   import 'font-awesome/css/font-awesome.css'
   import methodinfo from '../../config/MethodConst.js'
-  import eventMixin from '../../common/eventMixin'
   import {dateValid,formatDate} from '../../common/date'
   //其他组件
   import FormatInput from '../FormatInput.vue'
   import SinglePlace from './SinglePlace.vue'
   import Reason from '../Reason.vue'
+  import remark from '../remark.vue'
   import {TimePicker} from 'iview'
   import sysLog from  '../../components/syslog.vue'
   import '../../css/imgbtn.scss'
@@ -307,13 +312,17 @@
       }
     },
     mounted(){
-      console.log(this.degreeoptions)
     },
     computed: {
       ...mapGetters([
         'caterid',
         'catering',
-        'eventlist'
+        'eventlist',
+        'timeoptions',
+        'typeoptions',
+        'priceoptions',
+        'layoutoptions',
+        'degreeoptions'
       ]),
       eventcount(){
         if(this.eventlist){
@@ -323,7 +332,6 @@
         }
       }
     },
-    mixins: [eventMixin],
     methods: {
       checkEvent(){
         if(!this.expandevent.descript){
@@ -524,7 +532,8 @@
       FormatInput,
       TimePicker,
       SinglePlace,
-      Reason
+      Reason,
+      remark
     },
     watch:{
       staselected(val){

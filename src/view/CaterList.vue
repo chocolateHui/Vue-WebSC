@@ -49,7 +49,7 @@
                   <b-form inline class="paddingleft0 paddingbottom0">
                     <b-button
                       size="sm"
-                      variant="primary" @click="deleteempno()">编</b-button>
+                      variant="primary" @click="openCateringInfo(scope.row)">编</b-button>
                     <b-button
                       size="sm"
                        variant="warning" @click="deleteempno()">同</b-button>
@@ -320,6 +320,9 @@
           })
         })
       },
+      openCateringInfo(row){
+        this.$router.push({ name: '宴会预订详情', params: { caterid: row.caterid }});
+      }
     },
     computed: {
       searchitems:function () {

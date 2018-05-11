@@ -179,7 +179,6 @@
         this.$refs.multiplacetable.clearSelection();
       },
       changeTableType(){
-        console.log(this.eventbdate);
         if(!this.eventbdate){
           this.$alert("请先选择事务日期!")
           return;
@@ -253,6 +252,15 @@
       }
       .caret-wrapper{
         width: 20px;
+      }
+      .el-checkbox__input{
+        margin-top: 5px
+      }
+      .form-control{
+        height: 33.5px;
+      }
+      .el-checkbox{
+        margin-bottom: 0;
       }
     }
     .text-center{

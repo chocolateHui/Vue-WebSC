@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 import Vue from 'vue'
 import Router from 'vue-router'
 
@@ -19,6 +20,7 @@ const index = () => import(/* webpackChunkName: "group-main" */ '../view/Index.v
 const caterList = () => import(/* webpackChunkName: "group-main" */ '../view/CaterList.vue')
 const Maint = () => import(/* webpackChunkName: "group-maint" */ '../view/Maint.vue')
 const pccodeinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/pccodeinfo.vue')
+
 Vue.use(Router)
 
 const router = new Router({
@@ -39,7 +41,7 @@ const router = new Router({
           name: '首页',
           component: index,
           meta: {
-            keepAlive: false // 需要被缓存
+            keepAlive: true // 需要被缓存
           }
         },
         // ...其他子路由
@@ -94,7 +96,7 @@ const router = new Router({
           props: true
         },
         {
-          path: '/main/placeDistribution',
+          path: '/main/place/placeDistribution',
           name: '宴会场地分布',
           component: placeDistribution,
           meta: {
@@ -102,8 +104,8 @@ const router = new Router({
           }
         },
         {
-          path: '/main/placeList/:index?',
-          name: '宴会场地分布',
+          path: '/main/place/placeList/:index?',
+          name: '宴会事务列表',
           component: placeList,
           meta: {
             keepAlive: true // 需要被缓存
@@ -122,7 +124,7 @@ const router = new Router({
           name: '报表专家',
           component: report,
           meta: {
-            keepAlive: false // 不需要被缓存
+            keepAlive: true // 不需要被缓存
           }
         },
         {
@@ -196,6 +198,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(new Date().getTime())
   router.app.$store.commit('set_loading', true)
   if (to.path.indexOf('/login') < 0) {
     // this route requires auth, check if logged in
@@ -224,6 +227,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
+  console.log(new Date().getTime())
   router.app.$store.commit('set_loading', false)
 })
 

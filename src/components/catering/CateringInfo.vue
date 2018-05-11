@@ -65,10 +65,10 @@
                   <el-option
                     v-for="item in saleoptions"
                     :key="item.code"
-                    :label="item.descript"
+                    :label="item.name"
                     :value="item.code">
-                    <span class="option-main">{{ item.descript }}</span>
-                    <span class="option-sub">{{ item.code }}</span>
+                    <span style="float: left">{{ item.name }}</span>
+                    <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.code }}</span>
                   </el-option>
                 </el-select>
               </b-form-group>
@@ -110,7 +110,7 @@
           </b-col>
         </b-row>
         <b-row id = "catersub">
-          <b-row>
+          <b-row style="width: 100%">
             <b-form-group class="numinput" :label-cols="6" label="房&#8195;&#8195;数"
                           horizontal>
               <FormatInput type="number" maxlength="5" v-model="localcatering.rmnum"></FormatInput>
@@ -120,7 +120,7 @@
               <FormatInput type="number" maxlength="5" v-model="localcatering.cover"></FormatInput>
             </b-form-group>
             <b-form-group class="normalput" :label-cols="4" label="协议单位" horizontal>
-              <el-input class="modalinput" clearable readonly v-model="localcatering.cusno_des">
+              <el-input @click.native="profileShow" @clear="profileClear" class="modalinput" clearable readonly v-model="localcatering.cusno_des">
                 <i slot="prefix" class="fa fa-list"></i>
               </el-input>
             </b-form-group>
@@ -165,6 +165,14 @@
     <b-modal @shown="reasonShown" id="caterReasonmodal" ref="caterReasonmodal" title="理由列表" hide-footer>
       <Reason ref="caterReason" @reasonConfirm="reasonConfirm"></Reason>
     </b-modal>
+
+    <b-modal id="profilemodal" size="lg" ref="profilemodal" title="档案列表" hide-footer>
+      <popArchives ref="popArchives" :ifunit="profileType" @btnArchOk="ArchivesConfirm"></popArchives>
+    </b-modal>
+
+    <b-modal id="remarkModal" size="lg" ref="remarkModal" title="宴会备注" hide-footer>
+      <!--<remark ref="caterRemark" :remark="localcatering"></remark>-->
+    </b-modal>
   </b-container>
 </template>
 <script>
@@ -178,6 +186,8 @@
   // 组件和参数
   import FormatInput from '../FormatInput.vue'
   import Reason from '../Reason.vue'
+  import popArchives from '../SalesActivities/popArchives.vue'
+  import remark from '../remark.vue'
 
   export default {
     name: 'CateringInfo',
@@ -191,6 +201,10 @@
         localcatering:{
           type:'1'
         },
+        profileType:[
+        {name:'公司',id:'C'},
+        {name:'旅行社',id:'A'}
+        ],
         //宴会类型
         typeOptions: [
           { code: '1', descript: '宴席' },
@@ -214,7 +228,8 @@
         'caterid',
         'catersta',
         'saleid',
-        "catering"
+        'catering',
+        'salelist'
       ]),
       minDate() {
         if(!this.isNew){
@@ -299,6 +314,21 @@
           })
         })
       },
+      profileShow(){
+        if(!this.isClear){
+          this.$refs.profilemodal.show();
+        }else{
+          this.isClear =false;
+        }
+      },
+      profileClear(){
+        this.localcatering.cusno = '';
+        this.localcatering.cusno_des = '';
+        this.isClear =true;
+      },
+      ArchivesConfirm(profile){
+        console.log(profile)
+      },
       getDisableDate(time){
         return time<this.minDate;
       },
@@ -333,7 +363,7 @@
         this.cancelWidth = 'maxbtnwidth'
       },
       showNote(){
-
+        this.$refs.remarkModal.show();
       },
       EOShare(){
         this.$router.push({name: '宴会预订EO单', params: { caterid: this.caterid }});
@@ -347,7 +377,9 @@
     },
     components: {
       FormatInput,
-      Reason
+      Reason,
+      popArchives,
+      remark
     },
     mounted(){
       this.getStaFont();
@@ -364,6 +396,11 @@
       },
       catersta(val,oldval){
         this.getStaFont();
+      },
+      salelist(val){
+        if(val){
+          this.saleoptions = val;
+        }
       }
     }
   }

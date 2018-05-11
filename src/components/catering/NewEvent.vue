@@ -93,9 +93,9 @@
                         <el-select @change="priceChange" v-model="newEvent.unit" class="priceselect">
                           <el-option
                             v-for="item in priceoptions"
-                            :key="item.code"
+                            :key="item.id"
                             :label="item.descript"
-                            :value="item.code">
+                            :value="item.id">
                             <span style="float: left">{{ item.descript }}</span>
                             <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.price }}</span>
                           </el-option>
@@ -203,7 +203,6 @@
   import 'font-awesome/css/font-awesome.css'
   import methodinfo from '../../config/MethodConst.js'
   import {dateValid} from '../../common/date'
-  import eventMixin from '../../common/eventMixin'
   //其他组件
   import FormatInput from '../FormatInput.vue'
   import MultiPlace from './MultiPlace.vue'
@@ -213,7 +212,7 @@
   // 组件和参数
 
   export default {
-    name: 'EventInfo',
+    name: 'NewEvent',
     data () {
       return {
         newEvent:{
@@ -260,12 +259,15 @@
         'caterid',
         'catersta',
         'catering',
-        'defaulttype'
+        'defaulttype',
+        'timeoptions',
+        'typeoptions',
+        'priceoptions',
+        'layoutoptions',
+        'degreeoptions'
       ])
     },
-    mixins: [eventMixin],
-    created(){
-
+    mounted(){
     },
     methods: {
       eventCheck(catering){

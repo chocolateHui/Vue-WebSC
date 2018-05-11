@@ -28,7 +28,8 @@
     data () {
       return {
         eventshow:false,
-        toggleshow:true
+        toggleshow:true,
+        isNew:true
       };
     },
     props:['caterid'],
@@ -38,24 +39,28 @@
       EventList,
       RoomInfo
     },
+    ...mapGetters([
+      'catering'
+    ]),
     methods: {
       getCateringData(){
+        const loading = this.$loading.service({fullscreen:true});
         this.$store.commit('setCaterid',this.caterid);
         this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch("getCateringInfo").then(() => {
-          }).catch(function (errorMessage) {
-            this.$alert(errorMessage, "异常提示")
-          })
-        });
-        this.getEvnetList();
-      },
-      getEvnetList(){
-        this.$store.dispatch('encrypttoken').then(() => {
+          if(this.isNew){
+            this.$store.dispatch("getPlacelist");
+            this.$store.dispatch("getSale");
+            this.$store.dispatch("getAllBaseCodes");
+            this.$store.dispatch("getReasonList");
+            this.isNew = false;
+          }
+          this.$store.dispatch("getCateringInfo")
           this.$store.dispatch("getEventList");
           this.$store.dispatch("getRoomList");
-          this.$store.dispatch("getPlacelist");
-          this.$store.dispatch("getReasonList");
         });
+        setTimeout(() => {
+          loading.close();
+        }, 500);
       },
       updateCatering(localcatering){
         let _this=this;
@@ -85,6 +90,9 @@
         });
       },
     },
+    watch:{
+
+    },
     beforeRouteEnter  (to, from, next) {
       next(vm => vm.getCateringData())
     }
@@ -105,11 +113,18 @@
       margin-right: 17px;
       margin-top: 1px;
       position: relative;
-      z-index: 9999;
+      z-index: 1199;
       float: right;
     }
   }
   .card {
     margin-bottom: 15px;
+  }
+  .form-control{
+    height: 33.5px;
+  }
+  .ivu-input{
+    height: 33px;
+    margin-top: 0;
   }
 </style>

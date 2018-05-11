@@ -420,7 +420,6 @@
             if (response.status === 200) {
               this.zhuxdata = [];
               this.zhuydata = [];
-              console.log(response.data)
               if(typeof(response.data.rankinfo) != "undefined"){
                 var labelRight = {
                   normal: {
@@ -428,7 +427,6 @@
                   }
                 }
                 var rankinfo = response.data.rankinfo;
-                console.log(rankinfo);
                 if(rankinfo.length<=2){
                   for(var i=rankinfo.length-1;i>=0;i--){
                     console.log(rankinfo[i]);

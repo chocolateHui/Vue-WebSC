@@ -1,5 +1,5 @@
 <template>
-  <div class="pop_archives">
+  <div id="pop_archives" class="pop_archives">
     <div class="pop_archives_tou">宾客档案查询<i @click="archClose" class="fa fa-close"></i></div>
     <div class="search">
       <ul>
@@ -207,12 +207,17 @@
   }
 </script>
 
-<style scoped lang="scss">
-  .bgSales {
-    background: #ffffff !important;
-  }
+<style lang="scss">
+  @import '../../css/color';
 
-  .proCurrent {
-    background: #e1edf7 !important;
+  #pop_archives{
+
+    .bgSales {
+      background: $color18 !important;
+    }
+
+    .proCurrent {
+      background: #e1edf7 !important;
+    }
   }
 </style>
