@@ -1,63 +1,96 @@
 <template>
   <div>
-  <div class="pop_sales">
+  <div id="pop_sales" class="pop_sales">
     <div class="pop_sales_tou">销售日记<i class="fa fa-close" @click="popExit"></i></div>
     <ul class="clearfix">
-      <li><label class="title1">单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位</label><input type="text" v-model="popunit" id="unit" @click="btnUnit" readonly="readonly"></li>
-      <li><label class="title2">宾客</label><input type="text" id="guests" @click="btnGuests" v-model="popguest" readonly="readonly"></li>
-      <li><label class="title1 nofb">单位联系人</label><input type="text" v-model="contact" id="contact"></li>
-      <li><label class="title2 nofb">单位联系方式</label><input type="text" id="contactinfor" v-model="contactinfor" maxlength="20"></li>
-      <li><label class="title1">日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期</label><input ref="calendar" type="text" :value="datetime" @click="dataShow" id="date" readonly="readonly">
-        <div class="saleCalendar" v-if="calendarShow">
-        <calendar @choseDay="choseDay"></calendar>
-        </div>
+      <li><label class="title1">单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位</label><input type="text" v-model="popunit" class="unit" @click="btnUnit" readonly="readonly"></li>
+      <li><label class="title2">宾客</label><input type="text" class="guests" @click="btnGuests" v-model="popguest" readonly="readonly"></li>
+      <li><label class="title1 nofb">单位联系人</label><input type="text" v-model="contact" class="contact"></li>
+      <li><label class="title2 nofb">单位联系方式</label><input type="text" class="contactinfor" v-model="contactinfor" maxlength="20"></li>
+      <li><label class="title1">日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期</label>
+        <el-date-picker
+          v-model="datetime"
+          type="date"
+          placeholder="选择日期">
+        </el-date-picker>
       </li>
       <li><i class="fa" :class="{'fa-check':ifcheck}" id="instructions"></i>是否已批示</li>
-      <li>
-        <label class="title2">销售类型</label><div class="select" id="type">
-        <p :data-id="popsaletypeid" ref="reftype" @click="typeShow">{{saletype}}</p>
-        <ol v-if="salesTypeShow">
-          <li v-for="saleList in baseCodeList" :data-id="saleList.code" @click="btnTypeSelect(saleList)">{{saleList.descript}}</li>
-        </ol>
-      </div>
+      <li style="padding-left: 15px;width: 258px">
+        <b-form-group label="销售类型&#8194;" horizontal>
+          <el-select v-model="popsaletypeid" filterable>
+            <el-option
+              v-for="item in baseCodeList"
+              :key="item.code"
+              :label="item.descript"
+              :value="item.code">
+            </el-option>
+          </el-select>
+        </b-form-group>
       </li>
-      <li>
-        <label class="title1">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间</label><div class="select" id="time">
-        <p :data-id="dayNowId" @click="dayNowShow" ref="reftoday">{{dayNow}}</p>
-        <ol v-if="ifTimeNow">
-          <li v-for="item in todayList" :data-id="item.id" @click="dayNowHide(item)">{{item.time}}</li>
-        </ol>
-      </div>
+      <li class="timestyle">
+        <b-form-group label="时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间" horizontal>
+          <el-select v-model="dayNowId" filterable>
+            <el-option
+              v-for="item in todayList"
+              :key="item.id"
+              :label="item.time"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </b-form-group>
       </li>
       <li><label class="title2">金额</label><input type="number" id="amount" v-model="amount" maxlength="10"></li>
       <li><label class="title1 nofb">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label><textarea id="remarks" v-model="remarks"></textarea></li>
       <li><label class="title1 nofb">结&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;果</label><textarea id="result" v-model="result"></textarea></li>
-      <li>
-        <label class="title1">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;志</label><div class="select" id="sign">
-        <p :data-id="signId" @click="btnSignShow" ref="refsign">{{signStatus}}</p>
-        <ol v-if="signShow">
-          <li v-for="list in signList" :data-id="list.id" @click="btnSignHide(list)">{{list.status}}</li>
-        </ol>
-      </div>
+      <li class="signstyle">
+        <b-form-group label="标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;志" horizontal>
+          <el-select v-model="signId" filterable>
+            <el-option
+              v-for="item in signList"
+              :key="item.id"
+              :label="item.status"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </b-form-group>
       </li>
-      <li>
-        <label class="title2">销售员</label>
-        <input type="text" id="seller" @click="btnSalesShow" ref="refsales" :class="{'bgSales':ifbgSales}" :disabled="ifbgSales" :data-id="salesId" :value="salesName" readonly="readonly">
-        <ol class="seller_select" v-if="salesShow">
-          <li v-for="list in salelist" :data-id="list.code" @click="btnSalesHide(list)">{{list.name}}</li>
-        </ol>
+      <li class="signstyle">
+        <b-form-group label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;销售员" horizontal>
+          <el-select v-model="salesId" :disabled="ifbgSales"  filterable>
+            <el-option
+              v-for="item in salelist"
+              :key="item.code"
+              :label="item.name"
+              :value="item.code">
+            </el-option>
+          </el-select>
+        </b-form-group>
       </li>
-      <li><label class="title2">修改</label><input type="text" id="modify_name" v-model="modifyName" disabled="disabled"><input type="text" v-model="modifyTime" id="modify_time" disabled="disabled"></li>
+      <li><label class="title2">修改</label><input type="text" class="modify_name" v-model="modifyName" disabled="disabled"><input type="text" v-model="modifyTime" class="modify_time" disabled="disabled"></li>
     </ul>
-    <h1><input type="button" v-if="datadiary!=''" @click="btnInstruct" class="btn_instructions" value="批示"><input type="button" class="btn_save" @click="btnSave" value="保存"><input type="button" class="btn_saveas" @click="btnSaveas" value="另存"><input type="button" class="btn_exit" @click="popExit" value="退出"></h1>
+    <h1><input type="button" v-if="datadiary!='0'" @click="btnInstruct" class="btn_instructions" value="批示"><input type="button" class="btn_save" @click="btnSave" value="保存"><input type="button" class="btn_saveas" @click="btnSaveas" value="另存"><input type="button" class="btn_exit" @click="popExit" value="退出"></h1>
   </div>
-    <pop-archives @btnArchClose="btnArchClose" @btnArchOk="btnArchOk" :ifunit="ifUnit?unit:guests" v-if="poparch" @btnChooseName="btnChooseName"></pop-archives>
-  <pop-instructions v-if="ifInstructions" :instructtext="instructText" :instructtime="instructTime" :instructperson="instructPerson" @InstructOk="InstructOk" @InstructClose="InstructClose"></pop-instructions>
-
+    <el-dialog
+      title="宾客档案查询"
+      :visible.sync="poparch"
+      width="100%"
+      :modal-append-to-body.sync="ifInstruct"
+    >
+      <pop-archives @btnArchClose="btnArchClose" :archFlag="archFlag" @btnArchOk="btnArchOk" :ifunit="ifUnit?unit:guests" @btnChooseName="btnChooseName"></pop-archives>
+    </el-dialog>
+    <el-dialog
+      title="批示内容"
+      :visible.sync="ifInstructions"
+      width="100%"
+      :modal-append-to-body.sync="ifInstruct"
+      >
+      <pop-instructions :instructtext="instructText" :instruFlag="instruFlag" :instructtime="instructTime" :instructperson="instructPerson" @InstructOk="InstructOk" @InstructClose="InstructClose"></pop-instructions>
+    </el-dialog>
   </div>
 </template>
 <script>
   import methodinfo from '../../config/MethodConst.js'
+  import { formatDate } from '../../common/date.js'
   import popArchives from './popArchives'
   import popInstructions from './popInstructions'
   import calendar from '../../components/vue-calendar-component/calendar'
@@ -67,33 +100,24 @@
         name: "pop-sale",
       data() {
         return {
-          // dateList: [],
+          ifInstruct:false,
           datetime: "",
           today:'',
-          calendarShow:false,
-          salesTypeShow:false,
           popsaletypeid:'',
-          saletype:'',
-          ifTimeNow:false,
           dayNowId:'AM',
-          dayNow:'上午' ,
           todayList:[
             {time:'上午',id:'AM'},
             {time:'下午',id:'PM'},
             {time:'晚上',id:'EM'}
           ],
           signId:'1',
-          signStatus:'有效',
           signList:[
             {status:'有效',id:'1'},
             {status:'待确认',id:'2'},
             {status:'确认',id:'3'},
             {status:'取消',id:'4'},
           ],
-          signShow:false,
-          salesName:'',
           salesId:'',
-          salesShow:false,
           poparch: false,
           unit:[
             {name:'公司',id:'C'},
@@ -120,14 +144,29 @@
           ifcheck:false,
           instructPerson:'',
           instructTime:'',
-          instructText:''
-        }
+          instructText:'',
+          archFlag:1,
+          instruFlag:1,
+          pickerOptions1: {
+            disabledDate(time) {
+              return time.getTime() > Date.now();
+            },
+          },
+        };
       },
-      props:['clickdata','saletypea','datadiary','saletypeid','saletime','salesnameid','sellerneme','timedetail','timedetailid'],
+      props:['clickdata','saletypea','datadiary','saletypeid','saletime','salesnameid','sellerneme','timedetail','timedetailid','salesFlag'],
       components:{
         calendar,
         popArchives,
         popInstructions
+      },
+      watch:{
+        salesFlag:function (val,oldval) {
+           this.popSaleData()
+        },
+        datetime:function (val,oldval) {
+           this.datetime=this.dateFormat(this.datetime)
+        },
       },
       computed: {
         ...mapGetters(['baseCodeList']),
@@ -135,18 +174,13 @@
         ...mapGetters(['guestDiary']),
       },
       created(){
-          if(this.clickdata==''){
-            this.datetime=this.saletime
-          }else{
-            this.datetime=this.clickdata
-          }
-        if(this.salesnameid==''){
-            this.ifbgSales=false
-        }else{
-            this.ifbgSales=true
-        }
+
       },
       methods:{
+        dateFormat: function (date) {
+          date = new Date(date)
+          return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+        },
         configDefault:function () {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -179,6 +213,7 @@
         },
         btnInstruct:function () {
           this.ifInstructions=true
+          this.$set(this,"instruFlag",this.instruFlag+1);
         },
         btnSaveas:function () {
           if(this.popunit==''&&this.popguest==''){
@@ -294,174 +329,184 @@
           this.$emit('btnExit')
         },
         btnUnit:function () {
+          this.$set(this,"archFlag",this.archFlag+1);
           this.ifUnit=true
           this.poparch=true;
         },
         btnGuests:function () {
+          this.$set(this,"archFlag",this.archFlag+1);
           this.ifUnit=false
           this.poparch=true;
         },
-        dataShow:function () {
-          this.calendarShow=true
-        },
-        choseDay(data) {
-          var data1=data.split("/")
-          if(data1[1]<10){
-            data1[1]='0'+data1[1]
+        popSaleData:function () {
+          this.ifInstructions=false
+          this.poparch=false
+          if(this.clickdata==''){
+            this.datetime=this.saletime
+          }else{
+            this.datetime=this.clickdata
           }
-          if(data1[2]<10){
-            data1[2]='0'+data1[2]
+          if(this.salesnameid==''){
+            this.ifbgSales=false
+          }else{
+            this.ifbgSales=true
           }
-          this.datetime=data1[0] + '-' + data1[1]+'-'+data1[2];
-          this.calendarShow=false
-        },
-        typeShow:function () {
-          this.salesTypeShow=true
-        },
-        btnTypeSelect:function(item){
-          this.saletype=item.descript
-          this.popsaletypeid=item.code
-          this.salesTypeShow = false
-        },
-        dayNowShow:function () {
-          this.ifTimeNow=true
-        },
-        dayNowHide:function (item) {
-          this.dayNow=item.time
-          this.dayNowId=item.id
-          this.ifTimeNow = false
-        },
-        btnSignShow:function () {
-          this.signShow=true
-        },
-        btnSignHide:function (item) {
-          this.signId=item.id
-          this.signStatus=item.status
-          this.signShow = false
-        },
-        btnSalesShow:function () {
-          this.salesShow=true
-        },
-        btnSalesHide:function (item) {
-          this.salesName=item.name
-          this.salesId=item.code
-          this.salesShow = false
-        }
-      },
-      mounted:function () {
-        if(this.datadiary!='0'){
           var _this=this
-          this.$store.dispatch('encrypttoken').then(() => {
-            //获取工号信息,完成后进行路由
-            this.$store.dispatch('getguestdiary',this.datadiary).then(() => {
-              this.$nextTick(function(){
-                _this.popunit=this.guestDiary.cusnodes
-                _this.popunitno=this.guestDiary.cusno
-                _this.popguest=this.guestDiary.nodes==''?this.guestDiary.no:this.guestDiary.nodes
-                _this.popguestno=this.guestDiary.no
-                _this.amount=this.guestDiary.amount
-                _this.contact=this.guestDiary.applname
-                _this.contactinfor=this.guestDiary.appltel
-                _this.datetime=this.guestDiary.date
-                if(this.guestDiary.memsta=="T"){
-                  _this.ifcheck=true
-                }
-                _this.popsaletypeid=this.guestDiary.item
-                _this.dayNowId=this.guestDiary.ctime
-                var dayname=this.guestDiary.ctime
-                _this.todayList.map(function (item) {
-                  if(item.id==dayname){
-                    dayname=item.time
+          if(this.datadiary!='0'){
+            this.$store.dispatch('encrypttoken').then(() => {
+              //获取工号信息,完成后进行路由
+              this.$store.dispatch('getguestdiary',this.datadiary).then(() => {
+                this.$nextTick(function(){
+                  _this.popunit=this.guestDiary.cusnodes
+                  _this.popunitno=this.guestDiary.cusno
+                  _this.popguest=this.guestDiary.nodes==''?this.guestDiary.no:this.guestDiary.nodes
+                  _this.popguestno=this.guestDiary.no
+                  _this.amount=this.guestDiary.amount
+                  _this.contact=this.guestDiary.applname
+                  _this.contactinfor=this.guestDiary.appltel
+                  _this.datetime=this.guestDiary.date
+                  if(this.guestDiary.memsta=="T"){
+                    _this.ifcheck=true
+                  }else{
+                    _this.ifcheck=false
                   }
+                  _this.popsaletypeid=this.guestDiary.item
+                  _this.dayNowId=this.guestDiary.ctime
+                  _this.remarks=this.guestDiary.ref
+                  _this.result=this.guestDiary.feedback
+                  _this.signId=this.guestDiary.tag
+                  _this.salesId=this.guestDiary.saleid
+                  _this.modifyName=this.guestDiary.cby
+                  _this.modifyTime=this.guestDiary.changed
+                  _this.instructPerson=this.guestDiary.memby,
+                    _this.instructTime=this.guestDiary.memdate,
+                    _this.instructText=this.guestDiary.memorandum
+                  console.log(_this.instructText+'popsale')
                 })
-                _this.dayNow=dayname
-                _this.remarks=this.guestDiary.ref
-                _this.result=this.guestDiary.feedback
-                _this.signId=this.guestDiary.tag
-                var signstatusname=this.guestDiary.tag
-                _this.signList.map(function (item) {
-                  if(item.id==signstatusname){
-                    signstatusname=item.status
-                  }
-                })
-                _this.signStatus=signstatusname
-                _this.salesId=this.guestDiary.saleid
-                var salesname=this.guestDiary.saleid
-                _this.salelist.map(function (item) {
-                  if(item.code==salesname){
-                    salesname=item.name
-                  }
-                })
-                _this.salesName=salesname
-                _this.modifyName=this.guestDiary.cby
-                _this.modifyTime=this.guestDiary.changed
-                var saletypename=this.guestDiary.item
-                _this.baseCodeList.map(function (item) {
-                  if(item.code==saletypename){
-                    saletypename=item.descript
-                  }
-                })
-                _this.saletype=saletypename
-                _this.instructPerson=this.guestDiary.memby,
-                _this.instructTime=this.guestDiary.memdate,
-                _this.instructText=this.guestDiary.memorandum
               })
             })
-          })
-        }else{
-           this.salesName=this.sellerneme
-          this.salesId=this.salesnameid
-          this.dayNowId=this.timedetailid
-          this.dayNow=this.timedetail
-          if(this.baseCodeList){
-            if(this.saletypea!=''){
-              this.saletype=this.saletypea
-              this.popsaletypeid=this.saletypeid
-            } else{
-              this.saletype=this.baseCodeList[0].descript
-              this.popsaletypeid=this.baseCodeList[0].code
+          }else{
+            _this.popunit=''
+            _this.popunitno=''
+            _this.popguest=''
+            _this.popguestno=''
+            _this.amount=''
+            _this.contact=''
+            _this.contactinfor=''
+            _this.ifcheck=false
+            _this.modifyName=''
+            _this.modifyTime=''
+            _this.instructPerson=''
+              _this.instructTime=''
+              _this.instructText=''
+            _this.remarks=''
+            _this.result=''
+            _this.signId=this.signList[0].id
+            this.salesId=this.salesnameid
+            if(this.timedetailid!=''&&this.timedetailid){
+              this.dayNowId=this.timedetailid
+            }else{
+              this.dayNowId=this.todayList[0].id
+            }
+            if(this.baseCodeList){
+              if(this.saletypea!=''){
+                this.popsaletypeid=this.saletypeid
+              } else{
+                this.popsaletypeid=this.baseCodeList[0].code
+              }
             }
           }
-        }
-        document.addEventListener('click',(e)=>{
-          if(this.$refs.reftype){
-            if (!this.$refs.reftype.contains(e.target)) {
-              this.salesTypeShow = false
-            }
-          }
-          if(this.$refs.reftoday) {
-            if (!this.$refs.reftoday.contains(e.target)) {
-              this.ifTimeNow = false
-            }
-          }
-          if(this.$refs.refsign) {
-            if (!this.$refs.refsign.contains(e.target)) {
-              this.signShow = false
-            }
-          }
-          if(this.$refs.calendar) {
-            if (!this.$refs.calendar.contains(e.target)) {
-              this.calendarShow = false
-            }
-          }
-          if(this.$refs.refsales) {
-            if (!this.$refs.refsales.contains(e.target)) {
-              this.salesShow = false
-            }
-          }
-        })
+        },
+      },
+      mounted:function () {
       }
     }
 </script>
 
-<style scoped lang="scss">
-  .saleCalendar{
-    top: 35px;
-    left: 75px;
-    position: absolute;
-    z-index: 22;
+<style lang="scss">
+  #pop_sales{
+    .bgSales{
+      background-color: #F5F5F5!important;
+    }
+    .el-input__icon{
+      line-height:25px;
+    }
+    .el-date-editor.el-input{
+      width: 112px;
+    }
+    .el-input__inner{
+      border-radius: 0!important;
+      padding: 0 0px 0 30px;
+    }
+    .el-select .el-input__inner{
+      padding: 0 5px;
+    }
+    .col-sm-3 {
+      flex: 0 0 23%;
+      max-width: 23% !important;
+      padding-right: 0!important;
+      padding-left: 0;
+    }
+    .col-sm-9 {
+      flex: 0 0 77%;
+      max-width: 77% !important;
+      padding: 0!important;
+    }
+    .timestyle{
+      .col-sm-3 {
+        flex: 0 0 39%;
+        max-width: 39% !important;
+        padding-right: 0!important;
+        padding-left: 0;
+      }
+      .col-sm-9 {
+        flex: 0 0 61%;
+        max-width: 61% !important;
+        padding: 0!important;
+      }
+    }
+    .signstyle{
+      width: 147px;
+      .col-sm-3 {
+        flex: 0 0 50%;
+        max-width: 50% !important;
+        padding-right: 0!important;
+        padding-left: 0;
+      }
+      .col-sm-9 {
+        flex: 0 0 50%;
+        max-width: 50% !important;
+        padding: 0!important;
+      }
+    }
+    .col-form-label{
+      padding-top: 2px;
+    }
+    .form-row{
+      margin-left: 0;
+    }
+    .form-group {
+       margin-bottom: 0;
+    }
+    .el-select{
+      width: 100%;
+    }
+    .el-select .el-input.is-disabled .el-input__inner{
+      height: 24px!important;
+    }
+    .el-dialog{
+      margin-top: 20px !important;
+    }
   }
-  .bgSales{
-    background-color: #F5F5F5!important;
+  .el-dialog__wrapper{
+    top: -150px;
+    left: -20px;
+    overflow: visible !important;
+  }
+  .el-dialog__header{
+    display: none;
+  }
+  .el-dialog{
+    background: transparent;
   }
 </style>
