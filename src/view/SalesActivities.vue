@@ -47,14 +47,14 @@
             <li>星期日</li>
           </ol>
           <ul class="clearfix">
-            <li v-for="item in list" v-if="item.otherMonth==-1" v-bind:class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
+            <li v-for="item in list" v-if="item.otherMonth==-1" :class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
               {{item.id}}
             </li>
-            <li @drop='monthdrop($event,item.id)' @dragover='allowDrop($event)' v-for="item in list" v-if="!item.otherMonth"  @click="monthPopSaleShow(item)" class="Wselday" v-bind:class="{wh_isToday: item.isToday,wh_isMark:item.isMark,todaySelect:item.isTodayNow}">
+            <li @drop='monthdrop($event,item.id)' @dragover='allowDrop($event)' v-for="item in list" v-if="!item.otherMonth"  @click="monthPopSaleShow(item)" class="Wselday" :class="{wh_isToday: item.isToday,wh_isMark:item.isMark,todaySelect:item.isTodayNow}">
               <p class="title"> {{item.id}}</p>
               <h1 @click="btnDetail(diaryList)" v-for="diaryList in guestdiarylist" v-if="guestdiarylist?item.id==diaryList.date.substring(8,10):false"><h1 :style="{background:salesTypecontain.bgcolor}" v-for="salesTypecontain in baseCodeListarc" v-if="diaryList.item==salesTypecontain.code"><span v-for="salesType in baseCodeListarc" v-if="diaryList.item==salesType.code">{{salesType.descript}}</span><strong v-for="sales in salelist" v-if="diaryList.saleid==sales.code">{{sales.name}}</strong></h1></h1>
             </li>
-            <li v-for="item in list" v-if="item.otherMonth==1" v-bind:class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
+            <li v-for="item in list" v-if="item.otherMonth==1" :class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
               {{item.id}}
             </li>
           </ul>
