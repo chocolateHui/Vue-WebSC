@@ -223,7 +223,7 @@
           }
         },
         listChange:function () {
-          this.$router.push({path:'/main/placeDistribution'})
+          this.$router.push({name:'宴会场地分布'})
         },
         btnCheck:function (idx) {
           this.sta=''
@@ -337,7 +337,7 @@
           this.eventidC=list.eventid
           this.cateridC=list.caterid
           this.caternameC=list.catername
-          this.$router.push({path:'/main/placeDistribution'})
+          this.$router.push({name:'宴会场地分布'})
         },
         btnsave1:function (param,severmethods,ifcheck) {
           this.syncpost1(param,severmethods,false,ifcheck);

@@ -17,7 +17,8 @@
     data () {
       return {
         eventshow:true,
-        toggleshow:false
+        toggleshow:false,
+        isNew:true
       };
     },
     components: {
@@ -25,11 +26,11 @@
       NewEvent
     },
     created(){
-
+    },
+    mounted(){
     },
     methods: {
       saveCatering(localcatering){
-        console.log(localcatering)
         let _this=this;
         this.$refs.newevent.eventCheck(localcatering).then((checked) => {
           if(checked){
@@ -57,7 +58,12 @@
       },
       getCodeDatas(){
         this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch("getPlacelist");
+          if(this.isNew){
+            this.$store.dispatch("getPlacelist");
+            this.$store.dispatch("getSale");
+            this.$store.dispatch("getAllBaseCodes");
+            this.isNew = false;
+          }
         })
       }
     },
@@ -69,5 +75,12 @@
 <style lang="scss">
   .card {
     margin-bottom: 15px;
+    .form-control{
+      height: 33.5px;
+    }
+    .ivu-input{
+      height: 33px;
+      margin-top: 0;
+    }
   }
 </style>

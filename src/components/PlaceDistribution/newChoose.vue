@@ -134,7 +134,7 @@
               place:this.newChooseAddrNo,
               placedes:this.newChooseAddr
             }
-            this.$router.push({path:'/main/caterList'})
+            this.$router.push({name:'宴会预订详情',param:{caterid:''}})
           }
         },
         addInquiry:function () {
@@ -151,7 +151,7 @@
             enddate:this.newChooseTime,
           };
           this.catersta='Q'
-          this.$router.push({path:'/main/caterList'})
+          this.$router.push({name:'新建宴会问询'})
         },
         addBook:function () {
           var paramNewEvent={
@@ -167,7 +167,7 @@
             enddate:this.newChooseTime,
           }
           this.catersta='R'
-          this.$router.push({path:'/main/caterList'})
+          this.$router.push({name:'新建宴会预订'})
         },
         getcateringlist:function (param) {
           var _this=this

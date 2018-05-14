@@ -28,7 +28,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import 'font-awesome/css/font-awesome.css'
   import calendar from './calendar.vue'
-  import calendarjs from './calendar'
+  import calendarjs from '../../common/calendar'
   import {formatDate} from '../../common/date'
   // 组件和参数
 
@@ -49,7 +49,7 @@
           { route: '/main/caterList', name: '宴会预订列表',iconClass:"fa-list"},
           { route: '/main/newQuery', name: '新建宴会问询',iconClass:"fa-clock-o fa-rotate-90"},
           { route: '/main/newReserve', name: '新建宴会预订',iconClass:"fa-registered"},
-          { route: '/main/placeDistribution', name: '宴会场地分布',iconClass:"fa-th"},
+          { route: '/main/place/placeDistribution', name: '宴会场地分布',iconClass:"fa-th"},
           { route: '/main/saleDiary', name: '销售活动日历',iconClass:"fa-calendar"},
           { route: '/main/report', name: '报表专家',iconClass:"fa-list-alt"},
           { route: '/main/maint', name: '基础代码维护',iconClass:"fa-cog"}
@@ -112,7 +112,7 @@
         })
       } else {
         this.$store.commit('set_active_index', '首页');
-        this.$router.push('/main');
+        this.$router.push({path:'/main'});
       }
     },
     components: {

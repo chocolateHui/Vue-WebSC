@@ -103,9 +103,8 @@
             style="width: 100%">
             <el-table-column
             prop="tableno"
-            label="场地代码"
-            width="100"
-            sortable
+            label="编码"
+            width="65"
             show-overflow-tooltip>
               <template slot-scope="scope" >
                 <div @change="changeplace(scope)" v-if="scope.row.add === 'T'">
@@ -119,7 +118,6 @@
             <el-table-column
               prop="descript"
               label="中文描述"
-              sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-input @change="changeplace(scope)" v-model="scope.row.descript" placeholder=""></el-input>
@@ -128,7 +126,6 @@
             <el-table-column
               prop="descript1"
               label="英文描述"
-              sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-input  @change="changeplace(scope)" v-model="scope.row.descript1" placeholder=""></el-input>
@@ -137,7 +134,6 @@
             <el-table-column
               prop="descript2"
               label="第三描述"
-              sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-input @change="changeplace(scope)" v-model="scope.row.descript2" placeholder=""></el-input>
@@ -146,19 +142,17 @@
             <el-table-column
               prop="cover"
               label="人数"
-              width="70"
-              sortable
+              width="60"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <Numberinput class="el-input__inner" type="number" @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></Numberinput>
+                <Numberinput class="el-input__inner" type="number" maxlength="5" @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></Numberinput>
                 <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
               </template>
             </el-table-column>
             <el-table-column
               prop="layout"
               label="布局"
-              sortable
-              width="100"
+              width="135"
               show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-select v-model="scope.row.layoutarr" multiple @change=" handlelaySelectionChange(scope)">
@@ -174,7 +168,6 @@
             <el-table-column
               prop="toplace"
               label="从属场地"
-              sortable
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
@@ -271,12 +264,12 @@
   ]
 
   const placefildes = [
-    {  prop: 'tableno', label:  '场地代码',width:'100',sortable:true,showTip:true },
+    {  prop: 'tableno', label:  '代码',width:'80',sortable:false,showTip:true },
     {  prop: 'descript', label:  '中文描述',width:'',sortable:true,showTip:true},
     {  prop: 'descript1', label:  '英文描述',width:'',sortable:true,showTip:true},
     {  prop: 'descript2', label:  '第三描述',width:'',sortable:true ,showTip:true},
     {  prop: 'cover', label:  '人数',width:'65',sortable:true ,showTip:true},
-    {  prop: 'layout', label:  '布局',width:'70',sortable:true ,showTip:true},
+    {  prop: 'layout', label:  '布局',width:'80',sortable:true ,showTip:true},
     {  prop: 'toplace', label:  '从属场地',width:'',sortable:true,showTip:true }
   ]
 

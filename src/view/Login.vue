@@ -172,7 +172,9 @@
     ime-mode:disabled;
     text-transform:uppercase;
   }
-
+  .input-group > .form-control{
+    height: 35px;
+  }
   .logo{
     position:absolute;
     top:50px;
