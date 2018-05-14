@@ -7,7 +7,7 @@
     </ul>
     <ol>
       <li @click="listChange"><i class="fa fa-list"></i>列表</li>
-      <li class="current">图标</li>
+      <li class="current"><i class="fa fa-bar-chart"></i>图表</li>
     </ol>
     <button class="btn_refresh" @click="btnrefresh"><i class="fa fa-refresh"></i>刷新</button>
   </div>

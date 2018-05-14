@@ -7,9 +7,9 @@
           <b-input-group prepend="宴会">
             <b-form-input
               type="text"
-            v-model="remarkinfo.caterdes"
+            v-model="localcaterdes"
             required
-            :disabled="changeshow.pccodedisabled"
+            :disabled="show.pccodedisabled"
             @input.native="updateValue"
             placeholder="">
             </b-form-input>
@@ -19,9 +19,9 @@
           <b-input-group prepend="事务" >
             <b-form-input
               type="text"
-              v-model="remarkinfo.eventdes"
+              v-model="localeventdes"
               required
-              :disabled="changeshow.descriptdisabled"
+              :disabled="show.descriptdisabled"
               @input.native="updateValue"
               placeholder="">
             </b-form-input>
@@ -31,9 +31,9 @@
           <b-input-group prepend="排序">
             <b-form-input
               type="text"
-              v-model="remarkinfo.seq"
+              v-model="localscnotes.seq"
               required
-              :disabled="changeshow.descript1disabled"
+              :disabled="show.descript1disabled"
               placeholder="">
             </b-form-input>
           </b-input-group>
@@ -44,8 +44,8 @@
           <b-input-group prepend="标题">
             <b-form-input
               type="text"
-              v-model="remarkinfo.title"
-              :disabled="changeshow.descript2disabled"
+              v-model="localscnotes.title"
+              :disabled="show.descript2disabled"
               required
               placeholder="">
             </b-form-input>
@@ -54,7 +54,7 @@
         <b-col sm="4" class="my-1 paddingright0">
           <b-form-group horizontal :label-cols="4" label="显示在EO单" class="mb-0">
             <b-form-checkbox id="checkbox1"
-                             v-model="remarkinfo.flag"
+                             v-model="localscnotes.flag"
                              value="T"
                              unchecked-value="F">
             </b-form-checkbox>
@@ -64,8 +64,8 @@
           <b-input-group prepend="备注时间">
             <b-form-input
               type="text"
-              v-model="remarkinfo.date0"
-              :disabled="changeshow.tablesdisabled"
+              v-model="localscnotes.date0"
+              :disabled="show.tablesdisabled"
               required
               placeholder="">
             </b-form-input>
@@ -74,7 +74,7 @@
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px">
         <b-form-textarea id="textarea1"
-                         v-model="remarkinfo.content"
+                         v-model="localscnotes.content"
                          placeholder="Enter something"
                          :rows="12"
                          :max-rows="12">
@@ -88,44 +88,78 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue'
+  import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../config/MethodConst.js'
-  const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
-  const newshow = {  pccodedisabled: false, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:true,tablesdisabled:true}
+  import {formatDate} from '../common/date'
+  const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
+  const newshow = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
+
 
   export default {
+
     data () {
       return {
         show: show,
-        remarkinfo:this.remark,
+        localscnotes:{},
         ty:"",
+        localcaterdes:"",
+        localeventdes:"",
       }
     },
     props:{
-      remark: {
-        type:Object
-      },
+      // remark: {
+      //   type:Object
+      // },
+      // num:Number
     },
     created(){
-      console.log("a");
-      this.getremark()
+      // console.log("a");
+      // this.getremark()
     },
 
     watch: {
-      remarkinfo:function (val,oldval) {
-       this.getremark();
-      }
-    },
-
-    methods: {
-      changeshow() {
+      ty:function (val,oldval) {
         if(this.ty=="new"){
-          return show;
+          this.show= show;
         }else{
-          return newshow;
+          this.show=  newshow;
         }
       },
+      caterinfo:function (val,oldval) {
+        if(val==oldval){
+
+          this.localcaterdes =  this.caterdes.toString();
+          this.localeventdes = this.eventdes.toString();
+          this.localscnotes = Object.assign({},this.scnote);
+        }else{
+
+          this.localcaterdes =  this.caterdes.toString();
+          this.localeventdes =  this.eventdes.toString();
+
+          this.getremark();
+        }
+      },
+      scnote:function (val,oldval) {
+
+        if(val==oldval){
+          this.localscnotes = Object.assign({},val);
+        }else{
+          this.localscnotes = Object.assign({},val);
+        }
+
+      },
+    },
+    computed: {
+      ...mapGetters([
+        'caterinfo',
+        'caterdes',
+        'eventdes',
+        "scnote"
+      ]),
+    },
+    methods: {
       updateValue(event) {
-        console.log(event);
         if(!event.isComposing){
           return event.data;
         }else{
@@ -133,91 +167,90 @@
         }
       },
       getremark(){
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.$http.defaults.headers.common['username'] = this.$store.getters.username
-            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-            this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-            this.$http.post(methodinfo.getscnotelist, {
-              caterid: this.remarkinfo.caterid,
-              eventid: this.remarkinfo.eventid,
-              itemid:this.remarkinfo.itemid,
-              type:this.remarkinfo.type,
-            }).then((response)=> {
-              if (response.status === 200) {
-                if(typeof(response.data.notes) != "undefined"){
-                  var s = response.data.notes[0];
-                  this.remarkinfo.seq = s.seq;
-                  this.remarkinfo.content = s.content;
-                  this.remarkinfo.title = s.title;
-                  this.remarkinfo.flag = s.flag;
-                  this.remarkinfo.date0 = s.date0;
-                  this.remarkinfo.uuid= s.uuid;
-                  this.ty="update";
-                }
-                else{
-                  this.ty="new";
-                }
-              }
-            })
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch("getScNotots").then(() => {
+          }).catch(function (errorMessage) {
           })
+         });
         },
       close:function(){
-        // console.log(this.$store.getters.username);
-        // console.log(this.$store.getters.empno);
-        // this.$emit('onhide');
+        this.$emit('onhide');
       },
       updatescnotes(){
-        console.log(this.remarkinfo)
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.updatescnoteinfo, {
-            uuid: this.remarkinfo.uuid,
-            title: this.remarkinfo.title,
-            content:this.remarkinfo.content,
-            type:this.remarkinfo.type,
-            sta:this.remarkinfo.sta,
-            eoprinted:this.remarkinfo.eoprinted
+            uuid: this.localscnotes.uuid,
+            title: this.localscnotes.title,
+            content:this.localscnotes.content,
+            type:this.localscnotes.type,
+            sta:this.localscnotes.sta,
+            eoprinted:this.localscnotes.eoprinted
           }).then((response)=> {
-            if (response.status === 200) {
-              console.log(response.data.errorCode);
-            }
+              if(response.data.errorCode==="0"){
+                this.$message({
+                  type: '保存',
+                  message: '保存成功!'
+                });
+                this.$emit('onhide');
+               this.getremark()
+              }
+              else{
+                this.$message.error({
+                  type: '保存',
+                  message:response.data.errorMessage
+                });
+              }
           })
         })
       },
       newscnotes(){
+        if(!this.localscnotes.title){
+          this.$message.error({
+            type: '保存',
+            message:"标题不能为空"
+          });
+          return;
+        }
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.newscnoteinfo, {
-            blockid: this.remarkinfo.blockid,
-            caterid: this.remarkinfo.caterid,
-            eventid: this.remarkinfo.eventid,
-            itemid: this.remarkinfo.itemid,
-            type:this.remarkinfo.type,
-            title: this.remarkinfo.title,
-            content:this.remarkinfo.content,
-            date0:new Date().getTime(),
-            flag:this.remarkinfo.flag,
-            seq:this.remarkinfo.seq
+            blockid: this.localscnotes.blockid,
+            caterid: this.localscnotes.caterid,
+            eventid: this.localscnotes.eventid,
+            itemid: this.localscnotes.itemid,
+            type:this.localscnotes.type,
+            title: this.localscnotes.title,
+            content:this.localscnotes.content,
+            date0:formatDate(new Date(),"yyyy-MM-dd hh:mm:ss"),
+            flag:this.localscnotes.flag,
+            seq:this.localscnotes.seq
           }).then((response)=> {
-            if (response.status === 200) {
-
-              if(response.data.errorcode == "0"){
-
+              if(response.data.errorCode==="0"){
+                this.$message({
+                  type: '新建',
+                  message: '新建成功!'
+                });
+                this.$emit('onhide');
+                this.getremark()
               }
               else{
-
+                this.$message.error({
+                  type: '保存',
+                  message:response.data.errorMessage
+                });
               }
-            }
+
           })
         })
       },
       savescnotes:function(){
         var url = "";
-        if(this.ty==="update"){
+        if(this.localscnotes.isnew==="F"){
           this.updatescnotes();
         }
         else{
@@ -231,6 +264,9 @@
 </script>
 <style lang="scss" type="text/scss">
   #remark{
+    .paddingright0 {
+      padding-right: 0px;
+    }
    .btn {
       width: 92px;
       margin-left: 5px;
@@ -241,6 +277,9 @@
     }
     .custom-control {
       min-height: 0.6rem;
+    }
+    .form-row > .col, .form-row > [class*="col-"] {
+      padding-right: 0px;
     }
   }
 </style>
