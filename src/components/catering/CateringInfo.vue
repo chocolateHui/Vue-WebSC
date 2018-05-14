@@ -369,7 +369,7 @@
         this.$router.push({name: '宴会预订EO单', params: { caterid: this.caterid }});
       },
       refreshData(){
-        const loading = this.$loading.service({fullscreen:true});
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         setTimeout(() => {
           loading.close();
         }, 500);

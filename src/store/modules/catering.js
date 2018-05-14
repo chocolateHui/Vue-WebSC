@@ -130,6 +130,7 @@ const actions = {
     }
   },
   getEventList (store) {
+    store.commit('setEventlist', [])
     axiosinstance.defaults.headers.common['username'] = store.getters.username
     axiosinstance.defaults.headers.common['signature'] = store.getters.signature
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()

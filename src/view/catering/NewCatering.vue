@@ -13,6 +13,8 @@
   import NewEvent from '../../components/catering/NewEvent.vue'
   import '../../css/font.scss'
 
+  let loading;
+
   export default {
     data () {
       return {
@@ -26,6 +28,7 @@
       NewEvent
     },
     created(){
+      loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'})
     },
     mounted(){
     },
@@ -63,6 +66,9 @@
             this.$store.dispatch("getSale");
             this.$store.dispatch("getAllBaseCodes");
             this.isNew = false;
+            setTimeout(() => {
+              loading.close();
+            }, 300);
           }
         })
       }

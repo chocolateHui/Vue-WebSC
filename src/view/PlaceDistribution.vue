@@ -226,7 +226,7 @@
         ...mapGetters(['isLoading']),
       },
       created(){
-        loading = this.$loading.service({fullscreen:true});
+        loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           for(var num=8;num<=22;num++) {
             if (num <= 12) {
               var dataId = num

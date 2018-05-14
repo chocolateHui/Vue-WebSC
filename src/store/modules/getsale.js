@@ -112,8 +112,9 @@ const actions = {
         if (response.status === 200) {
           let placedata = []
           if (response.data.errorCode === '0') {
-            if (response.data.places !== null) {
-              placedata = response.data.places
+            placedata = response.data.places
+            if (!placedata) {
+              console.log(placedata)
               for (let i = 0; i < placedata.length; i++) {
                 placedata[i].bdates.reverse()
               }

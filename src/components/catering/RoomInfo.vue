@@ -94,6 +94,19 @@
     .container-fluid{
       padding: 0;
     }
+    .sum-row{
+      border-top: 1px solid #dee2e6;
+      margin-top: 6px;
+      .sumlabel{
+        margin-top: 5px;
+        margin-bottom: 0;
+        padding: 0 10px;
+      }
+      #radios2{
+        margin-top: 5px;
+        margin-bottom: 0;
+      }
+    }
     .row{
       margin-right: 0;
     }
