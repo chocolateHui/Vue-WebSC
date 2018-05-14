@@ -40,4 +40,7 @@ export default {
     font-family: 'Open Sans',sans-serif;
     overflow-y: hidden;
   }
+  input{
+    font-size: 0.9rem;
+  }
 </style>

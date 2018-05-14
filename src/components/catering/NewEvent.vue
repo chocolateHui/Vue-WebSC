@@ -24,7 +24,7 @@
                       <el-input class="eventname" v-model="newEvent.descript"></el-input>
                     </b-form-group>
                     <b-form-group label="时&#8195;&#8195;段&#8194;|" horizontal>
-                      <TimePicker :steps="[1, 10, 15]" v-model="eventtime" format="HH:mm" type="timerange" placeholder="Select time"></TimePicker>
+                      <TimePicker :steps="[1, 10, 15]" v-model="eventtime" format="HH:mm" type="timerange" placeholder=""></TimePicker>
                       <el-select class="timeselect" v-model="stdunit" @change="timeChange" placeholder="请选择">
                         <el-option
                           v-for="item in timeoptions"
@@ -219,6 +219,7 @@
           sta:'1',
           stdunit:'0'
         },
+        eventshow:true,
         eventbdate:[],
         eventtime: ['00:00', '00:00'],
         stdunit:'',
@@ -245,10 +246,6 @@
       }
     },
     props:{
-      eventshow :{
-        type:Boolean,
-        default:true
-      },
       toggleshow:{
         type:Boolean,
         default:false
@@ -267,7 +264,8 @@
         'degreeoptions'
       ])
     },
-    mounted(){
+    created(){
+      this.eventshow=!this.caterid;
     },
     methods: {
       eventCheck(catering){
@@ -418,7 +416,6 @@
         this.$refs.MultiPlace.clearSelect();
       },
       placeConfirm(allselect){
-        console.log(allselect);
         let eventcode = '';
         let eventcodedes='';
         for(let elem of allselect){

@@ -134,9 +134,8 @@
       },
       //页面切换数据处理
       handleSelectionChange(val) {
-        if(this.pageChange){
+        if(this.pageChange&&this.allselect.length>0){
           //换页时清空当前选择并重新赋值
-          this.pageChange=false;
           this.currentselect=[];
           for(let elem of this.allselect){
             this.$refs.multiplacetable.toggleRowSelection(elem);
@@ -153,6 +152,7 @@
               }
             }
           }
+          this.pageChange=false;
           this.currentselect = val;
         }
         this.currentplace = '';

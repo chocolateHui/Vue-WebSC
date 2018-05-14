@@ -13,6 +13,7 @@ const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../v
 const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfo.vue')
 const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
+const BaseCode = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/BaseCode.vue')
 const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
 const placeDistribution = () => import(/* webpackChunkName: "group-place" */ '../view/placeDistribution.vue')
 const placeList = () => import(/* webpackChunkName: "group-place" */ '../components/PlaceDistribution/placeList.vue')
@@ -180,9 +181,10 @@ const router = new Router({
               component: Hotelinfo
             },
             {
-              path: '/main/maint/basecode',
-              name: '基础代码',
-              component: Hotelinfo
+              path: '/main/maint/basecode/:cat',
+              name: '通用基础代码',
+              component: BaseCode,
+              props: true
             }
           ]
         }

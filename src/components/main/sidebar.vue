@@ -106,9 +106,13 @@
         }else if(this.$route.name==='新建宴会预订'){
           this.$store.commit('setCatersta', '1');
         }
-        this.$store.commit('add_tabs', {route: this.$route.path , name: this.$route.name });
+        let routename = this.$route.name;
+        if(this.$route.path.indexOf("/maint/")>0){
+          routename = "基础代码维护";
+        }
+        this.$store.commit('add_tabs', {route: this.$route.path , name: routename });
         this.$nextTick(function(){
-          this.$store.commit('set_active_index', this.$route.name);
+          this.$store.commit('set_active_index', routename);
         })
       } else {
         this.$store.commit('set_active_index', '首页');
