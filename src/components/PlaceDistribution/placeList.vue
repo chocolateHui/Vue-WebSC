@@ -15,7 +15,7 @@
             </ul>
             <ol>
               <li class="current"><i class="fa fa-list"></i>列表</li>
-              <li @click="listChange">图标</li>
+              <li @click="listChange"><i class="fa fa-bar-chart"></i>图标</li>
             </ol>
           </div>
           <table class="placelist_content_list" id="placelist_table">
@@ -60,14 +60,14 @@
       <!--<notesmodal v-if="ifnotes" @btnNoteChecked="btnNoteChecked" :ifnotechecked.sync="ifnotechecked" @btnsave1="btnsave1" :remarklist="remarklist" :eventidC="eventidC" :cateridC="cateridC" @btnNotesCancel="btnNotesCancel"></notesmodal>-->
      </div>
     <b-modal id="logmodal" ref="myModalRef" size="lg" title="宴会备注" hide-footer>
-      <notesmodal :remarklist="remarklist" :num="num" :eventidC="eventidC"  :cateridC="cateridC"  @btnsave1="btnsave1"  @onhide="btnNotesCancel"></notesmodal>
+      <notesmodal  @onhide="btnNotesCancel"></notesmodal>
     </b-modal>
   </div>
 </template>
 <script>
   import reasonmodal from './reasonmodal'
   import methodinfo from '../../config/MethodConst.js'
-  import notesmodal from './remark'
+  import notesmodal from './../remark'
   import '../../css/PlaceDistribute.scss';
     export default {
         name: "place-distribution-single",
@@ -100,7 +100,6 @@
             reasontype:'',
             cancelid:'',
             sta:'',
-            num:1
           }
       },
       components:{
@@ -321,9 +320,15 @@
           }
         },
         remark(list){
-          this.$set(this,"num",this.num+1);
+          var remarkinfo={};
+          remarkinfo['caterid']=list.caterid
+          remarkinfo['eventid']=list.eventid
+          remarkinfo['itemid']=null
+          remarkinfo['seq']=''
+          this.$store.commit('setCaterdes',list.catername)
+          this.$store.commit('setEventdes',list.descript)
+          this.$store.commit('setCaterinfo',remarkinfo)
           this.$refs.myModalRef.show()
-          this.remarklist=list
         },
         btnNotesCancel:function () {
           this.$refs.myModalRef.hide()

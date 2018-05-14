@@ -21,14 +21,16 @@
           </div>
         </li>
         <li></li>
-        <a class="btn_add" v-if=" new Date(timenow)<=new Date(timelistthing1)" @click="addThings">添加宴会事务</a>
+        <a class="btn_add" v-if=" new Date(timenow)<=new Date(timelistthing1)" @click="addThings"><i style="font-size: 1rem" class="fa fa-plus-circle"></i>   添加宴会事务</a>
       </ol>
  </template>
 <script>
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
   import '../../css/PlaceDistribute.scss';
+  import Icon from "iview/src/components/icon/icon";
     export default {
-        name: "today-things",
+      components: {Icon},
+      name: "today-things",
       data(){
         return{
            timenow:''

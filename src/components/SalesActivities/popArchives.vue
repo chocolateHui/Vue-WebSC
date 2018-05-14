@@ -1,5 +1,5 @@
 <template>
-  <div class="pop_archives">
+  <div class="pop_archives" id="pop_archives">
     <div class="pop_archives_tou">宾客档案查询<i @click="archClose" class="fa fa-close"></i></div>
     <div class="search">
       <ul>
@@ -7,10 +7,33 @@
         <li><label>手机</label><input type="text" class="text_input" v-model="mobile" id="archivesphone"></li>
         <li><label>档案号</label><input type="text" class="text_input" v-model="no" id="archivesno"></li>
         <li><label>联系人</label><input type="text" class="text_input" v-model="contacter" id="archivesContacts"></li>
-        <li><label>销售员</label><div class="select" id="archivessale"><p @click="saleListShow" ref="refsales" :data-id="salesId">{{salesName}}</p><ol v-if="ifSales"><li @click="saleListHide(item)" v-for="item in popSalesList" :data-id="item.code">{{item.name}}</li></ol></div></li>
-        <li><label>类型</label><div class="select" id="archivestype" :class="{'bgSales': bgUnit}"><p @click="archTypeShow" ref="reftype" :data-id="archTypeId">{{archTypeName}}</p>
-          <ol v-if="ifTypeShow&&bgUnit"><li @click="archTypeHide(item)" :data-id="item.id" v-for="item in ifunit">{{item.name}}</li></ol>
-        </div></li>
+        <li class="saleChoose">
+           <b-form-group label="&#8194;销售员" horizontal>
+            <el-select v-model="salesId" filterable>
+              <el-option
+                v-for="item in popSalesList"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code">
+              </el-option>
+            </el-select>
+          </b-form-group>
+        </li>
+        <li class="poptype">
+          <!--<label>类型</label><div class="select" id="archivestype" :class="{'bgSales': bgUnit}"><p @click="archTypeShow" ref="reftype" :data-id="archTypeId">{{archTypeName}}</p>-->
+          <!--<ol v-if="ifTypeShow&&bgUnit"><li @click="archTypeHide(item)" :data-id="item.id" v-for="item in ifunit">{{item.name}}</li></ol>-->
+        <!--</div>-->
+          <b-form-group label="&#8194;类型" horizontal>
+            <el-select v-model="archTypeId" filterable :disabled="!bgUnit">
+              <el-option
+                v-for="item in ifunit"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </b-form-group>
+        </li>
       </ul>
       <input type="button" class="btn_query" @click="btnQuery" value="查询" />
     </div>
@@ -58,21 +81,17 @@
 </template>
 <script>
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
-  import '../../css/SalesActivite.scss';
     export default {
         name: "pop-archives",
       data(){
           return{
-            archTypeName:'',
             archTypeId:'',
             salesAll:[{
               "name":"所有",
               "code":"",
             }],
             popSalesList:[],
-            ifSales:false,
             salesId:'',
-            salesName:'',
             bgUnit:false,
             ifTypeShow:false,
             proParam:{},
@@ -91,32 +110,51 @@
         ...mapGetters(['profileslist']),
         ...mapGetters(['cateringlist']),
       },
-      created(){
-        this.archTypeName=this.ifunit[0].name
-        this.archTypeId=this.ifunit[0].id
-        if( this.archTypeId=='F'){
-          this.bgUnit=false
-        }else{
-          this.bgUnit=true
-        }
-        var salesList=this.salelist
-        this.popSalesList=this.salesAll.concat(salesList)
-        this.salesId=this.salesAll[0].code
-        this.salesName=this.salesAll[0].name
+      watch:{
+        archFlag:function (val,oldval) {
+          this.poparchdata()
+        },
       },
-      props:['ifunit'],
+      created:function () {
+        this.poparchdata()
+      },
+      props:['ifunit','archFlag'],
       methods: {
+        poparchdata:function () {
+          this.clearAll()
+          this.archTypeId=this.ifunit[0].id
+          if( this.archTypeId=='F'){
+            this.bgUnit=false
+          }else{
+            this.bgUnit=true
+          }
+          var salesList=this.salelist
+          this.popSalesList=this.salesAll.concat(salesList)
+          this.salesId=this.salesAll[0].code
+        },
         chooseType:function (popType) {
           this.$emit('btnChooseName', popType.proname,this.prono,this.archTypeId);
+          this.clearAll()
+        },
+        clearAll:function () {
+          this.name=''
+          this.mobile=''
+          this.no=''
+          this.contacter=''
+          this.salesId=''
+          this.$store.commit("setProfilesNull")
         },
         archClose: function () {
+          this.clearAll()
           this.$emit('btnArchClose')
         },
         archOk: function () {
+          this.clearAll()
           this.$emit('btnArchOk',this.ifproCurrent,this.proName,this.proNo,this.archTypeId)
         },
         /*档案搜索*/
         btnQuery:function () {
+          this.$store.commit("setProfilesNull")
           if(this.mobile==''&&this.name==''&&this.no==''&&this.contacter==''){
             this.$message({
               message: "名称、手机号、档案号、联系人至少填写一个",
@@ -156,50 +194,134 @@
           this.$store.dispatch('encrypttoken').then(() => {
             //获取工号信息,完成后进行路由
             this.$store.dispatch('getProfiles',this.proParam).then(() => {
-
+              // this.profileslist1=this.profileslist
             })
           })
         },
-        saleListShow:function () {
-          this.ifSales=true
-        },
-        saleListHide:function (item) {
-          this.salesId=item.code
-          this.salesName=item.name
-          this.ifSales = false
-        },
-        archTypeShow:function () {
-          this.ifTypeShow=true
-        },
-        archTypeHide:function (item) {
-          this.archTypeId=item.id
-          this.archTypeName=item.name
-          this.ifTypeShow = false
-        },
       },
       mounted:function () {
-        this.$store.commit("setProfilesNull")
-        document.addEventListener('click',(e)=>{
-          if(this.$refs.refsales){
-            if (!this.$refs.refsales.contains(e.target)) {
-              this.ifSales = false
-            }
-          }
-          if(this.$refs.reftype){
-            if (!this.$refs.reftype.contains(e.target)) {
-              this.ifTypeShow = false
-            }
-          }
-        })
+        // this.$store.commit("setProfilesNull")
       }
     }
 </script>
 
-<style scoped lang="scss">
-.bgSales{
-  background: #ffffff !important;
-}
-  .proCurrent{
-    background: #e1edf7!important;
+<style lang="scss">
+  @import '../../css/color';
+  #pop_archives{background: $colorWhite;height: 580px;width: 780px;
+    .pop_archives_tou{background: $colorF5;border-bottom: 1px solid $colorGray; color: $colorD0;font-size: 16px;height: 54px;line-height: 54px;padding: 0 35px;margin-bottom: 20px;
+      i{color: #9E9E9F;cursor: pointer;display: inline-block;float: right;height: 14px;line-height: 14px;margin-top:24px;text-align: center;width: 14px;}
+    }
+    .search{padding: 0 35px;
+      ul{display: inline-block;width: 620px;
+        >li{float: left;margin-right: 12px; margin-bottom: 10px;}
+        li{
+          label{ color: #595757;display: inline-block; font-size: 13px;height:22px;line-height:22px;width: 50px;}
+          .text_input{background: $colorWhite;border:1px solid $colorGray; color: #9E9E9F;font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif ;height: 22px;line-height: 22px;padding: 0 3px;}
+          .select{border: 1px solid $colorGray; display:inline-block;height: 22px;position: relative;
+            p{cursor:pointer;padding: 0 10px;position: relative;
+              &::after{color: #888; content: '\f107'; font: normal normal normal 14px/1 FontAwesome;display: inline-block;position: absolute;right: 5px;top: 2px;}
+            }
+            ol{background: $colorWhite;border: 1px solid $colorGray; position: absolute;left: 0;top: 20px;width: 100%; overflow: auto !important;max-height: 150px;
+              li{padding: 0 10px;
+              }
+            }
+          }
+          #archivesname{width: 120px;}
+          #archivesphone{width: 120px;}
+          #archivesno{width: 190px;}
+          #archivesContacts{width: 120px;}
+          #archivessale{width: 120px;}
+          #archivestype{width: 190px; background: $colorF5;}
+        }
+      }
+      .btn_query{background: $colorHeadBtn;border: none;color: $colorWhite;cursor: pointer;float: right; font-size: 14px;height: 28px;line-height: 28px;text-align: center;width: 80px;}
+    }
+    .list_archives{padding: 0 35px 15px;
+      h1{color: $colorD0; font-size: 14px; margin-bottom: 8px;}
+      ol{background: #F8F8F8; overflow: hidden;border-left: 1px solid $colorGray;border-top: 1px solid $colorGray;
+        li{float: left; border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray; color: #595757;height: 32px;line-height: 32px; text-align: center;}
+      }
+      .nav1{width: 130px;}
+      .nav2{width: 129px;}
+      .nav3,.nav4,.nav5,.nav6,.nav7,.nav8{width: 75px;}
+      ul{ height: 135px; overflow: auto !important; width: 730px;
+        li{border-left: 1px solid $colorGray;overflow: hidden; height: 28px;line-height: 27px; width: 710px;
+          &:nth-child(2n){background: $colorF5;}
+          &.current{background: #E1EDF7;}
+          span{border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray;float: left; display: inline-block;height: 28px; padding: 0 5px;text-align: center;}
+        }
+      }
+    }
+    .list_book{padding: 0 35px 15px;
+      h1{color: $colorD0; font-size: 14px; margin-bottom: 8px;}
+      ol{background: #F8F8F8; overflow: hidden;border-left: 1px solid $colorGray;border-top: 1px solid $colorGray;
+        li{float: left; border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray; color: #595757;height: 32px;line-height: 32px; text-align: center;}
+      }
+      .nav1{width: 167px;}
+      .nav2{width: 140px;}
+      .nav3{width: 140px;}
+      .nav4{width: 112px;}
+      .nav5{width: 75px;}
+      .nav6{width: 75px;}
+      ul{ height: 108px; overflow: auto !important; width: 730px;
+        li{border-left: 1px solid $colorGray;overflow: hidden; height: 27px;line-height: 26px; width: 710px;
+          &:nth-child(2n){background: $colorF5;}
+          span{border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray;float: left; display: inline-block;height: 27px; padding: 0 5px;}
+        }
+      }
+    }
+    .btn_ok{background: $color752;border: none;color: $colorWhite;font-size: 14px;height: 28px;line-height: 28px;text-align: center;width: 80px;}
+    .btn_quit{background: $color052;border: none;color: $colorWhite;font-size: 14px;height: 28px;line-height: 28px;margin-left:10px; margin-right:35px;text-align: center;width: 80px;}
+    .bgSales{
+      background: #ffffff !important;
+    }
+    .proCurrent{
+      background: #e1edf7!important;
+    }
+    .saleChoose{
+      width: 170px;
+      .col-sm-3 {
+        flex: 0 0 30%;
+        max-width: 53% !important;
+        padding-right: 0!important;
+        padding-left: 0;
+      }
+      .col-sm-9 {
+        flex: 0 0 68%;
+        max-width: 77% !important;
+        padding: 0!important;
+      }
+    }
+    .poptype{
+      width: 240px;
+      .col-sm-3 {
+        flex: 0 0 22%;
+        max-width: 53% !important;
+        padding-right: 0!important;
+        padding-left: 0;
+      }
+      .col-sm-9 {
+        flex: 0 0 76%;
+        max-width: 77% !important;
+        padding: 0!important;
+      }
+      .el-select .el-input.is-disabled .el-input__inner{
+        height: 23px;
+      }
+    }
+    .el-input__inner{
+      border-radius: 0!important;
+      padding: 0 5px;
+      height: 23px !important;
+    }
+    .col-form-label{
+      padding-top: 0;
+    }
+    .form-group{
+      margin-bottom: 0;
+    }
+    .el-select{
+      width: 100%;
+    }
   }
 </style>

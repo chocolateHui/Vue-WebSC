@@ -32,10 +32,12 @@
             </ol>
           </li>
         </ul>
-        <input type="button" class="btn_addThing" @click="addThing" value="新建事务" />
+        <!--<input type="button" class="btn_addThing" @click="addThing" value="新建事务" />-->
+        <button type="button" class="btn_addThing" @click="addThing">新建事务</button>
         <button type="button" class="btn_addInquiry" @click="addInquiry">新建宴会问询</button>
         <button type="button" class="btn_addBook" @click="addBook">新建宴会预订</button>
-        <input type="button" class="btn_cancel" @click="closeChoose" value="退出" />
+        <button type="button" class="btn_cancel" @click="closeChoose">退出</button>
+        <!--<input type="button" class="btn_cancel" @click="closeChoose" value="退出" />-->
       </div>
       <div class="content_left">
         <ol>

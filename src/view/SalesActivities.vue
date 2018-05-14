@@ -1,5 +1,5 @@
 <template>
-    <div class="salesContain">
+    <div id="salesContain" class="salesContain">
     <div class="sales_activities">
       <div class="content_right">
         <div class="select">
@@ -81,8 +81,12 @@
         </div>
       </div>
     </div>
-      <pop-sales :clickdata="clickData" :datadiary="diaryId" @saveorupdateguestdiary="saveorupdateguestdiary" v-if="popsale" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>
-      <div id="layer" v-if="popsale"></div>
+      <b-modal id="logmodal" ref="myModalsale" @hidden="onHidden" size="lg" title="销售日记" hide-footer>
+        <!--<notesmodal :remark="remarklist" :num="num"  @onhide="btnNotesCancel"></notesmodal>-->
+        <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>
+      </b-modal>
+      <!--<pop-sales :clickdata="clickData" :datadiary="diaryId" @saveorupdateguestdiary="saveorupdateguestdiary" v-if="popsale" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>-->
+      <!--<div id="layer" v-if="popsale"></div>-->
       <div v-if="isLoading">
         <loading></loading>
       </div>
@@ -100,9 +104,10 @@
     name: "sales-activities",
     data() {
       return {
+        status: 'accepted',
         datetime: "",
         today: '',
-        popsale: false,
+        // popsale: false,
         ifMonth: true,
         timeType: "本月",
         dataType: '1',
@@ -130,9 +135,11 @@
         datetimenow:'',
         bgcolorFlag:['#A0A0A0','#82AF6F','#D15B47','#9585BF','#FEE188','#D6487E','#3A87AD'],
         baseCodeListarc:[],
+        salesFlag:1,
       }
     },
     computed: {
+      ...mapGetters(['baseCodeList']),
       ...mapGetters(['salelist']),
       ...mapGetters(['guestdiarylist']),
       ...mapGetters(['guestDiary']),
@@ -156,14 +163,17 @@
     methods:{
       btnDetail:function (id) {
          this.diaryId=id.id
-        this.popsale=true
+         // this.popsale=true
+        this.$set(this,"salesFlag",this.salesFlag+1);
+        this.$refs.myModalsale.show()
       },
       saveorupdateguestdiary:function (param) {
         this.$store.dispatch('encrypttoken').then(() => {
           //获取工号信息,完成后进行路由
           this.$store.dispatch('saveorupdateguestdiary',param).then(() => {
             this.SalesSelect()
-            this.popsale=false
+            // this.popsale=false
+            this.$refs.myModalsale.hide()
           })
         })
       },
@@ -181,7 +191,9 @@
         this.popSalesTime=this.dataTime+'-'+e
         this.popSaller=this.salesName
         this.clickData=''
-        this.popsale=true
+        // this.popsale=true
+        this.$set(this,"salesFlag",this.salesFlag+1);
+        this.$refs.myModalsale.show()
       },
       daydrop:function(event,name,saleid,time,timedetail){
         event.preventDefault();
@@ -193,7 +205,9 @@
         this.clickData=''
         this.timeDetail=timedetail
         this.timeDetailId=time
-        this.popsale=true
+        // this.popsale=true
+        this.$set(this,"salesFlag",this.salesFlag+1);
+        this.$refs.myModalsale.show()
       },
       //销售员选择
       salesShow:function () {
@@ -455,7 +469,9 @@
         this.clickData=''
         this.timeDetail=timedetail
         this.timeDetailId=time
-        this.popsale=true
+        // this.popsale=true
+        this.$set(this,"salesFlag",this.salesFlag+1);
+        this.$refs.myModalsale.show()
       },
       monthPopSaleShow :function (item) {
         var data=item.id
@@ -463,16 +479,24 @@
           data="0"+data
         }
           this.clickData=this.dataTime+'-'+data
-          this.popsale=true;
+          // this.popsale=true;
+        this.$set(this,"salesFlag",this.salesFlag+1);
+          this.$refs.myModalsale.show()
           this.popSaller=this.salesName
       },
       btnExit:function(){
-        this.popsale=false;
+        // this.popsale=false;
+        this.diaryId='0'
+        this.$refs.myModalsale.hide()
+      },
+      onHidden:function () {
         this.diaryId='0'
       },
       monthNow:function (date, isChosedDay = true) {
         this.ifMonth=true
         this.timeType="本月"
+        this.salesId=''
+        this.salesName='全部'
         this.datetime=this.$options.methods.toMonth().substring(0,4)+"年"+this.$options.methods.toMonth().substring(5,7)+"月"
         this.dataTime=this.$options.methods.toMonth()
         this.datetimenow=this.$options.methods.toDay().substring(0,4)+"-"+this.$options.methods.toDay().substring(5,7)+"-"+this.$options.methods.toDay().substring(8,10)
@@ -579,12 +603,14 @@
             cat:'guest_diary_item'
           }).then((response) => {
             if (response.status === 200) {
-              _this.baseCodeListarc=response.data.basecodes
-              _this.baseCodeListarc.forEach(function(item,index){
-                if(typeof item.bgcolor=='undefined'){
-                  _this.$set(item,"bgcolor",_this.bgcolorFlag[index%7])
-                }
-              })
+              if (response.data.errorCode === '0') {
+                _this.baseCodeListarc = response.data.basecodes
+                _this.baseCodeListarc.forEach(function (item, index) {
+                  if (typeof item.bgcolor == 'undefined') {
+                    _this.$set(item, "bgcolor", _this.bgcolorFlag[index % 7])
+                  }
+                })
+              }
             }
           })
         })
@@ -636,20 +662,32 @@
   }
 </script>
 
-<style scoped  lang="scss">
-  .nextMonth{
-    color: #DBDCDC;
+<style  lang="scss">
+  #salesContain{
+    .nextMonth{
+      color: #DBDCDC;
+    }
+    .todaySelect{
+      background: rgb(255, 255, 204);
+    }
+    .tc span{
+      cursor:pointer;
+    }
+    .saleCalendar{
+      top: 30px;
+      left:1%;
+      position: absolute;
+      z-index: 22;
+    }
+  .modal-lg {
+    max-width: 780px;
   }
-  .todaySelect{
-    background: rgb(255, 255, 204);
-  }
-  .tc span{
-    cursor:pointer;
-  }
-  .saleCalendar{
-    top: 30px;
-    left:1%;
-    position: absolute;
-    z-index: 22;
+    .modal-header{
+      display: none;
+    }
+    .modal-content{
+      background: transparent;
+      border:none;
+    }
   }
 </style>

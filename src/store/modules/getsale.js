@@ -70,7 +70,9 @@ const actions = {
       saleid: diaryParam.saleid,
     }).then(function (response) {
       if (response.status === 200) {
-        store.commit('setGuestdiarylist', response.data.guestdiarys)
+        if (response.data.errorCode === '0') {
+          store.commit('setGuestdiarylist', response.data.guestdiarys)
+        }
       }
     })
   },
@@ -87,7 +89,9 @@ const actions = {
       type: param.type,
     }).then(function (response) {
       if (response.status === 200) {
-        store.commit('setProfiles', response.data.profiles)
+        if (response.data.errorCode === '0') {
+          store.commit('setProfiles', response.data.profiles)
+        }
       }
     })
   },
@@ -98,7 +102,9 @@ const actions = {
       no: param.no,
     }).then(function (response) {
       if (response.status === 200) {
-        store.commit('setCatering', response.data.caterings)
+        if (response.data.errorCode === '0') {
+          store.commit('setCatering', response.data.caterings)
+        }
       }
     })
   },
@@ -125,8 +131,6 @@ const actions = {
       ref: param.ref,
       tag: param.tag
     }).then(function (response) {
-      if (response.status === 200) {
-      }
       resolve()
     })
     })
@@ -138,12 +142,11 @@ const actions = {
     axiosinstance.post(methodinfo.getguestdiary, {
       id: param,
     }).then(function (response) {
-      if (response.status === 200) {
+      if (response.data.errorCode==='0') {
         store.commit('setGuestDiary', response.data)
+        resolve()
       }
-      resolve()
     })
-
     })
   },
   // 查询场地状态
@@ -160,7 +163,7 @@ const actions = {
         if (response.status === 200) {
           var placedata=[]
           if (response.data.errorCode==="0") {
-            if(response.data.places!=null){
+            if(response.data.hasOwnProperty('places')){
               var placedata=response.data.places
               for(var i=0;i<placedata.length;i++){
                 placedata[i].bdates.reverse()
