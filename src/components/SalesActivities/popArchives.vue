@@ -239,8 +239,8 @@
         li{float: left; border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray; color: #595757;height: 32px;line-height: 32px; text-align: center;}
       }
       .nav1{width: 130px;}
-      .nav2{width: 129px;}
-      .nav3,.nav4,.nav5,.nav6,.nav7,.nav8{width: 75px;}
+      .nav4{width: 129px;}
+      .nav3,.nav2,.nav5,.nav6,.nav7,.nav8{width: 75px;}
       ul{ height: 135px; overflow: auto !important; width: 730px;
         li{border-left: 1px solid $colorGray;overflow: hidden; height: 28px;line-height: 27px; width: 710px;
           &:nth-child(2n){background: $colorF5;}
@@ -263,7 +263,7 @@
       ul{ height: 108px; overflow: auto !important; width: 730px;
         li{border-left: 1px solid $colorGray;overflow: hidden; height: 27px;line-height: 26px; width: 710px;
           &:nth-child(2n){background: $colorF5;}
-          span{border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray;float: left; display: inline-block;height: 27px; padding: 0 5px;}
+          span{text-align: center;border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray;float: left; display: inline-block;height: 27px; padding: 0 5px;}
         }
       }
     }

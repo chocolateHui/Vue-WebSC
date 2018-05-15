@@ -20,20 +20,24 @@ const state = {
   salelist: [],
   // 查询销售类别
   baseCodeList: [],
+  timechoose: [],
   // 查询销售活动列表参数
   guestdiarylist: [],
   profileslist: [],
   guestDiary: {},
-  placesinfo: []
+  placesinfo: [],
+  cateringlist:[]
 }
 // getters
 const getters = {
   salelist: state => state.salelist,
   baseCodeList: state => state.baseCodeList,
+  timechoose: state => state.timechoose,
   guestdiarylist: state => state.guestdiarylist,
   profileslist: state => state.profileslist,
   guestDiary: state => state.guestDiary,
-  placesinfo: state => state.placesinfo
+  placesinfo: state => state.placesinfo,
+  cateringlist: state => state.cateringlist
 }
 const getAllMsg = function (store) {
   axiosinstance.defaults.headers.common['username'] = store.getters.username
@@ -46,13 +50,17 @@ function getsaleidlist () {
 function getbasecodelist () {
   return axiosinstance.post(methodinfo.getbasecodelist, { cat: 'guest_diary_item' })
 }
+function getbasecodelist2 () {
+  return axiosinstance.post(methodinfo.getbasecodelist, { cat: 'sc_time_unit' })
+}
 // actions
 const actions = {
   getSale: function (store) {
     getAllMsg(store)
-    axios.all([getsaleidlist(), getbasecodelist()]).then(axios.spread((res1, res2) => {
+    axios.all([getsaleidlist(), getbasecodelist(),getbasecodelist2 ()]).then(axios.spread((res1, res2,res3) => {
       store.commit('setSalelist', res1.data.saleids)
       store.commit('setBaseCodeList', res2.data.basecodes)
+      store.commit('setBaseCodeList2', res3.data.basecodes)
     }))
       .catch((error) => {
         console.log(error)
@@ -94,8 +102,22 @@ const actions = {
   //查询预定记录
   getcateringlist: function (store, param) {
     getAllMsg(store)
+    if(param.hasOwnProperty('no')) {
+      axiosinstance.post(methodinfo.getcateringlist, {
+        no: param.no,
+      }).then(function (response) {
+        if (response.status === 200) {
+          if (response.data.errorCode === '0') {
+            store.commit('setCatering', response.data.caterings)
+          }
+        }
+      })
+    }else{
     axiosinstance.post(methodinfo.getcateringlist, {
-      no: param.no,
+      begindate:param.begindate,
+      enddate:param.enddate,
+      flag:param.flag,
+      sta:param.sta,
     }).then(function (response) {
       if (response.status === 200) {
         if (response.data.errorCode === '0') {
@@ -103,6 +125,7 @@ const actions = {
         }
       }
     })
+    }
   },
   //添加销售日记
   saveorupdateguestdiary: function (store, param) {
@@ -181,6 +204,9 @@ const mutations = {
   setBaseCodeList (state, baseCodeList) {
     state.baseCodeList = baseCodeList
   },
+  setBaseCodeList2 (state, timechoose) {
+    state.timechoose = timechoose
+  },
   setGuestdiarylist(state,guestdiarylist){
     state.guestdiarylist=guestdiarylist
   },
@@ -201,10 +227,6 @@ const mutations = {
     state.cateringlist=[]
     state.profileslist=[]
   },
-  // 设置当前激活的tab
-  // set_loading (state, isLoading) {
-  //   state.isLoading = isLoading;
-  // }
 }
 export default {
   state,

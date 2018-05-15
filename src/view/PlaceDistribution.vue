@@ -128,8 +128,6 @@
   <b-modal id="logmodal" ref="myModalchoose" size="lg" title="销售日记" hide-footer>
     <new-choose :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>
   </b-modal>
-  <!--<new-choose v-if="ifNewChoose" :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>-->
-  <!--<div id="layer" v-if="ifNewChoose"></div>-->
   <div v-if="isLoading">
     <loading></loading>
   </div>
@@ -143,10 +141,8 @@
   import newChoose from '../components/PlaceDistribution/newChoose';
   import methodinfo from '../config/MethodConst.js'
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
-  import { GetLunarDay } from './../js/lun'
-
+  import calendarjs from './../common/calendar'
   let loading
-
     export default {
         name: "place-distribution",
       data(){
@@ -270,6 +266,14 @@
               this.todayHour.push(num+':00')
             }
           }
+      },
+      beforeRouteEnter(to,from,next){
+        next(vm=>{
+          vm.$store.dispatch('encrypttoken').then(() => {
+            //获取工号信息,完成后进行路由
+            vm.$store.dispatch('getSale')
+          })
+        })
       },
       methods: {
         // 查询事物
@@ -423,11 +427,20 @@
           })
         },
         closeChoose:function () {
-          // this.ifNewChoose=false
           this.$refs.myModalchoose.hide()
         },
         addThings:function (time,addr) {
-           this.newChooseTime=time
+          this.newChooseTime=time
+          var newParam={
+            begindate:time,
+            enddate:time,
+            flag:'T',
+            sta:'1,2,3,W,Q',
+          }
+          var _this=this
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$store.dispatch('getcateringlist',newParam)
+          })
           for(var t=0;t<this.placeslist.length;t++){
              if(addr==this.placeslist[t].tableno){
                this.newChooseAddr=this.placeslist[t].descript
@@ -435,7 +448,6 @@
              }
           }
           this.$refs.myModalchoose.show()
-          // this.ifNewChoose=true
         },
         typeCheckAll:function () {
           this.ifTypeCheckAll=!this.ifTypeCheckAll
@@ -532,11 +544,11 @@
             var data1=this.adddateday(datanow,i)
             var data2=this.adddateday(datanow,i).substring(5,10);
             var dataS=data1.split("-")
-            var lunar1=GetLunarDay( dataS[0], dataS[1],dataS[2]).lunarDayStr
+            var lunar1=calendarjs.solar2lunar( dataS[0], dataS[1],dataS[2])
             var formL={
               data:data2,
               dataAll:data1,
-              dataLun:lunar1
+              dataLun:lunar1.IMonthCn+lunar1.IDayCn
             }
             this.formdata.push(formL)
           }
@@ -751,7 +763,9 @@
     .calendarShow{
       position: absolute;
       z-index: 22;
-      left:50%;
+      top: 90px;
+      left: 50%;
+      margin-left: -90px;
     }
     .thingsLeft{
       left:0;

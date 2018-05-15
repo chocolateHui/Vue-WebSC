@@ -13,7 +13,7 @@
         <h1>起止时间</h1>
         <el-select v-model="timebegin" @change="btntimehide" filterable>
           <el-option
-            v-for="item in basecodelist"
+            v-for="item in timechoose"
             :key="item.code"
             :label="item.descript"
             :value="item.code">
@@ -38,7 +38,7 @@
           <li>抵达日期</li>
         </ol>
         <ul>
-          <li v-for="list in caterings" @click="btnCatering(list)" :class="{'caterCurrent':ifCaterChoose==list.caterid}">
+          <li v-for="list in cateringlist" @click="btnCatering(list)" :class="{'caterCurrent':ifCaterChoose==list.caterid}">
             <span class="nav1" v-for="colorlist in headlist" :class="colorlist.liStyle" v-if="colorlist.dataid==list.sta"></span>
             <span class="nav2">{{list.caterid}}</span>
             <span class="nav3">{{list.name}}</span>
@@ -59,17 +59,14 @@
   //时间组件
   import {TimePicker} from 'iview'
   import '../../css/iviewpicker.css'
+  import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
   Vue.use(TimePicker)
     export default {
         name: "new-choose",
       data(){
           return{
-            newParam:{},
-            caterings:[],
-            basecodelist:[],
             timebegin:'',
             iftimeselect:false,
-            todayHour:[],
             ifpintime:false,
             ifpouttime:false,
             ifCaterChoose:'',
@@ -80,30 +77,16 @@
           }
       },
       created(){
-        for(var num=8;num<=22;num++) {
-            var dataId = num
-            if (dataId < 10) {
-              dataId = "0" + dataId
-            }
-            for (var m = 1; m <= 2; m++) {
-              var datatime=''
-              if(m==1){
-                datatime=dataId+':00'
-              }else if(num<22){
-                datatime=dataId+':30'
-              }
-              this.todayHour.push(datatime)
-            }
-        }
-       this.newParam={
-         begindate:this.newChooseTime,
-         enddate:this.newChooseTime,
-         flag:'T',
-         sta:'1,2,3,W,Q',
-       }
+        this.timebegin=this.timechoose[0].descript
+        this.$set(this.eventtime,0,this.timechoose[0].exts1)
+        this.$set(this.eventtime,1,this.timechoose[0].exts2)
       },
       components:{
         TimePicker,
+      },
+      computed:{
+        ...mapGetters(['cateringlist']),
+        ...mapGetters(['timechoose']),
       },
       props:['newChooseTime','newChooseAddr','headlist','newChooseAddrNo'],
       methods:{
@@ -168,46 +151,8 @@
           this.catersta='R'
           this.$router.push({name:'新建宴会预订'})
         },
-        getcateringlist:function (param) {
-          var _this=this
-          this.$store.dispatch('encrypttoken').then(() => {
-            _this.configDefault()
-            this.$http.post(methodinfo.getcateringlist, {
-              begindate:param.begindate,
-              enddate:param.enddate,
-              flag:param.flag,
-              sta:param.sta,
-            }).then((response) => {
-              if (response.status === 200) {
-                if (response.data.errorCode=="0") {
-                  _this.caterings=response.data.caterings
-                }
-              }
-            })
-          })
-        },
-        getbasecodelist:function (param) {
-          var _this=this
-          this.$store.dispatch('encrypttoken').then(() => {
-            _this.configDefault()
-            this.$http.post(methodinfo.getbasecodelist, {
-              cat:"sc_time_unit"
-            }).then((response) => {
-              if (response.status === 200) {
-                if (response.data.errorCode=="0") {
-                  _this.basecodelist=response.data.basecodes
-                  if(response.data.basecodes){
-                    _this.timebegin=response.data.basecodes[0].descript
-                    _this.$set(this.eventtime,0,response.data.basecodes[0].exts1)
-                    _this.$set(this.eventtime,1,response.data.basecodes[0].exts2)
-                  }
-                }
-              }
-            })
-          })
-        },
          btntimehide:function (val) {
-          for(let option of this.basecodelist){
+          for(let option of this.timechoose){
             if(option.code===val){
               if(option.exts1){
                 this.$set(this.eventtime,0,option.exts1)
@@ -228,8 +173,6 @@
         },
       },
       mounted:function () {
-        this.getcateringlist(this.newParam)
-        this.getbasecodelist()
       }
     }
 </script>
