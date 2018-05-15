@@ -3,18 +3,33 @@
     <navbar @screenChange = "screenChange"></navbar>
     <sidebar @barclose="barclose"></sidebar>
     <div :style="mainstyle">
-      <el-tabs v-model="activeIndex" type="card" closable @tab-click="tabClick" @tab-remove="tabRemove">
-        <el-tab-pane
-          v-for="(item , index) in mainRoutes"
-          :key="item.name"
-          :label="item.name"
-          :name="item.name">
-          <keep-alive>
-            <router-view v-if="$route.meta.keepAlive"></router-view>
-          </keep-alive>
-          <router-view v-if="!$route.meta.keepAlive"></router-view>
-        </el-tab-pane>
-      </el-tabs>
+      <!--<el-tabs v-model="activeIndex" type="card" closable @tab-click="tabClick" @tab-remove="tabRemove">-->
+        <!--<el-tab-pane-->
+          <!--v-for="(item , index) in mainRoutes"-->
+          <!--:key="item.name"-->
+          <!--:label="item.name"-->
+          <!--:name="item.name">-->
+        <!--</el-tab-pane>-->
+      <!--</el-tabs>-->
+      <b-row>
+        <i @click="tabLeftClick" class="fa fa-angle-left tabicon"></i>
+        <div id="nav" ref="nav" class="navdiv" :style="{width: bodyWidth + 'px'}">
+          <b-nav id="navTab" ref="navTab" tabs :style="navStyle">
+            <b-nav-item :active="getTabActive(item)" v-for="item in mainRoutes" :key="item.name" append>
+              <i v-if="item.name==='首页'" @click="tabClick(item)" class="fa fa-home"></i>
+              <span @click="tabClick($event,item)">{{item.name}}</span>
+              <i v-if="item.name!=='首页'" @click="tabRemove(item.name)" class="el-icon-close"></i>
+            </b-nav-item>
+          </b-nav>
+        </div>
+        <i @click="tabRightClick" class="fa fa-angle-right tabicon"></i>
+      </b-row>
+      <div class="viewDiv" :style="{height: screenHeight + 'px'}">
+        <keep-alive>
+          <router-view v-if="$route.meta.keepAlive"></router-view>
+        </keep-alive>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -35,8 +50,13 @@
         mainstyle:{
           'margin-left':"150px"
         },
-        screenHeight: document.body.clientHeight-105,//减去header的60px
-        isTabChange:false
+        navStyle:{
+          transform:"translateX(0px)"
+        },
+        bodyWidth: document.body.clientWidth-186,//减去header的60px
+        screenHeight: document.body.clientHeight-85,//减去header的60px
+        isTabChange:false,
+        navTransform:0
       }
     },
     computed: {
@@ -46,28 +66,19 @@
         'empno',
         'mainRoutes',
         'isLoading'
-      ]),
-      activeIndex:{
-        get () {
-          return this.$store.getters.activeIndex
-        },
-        set (value) {
-          this.$store.commit('set_active_index', value)
-        }
-      }
+      ])
     },
     methods: {
       ...mapMutations([
         'delete_tabs'
       ]),
-      tabClick: function () {
+      getTabActive(item){
+        return this.$route.name===item.name;
+      },
+      tabClick: function ($event,item) {
+        console.log($event)
         this.isTabChange = true;
-        for (let option of this.mainRoutes) {
-          if (option.name === this.activeIndex) {
-            this.$router.push({path: option.route});
-            break;
-          }
-        }
+        this.$router.push({path: item.route});
       },
       tabRemove: function (name) {
         if(name==="首页"){
@@ -81,7 +92,7 @@
           index++;
         }
         //查找对应tab位置，如果是最后一个则将路由设置倒数第二个上,如果是当前标签则路由到下一个
-        if(this.activeIndex===name){
+        if(this.$route.name===name){
           if(index === this.mainRoutes.length-1){
             this.$router.push({path: this.mainRoutes[index-1].route});
           }else{
@@ -94,21 +105,37 @@
         }
         this.$store.commit('delete_tabs', index);
       },
+      tabLeftClick(){
+        this.navStyle = {
+          transform:"translateX(0px)"
+        }
+      },
+      tabRightClick(){
+        let translateX = 0
+        let navwidth = this.$refs.nav.clientWidth;
+        let navTabwidth = this.$refs.navTab.clientWidth
+        if(navTabwidth>navwidth){
+          translateX = navTabwidth - navwidth;
+        }
+        this.navStyle = {
+          transform:"translateX(-"+translateX+"px)"
+        }
+      },
       barclose:function (isclose) {
-        console.log(isclose)
         if(isclose){
           this.mainstyle= {
             'margin-left':"150px"
           }
+          this.bodyWidth = document.body.clientWidth-186
         }else{
           this.mainstyle= {
             'margin-left':"50px"
           }
+          this.bodyWidth = document.body.clientWidth-86
         }
       },
       screenChange(){
         this.screenHeight = document.body.clientHeight-105
-        console.log(this.screenHeight)
       }
     },
     watch: {
@@ -147,16 +174,11 @@
         for (let option of this.mainRoutes) {
           if (option.name === to.name) {
             flag = true;
-            this.$store.commit('set_active_index', option.name);
             break
           }
         }
         if (!flag) {
           this.$store.commit('add_tabs', {route: to.path, name: to.name});
-          //等待渲染完毕后调用设置当前页方法
-          this.$nextTick(function(){
-            this.$store.commit('set_active_index', to.name);
-          })
         }
         this.isTabChange = false;
       }
@@ -171,12 +193,31 @@
 <style lang="scss"  type="text/scss">
   #scmain{
     height: calc(100%);
-    #tab-首页{
-      .el-icon-close{
-       display: none;
-      }
+    /*#tab-首页{*/
+      /*.el-icon-close{*/
+       /*display: none;*/
+      /*}*/
+    /*}*/
+    .navdiv{
+      overflow: hidden;
+      border-bottom: 1px solid #dee2e6;
     }
-    #tabs{
+    .nav-tabs{
+      width: auto;
+      white-space: nowrap;
+      position: relative;
+      transition: transform .3s;
+      display: block;
+      float: left;
+      margin-top: 3px;
+      border: 1px solid #dee2e6;
+      border-bottom: none;
+      border-radius: 4px 4px 0 0;
+      li{
+        position: relative;
+        list-style: none;
+        display: inline-block;//使li对象显示为一行
+      }
       .container-fluid{
         padding: 0;
       }
@@ -186,20 +227,50 @@
       .fa-fw{
         font-size: 1rem;
       }
+      .nav-item{
+        .nav-link{
+          color: #495057;
+          border-left: 1px solid #e4e7ed;
+          border-radius: 0;
+        }
+        .nav-link.active{
+          color: #007bff;
+          border: none;
+          border-left: 1px solid #e4e7ed;
+          .el-icon-close{
+            display: inline-block;
+          }
+        }
+      }
+      .nav-item:first-child{
+        a{
+          border-left: none
+        }
+      }
+      .nav-item:hover{
+        .el-icon-close{
+          display: inline-block;
+        }
+      }
+      .el-icon-close{
+        color: #909399;
+        border-radius: 100%;
+        display: none;
+      }
+      .el-icon-close:hover{
+        color: white;
+        background-color: #909399;
+      }
     }
-    .el-tabs__header{
-      margin-bottom: 0;
+    .tabicon{
+      font-size: 20px;
+      padding: 10px 5px;
+      cursor: pointer;
+      border-bottom: 1px solid #dee2e6;
     }
-    .el-tabs__content{
-      padding-top: 15px;
+    .viewDiv{
+      padding-top: 0.75rem;
       overflow: auto;
-    }
-    .el-tabs{
-      padding-top: 4px;
-    }
-    .el-tabs__item{
-      height: 36px;
-      line-height: 36px;
     }
   }
 </style>

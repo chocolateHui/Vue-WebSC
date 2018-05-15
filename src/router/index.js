@@ -40,7 +40,7 @@ const router = new Router({
         // 当 /main 匹配成功，
         // DashBoard 会被渲染在 main 的 <router-view> 中
         {
-          path: '',
+          path: '/main/index',
           name: '首页',
           component: index,
           meta: {
@@ -197,6 +197,10 @@ const router = new Router({
     {
       path: '/',
       redirect: '/login'
+    },
+    {
+      path: '/main',
+      redirect: '/main/index'
     }
   ]
 })

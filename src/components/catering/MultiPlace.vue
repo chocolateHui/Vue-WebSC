@@ -76,7 +76,8 @@
         currentplace:'',
         currentselect:[],
         allselect:[],
-        hash:{}
+        hash:{},
+        placecount:0
       }
     },
     props:{
@@ -108,9 +109,6 @@
             }
           }));
         }
-      },
-      placecount:function () {
-        return this.items.length;
       }
     },
     created(){
@@ -238,6 +236,13 @@
       },
       eventbdate(val,oldval){
         console.log(val)
+      },
+      searchitems(val){
+        if(this.filterValue==='' || !this.filterValue){
+          this.placecount = this.items.length
+        }else{
+          this.placecount = this.total
+        }
       }
     }
   }

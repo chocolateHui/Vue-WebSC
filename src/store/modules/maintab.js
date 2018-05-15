@@ -5,7 +5,7 @@
 // initial state
 const state = {
   mainRoutes: [
-    { route: '/main', name: '首页' }
+    { route: '/main/index', name: '首页' }
   ],
   activeIndex: '首页',
   isLoading: false

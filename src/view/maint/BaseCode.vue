@@ -130,7 +130,7 @@
     },
     props:['cat'],
     created(){
-//      this.refreshData();
+      this.refreshData();
     },
     methods: {
       refreshData(){

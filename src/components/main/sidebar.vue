@@ -100,7 +100,7 @@
       let lunarinfo= calendarjs.solar2lunar(new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate());
       this.lunardate = lunarinfo.IMonthCn+lunarinfo.IDayCn
       // 刷新时以当前路由做为tab加入tabs
-      if (this.$route.path !== '/main') {
+      if (this.$route.path !== '/main/index') {
         if(this.$route.name==='新建宴会问询'){
           this.$store.commit('setCatersta', 'Q');
         }else if(this.$route.name==='新建宴会预订'){
@@ -114,9 +114,6 @@
         this.$nextTick(function(){
           this.$store.commit('set_active_index', routename);
         })
-      } else {
-        this.$store.commit('set_active_index', '首页');
-        this.$router.push({path:'/main'});
       }
     },
     components: {

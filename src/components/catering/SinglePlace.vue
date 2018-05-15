@@ -70,8 +70,8 @@
         currentPage:1,
         pageChange:false,
         isunuse:false,
-        usebtndes:'查看空闲场地'
-
+        usebtndes:'查看空闲场地',
+        placecount:0
       }
     },
     props:{
@@ -103,9 +103,6 @@
             }
           }));
         }
-      },
-      placecount:function () {
-        return this.items.length;
       }
     },
     created(){
@@ -216,7 +213,12 @@
           this.items = val;
         }
       },
-      eventbdate(val,oldval){
+      searchitems(val){
+        if(this.filterValue==='' || !this.filterValue){
+          this.placecount = this.items.length
+        }else{
+          this.placecount = this.total
+        }
       }
     }
   }
