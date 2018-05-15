@@ -5,6 +5,8 @@ import user from './modules/user'
 import catering from './modules/catering'
 import maintab from './modules/maintab'
 import sysoption from './modules/sysoption'
+import sceventitem from './modules/sceventitem'
+import scnote from './modules/scnote'
 import VuexPersistence from 'vuex-persist'
 
 Vue.use(Vuex)
@@ -23,7 +25,9 @@ const store = new Vuex.Store({
     user,
     maintab,
     sysoption,
-    catering
+    catering,
+    scnote,
+    sceventitem,
   },
   plugins: [vuexLocal.plugin],
   mutations: {

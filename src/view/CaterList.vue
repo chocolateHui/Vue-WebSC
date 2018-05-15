@@ -1,7 +1,25 @@
 <!-- 模板组件，用于模拟不同路由下的组件显示 -->
 <template>
-  <div id="CaterListpanel" class="router-template2">
-    <div class="template-wrap2" >
+  <div id="CaterListpanel" >
+
+
+        <el-date-picker
+          v-model="timechose"
+          class="datea"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+      <el-select v-model="arrdep"  class="datea" placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
       <el-tabs type="border-card" class="width100 height100" @tab-click="tabClick">
 
 
@@ -36,7 +54,6 @@
               :data="searchitems"
               border
               stripe
-              max-height="470"
               style="width: 100%">
               <el-table-column
                 v-for="item in fildes"
@@ -59,7 +76,7 @@
                        variant="warning" @click="deleteempno()">同</b-button>
                     <b-button
                       size="sm"
-                     @click="deleteempno()">备</b-button>
+                     @click="remarkshow(scope.row)">备</b-button>
                   </b-form>
                 </template>
               </el-table-column>
@@ -100,7 +117,7 @@
               :data="searchHitems"
               border
               stripe
-              max-height="470"
+
               style="width: 100%">
               <el-table-column
                 v-for="item in fildes"
@@ -124,50 +141,29 @@
             </el-table>
           </b-row>
         </el-tab-pane>
-        <el-tab-pane disabled>
-          <span slot="label">
-               <el-date-picker
-                 v-model="timechose"
-                 value-format="yyyy-MM-dd"
-                 type="daterange"
-                 range-separator="至"
-                 start-placeholder="开始日期"
-                 end-placeholder="结束日期">
-                        </el-date-picker>
-          </span>
 
-        </el-tab-pane>
-        <el-tab-pane disabled>
-          <span slot="label">
-              <el-select v-model="arrdep" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-          </span>
 
-        </el-tab-pane>
 
       </el-tabs>
-
-    </div>
+      <b-modal id="logmodal" ref="myModalRef2"  size="lg" title="宴会备注" hide-footer>
+        <sysLog @onhide="onhide"></sysLog>
+      </b-modal>
   </div>
 </template>
 
 <script>
+  import Vue from 'vue'
+  import { mapGetters, mapMutations } from 'vuex'
   import {datevalid}  from '../common/date.js'
   import methodinfo from '../config/MethodConst.js'
   import 'font-awesome/css/font-awesome.css'
-
+  import sysLog from  '../components/remark.vue'
 
   const fildes = [
     {  prop: 'caterid', label:  '账号',width:'160',sortable:true,showTip: true},
     {  prop: 'name', label:  '宴会名称',width:'',sortable:true,showTip: true},
-    {  prop: 'stades', label:  '状态',width:'',sortable:true,showTip: true},
-    {  prop: 'eventnum', label:  '事务数',width:'',sortable:true ,showTip: true},
+    {  prop: 'stades', label:  '状态',width:'80',sortable:true,showTip: true},
+    {  prop: 'eventnum', label:  '事务数',width:'90',sortable:true ,showTip: true},
     {  prop: 'arr', label:  '到达时间',width:'',sortable:true,showTip: true },
     {  prop: 'dep', label:  '离开时间',width:'',sortable:true,showTip: true},
     {  prop: 'blockid', label:  '团队账号',width:'120',sortable:true,showTip: true },
@@ -175,7 +171,16 @@
     {  prop: 'cusno_des', label:  '协议单位',width:'',sortable:true,showTip: true},
     {  prop: 'remark', label:  '备注',width:'',sortable:true }
   ]
-
+  const re = {  caterid: '',caterdes:'',
+    eventid:"",
+    itemid:"",
+    type:"",
+    eventdes:"",
+    title:"",
+    seq:"",
+    date0:"",
+    content:"",
+    flag:"F"}
   export default {
 
     data () {
@@ -207,7 +212,9 @@
         Hselected: ["1","2","3"],
         HallSelected: false,
         Hindeterminate: true,
-        ishistory:""
+        ishistory:"",
+        num:0,
+        remark:re
       }
     },
     mounted() {
@@ -329,6 +336,24 @@
           })
         })
       },
+      showModal1 () {
+
+      },
+      onhide() {
+        this.$refs.myModalRef2.hide()
+      },
+
+      remarkshow:function (row) {
+        var caterinfo = {};
+        caterinfo["caterid"] = row.caterid;
+        caterinfo["type"] = "1";
+        // caterinfo["caterdes"] = row.name;
+        this.$store.commit('setCaterdes',row.name);
+        this.$store.commit('setCaterinfo',caterinfo);
+        // this.$set(this.remark,"caterid",row.caterid);
+        // this.$set(this.remark,"caterdes",row.name);
+        this.$refs.myModalRef2.show()
+      },
     },
     computed: {
       searchitems:function () {
@@ -372,6 +397,9 @@
         }
       }
     },
+    components: {
+      sysLog,
+    },
     watch: {
       selected(newVal, oldVal) {
         if (newVal.length === 0) {
@@ -411,6 +439,12 @@
 </script>
 <style lang="scss"  type="text/scss">
   #CaterListpanel{
+    .el-tabs__content{
+      overflow: hidden!important;
+    }
+    .el-tabs {
+      padding-top: 0px!important;
+    }
     .router-template2 {
       color: #000;
       font-size: 15px;
@@ -431,7 +465,7 @@
     }
 
     .height100{
-      height: 100%;
+      height: 90%;
     }
 
     .paddingleft0{
@@ -448,7 +482,7 @@
     }
     .container {
       width: 100%!important;
-      max-width: 99%!important;
+      max-width: 97%!important;
       padding-right: 0px;
       padding-left: 0px;
       margin-right: 0px;
@@ -494,9 +528,20 @@
         padding: 5px!important;
         box-shadow: 1px 5px 5px #dee2e6;
       }
+
     }
 
-
+    .datea{
+      position: relative;
+      z-index: 99;
+      margin-right: 17px;
+      margin-top: 1px;
+      float: right;
+      height: 35px;
+      .el-input__inner{
+        height: 35px;
+      }
+    }
   }
 
 </style>

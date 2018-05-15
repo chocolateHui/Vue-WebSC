@@ -58,21 +58,21 @@
 <style lang="scss">
   #Catering{
     overflow: auto;
-    .el-tabs{
-      padding-top: 0;
-      margin-left: 15px;
-      margin-right: 15px;
-      .el-tabs__header{
-        margin: 0;
-      }
-    }
-    .newEventbtn{
-      margin-right: 17px;
-      margin-top: 1px;
-      position: relative;
-      z-index: 9999;
-      float: right;
-    }
+  .el-tabs{
+    padding-top: 0;
+    margin-left: 15px;
+    margin-right: 15px;
+  .el-tabs__header{
+    margin: 0;
+  }
+  }
+  .newEventbtn{
+    margin-right: 17px;
+    margin-top: 1px;
+    position: relative;
+    z-index: 9999;
+    float: right;
+  }
   }
   .card {
     margin-bottom: 15px;

@@ -14,8 +14,9 @@ const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/ma
 const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 const index = () => import(/* webpackChunkName: "group-main" */ '../view/Index.vue')
-const caterList = () => import(/* webpackChunkName: "group-main" */ '../view/CaterList.vue')
+const caterList = () => import(/* webpackChunkName: "group-main" */ '../view/maint/ScEventItem.vue')
 const pccodeinfo = () => import(/* webpackChunkName: "group-main" */ '../view/maint/pccodeinfo.vue')
+const sciteminfo = () => import(/* webpackChunkName: "group-main" */ '../view/maint/sciteminfo.vue')
 Vue.use(Router)
 
 const router =new Router({
@@ -157,7 +158,7 @@ const router =new Router({
             {
               path: '/main/maint/item',
               name: '宴会项目',
-              component: Hotelinfo
+              component: sciteminfo
             },
             {
               path: '/main/maint/basecode',
