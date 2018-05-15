@@ -14,7 +14,6 @@
     import { mapGetters, mapActions,mapMutations } from 'vuex'
     import pinyin from 'pinyin'
 
-
     export default {
         name: 'hotelDiv',
         data () {

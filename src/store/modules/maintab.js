@@ -5,10 +5,10 @@
 // initial state
 const state = {
   mainRoutes: [
-    {route: '/main',name:'首页'}
+    { route: '/main/index', name: '首页' }
   ],
   activeIndex: '首页',
-  isLoading:false
+  isLoading: false
 }
 
 // getters
@@ -29,20 +29,20 @@ const actions = {
 const mutations = {
   // 添加tabs
   add_tabs (state, data) {
-    state.mainRoutes.push(data);
+    state.mainRoutes.push(data)
   },
   // 删除tabs
   delete_tabs (state, index) {
-    state.mainRoutes.splice(index, 1);
+    state.mainRoutes.splice(index, 1)
   },
   // 设置当前激活的tab
   set_active_index (state, name) {
-    state.activeIndex = name;
+    state.activeIndex = name
   },
   // 设置当前激活的tab
   set_loading (state, isLoading) {
-  state.isLoading = isLoading;
-}
+    state.isLoading = isLoading
+  }
 }
 
 export default {

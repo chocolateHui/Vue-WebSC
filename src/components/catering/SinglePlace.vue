@@ -70,8 +70,8 @@
         currentPage:1,
         pageChange:false,
         isunuse:false,
-        usebtndes:'查看空闲场地'
-
+        usebtndes:'查看空闲场地',
+        placecount:0
       }
     },
     props:{
@@ -103,9 +103,6 @@
             }
           }));
         }
-      },
-      placecount:function () {
-        return this.items.length;
       }
     },
     created(){
@@ -129,8 +126,13 @@
       },
       handleCurrentChange(val) {
         if(!this.pageChange){
-          this.currentRow = val;
-          this.currentplace = val.descript;
+          if(val){
+            this.currentRow = val;
+            this.currentplace = val.descript;
+          }else{
+            this.currentRow = {};
+            this.currentplace = '';
+          }
         }else{
           this.pageChange = false;
         }
@@ -194,6 +196,10 @@
         }
       },
       placeConfirm(){
+        if(!this.currentRow){
+          this.$alert("请选择一个场地!")
+          return
+        }
         this.$emit('placeConfirm',this.currentRow)
         this.$root.$emit('bv::hide::modal','singleplacemodal')
       },
@@ -203,9 +209,16 @@
     },
     watch:{
       placelist(val,oldval){
-        this.items = val;
+        if(val){
+          this.items = val;
+        }
       },
-      eventbdate(val,oldval){
+      searchitems(val){
+        if(this.filterValue==='' || !this.filterValue){
+          this.placecount = this.items.length
+        }else{
+          this.placecount = this.total
+        }
       }
     }
   }
@@ -228,10 +241,6 @@
     .pagination{
       float: right;
       padding: 5px 10px;
-    }
-    .el-table__expanded-cell{
-      padding: 5px!important;
-      box-shadow: 0 !important;
     }
     .row{
       margin-right: 0;

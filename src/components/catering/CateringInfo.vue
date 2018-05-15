@@ -3,13 +3,25 @@
     <b-card header-tag="header">
       <b-row slot="header">
         <b-col sm="1" class="my-1 catertitle">
-          <span>宴会信息</span>
+          <span class="title">宴会信息</span>
         </b-col>
-        <b-col sm="6" class="my-1"></b-col>
-        <b-col sm="4" class="my-1"></b-col>
-        <b-col sm="1" class="my-1 icondiv">
-          <a></a>
-          <a></a>
+        <b-col sm="2" class="my-1">
+          <span v-if="!isNew" class="title">订单号:{{catering.caterid}}</span>
+        </b-col>
+        <b-col sm="8" class="my-1 titleInfo">
+          <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 宴会名称:&#8195;{{catering.name}}</span>
+          <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{catering.saleid_des}}</span>
+        </b-col>
+        <b-col class="my-1 icondiv">
+          <a v-if="!isNew">
+            <i @click="showNote" class="fa fa-sticky-note titleIcon"></i>
+          </a>
+          <a v-if="!isNew">
+            <i @click="EOShare" class="fa fa-print titleIcon"></i>
+          </a>
+          <a v-if="!isNew">
+            <i @click="refreshData" class="fa fa-refresh titleIcon"></i>
+          </a>
           <a>
             <i v-b-toggle="'cater'" @click="toggleclick" class="fa toggleclass" :class="toggleclass"></i>
           </a>
@@ -53,10 +65,10 @@
                   <el-option
                     v-for="item in saleoptions"
                     :key="item.code"
-                    :label="item.descript"
+                    :label="item.name"
                     :value="item.code">
-                    <span class="option-main">{{ item.descript }}</span>
-                    <span class="option-sub">{{ item.code }}</span>
+                    <span style="float: left">{{ item.name }}</span>
+                    <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.code }}</span>
                   </el-option>
                 </el-select>
               </b-form-group>
@@ -82,9 +94,9 @@
           <b-col sm="2" class="my-1">
             <div class="btndiv" v-if="!isNew">
               <div>
-                <transition mode="out-in">
-                  <b-button v-if="catersta==='Q'||catersta==='0'" key="reserve" class="reservebtn" @click="updateCatering('1')">预订</b-button>
-                  <b-button v-if="catersta==='1'" key="confirm" class="confirmbtn" @click="updateCatering('2')">确认</b-button>
+                <transition @before-enter="btnenter" @after-leave="btnleave" mode="out-in">
+                  <b-button v-if="catersta==='Q'||catersta==='0'" key="reserve" class="reservebtn" @click="updateCateringSta('1')">预订</b-button>
+                  <b-button v-if="catersta==='1'" key="confirm" class="confirmbtn" @click="updateCateringSta('2')">确认</b-button>
                 </transition>
                 <b-button class="cancelbtn" :class="cancelWidth" @click="cancelCatering">取消</b-button>
               </div>
@@ -98,7 +110,7 @@
           </b-col>
         </b-row>
         <b-row id = "catersub">
-          <b-row>
+          <b-row style="width: 100%">
             <b-form-group class="numinput" :label-cols="6" label="房&#8195;&#8195;数"
                           horizontal>
               <FormatInput type="number" maxlength="5" v-model="localcatering.rmnum"></FormatInput>
@@ -108,7 +120,7 @@
               <FormatInput type="number" maxlength="5" v-model="localcatering.cover"></FormatInput>
             </b-form-group>
             <b-form-group class="normalput" :label-cols="4" label="协议单位" horizontal>
-              <el-input class="modalinput" clearable readonly v-model="localcatering.cusno_des">
+              <el-input @click.native="profileShow" @clear="profileClear" class="modalinput" clearable readonly v-model="localcatering.cusno_des">
                 <i slot="prefix" class="fa fa-list"></i>
               </el-input>
             </b-form-group>
@@ -149,6 +161,18 @@
         </b-row>
       </b-collapse>
     </b-card>
+
+    <b-modal @shown="reasonShown" id="caterReasonmodal" ref="caterReasonmodal" title="理由列表" hide-footer>
+      <Reason ref="caterReason" @reasonConfirm="reasonConfirm"></Reason>
+    </b-modal>
+
+    <b-modal id="profilemodal" size="lg" ref="profilemodal" title="档案列表" hide-footer>
+      <popArchives ref="popArchives" :ifunit="profileType" @btnArchOk="ArchivesConfirm"></popArchives>
+    </b-modal>
+
+    <b-modal id="remarkModal" size="lg" ref="remarkModal" title="宴会备注" hide-footer>
+      <!--<remark ref="caterRemark" :remark="localcatering"></remark>-->
+    </b-modal>
   </b-container>
 </template>
 <script>
@@ -161,6 +185,9 @@
 
   // 组件和参数
   import FormatInput from '../FormatInput.vue'
+  import Reason from '../Reason.vue'
+  import popArchives from '../SalesActivities/popArchives.vue'
+  import remark from '../remark.vue'
 
   export default {
     name: 'CateringInfo',
@@ -174,6 +201,10 @@
         localcatering:{
           type:'1'
         },
+        profileType:[
+        {name:'公司',id:'C'},
+        {name:'旅行社',id:'A'}
+        ],
         //宴会类型
         typeOptions: [
           { code: '1', descript: '宴席' },
@@ -182,7 +213,8 @@
           { code: '4', descript: '其他' }
         ],
         //销售员列表
-        saleoptions:[]
+        saleoptions:[],
+        cancelWidth:'cancelwidth'
       }
     },
     props:{
@@ -196,7 +228,8 @@
         'caterid',
         'catersta',
         'saleid',
-        "catering"
+        'catering',
+        'salelist'
       ]),
       minDate() {
         if(!this.isNew){
@@ -210,13 +243,6 @@
          disabledDate:this.getDisableDate
        }
       },
-      cancelWidth(){
-        if(this.catersta==="2"){
-          return "maxbtnwidth";
-        }else{
-          return "cancelwidth";
-        }
-      }
     },
     methods: {
       saveCatering(){
@@ -232,15 +258,76 @@
         this.localcatering.dep = this.caterdate[1];
         this.$emit('saveCatering',this.localcatering);
       },
-      updateCatering(sta){
-        if(sta){
-          this.localcatering.sta = sta;
-          this.$store.commit("setCatersta",sta);
+      updateCatering(){
+        if(this.catersta==='0'){
+          this.$alert("请先恢复预订再进行保存!")
+          return;
         }
-        console.log(this.localcatering)
+        if(!this.localcatering.name){
+          this.$alert("宴会名称不允许为空!")
+          return;
+        }
+        this.$emit('updateCatering',this.localcatering);
+      },
+      updateCateringSta(sta){
+        let _this = this;
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.updatecateringsta, {
+            caterid: this.localcatering.caterid,
+            sta: sta
+          }).then(function (response) {
+            if (response.data.errorCode === '0') {
+              _this.localcatering.sta = sta;
+              _this.$store.commit('setCatering', _this.localcatering)
+              _this.$store.commit('setCatersta', sta)
+              _this.$store.dispatch("getEventList");
+            } else {
+              _this.$alert(response.data.errorMessage)
+            }
+          });
+        })
       },
       cancelCatering(){
-        this.$store.commit("setCatersta","0");
+        this.$refs.caterReasonmodal.show();
+      },
+      reasonShown(){
+        this.$refs.caterReason.clearRow();
+      },
+      reasonConfirm(reason){
+        let _this = this;
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.updatecateringsta, {
+            caterid: this.localcatering.caterid,
+            sta: '0',
+            cancelreason:reason.code
+          }).then(()=>{
+            _this.localcatering.sta = '0';
+            _this.$store.commit('setCatering', _this.localcatering)
+            _this.$store.commit('setCatersta', '0')
+            _this.$store.dispatch("getEventList");
+          })
+        })
+      },
+      profileShow(){
+        if(!this.isClear){
+          this.$refs.profilemodal.show();
+        }else{
+          this.isClear =false;
+        }
+      },
+      profileClear(){
+        this.localcatering.cusno = '';
+        this.localcatering.cusno_des = '';
+        this.isClear =true;
+      },
+      ArchivesConfirm(profile){
+        console.log(profile)
       },
       getDisableDate(time){
         return time<this.minDate;
@@ -268,10 +355,35 @@
         } else{
           this.staFont = val;
         }
+      },
+      btnenter(el){
+        this.cancelWidth = 'cancelwidth'
+      },
+      btnleave(el){
+        this.cancelWidth = 'maxbtnwidth'
+      },
+      showNote(){
+        this.$refs.remarkModal.show();
+      },
+      EOShare(){
+        this.$router.push({name: '宴会预订EO单', params: { caterid: this.caterid }});
+      },
+      refreshData(){
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch('getCateringInfo');
+          this.$store.dispatch('getEventList');
+        })
       }
     },
     components: {
-      FormatInput
+      FormatInput,
+      Reason,
+      popArchives,
+      remark
     },
     mounted(){
       this.getStaFont();
@@ -288,6 +400,11 @@
       },
       catersta(val,oldval){
         this.getStaFont();
+      },
+      salelist(val){
+        if(val){
+          this.saleoptions = val;
+        }
       }
     }
   }
@@ -310,6 +427,12 @@
     input{
       font-size: 0.9rem;
     }
+    .titleIcon{
+      color: #fcac6f;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0 2px;
+    }
     .toggleclass{
       float: right;
       font-size: 20px;
@@ -331,6 +454,12 @@
     }
     .option-sub{
       float: right; color: #8492a6; font-size: 0.9rem
+    }
+    .title{
+      color: #4C8FBD;
+    }
+    .titleInfo{
+      flex: 0 0 64%;
     }
     //宴会主单主要信息
     #catermain{
@@ -409,10 +538,10 @@
       }
       .cancelbtn{
         background-color: #2EC5FA;
-        transition:width 1s;
-        -moz-transition:width 1s; /* Firefox 4 */
-        -webkit-transition:width 1s; /* Safari and Chrome */
-        -o-transition:width 1s; /* Opera */
+        transition:width .5s;
+        -moz-transition:width .5s; /* Firefox 4 */
+        -webkit-transition:width .5s; /* Safari and Chrome */
+        -o-transition:width .5s; /* Opera */
       }
       .savebtn {
         width: 99%;
@@ -468,13 +597,13 @@
         padding-top: calc(0.375rem + 2px);
       }
       .numinput{
-        width: 12%;
+        flex:0 0 12%;
         div{
           padding: 0;
         }
       }
       .normalput {
-        width: 19%;
+        flex:0 0 19%;
         div {
           padding: 0;
         }

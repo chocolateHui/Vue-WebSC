@@ -141,7 +141,7 @@
                           this.$http.defaults.headers.common['username'] = this.username
                           this.$store.dispatch('getAllSysoption')
                           this.password = ''
-                          this.$router.push({path:"/main"})
+                          this.$router.push({path:"/main/index"})
                         })
                     })
                 }).catch(function () {
@@ -172,7 +172,9 @@
     ime-mode:disabled;
     text-transform:uppercase;
   }
-
+  .input-group > .form-control{
+    height: 35px;
+  }
   .logo{
     position:absolute;
     top:50px;

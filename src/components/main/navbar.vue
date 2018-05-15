@@ -209,8 +209,8 @@
             ws && ws.SendKeys("{F11}");
           }
         }
-      }
-      , reseticon() {
+      },
+      reseticon() {
         if (this.screensize === "normal") {
           this.screensize = "fullscreen";
           this.ScreenClass = "fa-compress";
@@ -218,6 +218,7 @@
           this.screensize = "normal";
           this.ScreenClass = "fa-expand";
         }
+        this.$emit("screenChange",this.screensize)
       }
     },
     mounted(){

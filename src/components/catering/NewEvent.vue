@@ -24,7 +24,7 @@
                       <el-input class="eventname" v-model="newEvent.descript"></el-input>
                     </b-form-group>
                     <b-form-group label="时&#8195;&#8195;段&#8194;|" horizontal>
-                      <TimePicker :steps="[1, 10, 15]" v-model="eventtime" format="HH:mm" type="timerange" placeholder="Select time"></TimePicker>
+                      <TimePicker :steps="[1, 10, 15]" v-model="eventtime" format="HH:mm" type="timerange" placeholder=""></TimePicker>
                       <el-select class="timeselect" v-model="stdunit" @change="timeChange" placeholder="请选择">
                         <el-option
                           v-for="item in timeoptions"
@@ -93,9 +93,9 @@
                         <el-select @change="priceChange" v-model="newEvent.unit" class="priceselect">
                           <el-option
                             v-for="item in priceoptions"
-                            :key="item.code"
+                            :key="item.id"
                             :label="item.descript"
-                            :value="item.code">
+                            :value="item.id">
                             <span style="float: left">{{ item.descript }}</span>
                             <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.price }}</span>
                           </el-option>
@@ -203,7 +203,6 @@
   import 'font-awesome/css/font-awesome.css'
   import methodinfo from '../../config/MethodConst.js'
   import {dateValid} from '../../common/date'
-  import eventMixin from '../../common/eventMixin'
   //其他组件
   import FormatInput from '../FormatInput.vue'
   import MultiPlace from './MultiPlace.vue'
@@ -213,7 +212,7 @@
   // 组件和参数
 
   export default {
-    name: 'EventInfo',
+    name: 'NewEvent',
     data () {
       return {
         newEvent:{
@@ -246,10 +245,6 @@
       }
     },
     props:{
-      eventshow :{
-        type:Boolean,
-        default:true
-      },
       toggleshow:{
         type:Boolean,
         default:false
@@ -259,17 +254,19 @@
       ...mapGetters([
         'caterid',
         'catersta',
-        'event'
-      ])
+        'catering',
+        'defaulttype',
+        'timeoptions',
+        'typeoptions',
+        'priceoptions',
+        'layoutoptions',
+        'degreeoptions'
+      ]),
+      eventshow:function () {
+        return !this.caterid;
+      }
     },
-    mixins: [eventMixin],
     created(){
-      if(this.catersta==='1'||this.catersta==='Q'){
-        this.$set(this.newEvent,'sta',this.catersta)
-      }
-      if(this.catersta==='2'){
-        this.staoptions.push({ code: '2', descript: '确认' });
-      }
     },
     methods: {
       eventCheck(catering){
@@ -280,27 +277,35 @@
             if(!newEvent.descript){
               this.$alert("事务名称不允许为空!")
               resolve(false)
+              return
             }else if(!newEvent.type){
               this.$alert("事务类别不允许为空!")
               resolve(false)
+              return
             }else if(!this.eventbdate[0]){
               this.$alert("事务日期不允许为空!")
               resolve(false)
+              return
             }else if(!this.eventtime[0]){
               this.$alert("事务时间不允许为空!")
               resolve(false)
+              return
             }else if(this.eventtime[0]===this.eventtime[1]){
               this.$alert("事务开始时间和结束时间相同,请修改!")
               resolve(false)
+              return
             }else if(!newEvent.sta){
               this.$alert("事务状态不允许为空!")
               resolve(false)
+              return
             }else if(!newEvent.code){
               this.$alert("事务场地不允许为空!")
               resolve(false)
+              return
             }else if(!dateValid(this.eventbdate[1],catering.dep)){
               this.$alert("事务日期不允许晚于宴会离开日期!")
               resolve(false)
+              return
             }
             this.newEvent.begindate = this.eventbdate[0];
             this.newEvent.enddate = this.eventbdate[1];
@@ -348,17 +353,23 @@
         })
       },
       batchSaveEvent(caterid){
+        let _this = this;
         return new Promise((resolve, reject) => {
           if(this.newEvent.code||this.eventbdate[0]){
-            let commitEvent = Object.assign({},this.newEvent)
-            commitEvent.caterid = caterid;
+            this.newEvent.caterid = caterid;
             let eventplaces = this.newEvent.code.split(",");
-            for(let code of eventplaces){
-              console.log(code);
-              commitEvent.code = code;
-              this.$http.post(methodinfo.newbatchevent, commitEvent)
+            for(let i =0;i < eventplaces.length;i++){
+              let commitEvent = Object.assign({},this.newEvent)
+              commitEvent.code = eventplaces[i];
+              if(i===eventplaces.length-1){
+                this.$http.post(methodinfo.newbatchevent, commitEvent).then(()=>{
+                  _this.$root.$emit("bv::toggle::collapse","newevent")
+                  resolve()
+                })
+              }else{
+                this.$http.post(methodinfo.newbatchevent, commitEvent)
+              }
             }
-            resolve()
           }else{
             resolve()
           }
@@ -405,7 +416,6 @@
         this.$refs.MultiPlace.clearSelect();
       },
       placeConfirm(allselect){
-        console.log(allselect);
         let eventcode = '';
         let eventcodedes='';
         for(let elem of allselect){
@@ -424,7 +434,24 @@
       MultiPlace
     },
     watch:{
-
+      catersta(val, oldval){
+        if(this.catersta==='1'||this.catersta==='Q'){
+          this.$set(this.newEvent,'sta',this.catersta)
+        }
+        if(this.catersta==='2'){
+          this.staoptions.push({ code: '2', descript: '确认' });
+        }
+      },
+      catering(val,oldval){
+        if(val){
+          this.$set(this.newEvent,'descript',val.name)
+        }
+      },
+      defaulttype(val){
+        if(val){
+          this.$set(this.newEvent,'type',val)
+        }
+      }
     }
   }
 </script>

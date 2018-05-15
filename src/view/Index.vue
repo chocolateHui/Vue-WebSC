@@ -161,11 +161,18 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import {formatDate}  from '../common/date.js'
   import methodinfo from '../config/MethodConst.js'
   import 'font-awesome/css/font-awesome.css'
-
-
+  let echarts = require('echarts/lib/echarts')
+  // 引入柱状图组件
+  require('echarts/lib/chart/bar')
+  require('echarts/lib/chart/line')
+  require('echarts/lib/chart/pie')
+  // 引入提示框和title组件
+  require('echarts/lib/component/tooltip')
+  require('echarts/lib/component/title')
 
   export default {
 
@@ -185,7 +192,6 @@
     },
     mounted() {
 
-
       this.getlinedata();
       this.getpiedata();
       this.getzhudata();
@@ -196,7 +202,7 @@
     methods: {
       drawLine() {
         // 基于准备好的dom，初始化echarts实例
-        let myChart = this.$echarts.init(document.getElementById('myChart'))
+        let myChart = echarts.init(document.getElementById('myChart'))
         // 绘制图表
         myChart.setOption({
           title: {
@@ -238,7 +244,7 @@
       },
       drawpie() {
         // 基于准备好的dom，初始化echarts实例
-        let myChart = this.$echarts.init(document.getElementById('myChart2'))
+        let myChart = echarts.init(document.getElementById('myChart2'))
         // 绘制图表
         myChart.setOption({
           title: {
@@ -282,7 +288,7 @@
       },
       drawzhu() {
         // 基于准备好的dom，初始化echarts实例
-        let myChart = this.$echarts.init(document.getElementById('myChart3'));
+        let myChart = echarts.init(document.getElementById('myChart3'));
 
         // 绘制图表
         myChart.setOption({
@@ -414,7 +420,6 @@
             if (response.status === 200) {
               this.zhuxdata = [];
               this.zhuydata = [];
-              console.log(response.data)
               if(typeof(response.data.rankinfo) != "undefined"){
                 var labelRight = {
                   normal: {
@@ -422,7 +427,6 @@
                   }
                 }
                 var rankinfo = response.data.rankinfo;
-                console.log(rankinfo);
                 if(rankinfo.length<=2){
                   for(var i=rankinfo.length-1;i>=0;i--){
                     console.log(rankinfo[i]);
@@ -562,8 +566,6 @@
         this.gettable3data();
       }
     }
-
-
 
   }
 </script>
