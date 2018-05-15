@@ -219,7 +219,6 @@
           sta:'1',
           stdunit:'0'
         },
-        eventshow:true,
         eventbdate:[],
         eventtime: ['00:00', '00:00'],
         stdunit:'',
@@ -262,10 +261,12 @@
         'priceoptions',
         'layoutoptions',
         'degreeoptions'
-      ])
+      ]),
+      eventshow:function () {
+        return !this.caterid;
+      }
     },
     created(){
-      this.eventshow=!this.caterid;
     },
     methods: {
       eventCheck(catering){
@@ -306,7 +307,6 @@
               resolve(false)
               return
             }
-            console.log(this.newEvent);
             this.newEvent.begindate = this.eventbdate[0];
             this.newEvent.enddate = this.eventbdate[1];
             this.newEvent.begintime = this.eventtime[0];

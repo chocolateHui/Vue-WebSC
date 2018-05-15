@@ -130,7 +130,7 @@
     },
     props:['cat'],
     created(){
-      this.refreshData();
+//      this.refreshData();
     },
     methods: {
       refreshData(){
@@ -218,6 +218,14 @@
           if(!elem.hasOwnProperty('descript1')||!elem.descript1){
             this.$message.error("英文描述不能为空!")
             return
+          }
+          if(this.cat==='sc_time_unit'){
+            console.log(elem.exts1)
+            console.log(elem.exts2)
+            if(elem.exts1>elem.exts2){
+              this.$message.error("开始时间不能晚于结束时间!")
+              return
+            }
           }
         }
         this.$store.dispatch('encrypttoken').then(() => {
@@ -322,7 +330,7 @@
         width: 100px;
       }
     }
-    ivu-input{
+    .ivu-input{
       margin: 0;
     }
     .image-btn{

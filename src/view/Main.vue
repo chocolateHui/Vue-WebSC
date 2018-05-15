@@ -9,15 +9,10 @@
           :key="item.name"
           :label="item.name"
           :name="item.name">
-          <div v-if="isLoading">
-            <loading></loading>
-          </div>
-          <div v-if="!isLoading" :style="{height: screenHeight + 'px'}">
-            <keep-alive>
-              <router-view v-if="$route.meta.keepAlive"></router-view>
-            </keep-alive>
-            <router-view v-if="!$route.meta.keepAlive"></router-view>
-          </div>
+          <keep-alive>
+            <router-view v-if="$route.meta.keepAlive"></router-view>
+          </keep-alive>
+          <router-view v-if="!$route.meta.keepAlive"></router-view>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -123,8 +118,12 @@
           return;
         }
         if(to.name==='新建宴会问询'){
+          this.$store.commit('setCatering', {});
+          this.$store.commit('setCaterid', '');
           this.$store.commit('setCatersta', 'Q');
         }else if(to.name==='新建宴会预订'){
+          this.$store.commit('setCatering', {});
+          this.$store.commit('setCaterid', '');
           this.$store.commit('setCatersta', '1');
         }
 

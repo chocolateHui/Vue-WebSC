@@ -103,12 +103,12 @@
             ifproCurrent:'',
             proName:'',
             proNo:'',
+            cateringlist:[]
           }
       },
       computed: {
         ...mapGetters(['salelist']),
         ...mapGetters(['profileslist']),
-        ...mapGetters(['cateringlist']),
       },
       watch:{
         archFlag:function (val,oldval) {
@@ -175,18 +175,22 @@
         },
         //预定历史搜索
         getHistoryList:function (proList) {
-          this.proName=proList.proname
-          this.proNo=proList.prono
-          this.ifproCurrent=proList.prono
-          this.caterParam = {
-            no:proList.prono,
-          };
-          this.getCateringList()
-        },
-        getCateringList:function () {
+          this.proName = proList.proname
+          this.proNo = proList.prono
+          this.ifproCurrent = proList.prono
           this.$store.dispatch('encrypttoken').then(() => {
-            //获取工号信息,完成后进行路由
-            this.$store.dispatch('getcateringlist',this.caterParam).then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+            this.$http.post(methodinfo.getcateringlist, {
+              no: proList.prono,
+            }).then(function (response) {
+              if (response.data.errorCode === '0') {
+                this.cateringlist =[];
+                if(response.data.caterings){
+                  this.cateringlist = response.data.caterings;
+                }
+              }
             })
           })
         },
