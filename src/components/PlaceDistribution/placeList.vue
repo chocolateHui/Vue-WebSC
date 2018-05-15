@@ -4,7 +4,7 @@
       <div class="placelist">
         <div class="placelist_head" >
           <ul>
-            <router-link tag="li" :to="{path:'/main/placeList/'+item.num}" v-for="item,index in placeHeadList" :key="index" active-class="current">{{item.name}}</router-link>
+            <router-link tag="li" :to="{path:'/main/place/placeList/'+item.num}" v-for="item,index in placeHeadList" :key="index" active-class="current">{{item.name}}</router-link>
           </ul>
         </div>
         <div class="placelist_content">
@@ -56,8 +56,7 @@
           </table>
         </div>
       </div>
-      <!--<reasonmodal v-if="ifreson" @resonCancel="resonCancel" @reasonsure="reasonsure" :remarklist="remarklist"></reasonmodal>-->
-      </div>
+       </div>
     <b-modal @shown="reasonShown" id="reasonmodal" size="lg" ref="reasonmodal" title="理由列表" hide-footer>
       <Reason ref="Reason" @reasonConfirm="reasonConfirm"></Reason>
     </b-modal>
@@ -68,8 +67,7 @@
 </template>
 <script>
   import Reason from '../Reason.vue'
-  // import reasonmodal from './reasonmodal'
-  import methodinfo from '../../config/MethodConst.js'
+   import methodinfo from '../../config/MethodConst.js'
   import notesmodal from './../remark'
   import '../../css/PlaceDistribute.scss';
     export default {
@@ -106,7 +104,6 @@
       },
       components:{
         notesmodal,
-        // reasonmodal
         Reason
       },
       created(){

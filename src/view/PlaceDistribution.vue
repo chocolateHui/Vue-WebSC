@@ -613,7 +613,7 @@
           }
         },
         listChange:function () {
-          this.$router.push({path:'/main/placeList/0'})
+          this.$router.push({path:'/main/place/placeList/0'})
         },
         btnCheck:function (idx) {
           var check = this.headList[idx].checked;

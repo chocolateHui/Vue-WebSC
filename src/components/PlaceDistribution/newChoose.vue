@@ -200,7 +200,6 @@
                     _this.timebegin=response.data.basecodes[0].descript
                     _this.$set(this.eventtime,0,response.data.basecodes[0].exts1)
                     _this.$set(this.eventtime,1,response.data.basecodes[0].exts2)
-                    console.log(_this.eventtime+'_this.eventtime')
                   }
                 }
               }
