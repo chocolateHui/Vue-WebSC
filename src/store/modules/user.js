@@ -15,12 +15,13 @@ const state = {
   },
   hotels: [],
   empno: {
-  }
+  },
+  empsale:''
 }
 
 // getters
 const getters = {
-  groupid: groupid => state.groupid,
+  groupid: state => state.groupid,
 
   username: state => state.username,
 
@@ -28,7 +29,9 @@ const getters = {
 
   hotels: state => state.hotels,
 
-  empno: state => state.empno
+  empno: state => state.empno,
+
+  empsale: state => state.empsale,
 }
 
 // actions
@@ -73,7 +76,7 @@ const mutations = {
     state.groupid = groupid
   },
   setUsername (state, username) {
-    state.username = username.toUpperCase()
+    state.username = (username+'').toUpperCase()
   },
   setHotel (state, hotel) {
     state.hotel = hotel
@@ -85,7 +88,10 @@ const mutations = {
     delete empno.password;
     delete empno.md5;
     state.empno = empno
-  }
+  },
+  setEmpSale (state, empsale) {
+    state.empsale = empsale
+  },
 }
 
 export default {

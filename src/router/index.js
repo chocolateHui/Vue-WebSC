@@ -1,19 +1,31 @@
+/* eslint-disable radix */
 import Vue from 'vue'
 import Router from 'vue-router'
 
 const login = () => import(/* webpackChunkName: "group-login" */ '../view/Login.vue')
 const main = () => import(/* webpackChunkName: "group-main" */ '../view/Main.vue')
 const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Template.vue')
+const NewCatering = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/NewCatering.vue')
+const CateringInfo = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/CateringInfo.vue')
 const EOShare = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/EOShare.vue')
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
-const Maint = () => import(/* webpackChunkName: "group-main" */ '../view/Maint.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
 const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfo.vue')
 const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
+const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
+const placeDistribution = () => import(/* webpackChunkName: "group-place" */ '../view/placeDistribution.vue')
+const placeList = () => import(/* webpackChunkName: "group-place" */ '../components/PlaceDistribution/placeList.vue')
+const index = () => import(/* webpackChunkName: "group-main" */ '../view/Index.vue')
+const caterList = () => import(/* webpackChunkName: "group-main" */ '../view/CaterList.vue')
+const Maint = () => import(/* webpackChunkName: "group-maint" */ '../view/Maint.vue')
+const pccodeinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/pccodeinfo.vue')
+
 Vue.use(Router)
 
-const router =new Router({
+let loadingInstance
+
+const router = new Router({
   routes: [
     {
       path: '/login',
@@ -26,15 +38,19 @@ const router =new Router({
       children: [
         // 当 /main 匹配成功，
         // DashBoard 会被渲染在 main 的 <router-view> 中
-        { path: '',name: '首页', component: Template,
+        {
+          path: '',
+          name: '首页',
+          component: index,
           meta: {
-            keepAlive: false // 需要被缓存
-          } },
+            keepAlive: true // 需要被缓存
+          }
+        },
         // ...其他子路由
         {
           path: '/main/caterList',
           name: '宴会预订列表',
-          component: Template,
+          component: caterList,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -42,7 +58,7 @@ const router =new Router({
         {
           path: '/main/newQuery',
           name: '新建宴会问询',
-          component: Template,
+          component: NewCatering,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -50,18 +66,19 @@ const router =new Router({
         {
           path: '/main/newReserve',
           name: '新建宴会预订',
-          component: EOShare,
+          component: NewCatering,
           meta: {
             keepAlive: true // 需要被缓存
           }
         },
         {
-          path: '/main/catering/cateringInfo',
+          path: '/main/catering/cateringInfo/:caterid',
           name: '宴会预订详情',
-          component: Template,
+          component: CateringInfo,
           meta: {
             keepAlive: true // 需要被缓存
-          }
+          },
+          props: true
         },
         {
           path: '/main/catering/eventItem',
@@ -72,17 +89,26 @@ const router =new Router({
           }
         },
         {
-          path: '/main/EOShare',
+          path: '/main/EOShare/:caterid',
           name: '宴会预订EO单',
           component: EOShare,
+          meta: {
+            keepAlive: false // 需要被缓存
+          },
+          props: true
+        },
+        {
+          path: '/main/place/placeDistribution',
+          name: '宴会场地分布',
+          component: placeDistribution,
           meta: {
             keepAlive: true // 需要被缓存
           }
         },
         {
-          path: '/main/placeDistribution',
-          name: '宴会场地分布',
-          component: Template,
+          path: '/main/place/placeList/:index?',
+          name: '宴会事务列表',
+          component: placeList,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -90,7 +116,7 @@ const router =new Router({
         {
           path: '/main/saleDiary',
           name: '销售活动日历',
-          component: Template,
+          component: salesActivities,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -100,7 +126,7 @@ const router =new Router({
           name: '报表专家',
           component: report,
           meta: {
-            keepAlive: false // 不需要被缓存
+            keepAlive: true // 不需要被缓存
           }
         },
         {
@@ -108,7 +134,7 @@ const router =new Router({
           name: '订单流失统计',
           component: Lossstatistics,
           meta: {
-            keepAlive: true // 需要被缓存
+            keepAlive: false // 需要被缓存
           }
         },
         {
@@ -146,7 +172,7 @@ const router =new Router({
             {
               path: '/main/maint/pccode',
               name: '宴会营业点',
-              component: Hotelinfo
+              component: pccodeinfo
             },
             {
               path: '/main/maint/item',
@@ -159,7 +185,7 @@ const router =new Router({
               component: Hotelinfo
             }
           ]
-        },
+        }
       ]
     },
     {
@@ -175,8 +201,8 @@ const router =new Router({
 
 router.beforeEach((to, from, next) => {
   console.log(new Date().getTime())
-  router.app.$store.commit("set_loading",true);
-  if (to.path.indexOf("/login")<0) {
+  loadingInstance = router.app.$loading.service({ fullscreen: true })
+  if (to.path.indexOf('/login') < 0) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
     if (!router.app.$store.getters.token) {
@@ -184,16 +210,16 @@ router.beforeEach((to, from, next) => {
         path: '/login',
         query: { redirect: to.fullPath }
       })
-    }else {
-      let tokentime = router.app.$store.getters.tokentime;
-      let now = new Date().getTime();
-      let timelong =  parseInt(now - tokentime) / 1000 / 60 /60;
-      if(!tokentime||timelong>=8){
+    } else {
+      let tokentime = router.app.$store.getters.tokentime
+      let now = new Date().getTime()
+      let timelong =  parseInt(now - tokentime) / 1000 / 60 / 60
+      if (!tokentime || timelong >= 8) {
         next({
           path: '/login',
           query: { redirect: to.fullPath }
         })
-      }else{
+      } else {
         next()
       }
     }
@@ -204,8 +230,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
   console.log(new Date().getTime())
-  router.app.$store.commit("set_loading",false);
+  loadingInstance.close()
 })
-
 
 export default router

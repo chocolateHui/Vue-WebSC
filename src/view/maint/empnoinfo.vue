@@ -1,4 +1,3 @@
-<!-- 模板组件，用于模拟不同路由下的组件显示 -->
 <template>
   <div id="empnoinfo">
     <b-container fluid>
@@ -26,7 +25,7 @@
         <b-col sm="4" class="my-1">
           <b-form-group class="mb-0">
             <b-form-checkbox >停用</b-form-checkbox>
-            <b-button variant="primary">查询</b-button>
+            <b-button variant="primary" @click="doFilter">查询</b-button>
             <b-button variant="primary" @click="newProp">新建</b-button>
           </b-form-group>
         </b-col>
@@ -36,9 +35,8 @@
         ref = "empnotable"
         :row-key="getRowKeys"
         @expand-change = "expandChange"
-        :data="getempnolist"
+        :data="getempnolist1"
         border
-        stripe
         style="width: 100%" :max-height="tableHeight">
         <el-table-column type="expand">
           <template slot-scope="props">
@@ -143,8 +141,9 @@
               </b-col>
             </b-row>
             <b-button type="submit" @click="submitempno(props.row)" variant="primary">保存</b-button>
-            <b-button type="submit" variant="primary">修改密码</b-button>
-            <b-button type="submit" variant="primary">解锁</b-button>
+            <b-button type="submit" variant="primary" v-b-modal.passmodal1>修改密码</b-button>
+
+
             <b-button v-b-modal.logmodal type="submit" variant="primary">日志</b-button>
           </template>
         </el-table-column>
@@ -160,7 +159,7 @@
           <template slot-scope="scope">
             <b-button
               size="mini"
-              type="danger" @click="deleteempno(row)"></b-button>
+              type="danger" @click="deleteempno(scope.$index, getempnolist1)"></b-button>
           </template>
         </el-table-column>
       </el-table>
@@ -169,21 +168,50 @@
         <sysLog></sysLog>
       </b-modal>
     </b-container>
+    <b-modal id="passmodal1" ref="passmodal1" @hidden="modalhidden" size="sm" title="修改密码" hide-footer>
+      <div>
+        <b-form @submit="onSubmit" v-if="show">
+          <b-form-group label="用户名" horizontal>
+            <b-form-input :value="empno.empname" disabled>
+            </b-form-input>
+          </b-form-group>
+          <b-form-group label="旧密码" horizontal>
+            <b-form-input type="password"
+                          v-model="oldpassword"
+                          required>
+            </b-form-input>
+          </b-form-group>
+          <b-form-group label="新密码:" horizontal>
+            <b-form-input type="password"
+                          v-model="newpassword"
+                          required>
+            </b-form-input>
+          </b-form-group>
+          <b-form-group label="确认密码:" horizontal>
+            <b-form-input type="password"
+                          v-model="confirmpassword"
+                          required>
+            </b-form-input>
+          </b-form-group>
+          <b-row>
+            <b-col sm="3">
+            </b-col>
+            <b-col>
+              <b-button type="submit" variant="primary">提交</b-button>
+            </b-col>
+          </b-row>
+        </b-form>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
   import sysLog from  '../../components/syslog.vue'
   import methodinfo from '../../config/MethodConst.js'
+  import { mapGetters, mapMutations } from 'vuex'
 
-//  const items = [
-//    {  age: 40,empno:'FOX', empname:  '销售员1',email:'',sex:'1' },
-//    {  age: 21,empno:'TEST1', empname: '销售员1',email:'' ,sex:'1'},
-//    {  age: 9,empno:'TEST2', empname: 'Mini',email:'mini@126.com',sex:'2'},
-//    {  age: 89,empno:'TEST3', empname: 'Geneva',email:'',sex:'2' },
-//    {  age: 38,empno:'TEST4', empname: 'Jami',email:'',sex:'2' },
-//    {  age: 27,empno:'TEST5', empname: 'Essie',email:'',sex:'2' }
-//  ]
+
   const fildes = [
     {  prop: 'empno', label:  '工号',width:'160',sortable:true },
     {  prop: 'empname', label:  '姓名',width:'',sortable:true,showTip:true},
@@ -192,11 +220,11 @@
     {  prop: 'htljob', label:  '角色',width:'100',sortable:true },
     {  prop: 'hotel', label:  '所属酒店',width:'',sortable:true }
   ]
-
   export default {
     data () {
       return {
-        getempnolist: [],
+        getempnolist: [],//
+        getempnolist1: [],//
         fildes :fildes,
         saleid: '',
         gethotellist: [],
@@ -206,6 +234,10 @@
         expands:'',
         hotelid:'',
         disabled:'',
+        oldpassword: '',
+        newpassword: '',
+        confirmpassword: '',
+        show: true,
         // 获取row的key值
         getRowKeys(row) {
           return row.empno;
@@ -215,14 +247,15 @@
 
       }
     },
+    filters: {
+
+    },
     computed: {
-      searchitems:function () {
-        if(!this.saleid){
-          return this.items;
-        }else{
-          return this.items.filter( item => (~item.name.indexOf(this.saleid)));
-        }
-      }
+      ...mapGetters([
+        'groupid',
+        'hotel',
+        'empno'
+      ])
     },
     methods: {
       configDefault:function () {
@@ -233,19 +266,74 @@
       submitempno:function (row) {
         console.log(row.toSource());
       },
-      deleteempno:function (row) {
+      onSubmit: function () {
+        if (this.newpassword !== this.confirmpassword) {
+          this.$alert('两次密码输入不一致,请检查!');
+          return;
+        }
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.modifypassword, {
+            username: this.empno.empno,
+            newpassword: this.newpassword,
+            oldpassword: this.oldpassword
+          }).then((response) => {
+            if (response.data.errorCode === '0') {
+              this.$message({message: "修改成功", type: 'success'});
+              let tokenparam = {
+                groupid: this.$store.getters.groupid,
+                hotelid: this.hotel.hotelid,
+                username: this.empno.empno,
+                password: this.newpassword
+              };
+              this.$store.dispatch('gettoken', tokenparam);
+              this.$refs.passmodal1.hide();
+            } else {
+              this.$alert(response.data.errorMessage, "修改失败", {type: 'error'})
+            }
+          })
+        })
+      },
+      modalhidden: function () {
+        console.log(this.oldpassword);
+        this.oldpassword = '';
+        this.newpassword = '';
+        this.confirmpassword = '';
+        this.show = false;
+        this.$nextTick(() => { this.show = true });
+      },
+      deleteempno:function (index,row) {
         this.$confirm("是否要删除该员工信息？", "提示", {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.getempnolist.splice(row,1);
+          this.getempnolist1.splice(index,1);
 //          this.$message({
 //            type: 'success',
 //            message: '删除成功!'
 //          });
         });
 
+      },
+      doFilter : function(){               //搜索
+        var _this = this;
+        this.hotelid = _this.$store.state.user.hotel.hotelid;
+        if (this.value1 && this.descript ) {
+          _this.getempnolist1 = [];
+          var i;
+          for (i in this.getempnolist) {
+            if (this.getempnolist[i].hotelid == _this.hotelid && this.getempnolist[i].htljob == _this.value1) {
+              _this.getempnolist1.push(this.getempnolist[i]);
+              console.log(this.getempnolist[i])
+              console.log(_this.getempnolist1)
+            }
+          }
+        }else{
+          this.$message.warning("查询条件不能为空！");
+          return;
+        }
       },
       expandChange:function (row, expandedRows) {
         if(expandedRows.length>1){
@@ -305,6 +393,8 @@
             if (response.status === 200) {
               if (response.data.errorCode == "0") {
                 _this.getempnolist = response.data.empnos;
+                //克隆数组getempnolist给getempnolist1
+                [ ..._this.getempnolist1 ] = _this.getempnolist
               }
             }
           });
@@ -330,7 +420,9 @@
       color: #FFFFFF;
     }
     #empnoinfo{
-
+      .form-control{
+        height: 33.5px;
+      }
       .el-date-editor .el-range-separator{
         padding: 0;
       }
@@ -349,7 +441,8 @@
         }
       }
       .btn-primary{
-        width: 100px;
+        margin-right: 10px;
+        padding: 5px 25px;
           background: #7EB2DD;
           border: none;
          &:last-of-type{
@@ -399,7 +492,7 @@
         .el-table__expanded-cell{
           border-right: none;
           border-left: 1px solid #ebeef5;
-          padding: 5px!important;
+          padding: 20px!important;
           box-shadow: 1px 5px 5px #dee2e6;
           .btn-primary:last-of-type{
              background: #7EB2DD;

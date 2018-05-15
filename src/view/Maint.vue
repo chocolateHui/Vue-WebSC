@@ -16,6 +16,7 @@
           :props="defaultProps"
           @node-click="NodeClick"
           default-expand-all
+          highlight-current
           :filter-node-method="filterNode"
           ref="tree2">
         </el-tree>
@@ -66,31 +67,36 @@
             route:'/main/maint/item'
           },{
             label: '事务类型',
-            route:'/main/maint/basecode'
+            route:'/main/maint/basecode',
+            car:'sc_event_type'
           },{
             label: '事务常用时间段',
-            route:'/main/maint/basecode'
-          }, {
-            label: '事务常用时间段',
-            route:'/main/maint/basecode'
+            route:'/main/maint/basecode',
+            car:'sc_time_unit'
           }, {
             label: '事务优先等级设置',
-            route:'/main/maint/basecode'
+            route:'/main/maint/basecode',
+            car:'sc_event_degree'
           },{
             label: '场地布局',
-            route:'/main/maint/basecode'
+            route:'/main/maint/basecode',
+            car:'layout'
           }, {
             label: '宴会取消理由',
-            route:'/main/maint/basecode'
+            route:'/main/maint/basecode',
+            car:'sc_cancel_reason'
           },{
             label: '场地类型',
-            route:'/main/maint/basecode'
+            route:'/main/maint/basecode',
+            car:'sc_place_kind'
           }, {
             label: '场地风格',
-            route:'/main/maint/basecode'
+            route:'/main/maint/basecode',
+            car:'sc_place_style'
           },{
             label: '场地位置',
-            route:'/main/maint/basecode'
+            route:'/main/maint/basecode',
+            car:'sc_place_location'
           }]
         }],
         defaultProps: {
@@ -116,7 +122,7 @@
         return data.label.indexOf(value) !== -1;
       },
       NodeClick(data){
-        this.$router.push({path:data.route})
+        this.$router.push({path:data.route, params: { cat: data.cat }})
       }
     },
     mounted ()  {

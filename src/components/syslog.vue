@@ -1,4 +1,3 @@
-<!-- 模板组件，用于模拟不同路由下的组件显示 -->
 <template>
   <div id="syslog">
     <b-container fluid>
