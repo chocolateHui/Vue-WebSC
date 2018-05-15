@@ -255,7 +255,9 @@
       line-height: 30px;
     }
     .ivu-input{
-      padding: 0.375rem 0.75rem !important;
+      padding: 0 0.75rem !important;
+      line-height: 30px;
+      height: 30px;
       border: 1px solid #DBDCDC;
     }
   }
