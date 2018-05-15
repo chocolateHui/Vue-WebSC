@@ -1,5 +1,5 @@
 <template>
-<div class="place_contain" ref="contain">
+<div class="place_contain" id="place_contain" ref="contain">
   <div class="place_head clearfix">
     <ul>
       <li class="all" @click="btnAllCheck"><i class="fa" :class="{'fa-check':ifAllCheck}"></i>所有</li>
@@ -64,8 +64,8 @@
                 <label>{{item.time}}</label>
                 <p>
                   <span v-for="items in timeAll[indexdetail].content" >
-                    <span v-for="(infolist1,infoindex1) in placesinfo" v-if="infolist1.tableno==placeitem.tableno">
-                        <span v-for="infolist in (placesinfo[infoindex1].bdates)" v-if="timelist==infolist.bdate">
+                    <span v-for="(infolist1,infoindex1) in placesinfo1" v-if="infolist1.tableno==placeitem.tableno">
+                        <span v-for="infolist in (placesinfo1[infoindex1].bdates)" v-if="timelist==infolist.bdate">
                             <span v-for="typeitem in typeList" v-if="iftypelist||(typeitem==infolist.eventtype)">
                                <span v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta&&( (items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))"  :data-id="items.dataid" :data-it="items.datait"></span>
                             </span>
@@ -125,8 +125,14 @@
       </div>
     </div>
   </div>
-  <new-choose v-if="ifNewChoose" :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>
-  <div id="layer" v-if="ifNewChoose"></div>
+  <b-modal id="logmodal" ref="myModalchoose" size="lg" title="销售日记" hide-footer>
+    <new-choose :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>
+  </b-modal>
+  <!--<new-choose v-if="ifNewChoose" :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>-->
+  <!--<div id="layer" v-if="ifNewChoose"></div>-->
+  <div v-if="isLoading">
+    <loading></loading>
+  </div>
 </div>
 </template>
 <script>
@@ -200,6 +206,7 @@
             gettolist:[],
             placeinfoparam:{},
             basecodeslist:[],
+            placesinfo1:[],
             typeList:['1'],
             iftypelist:true,
             gettocurrent:'',
@@ -264,9 +271,9 @@
               this.todayHour.push(num+':00')
             }
           }
-
       },
       methods: {
+        // 查询事物
         getbasecodelist:function () {
           var _this=this
           this.$store.dispatch('encrypttoken').then(() => {
@@ -317,8 +324,6 @@
                   }
                 }
                 this.getplacelist()
-                this.getplaceusedinfo()
-                this.gettoplacelist()
               }
             })
           })
@@ -336,6 +341,8 @@
                 if (response.data.errorCode=="0") {
                   _this.placeslist=response.data.places
                 }
+                this.getplaceusedinfo()
+                this.gettoplacelist()
               }
             })
           })
@@ -387,6 +394,8 @@
           this.$store.dispatch('encrypttoken').then(() => {
             //获取工号信息,完成后进行路由
             this.$store.dispatch('getplaceusedinfo',this.placeinfoparam).then(() => {
+              var info=this.placesinfo
+              this.placesinfo1=info
               loading.close();
             })
           })
@@ -417,7 +426,8 @@
           })
         },
         closeChoose:function () {
-          this.ifNewChoose=false
+          // this.ifNewChoose=false
+          this.$refs.myModalchoose.hide()
         },
         addThings:function (time,addr) {
            this.newChooseTime=time
@@ -427,7 +437,8 @@
                this.newChooseAddrNo=this.placeslist[t].tableno
              }
           }
-          this.ifNewChoose=true
+          this.$refs.myModalchoose.show()
+          // this.ifNewChoose=true
         },
         typeCheckAll:function () {
           this.ifTypeCheckAll=!this.ifTypeCheckAll
@@ -605,7 +616,7 @@
           }
         },
         listChange:function () {
-          this.$router.push({name:'宴会事务列表'})
+          this.$router.push({path:'/main/placeList/0'})
         },
         btnCheck:function (idx) {
           var check = this.headList[idx].checked;
@@ -738,61 +749,78 @@
     }
 </script>
 
-<style scoped  lang="scss">
-  .calendarShow{
-    position: absolute;
-    z-index: 22;
-    left:50%;
-  }
-  .thingsLeft{
-  left:0;
-  right:inherit;
-  }
-  .thingsRight{
-    left:inherit;
-    right:0;
-  }
-.thingsBottom{
-bottom:75px;
-top:inherit
-}
-  .thingsTop{
-    bottom:inherit;
-    top:70px
-  }
-  .bgtime{
-    float: left;
-    height: 13px;
-    width: 100%;
-  }
-  .bgtime2{
-    float: left;
-    height: 24px;
-    width: 100%;
-  }
-  .todayThings{
-    background: #fff;
-    position: absolute;
-    min-height: 100px;
-    padding-bottom: 10px;
-    width: 470px;
-    z-index: 9;
-    border-radius:3px;
-    box-shadow:0 0 15px #C1C1C1;
-  }
-  .borderleft{border-left: 2px solid #fff;}
-  .gettochild{
-    position: absolute;
-    width: auto;
-    display: inline-block;
-    background: #ffffff;
-    z-index: 22;
-    left: 60%;
-    top: 82px;
-    border: 1px solid #4C4C4C;
-    span{
-      width: auto !important;
-      margin-bottom: 0 !important;
+<style  lang="scss">
+  #place_contain{
+    .calendarShow{
+      position: absolute;
+      z-index: 22;
+      left:50%;
+    }
+    .thingsLeft{
+      left:0;
+      right:inherit;
+    }
+    .thingsRight{
+      left:inherit;
+      right:0;
+    }
+    .thingsBottom{
+      bottom:75px;
+      top:inherit
+    }
+    .thingsTop{
+      bottom:inherit;
+      top:70px
+    }
+    .bgtime{
+      float: left;
+      height: 13px;
+      width: 100%;
+    }
+    .bgtime2{
+      float: left;
+      height: 24px;
+      width: 100%;
+    }
+    .todayThings{
+      background: #fff;
+      position: absolute;
+      min-height: 100px;
+      padding-bottom: 10px;
+      width: 470px;
+      z-index: 9;
+      border-radius:3px;
+      box-shadow:0 0 15px #C1C1C1;
+    }
+    .borderleft{border-left: 2px solid #fff;}
+    .gettochild{
+      position: absolute;
+      width: auto;
+      display: inline-block;
+      background: #ffffff;
+      z-index: 22;
+      left: 60%;
+      top: 82px;
+      border: 1px solid #4C4C4C;
+      span{
+        width: auto !important;
+        margin-bottom: 0 !important;
+      }
+    }
+    .modal-content{
+      background: transparent;
+      border:none;
+    }
+    .modal-header{
+      display: none;
+    }
+    .modal-dialog{
+      margin: 1.75rem auto;
+      padding: 10px!important;
+    }
+    .modal-lg {
+      max-width: 700px;
     }
   }
+
 </style>

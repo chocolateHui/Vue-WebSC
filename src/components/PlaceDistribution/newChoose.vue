@@ -1,5 +1,5 @@
 <template>
-  <div class="pop_place">
+  <div class="pop_place" id="pop_place">
     <div class="pop_place_tou">
       <i class="fa fa-close" @click="closeChoose"></i>
       <ul>
@@ -11,34 +11,24 @@
     <div class="content">
       <div class="content_right">
         <h1>起止时间</h1>
-        <div class="select">
-          <p @click="btntimeselect" ref="regtimebegin">{{timebegin}}</p>
-          <ol v-if="iftimeselect">
-            <li @click="btntimehide(item)" v-for="item in basecodelist">{{item.descript}}</li>
-          </ol>
-        </div>
+        <el-select v-model="timebegin" @change="btntimehide" filterable>
+          <el-option
+            v-for="item in basecodelist"
+            :key="item.code"
+            :label="item.descript"
+            :value="item.code">
+          </el-option>
+        </el-select>
         <ul>
-          <li id="pintime">
-            <p @click="btnpintimeshow" ref="regpintime">{{pintime}}</p>
-            <ol v-if="ifpintime">
-              <li @click="btnpintimehide(list)" v-for="list in todayHour">{{list}}</li>
-            </ol>
-          </li>
-          <li class="title">至</li>
-          <li id="pouttime">
-            <p  @click="btnpouttimeshow" ref="regpouttime">{{pouttime}}</p>
-            <ol v-if="ifpouttime">
-              <li @click="btnpouttimehide(list)" v-for="list in todayHour">{{list}}</li>
-            </ol>
+          <li>
+            <TimePicker :steps="[1, 30, 15]" v-model="eventtime" format="HH:mm" type="timerange"></TimePicker>
           </li>
         </ul>
-        <!--<input type="button" class="btn_addThing" @click="addThing" value="新建事务" />-->
-        <button type="button" class="btn_addThing" @click="addThing">新建事务</button>
+         <button type="button" class="btn_addThing" @click="addThing">新建事务</button>
         <button type="button" class="btn_addInquiry" @click="addInquiry">新建宴会问询</button>
         <button type="button" class="btn_addBook" @click="addBook">新建宴会预订</button>
         <button type="button" class="btn_cancel" @click="closeChoose">退出</button>
-        <!--<input type="button" class="btn_cancel" @click="closeChoose" value="退出" />-->
-      </div>
+       </div>
       <div class="content_left">
         <ol>
           <li>订单号</li>
@@ -63,14 +53,17 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import '../../css/PlaceDistribute.scss';
   import methodinfo from '../../config/MethodConst.js'
+  //时间组件
+  import {TimePicker} from 'iview'
+  import '../../css/iviewpicker.css'
+  Vue.use(TimePicker)
     export default {
         name: "new-choose",
       data(){
           return{
-            pintime:'',
-            pouttime:'',
             newParam:{},
             caterings:[],
             basecodelist:[],
@@ -80,7 +73,10 @@
             ifpintime:false,
             ifpouttime:false,
             ifCaterChoose:'',
-            catersta:''
+            catersta:'',
+            startTime: '',
+            endTime: '',
+            eventtime:[],
           }
       },
       created(){
@@ -105,6 +101,9 @@
          flag:'T',
          sta:'1,2,3,W,Q',
        }
+      },
+      components:{
+        TimePicker,
       },
       props:['newChooseTime','newChooseAddr','headlist','newChooseAddrNo'],
       methods:{
@@ -141,8 +140,8 @@
           var paramNewEvent={
             begindate:this.newChooseTime,
             enddate:this.newChooseTime,
-            begintime:this.pintime,
-            endtime:this.pouttime,
+            begintime:this.eventtime[0],
+            endtime:this.eventtime[1],
             place:this.newChooseAddrNo,
             placedes:this.newChooseAddr
           };
@@ -157,8 +156,8 @@
           var paramNewEvent={
             begindate:this.newChooseTime,
             enddate:this.newChooseTime,
-            begintime:this.pintime,
-            endtime:this.pouttime,
+            begintime:this.eventtime[0],
+            endtime:this.eventtime[1],
             place:this.newChooseAddrNo,
             placedes:this.newChooseAddr
           }
@@ -199,73 +198,65 @@
                   _this.basecodelist=response.data.basecodes
                   if(response.data.basecodes){
                     _this.timebegin=response.data.basecodes[0].descript
-                    _this.pintime=response.data.basecodes[0].exts1
-                    _this.pouttime=response.data.basecodes[0].exts2
+                    _this.$set(this.eventtime,0,response.data.basecodes[0].exts1)
+                    _this.$set(this.eventtime,1,response.data.basecodes[0].exts2)
+                    console.log(_this.eventtime+'_this.eventtime')
                   }
                 }
               }
             })
           })
         },
-        btntimeselect:function () {
-          this.iftimeselect=true
-        },
-        btntimehide:function (item) {
-          this.timebegin=item.descript
+         btntimehide:function (val) {
+          for(let option of this.basecodelist){
+            if(option.code===val){
+              if(option.exts1){
+                this.$set(this.eventtime,0,option.exts1)
+              }else{
+                this.$set(this.eventtime,0,'00:00')
+              }
+              if(option.exts2){
+                this.$set(this.eventtime,1,option.exts2)
+              }else{
+                this.$set(this.eventtime,1,'00:00')
+              }
+              return;
+            }
+          }
           this.pintime=item.exts1
           this.pouttime=item.exts2
           this.iftimeselect=false
-        },
-        btnpintimeshow:function () {
-          this.ifpintime=true
-        },
-        btnpintimehide:function (list) {
-          this.pintime=list
-          this.ifpintime=false
-        },
-        btnpouttimeshow:function () {
-         this.ifpouttime=true
-        },
-        btnpouttimehide:function (list) {
-          this.pouttime=list
-          this.ifpouttime=false
         },
       },
       mounted:function () {
         this.getcateringlist(this.newParam)
         this.getbasecodelist()
-        document.addEventListener('click',(e)=> {
-          if (this.$refs.regtimebegin) {
-            if (!this.$refs.regtimebegin.contains(e.target)) {
-              this.iftimeselect = false
-            }
-          }
-          if (this.$refs.regpintime) {
-            if (!this.$refs.regpintime.contains(e.target)) {
-              this.ifpintime = false
-            }
-          }
-          if (this.$refs.regpouttime) {
-            if (!this.$refs.regpouttime.contains(e.target)) {
-              this.ifpouttime = false
-            }
-          }
-        })
       }
     }
 </script>
 
-<style scoped lang="scss">
-  .content_left{
+<style lang="scss">
+  #pop_place{
+    .content_left{
       ol{
         border-right: 1px solid #DBDCDC;
       }
       ul{
         border-right: 1px solid #DBDCDC;
       }
+    }
+    .caterCurrent{
+      background: #F5F5F5;
+    }
+    .el-input__inner{
+      padding-left: 5px;
+      border-radius: 0;
+      height: 30px;
+      line-height: 30px;
+    }
+    .ivu-input{
+      padding: 0.375rem 0.75rem !important;
+      border: 1px solid #DBDCDC;
+    }
   }
-  .caterCurrent{
-    background: #F5F5F5;
-  }
-
 </style>
