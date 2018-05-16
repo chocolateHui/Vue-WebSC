@@ -782,7 +782,7 @@
     }
 
     .btn{
-      width: 92px;
+      width: 90px;
       margin-top:5px ;
       border-radius: 0.25rem;
     }
