@@ -28,11 +28,10 @@
             </li>
             <li class="fr"><input type="button" class="btn_month" :class="{'current':ifMonth}" value="月" @click="monthNow"><input type="button" class="btn_day"
                                                                                                                                   value="日" @click="dayNow":class="{'current':!ifMonth}"  ></li>
-            <li class="tc"><span style="display: inline-block;position: relative"><span data-type="1" id="timeData"  ref="refcalendar" @click="ifCalendarShow">{{datetime}}</span>
+            <li class="tc"><span data-type="1" id="timeData"  ref="refcalendar" @click="ifCalendarShow">{{datetime}}</span>
               <div class="saleCalendar"  ref="refcalendar" v-if="calendarShow">
                 <calendar :dataSign="datetimenow" @choseDay="choseDay" ></calendar>
               </div>
-            </span>
             </li>
           </ul>
         </div>
@@ -671,10 +670,11 @@
       cursor:pointer;
     }
     .saleCalendar{
-      top: 30px;
-      left:1%;
+      top: 50px;
+      left:50%;
       position: absolute;
       z-index: 22;
+      margin-left: -140px;
     }
   .modal-lg {
     max-width: 780px;
