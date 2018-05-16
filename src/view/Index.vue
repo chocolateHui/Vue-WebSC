@@ -581,12 +581,15 @@
       font-size: 15px;
       font-weight: 400;
       height: 100%;
+
     }
     .template-wrap2 {
       height: 100%;
       display: flex;
       flex-flow: row wrap;
       align-items: left;
+      padding-left: 15px;
+      padding-right: 15px;
     }
     .width100{
       width: 100%;
