@@ -76,7 +76,8 @@
         currentplace:'',
         currentselect:[],
         allselect:[],
-        hash:{}
+        hash:{},
+        placecount:0
       }
     },
     props:{
@@ -108,9 +109,6 @@
             }
           }));
         }
-      },
-      placecount:function () {
-        return this.items.length;
       }
     },
     created(){
@@ -134,9 +132,8 @@
       },
       //页面切换数据处理
       handleSelectionChange(val) {
-        if(this.pageChange){
+        if(this.pageChange&&this.allselect.length>0){
           //换页时清空当前选择并重新赋值
-          this.pageChange=false;
           this.currentselect=[];
           for(let elem of this.allselect){
             this.$refs.multiplacetable.toggleRowSelection(elem);
@@ -153,6 +150,7 @@
               }
             }
           }
+          this.pageChange=false;
           this.currentselect = val;
         }
         this.currentplace = '';
@@ -238,6 +236,13 @@
       },
       eventbdate(val,oldval){
         console.log(val)
+      },
+      searchitems(val){
+        if(this.filterValue==='' || !this.filterValue){
+          this.placecount = this.items.length
+        }else{
+          this.placecount = this.total
+        }
       }
     }
   }

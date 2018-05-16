@@ -61,7 +61,8 @@
         pageSize:13,
         currentPage:1,
         currentRow:{},
-        pageChange:false
+        pageChange:false,
+        itemcount:0
       }
     },
     computed: {
@@ -83,9 +84,6 @@
             }
           }));
         }
-      },
-      itemcount:function () {
-        return this.items.length;
       }
     },
     created(){
@@ -147,6 +145,13 @@
       reasonlist(val,oldval){
         if(val){
           this.items = val;
+        }
+      },
+      searchitems(val){
+        if(this.filterValue==='' || !this.filterValue){
+          this.placecount = this.items.length
+        }else{
+          this.placecount = this.total
         }
       }
     }

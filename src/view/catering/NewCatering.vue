@@ -1,7 +1,7 @@
 <template>
   <div>
     <CateringInfo isNew @saveCatering="saveCatering"></CateringInfo>
-    <NewEvent :eventshow="eventshow" :toggleshow="toggleshow" ref="newevent"></NewEvent>
+    <NewEvent :toggleshow="toggleshow" ref="newevent"></NewEvent>
   </div>
 </template>
 
@@ -13,10 +13,11 @@
   import NewEvent from '../../components/catering/NewEvent.vue'
   import '../../css/font.scss'
 
+  let loading;
+
   export default {
     data () {
       return {
-        eventshow:true,
         toggleshow:false,
         isNew:true
       };
@@ -26,6 +27,7 @@
       NewEvent
     },
     created(){
+      loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'})
     },
     mounted(){
     },
@@ -63,6 +65,9 @@
             this.$store.dispatch("getSale");
             this.$store.dispatch("getAllBaseCodes");
             this.isNew = false;
+            setTimeout(() => {
+              loading.close();
+            }, 300);
           }
         })
       }
@@ -79,7 +84,7 @@
       height: 33.5px;
     }
     .ivu-input{
-      height: 33px;
+      height: 30px;
       margin-top: 0;
     }
   }

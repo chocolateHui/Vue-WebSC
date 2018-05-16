@@ -1,6 +1,5 @@
 <template>
   <div class="pop_archives" id="pop_archives">
-    <div class="pop_archives_tou">宾客档案查询<i @click="archClose" class="fa fa-close"></i></div>
     <div class="search">
       <ul>
         <li><label>名称</label><input type="text" class="text_input" v-model="name" id="archivesname"></li>
@@ -78,6 +77,8 @@
 </template>
 <script>
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
+  import methodinfo from '../../config/MethodConst.js'
+
     export default {
         name: "pop-archives",
       data(){
@@ -100,12 +101,12 @@
             ifproCurrent:'',
             proName:'',
             proNo:'',
+            cateringlist:[]
           }
       },
       computed: {
         ...mapGetters(['salelist']),
         ...mapGetters(['profileslist']),
-        ...mapGetters(['cateringlist']),
       },
       watch:{
         archFlag:function (val,oldval) {
@@ -172,18 +173,23 @@
         },
         //预定历史搜索
         getHistoryList:function (proList) {
-          this.proName=proList.proname
-          this.proNo=proList.prono
-          this.ifproCurrent=proList.prono
-          this.caterParam = {
-            no:proList.prono,
-          };
-          this.getCateringList()
-        },
-        getCateringList:function () {
+          let _this = this;
+          this.proName = proList.proname
+          this.proNo = proList.prono
+          this.ifproCurrent = proList.prono
           this.$store.dispatch('encrypttoken').then(() => {
-            //获取工号信息,完成后进行路由
-            this.$store.dispatch('getcateringlist',this.caterParam).then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+            this.$http.post(methodinfo.getcateringlist, {
+              no: proList.prono,
+            }).then(function (response) {
+              if (response.data.errorCode === '0') {
+                _this.cateringlist =[];
+                if(response.data.caterings){
+                  _this.cateringlist = response.data.caterings;
+                }
+              }
             })
           })
         },
@@ -204,13 +210,13 @@
 
 <style lang="scss">
   @import '../../css/color';
-  #pop_archives{background: $colorWhite;height: 580px;width: 780px;
+  #pop_archives{background: $colorWhite;width: 780px;
     .pop_archives_tou{background: $colorF5;border-bottom: 1px solid $colorGray; color: $colorD0;font-size: 16px;height: 54px;line-height: 54px;padding: 0 35px;margin-bottom: 20px;
       i{color: #9E9E9F;cursor: pointer;display: inline-block;float: right;height: 14px;line-height: 14px;margin-top:24px;text-align: center;width: 14px;}
     }
     .search{padding: 0 35px;
-      ul{display: inline-block;width: 620px;
-        >li{float: left;margin-right: 12px; margin-bottom: 10px;}
+      ul{display: inline-block;width: 620px;padding-left: 0;
+        >li{float: left;margin-right: 12px; margin-bottom: 10px;list-style: none;}
         li{
           label{ color: #595757;display: inline-block; font-size: 13px;height:22px;line-height:22px;width: 50px;float: left}
           .text_input{background: $colorWhite;border:1px solid $colorGray; color: #9E9E9F;font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif ;height: 22px;line-height: 22px;padding: 0 3px;}
@@ -235,14 +241,14 @@
     }
     .list_archives{padding: 0 35px 15px;
       h1{color: $colorD0; font-size: 14px; margin-bottom: 8px;}
-      ol{background: #F8F8F8; overflow: hidden;border-left: 1px solid $colorGray;border-top: 1px solid $colorGray;
-        li{float: left; border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray; color: #595757;height: 32px;line-height: 32px; text-align: center;}
+      ol{background: #F8F8F8; overflow: hidden;border-left: 1px solid $colorGray;border-top: 1px solid $colorGray;padding-left: 0;
+        li{float: left; border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray; color: #595757;height: 32px;line-height: 32px; text-align: center;list-style: none;}
       }
       .nav1{width: 130px;}
       .nav4{width: 129px;}
       .nav3,.nav2,.nav5,.nav6,.nav7,.nav8{width: 75px;}
-      ul{ height: 135px; overflow: auto !important; width: 730px;
-        li{border-left: 1px solid $colorGray;overflow: hidden; height: 28px;line-height: 27px; width: 710px;
+      ul{ height: 135px; overflow: auto !important; width: 730px;padding-left: 0;
+        li{border-left: 1px solid $colorGray;overflow: hidden; height: 28px;line-height: 27px; width: 710px;padding-left: 0;
           &:nth-child(2n){background: $colorF5;}
           &.current{background: #E1EDF7;}
           span{border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray;float: left; display: inline-block;height: 28px; padding: 0 5px;text-align: center;}
@@ -251,8 +257,8 @@
     }
     .list_book{padding: 0 35px 15px;
       h1{color: $colorD0; font-size: 14px; margin-bottom: 8px;}
-      ol{background: #F8F8F8; overflow: hidden;border-left: 1px solid $colorGray;border-top: 1px solid $colorGray;
-        li{float: left; border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray; color: #595757;height: 32px;line-height: 32px; text-align: center;}
+      ol{background: #F8F8F8; overflow: hidden;border-left: 1px solid $colorGray;border-top: 1px solid $colorGray;padding-left: 0;
+        li{float: left; border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray; color: #595757;height: 32px;line-height: 32px; text-align: center;list-style: none;}
       }
       .nav1{width: 167px;}
       .nav2{width: 140px;}
@@ -260,15 +266,18 @@
       .nav4{width: 112px;}
       .nav5{width: 75px;}
       .nav6{width: 75px;}
-      ul{ height: 108px; overflow: auto !important; width: 730px;
-        li{border-left: 1px solid $colorGray;overflow: hidden; height: 27px;line-height: 26px; width: 710px;
+      ul{ height: 108px; overflow: auto !important; width: 730px;padding-left: 0;
+        li{border-left: 1px solid $colorGray;overflow: hidden; height: 27px;line-height: 26px; width: 710px;padding-left: 0;
           &:nth-child(2n){background: $colorF5;}
           span{text-align: center;border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray;float: left; display: inline-block;height: 27px; padding: 0 5px;}
         }
       }
     }
-    .btn_ok{background: $color752;border: none;color: $colorWhite;font-size: 14px;height: 28px;line-height: 28px;text-align: center;width: 80px;}
-    .btn_quit{background: $color052;border: none;color: $colorWhite;font-size: 14px;height: 28px;line-height: 28px;margin-left:10px; margin-right:35px;text-align: center;width: 80px;}
+    .tr{
+      text-align: right;
+    }
+    .btn_ok{background: $colorQuitBtn;border: none;color: $colorWhite;font-size: 14px;height: 28px;line-height: 28px;text-align: center;width: 80px;}
+    .btn_quit{background: $colorSaveBtn;border: none;color: $colorWhite;font-size: 14px;height: 28px;line-height: 28px;margin-left:10px; margin-right:35px;text-align: center;width: 80px;}
     .bgSales{
       background: #ffffff !important;
     }
@@ -319,6 +328,9 @@
     }
     .el-select{
       width: 100%;
+    }
+    ol, ul, dl{
+      margin-bottom: 0;
     }
   }
 </style>

@@ -44,7 +44,7 @@
     ]),
     methods: {
       getCateringData(){
-        const loading = this.$loading.service({fullscreen:true});
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         this.$store.commit('setCaterid',this.caterid);
         this.$store.dispatch('encrypttoken').then(() => {
           if(this.isNew){
@@ -124,7 +124,7 @@
     height: 33.5px;
   }
   .ivu-input{
-    height: 33px;
+    height: 30px;
     margin-top: 0;
   }
 </style>

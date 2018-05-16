@@ -14,6 +14,7 @@ const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/ma
 const Hotelinfoadmin = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfoadmin.vue')
 const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
+const BaseCode = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/BaseCode.vue')
 const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
 const placeDistribution = () => import(/* webpackChunkName: "group-place" */ '../view/placeDistribution.vue')
 const placeList = () => import(/* webpackChunkName: "group-place" */ '../components/PlaceDistribution/placeList.vue')
@@ -40,7 +41,7 @@ const router = new Router({
         // 当 /main 匹配成功，
         // DashBoard 会被渲染在 main 的 <router-view> 中
         {
-          path: '',
+          path: '/main/index',
           name: '首页',
           component: index,
           meta: {
@@ -181,9 +182,10 @@ const router = new Router({
               component: Hotelinfo
             },
             {
-              path: '/main/maint/basecode',
-              name: '基础代码',
-              component: Hotelinfo
+              path: '/main/maint/basecode/:cat',
+              name: '通用基础代码',
+              component: BaseCode,
+              props: true
             }
           ]
         }
@@ -196,13 +198,16 @@ const router = new Router({
     {
       path: '/',
       redirect: '/login'
+    },
+    {
+      path: '/main',
+      redirect: '/main/index'
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(new Date().getTime())
-  loadingInstance = router.app.$loading.service({ fullscreen: true })
+  loadingInstance = router.app.$loading.service({ fullscreen: true, background: 'rgba(0, 0, 0, 0.7)' })
   if (to.path.indexOf('/login') < 0) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
@@ -230,7 +235,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  console.log(new Date().getTime())
   loadingInstance.close()
 })
 

@@ -9,14 +9,14 @@ const state = {
   groupid: 'G000001',
   username: '',
   hotel: {
-    hotelid : '',
-    descript : '',
-    descript1: ''
+    hotelid: '',
+    descript: '',
+    descript1: '',
+    sign: 0
   },
   hotels: [],
-  empno: {
-  },
-  empsale:''
+  empno: {},
+  empsale: ''
 }
 
 // getters
@@ -31,7 +31,7 @@ const getters = {
 
   empno: state => state.empno,
 
-  empsale: state => state.empsale,
+  empsale: state => state.empsale
 }
 
 // actions
@@ -57,9 +57,9 @@ const actions = {
         username: state.username
       }).then(function (response) {
         if (response.status === 200) {
-          if(response.data.errorCode!=='0'){
+          if (response.data.errorCode !== '0') {
             reject(response.data.errorMessage)
-          }else{
+          } else {
             store.commit('setEmpno', response.data)
           }
         }
@@ -76,7 +76,7 @@ const mutations = {
     state.groupid = groupid
   },
   setUsername (state, username) {
-    state.username = (username+'').toUpperCase()
+    state.username = (String(username)).toUpperCase()
   },
   setHotel (state, hotel) {
     state.hotel = hotel
@@ -85,13 +85,13 @@ const mutations = {
     state.hotels = hotels
   },
   setEmpno (state, empno) {
-    delete empno.password;
-    delete empno.md5;
+    delete empno.password
+    delete empno.md5
     state.empno = empno
   },
   setEmpSale (state, empsale) {
     state.empsale = empsale
-  },
+  }
 }
 
 export default {

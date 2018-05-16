@@ -3,7 +3,6 @@
   border: none;
   padding: 0.375rem 0.75rem;
   font-size: 0.9rem;
-  margin-top: -4px;
 }
 
 .ivu-date-picker {
@@ -21,7 +20,9 @@
   overflow: visible;
   max-height: none
 }
-
+.ivu-time-picker-cells {
+  min-width: 112px;
+}
 .ivu-date-picker-cells {
   width: 196px;
   margin: 10px;
@@ -270,9 +271,7 @@ span.ivu-date-picker-cells-cell-disabled.ivu-date-picker-cells-cell-selected em 
   min-width: 100%;
   list-style: none
 }
-.ivu-picker-panel-body {
-  min-width: 432px
-}
+
 .ivu-picker-panel-body-wrapper.ivu-picker-panel-with-sidebar {
   padding-left: 92px
 }

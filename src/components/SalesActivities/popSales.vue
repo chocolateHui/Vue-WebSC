@@ -494,19 +494,16 @@
     .el-select .el-input.is-disabled .el-input__inner{
       height: 24px!important;
     }
-    .el-dialog{
-      margin-top: 20px !important;
-    }
   }
   .el-dialog__wrapper{
-    top: -150px;
     left: -20px;
     overflow: visible !important;
-  }
-  .el-dialog__header{
-    display: none;
-  }
-  .el-dialog{
-    background: transparent;
+    .el-dialog__header{
+      border-bottom: 1px solid #d9d9d9;
+    }
+    .el-dialog{
+      margin: 0 auto;
+      margin-top: -10px !important;
+    }
   }
 </style>

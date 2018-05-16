@@ -46,14 +46,14 @@
             <li>星期日</li>
           </ol>
           <ul class="clearfix">
-            <li v-for="item in list" v-if="item.otherMonth==-1" v-bind:class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
+            <li v-for="item in list" v-if="item.otherMonth==-1" :class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
               {{item.id}}
             </li>
-            <li @drop='monthdrop($event,item.id)' @dragover='allowDrop($event)' v-for="item in list" v-if="!item.otherMonth"  @click="monthPopSaleShow(item)" class="Wselday" v-bind:class="{wh_isToday: item.isToday,wh_isMark:item.isMark,todaySelect:item.isTodayNow}">
+            <li @drop='monthdrop($event,item.id)' @dragover='allowDrop($event)' v-for="item in list" v-if="!item.otherMonth"  @click="monthPopSaleShow(item)" class="Wselday" :class="{wh_isToday: item.isToday,wh_isMark:item.isMark,todaySelect:item.isTodayNow}">
               <p class="title"> {{item.id}}</p>
               <h1 @click="btnDetail(diaryList)" v-for="diaryList in guestdiarylist" v-if="guestdiarylist?item.id==diaryList.date.substring(8,10):false"><h1 :style="{background:salesTypecontain.bgcolor}" v-for="salesTypecontain in baseCodeListarc" v-if="diaryList.item==salesTypecontain.code"><span v-for="salesType in baseCodeListarc" v-if="diaryList.item==salesType.code">{{salesType.descript}}</span><strong v-for="sales in salelist" v-if="diaryList.saleid==sales.code">{{sales.name}}</strong></h1></h1>
             </li>
-            <li v-for="item in list" v-if="item.otherMonth==1" v-bind:class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
+            <li v-for="item in list" v-if="item.otherMonth==1" :class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
               {{item.id}}
             </li>
           </ul>
@@ -80,7 +80,7 @@
         </div>
       </div>
     </div>
-      <b-modal id="logmodal" ref="myModalsale" @hidden="onHidden" size="lg" title="销售日记" hide-footer>
+      <b-modal id="logmodal" ref="myModalsale" :no-close-on-backdrop="true" :no-close-on-esc="true" @hidden="onHidden" size="lg" title="销售日记" hide-footer>
          <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>
       </b-modal>
       <div v-if="isLoading">
