@@ -84,6 +84,6 @@
     }
     .text{border: 1px solid $colorGray; width: 710px;height: 225px;padding: 5px; resize: none;}
     .text_input{background: $colorF5; border: 1px solid $colorGray;font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif ; width: 350px;height:30px;line-height:30px;padding: 5px;}
-    .btn_ok{background: $color752;border: none;color: $colorWhite;font-size: 14px;height: 28px;line-height: 28px;margin-right:35px;text-align: center;width: 80px;float: right;margin-top: 20px}
+    .btn_ok{background: $colorSaveBtn;border: none;color: $colorWhite;font-size: 14px;height: 28px;line-height: 28px;margin-right:35px;text-align: center;width: 80px;float: right;margin-top: 20px}
   }
 </style>

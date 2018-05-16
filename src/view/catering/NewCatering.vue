@@ -84,8 +84,8 @@
       height: 33.5px;
     }
     .ivu-input{
-      height: 31.5px;
-      margin-top: -2.5px;
+      height: 30px;
+      margin-top: 0;
     }
   }
 </style>
