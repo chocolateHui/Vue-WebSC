@@ -82,11 +82,8 @@
       </div>
     </div>
       <b-modal id="logmodal" ref="myModalsale" @hidden="onHidden" size="lg" title="销售日记" hide-footer>
-        <!--<notesmodal :remark="remarklist" :num="num"  @onhide="btnNotesCancel"></notesmodal>-->
-        <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>
+         <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>
       </b-modal>
-      <!--<pop-sales :clickdata="clickData" :datadiary="diaryId" @saveorupdateguestdiary="saveorupdateguestdiary" v-if="popsale" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>-->
-      <!--<div id="layer" v-if="popsale"></div>-->
       <div v-if="isLoading">
         <loading></loading>
       </div>

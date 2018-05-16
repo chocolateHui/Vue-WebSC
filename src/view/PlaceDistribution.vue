@@ -1,5 +1,5 @@
 <template>
-<div class="place_contain" ref="contain">
+<div class="place_contain" id="place_contain" ref="contain">
   <div class="place_head clearfix">
     <ul>
       <li class="all" @click="btnAllCheck"><i class="fa" :class="{'fa-check':ifAllCheck}"></i>所有</li>
@@ -125,8 +125,12 @@
       </div>
     </div>
   </div>
-  <new-choose v-if="ifNewChoose" :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>
-  <div id="layer" v-if="ifNewChoose"></div>
+  <b-modal id="logmodal" ref="myModalchoose" size="lg" title="销售日记" hide-footer>
+    <new-choose :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>
+  </b-modal>
+  <div v-if="isLoading">
+    <loading></loading>
+  </div>
 </div>
 </template>
 <script>
@@ -137,10 +141,8 @@
   import newChoose from '../components/PlaceDistribution/newChoose';
   import methodinfo from '../config/MethodConst.js'
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
-  import { GetLunarDay } from './../js/lun'
-
+  import calendarjs from './../common/calendar'
   let loading
-
     export default {
         name: "place-distribution",
       data(){
@@ -264,9 +266,17 @@
               this.todayHour.push(num+':00')
             }
           }
-
+      },
+      beforeRouteEnter(to,from,next){
+        next(vm=>{
+          vm.$store.dispatch('encrypttoken').then(() => {
+            //获取工号信息,完成后进行路由
+            vm.$store.dispatch('getSale')
+          })
+        })
       },
       methods: {
+        // 查询事物
         getbasecodelist:function () {
           var _this=this
           this.$store.dispatch('encrypttoken').then(() => {
@@ -317,8 +327,6 @@
                   }
                 }
                 this.getplacelist()
-                this.getplaceusedinfo()
-                this.gettoplacelist()
               }
             })
           })
@@ -336,6 +344,8 @@
                 if (response.data.errorCode=="0") {
                   _this.placeslist=response.data.places
                 }
+                this.getplaceusedinfo()
+                this.gettoplacelist()
               }
             })
           })
@@ -417,17 +427,27 @@
           })
         },
         closeChoose:function () {
-          this.ifNewChoose=false
+          this.$refs.myModalchoose.hide()
         },
         addThings:function (time,addr) {
-           this.newChooseTime=time
+          this.newChooseTime=time
+          var newParam={
+            begindate:time,
+            enddate:time,
+            flag:'T',
+            sta:'1,2,3,W,Q',
+          }
+          var _this=this
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$store.dispatch('getcateringlist',newParam)
+          })
           for(var t=0;t<this.placeslist.length;t++){
              if(addr==this.placeslist[t].tableno){
                this.newChooseAddr=this.placeslist[t].descript
                this.newChooseAddrNo=this.placeslist[t].tableno
              }
           }
-          this.ifNewChoose=true
+          this.$refs.myModalchoose.show()
         },
         typeCheckAll:function () {
           this.ifTypeCheckAll=!this.ifTypeCheckAll
@@ -524,11 +544,11 @@
             var data1=this.adddateday(datanow,i)
             var data2=this.adddateday(datanow,i).substring(5,10);
             var dataS=data1.split("-")
-            var lunar1=GetLunarDay( dataS[0], dataS[1],dataS[2]).lunarDayStr
+            var lunar1=calendarjs.solar2lunar( dataS[0], dataS[1],dataS[2])
             var formL={
               data:data2,
               dataAll:data1,
-              dataLun:lunar1
+              dataLun:lunar1.IMonthCn+lunar1.IDayCn
             }
             this.formdata.push(formL)
           }
@@ -605,7 +625,7 @@
           }
         },
         listChange:function () {
-          this.$router.push({name:'宴会事务列表'})
+          this.$router.push({path:'/main/place/placeList/0'})
         },
         btnCheck:function (idx) {
           var check = this.headList[idx].checked;
@@ -738,61 +758,80 @@
     }
 </script>
 
-<style scoped  lang="scss">
-  .calendarShow{
-    position: absolute;
-    z-index: 22;
-    left:50%;
-  }
-  .thingsLeft{
-  left:0;
-  right:inherit;
-  }
-  .thingsRight{
-    left:inherit;
-    right:0;
-  }
-.thingsBottom{
-bottom:75px;
-top:inherit
-}
-  .thingsTop{
-    bottom:inherit;
-    top:70px
-  }
-  .bgtime{
-    float: left;
-    height: 13px;
-    width: 100%;
-  }
-  .bgtime2{
-    float: left;
-    height: 24px;
-    width: 100%;
-  }
-  .todayThings{
-    background: #fff;
-    position: absolute;
-    min-height: 100px;
-    padding-bottom: 10px;
-    width: 470px;
-    z-index: 9;
-    border-radius:3px;
-    box-shadow:0 0 15px #C1C1C1;
-  }
-  .borderleft{border-left: 2px solid #fff;}
-  .gettochild{
-    position: absolute;
-    width: auto;
-    display: inline-block;
-    background: #ffffff;
-    z-index: 22;
-    left: 60%;
-    top: 82px;
-    border: 1px solid #4C4C4C;
-    span{
-      width: auto !important;
-      margin-bottom: 0 !important;
+<style  lang="scss">
+  #place_contain{
+    .calendarShow{
+      position: absolute;
+      z-index: 22;
+      top: 90px;
+      left: 50%;
+      margin-left: -90px;
+    }
+    .thingsLeft{
+      left:0;
+      right:inherit;
+    }
+    .thingsRight{
+      left:inherit;
+      right:0;
+    }
+    .thingsBottom{
+      bottom:75px;
+      top:inherit
+    }
+    .thingsTop{
+      bottom:inherit;
+      top:70px
+    }
+    .bgtime{
+      float: left;
+      height: 13px;
+      width: 100%;
+    }
+    .bgtime2{
+      float: left;
+      height: 24px;
+      width: 100%;
+    }
+    .todayThings{
+      background: #fff;
+      position: absolute;
+      min-height: 100px;
+      padding-bottom: 10px;
+      width: 470px;
+      z-index: 9;
+      border-radius:3px;
+      box-shadow:0 0 15px #C1C1C1;
+    }
+    .borderleft{border-left: 2px solid #fff;}
+    .gettochild{
+      position: absolute;
+      width: auto;
+      display: inline-block;
+      background: #ffffff;
+      z-index: 22;
+      left: 60%;
+      top: 82px;
+      border: 1px solid #4C4C4C;
+      span{
+        width: auto !important;
+        margin-bottom: 0 !important;
+      }
+    }
+    .modal-content{
+      background: transparent;
+      border:none;
+    }
+    .modal-header{
+      display: none;
+    }
+    .modal-dialog{
+      margin: 1.75rem auto;
+      padding: 10px!important;
+    }
+    .modal-lg {
+      max-width: 700px;
     }
   }
+
 </style>

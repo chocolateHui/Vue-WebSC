@@ -20,9 +20,6 @@
           </b-form-group>
         </li>
         <li class="poptype">
-          <!--<label>类型</label><div class="select" id="archivestype" :class="{'bgSales': bgUnit}"><p @click="archTypeShow" ref="reftype" :data-id="archTypeId">{{archTypeName}}</p>-->
-          <!--<ol v-if="ifTypeShow&&bgUnit"><li @click="archTypeHide(item)" :data-id="item.id" v-for="item in ifunit">{{item.name}}</li></ol>-->
-        <!--</div>-->
           <b-form-group label="&#8194;类型" horizontal>
             <el-select v-model="archTypeId" filterable :disabled="!bgUnit">
               <el-option
@@ -219,7 +216,7 @@
       ul{display: inline-block;width: 620px;
         >li{float: left;margin-right: 12px; margin-bottom: 10px;}
         li{
-          label{ color: #595757;display: inline-block; font-size: 13px;height:22px;line-height:22px;width: 50px;}
+          label{ color: #595757;display: inline-block; font-size: 13px;height:22px;line-height:22px;width: 50px;float: left}
           .text_input{background: $colorWhite;border:1px solid $colorGray; color: #9E9E9F;font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif ;height: 22px;line-height: 22px;padding: 0 3px;}
           .select{border: 1px solid $colorGray; display:inline-block;height: 22px;position: relative;
             p{cursor:pointer;padding: 0 10px;position: relative;
@@ -246,8 +243,8 @@
         li{float: left; border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray; color: #595757;height: 32px;line-height: 32px; text-align: center;}
       }
       .nav1{width: 130px;}
-      .nav2{width: 129px;}
-      .nav3,.nav4,.nav5,.nav6,.nav7,.nav8{width: 75px;}
+      .nav4{width: 129px;}
+      .nav3,.nav2,.nav5,.nav6,.nav7,.nav8{width: 75px;}
       ul{ height: 135px; overflow: auto !important; width: 730px;
         li{border-left: 1px solid $colorGray;overflow: hidden; height: 28px;line-height: 27px; width: 710px;
           &:nth-child(2n){background: $colorF5;}
@@ -270,7 +267,7 @@
       ul{ height: 108px; overflow: auto !important; width: 730px;
         li{border-left: 1px solid $colorGray;overflow: hidden; height: 27px;line-height: 26px; width: 710px;
           &:nth-child(2n){background: $colorF5;}
-          span{border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray;float: left; display: inline-block;height: 27px; padding: 0 5px;}
+          span{text-align: center;border-bottom: 1px solid $colorGray;border-right: 1px solid $colorGray;float: left; display: inline-block;height: 27px; padding: 0 5px;}
         }
       }
     }

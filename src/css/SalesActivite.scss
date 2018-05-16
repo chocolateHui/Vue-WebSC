@@ -193,7 +193,7 @@ $colorD0:#5999D0;
     }
   }
 }
-.pop_sales{background:$colorWhite;height: 440px; width: 580px;
+.pop_sales{background:$colorWhite;height: 440px; width: 600px;
   //position: fixed; left: 50%;top: 50%; margin-left: -300px;margin-top: -220px;z-index: 997;
   .pop_sales_tou {
     background: $colorF5;
@@ -206,7 +206,7 @@ $colorD0:#5999D0;
     i{float: right; color: #9E9E9F; cursor: pointer; height: 14px; line-height: 14px; margin-top: 21px; width: 14px;}
   }
   ul{
-    padding:5px 10px;
+    padding:5px 22px;
     >li{ float: left; margin-bottom: 10px;min-height:25px;line-height: 24px;position: relative;font-size: 12px}
     li{
       .title1{color: #595757;font-size: 12px; display: inline-block; width: 77px; float: left;}

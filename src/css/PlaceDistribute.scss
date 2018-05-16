@@ -312,7 +312,7 @@ $colorAll:#b4b4b6;
   }
 }
 .pop_place{
-  background: $colorWhite;height: 410px;width: 695px;position: fixed;left: 50%;top: 50%; margin-left: -347px; margin-top: -205px;z-index: 999;
+  background: $colorWhite;height: 410px;width: 695px;
   .pop_place_tou{
     background: $colorF5;height: 54px; padding: 15px 23px;
     i{float: right; color: $color9E;cursor: pointer; margin-top:5px;}
@@ -370,9 +370,9 @@ $colorAll:#b4b4b6;
         }
       }
       ul{
-        border: 1px solid $colorGray; font-size: 13px; font-weight: bold; color: $colorBlack;margin-bottom: 20px; text-align: center;
+       font-size: 13px; font-weight: bold; color: $colorBlack;margin-bottom: 20px; text-align: center;margin-top: 10px;padding-left: 0;
         >li{
-          height: 35px;line-height: 35px; position: relative;
+          height: 30px;line-height: 30px; position: relative;
           p{
             cursor: pointer;position: relative;
             ::before{color: $color9E;content:"\f0dd"; cursor: pointer; position:absolute; right:44px; top:8px; display: inline-block;font: normal normal normal 14px/1 FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}

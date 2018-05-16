@@ -4,7 +4,7 @@
       <div class="placelist">
         <div class="placelist_head" >
           <ul>
-            <router-link tag="li" :to="{path:'/main/placeList/'+item.num}" v-for="item,index in placeHeadList" :key="index" active-class="current">{{item.name}}</router-link>
+            <router-link tag="li" :to="{path:'/main/place/placeList/'+item.num}" v-for="item,index in placeHeadList" :key="index" active-class="current">{{item.name}}</router-link>
           </ul>
         </div>
         <div class="placelist_content">
@@ -56,17 +56,18 @@
           </table>
         </div>
       </div>
-      <reasonmodal v-if="ifreson" @resonCancel="resonCancel" @reasonsure="reasonsure" :remarklist="remarklist"></reasonmodal>
-      <!--<notesmodal v-if="ifnotes" @btnNoteChecked="btnNoteChecked" :ifnotechecked.sync="ifnotechecked" @btnsave1="btnsave1" :remarklist="remarklist" :eventidC="eventidC" :cateridC="cateridC" @btnNotesCancel="btnNotesCancel"></notesmodal>-->
-     </div>
+       </div>
+    <b-modal @shown="reasonShown" id="reasonmodal" size="lg" ref="reasonmodal" title="理由列表" hide-footer>
+      <Reason ref="Reason" @reasonConfirm="reasonConfirm"></Reason>
+    </b-modal>
     <b-modal id="logmodal" ref="myModalRef" size="lg" title="宴会备注" hide-footer>
       <notesmodal  @onhide="btnNotesCancel"></notesmodal>
     </b-modal>
   </div>
 </template>
 <script>
-  import reasonmodal from './reasonmodal'
-  import methodinfo from '../../config/MethodConst.js'
+  import Reason from '../Reason.vue'
+   import methodinfo from '../../config/MethodConst.js'
   import notesmodal from './../remark'
   import '../../css/PlaceDistribute.scss';
     export default {
@@ -97,14 +98,13 @@
             caternameC:'',
             ifnotechecked:false,
             ifreson:false,
-            reasontype:'',
             cancelid:'',
             sta:'',
           }
       },
       components:{
         notesmodal,
-        reasonmodal
+        Reason
       },
       created(){
           this.getListHead()
@@ -115,11 +115,20 @@
           this.getListHead()
         }
       },
+      beforeRouteEnter  (to, from, next) {
+        next(vm => vm.refreshData())
+      },
       methods: {
+        refreshData(){
+          this.$store.dispatch("getReasonList");
+        },
         configDefault:function () {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+        },
+        reasonShown(){
+          this.$refs.Reason.clearRow();
         },
         //获取今天的时间
         today:function(){
@@ -378,82 +387,23 @@
         btnNoteChecked:function () {
           this.ifnotechecked=!this.ifnotechecked
         },
-        resonCancel:function () {
-          this.ifreson=false
-        },
-        placeCancel:function (list) {
-          this.remarklist=list
-          if(this.remarklist.dataid!=0){
-            var eventid = list.eventid;
-            this.setreasontype("event",eventid);
-          }else{
-            this.$message({
-              message:"该事务已被取消",
-              type: "success"
-            });
+        placeCancel:function (row) {
+          let now = new Date(new Date() - 24 * 60 * 60 * 1000);
+          let eventdate = new Date(row.bdate.replace(/-/g,"/"));
+          if(now >eventdate){
+            this.$alert('本日之前的事务不允许取消!')
+          }else if(row.sta==='0'){
+            this.$alert('取消的事务不需要再取消!')
+          }else {
+              var eventid = row.eventid;
+              this.setreasontype("event", eventid);
           }
         },
         setreasontype:function(type,id) {
-          this.reasontype = type;
           this.cancelid = id;
-          this.ifreson=true
+          this.$refs.reasonmodal.show();
         },
-       commitcaterupdate(sta,reason){
-          if(sta==="0"){
-            var reason =reason;
-            if(reason==''){
-              this.$message({
-                message:"取消原因不能为空",
-                type: "warning"
-              });
-              return;
-            }else{
-              var updateparams = new Object(null);
-              updateparams.caterid = this.remarklist.caterid;
-              updateparams.sta =sta;
-              updateparams.cancelreason =reason;
-            }
-          }
-          var updatamethod=methodinfo.updatecateringsta
-          this.syncPost2(updateparams,updatamethod,false);
-        },
-        syncPost2(paramdata,updatamethod,async){
-          var _this=this
-          this.$store.dispatch('encrypttoken').then(() => {
-            return new Promise((resolve, reject) => {
-              this.configDefault()
-              this.$http.post(updatamethod, {
-                caterid:paramdata.caterid,
-                sta:paramdata.sta,
-                cancelreason:paramdata.cancelreason,
-              }).then((response) => {
-                if (response.status === 200) {
-                  if(response.data.errorCode==='0'){
-                    this.sta=''
-                    let id = this.$route.params.index;
-                    var ifcheckedallf=false
-                    for(var i=0;i<this.placeList.length;i++){
-                      if(this.placeList[i].checked==true){
-                        ifcheckedallf=true
-                      }
-                    }
-                    if(this.allChecked==true||ifcheckedallf==false){
-                      for(var i=0;i<this.placeList.length;i++){
-                        this.sta+=this.placeList[i].dataid+','
-                      }
-                    }
-                    if(id==0){
-                      _this.todayeventlist()
-                    }else{
-                      _this.othereventlist()
-                    }
-                  }
-                }
-              })
-            })
-          })
-        },
-        syncPost3(paramdata,updatamethod,async){
+        syncPost3(paramdata,updatamethod){
           var _this=this
           this.$store.dispatch('encrypttoken').then(() => {
             return new Promise((resolve, reject) => {
@@ -485,16 +435,11 @@
           cancelreason:reason
         }
         var cancelevent=methodinfo.cancelevent
-          this.syncPost3(params,cancelevent,false);
+          this.syncPost3(params,cancelevent);
         },
-        reasonsure:function (reason) {
-          if("cater"===this.reasontype){
-            this.commitcaterupdate("0");
-          }else{
-            this.cancelEvent(this.cancelid,reason);
-          }
-          this.ifreson=false
-        }
+        reasonConfirm:function (reason) {
+            this.cancelEvent(this.cancelid,reason.code);
+        },
       },
       mounted:function () {
 
