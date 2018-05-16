@@ -5,6 +5,7 @@
 
         <el-date-picker
           v-model="timechose"
+          style="width:365px;"
           class="datea"
           value-format="yyyy-MM-dd"
           type="daterange"
@@ -534,9 +535,10 @@
       margin-right: 17px;
       margin-top: 1px;
       float: right;
-      height: 35px;
+      height: 39px;
+
       .el-input__inner{
-        height: 35px;
+        height: 39px;
       }
     }
   }
