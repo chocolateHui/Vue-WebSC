@@ -296,7 +296,7 @@
         currentRow: null,
         placeRow: null,
         // 要展开的行，数值的元素是row的key值
-        tableHeight: document.body.clientHeight-140,//减去header的60px
+        tableHeight: document.body.clientHeight-205,//减去header的60px
         num:0,
       }
     },
