@@ -71,13 +71,13 @@
                   property="bdate"
                   :show-overflow-tooltip=true
                   label="事务日期"
-                  width="80">
+                  width="70">
                 </el-table-column>
                 <el-table-column
                   property="begintime"
                   :show-overflow-tooltip=true
                   label="开始日期"
-                  width="80">
+                  width="70">
                 </el-table-column>
               </el-table>
             </b-card>
