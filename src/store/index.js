@@ -16,7 +16,7 @@ const debug = process.env.NODE_ENV !== 'production'
 const vuexLocal = new VuexPersistence({
   strictMode: debug,
   storage: window.localStorage,
-  modules: ['token', 'user', 'sysoption', 'getsale', 'scnote']
+  modules: ['token', 'user', 'sysoption']
 })
 
 const store = new Vuex.Store({

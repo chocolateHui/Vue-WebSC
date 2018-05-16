@@ -206,7 +206,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(new Date().getTime())
   loadingInstance = router.app.$loading.service({ fullscreen: true, background: 'rgba(0, 0, 0, 0.7)' })
   if (to.path.indexOf('/login') < 0) {
     // this route requires auth, check if logged in
@@ -235,7 +234,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  console.log(new Date().getTime())
   loadingInstance.close()
 })
 

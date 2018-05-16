@@ -31,6 +31,12 @@ const mutations = {
   add_tabs (state, data) {
     state.mainRoutes.push(data)
   },
+  // 添加tabs
+  set_tab_route (state, data) {
+    let index = data.index
+    let route = data.route
+    state.mainRoutes[index].route = route
+  },
   // 删除tabs
   delete_tabs (state, index) {
     state.mainRoutes.splice(index, 1)

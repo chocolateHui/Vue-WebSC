@@ -74,7 +74,11 @@
         'delete_tabs'
       ]),
       getTabActive(item){
-        return this.$route.name===item.name;
+        if(this.$route.path.indexOf("/maint/")>0&&item.name==='基础代码维护'){
+          return true;
+        }else{
+          return this.$route.name===item.name;
+        }
       },
       tabClick: function ($event,item) {
         if(!this.isTabRemove){
@@ -146,6 +150,18 @@
       //路由监听,侧边栏进行路由跳转后在这里新增tab页,把路由目标转到新的tab页上
       '$route'(to) {
         if(to.path.indexOf("/maint/")>0){
+          let index = 0;
+          for (let option of this.mainRoutes) {
+            if (option.name === '基础代码维护') {
+              break;
+            }
+            index++;
+          }
+          let newRoute ={
+            index:index,
+            route:to.path
+          }
+          this.$store.commit('set_tab_route', newRoute);
           return;
         }
         if(to.name==='新建宴会问询'){
