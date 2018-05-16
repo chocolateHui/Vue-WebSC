@@ -65,10 +65,6 @@
         }, {
           label: '宴会代码',
           children: [{
-            id:'pccode',
-            label: '宴会营业点',
-            route:'/main/maint/pccode'
-          }, {
             id:'item',
             label: '宴会项目',
             route:'/main/maint/item'
@@ -144,10 +140,17 @@
       }
     },
     mounted ()  {
-      if(!this.$store.getters.hotel.sign){
+      if(this.$store.getters.hotel.sign===0){
         this.maintTree[0].children.splice(1,0,{
           label: '岗位设置',
           route:'/main/maint/hoteldept'
+        });
+      }
+      if(this.$store.getters.hotel.sign===2){
+        this.maintTree[1].children.splice(0,0,{
+          id:'pccode',
+          label: '宴会营业点',
+          route:'/main/maint/pccode'
         });
       }
       let index = this.$route.path.indexOf('/maint/')

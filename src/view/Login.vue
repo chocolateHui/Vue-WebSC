@@ -78,7 +78,8 @@
                 'hotel',
                 'hotels',
                 'empno',
-                'loginerror'
+                'loginerror',
+              'isHotelChange'
             ]),
           username:{
             get () {
@@ -138,6 +139,10 @@
                     this.$store.dispatch('encrypttoken').then(() => {
                         //获取工号信息,完成后进行路由
                         this.$store.dispatch('getsysempno',this.$store.getters.signature).then(() => {
+                          if(this.isHotelChange){
+                            this.$store.commit('initTabs');
+                            this.$store.commit('setHotelChange',false);
+                          }
                           this.$http.defaults.headers.common['username'] = this.username
                           this.$store.dispatch('getAllSysoption')
                           this.password = ''

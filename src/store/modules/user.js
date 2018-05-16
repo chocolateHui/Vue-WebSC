@@ -15,8 +15,7 @@ const state = {
     sign: 0
   },
   hotels: [],
-  empno: {
-  },
+  empno: {},
   empsale: ''
 }
 
