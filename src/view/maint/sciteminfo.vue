@@ -101,12 +101,12 @@
             :data="placedata"
             border
             stripe
-            max-height="470"
+            :height="tableHeight"
             style="width: 100%;font-size: 12px">
             <el-table-column
             prop="code"
-            label="场地代码"
-            width="80"
+            label="代码"
+            width="55"
             sortable
             show-overflow-tooltip>
               <template slot-scope="scope" >
@@ -159,8 +159,7 @@
             <el-table-column
               prop="remark"
               label="备注"
-              width="55"
-              sortable
+              width="50"
               show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-input  @change="changeplace(scope)" v-model="scope.row.remark" placeholder=""></el-input>
@@ -670,7 +669,7 @@
       padding: 0;
     }
     .btn{
-      width: 92px;
+      width: 90px;
       margin-top:5px ;
       border-radius: 0.25rem;
     }
