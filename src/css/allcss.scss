@@ -1,43 +1,42 @@
 /*----->综合<-----*/
-html,body{width:100%;height:100%;background-color:white; font-size:12px}
-.td-height{text-align:center;height:20px;line-height:20px}
-.height{height:32px;line-height:30px}
-h1,h2,h3,h4,h5,h6,a,b,ul,li,span,i,input[type="text"],tr,td,.btn{font-size:12px !important;margin:0 auto}
-/*图片按钮*/
-button[name="refresh"]{margin-top: 2px}
-a{margin:0 1px}
-%mf{
-  margin:0 auto;float:left
-}
-$types: 33;
-$type-width: 0%;
-
-@while $types > 4{
-  .width-#{$types} {
-    width: $type-width+$types;
-    @extend %mf;
+.Notesmodal{
+  .td-height{text-align:center;height:20px;line-height:20px}
+  .height{height:32px;line-height:30px}
+  button[name="refresh"]{margin-top: 2px}
+  a{margin:0 1px}
+  %mf{
+    margin:0 auto;float:left
   }
-  $types: $types - 1;
-}
-$types1: 100;
-$types1-width: 0%;
+  $types: 33;
+  $type-width: 0%;
 
-@while $types1 > 30 {
-  .width-#{$types1} {
-    width: $types1-width+$types1;
-    @extend %mf;
+  @while $types > 4{
+    .width-#{$types} {
+      width: $type-width+$types;
+      @extend %mf;
+    }
+    $types: $types - 1;
   }
-  $types1: $types1 - 5;
-}
-.width-84{width:84%;margin:0 auto;float:left}
-.font{font-size: 12px;font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif }
-.head{width:100%;height:30px;margin:5px auto;}
-.checkbox-margin-left{line-height:30px}
-.btn{display:block;width:65px;height:30px;line-height:30px;border:none;text-align:center;float:right;padding:0;margin: 0 2px}
-.glyphicon{top:1px}
+  $types1: 100;
+  $types1-width: 0%;
 
-$color752:#FFB752;
-$color052:#FA8052;
-.btn-ok{background: $color752;border: none;color: #fff;font-size: 14px;height: 28px;line-height: 28px;text-align: center;width: 80px;}
-.btn-quit{background:$color052;border: none;color: #fff;font-size: 14px;height: 28px;line-height: 28px;margin-left:10px; margin-right:35px;text-align: center;width: 80px;}
-textarea{resize: none}
+  @while $types1 > 30 {
+    .width-#{$types1} {
+      width: $types1-width+$types1;
+      @extend %mf;
+    }
+    $types1: $types1 - 5;
+  }
+  .width-84{width:84%;margin:0 auto;float:left}
+  .font{font-size: 12px;font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif }
+  .head{width:100%;height:30px;margin:5px auto;}
+  .checkbox-margin-left{line-height:30px}
+  .btn{display:block;width:65px;height:30px;line-height:30px;border:none;text-align:center;float:right;padding:0;margin: 0 2px}
+  .glyphicon{top:1px}
+
+  $color752:#FFB752;
+  $color052:#FA8052;
+  .btn-ok{background: $color752;border: none;color: #fff;font-size: 14px;height: 28px;line-height: 28px;text-align: center;width: 80px;}
+  .btn-quit{background:$color052;border: none;color: #fff;font-size: 14px;height: 28px;line-height: 28px;margin-left:10px; margin-right:35px;text-align: center;width: 80px;}
+  textarea{resize: none}
+}

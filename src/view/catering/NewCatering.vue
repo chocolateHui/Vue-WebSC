@@ -1,7 +1,7 @@
 <template>
   <div>
     <CateringInfo isNew @saveCatering="saveCatering"></CateringInfo>
-    <NewEvent :eventshow="eventshow" :toggleshow="toggleshow" ref="newevent"></NewEvent>
+    <NewEvent :toggleshow="toggleshow" ref="newevent"></NewEvent>
   </div>
 </template>
 
@@ -13,11 +13,13 @@
   import NewEvent from '../../components/catering/NewEvent.vue'
   import '../../css/font.scss'
 
+  let loading;
+
   export default {
     data () {
       return {
-        eventshow:true,
-        toggleshow:false
+        toggleshow:false,
+        isNew:true
       };
     },
     components: {
@@ -25,11 +27,12 @@
       NewEvent
     },
     created(){
-
+      loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'})
+    },
+    mounted(){
     },
     methods: {
       saveCatering(localcatering){
-        console.log(localcatering)
         let _this=this;
         this.$refs.newevent.eventCheck(localcatering).then((checked) => {
           if(checked){
@@ -39,9 +42,12 @@
               this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
               this.$http.post(methodinfo.newcatering, localcatering).then(function (response) {
                 if (response.data.errorCode === '0') {
-                  console.log(response.data)
                   let caterid = response.data.caterid;
                   _this.$refs.newevent.batchSaveEvent(caterid).then(() => {
+                    _this.$message({
+                      message: '宴会保存成功!',
+                      type: 'success'
+                    })
                     _this.$router.push({ name: '宴会预订详情', params: { caterid: caterid }});
                   });
                 }else{
@@ -54,7 +60,15 @@
       },
       getCodeDatas(){
         this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch("getPlacelist");
+          if(this.isNew){
+            this.$store.dispatch("getPlacelist");
+            this.$store.dispatch("getSale");
+            this.$store.dispatch("getAllBaseCodes");
+            this.isNew = false;
+            setTimeout(() => {
+              loading.close();
+            }, 300);
+          }
         })
       }
     },
@@ -66,5 +80,12 @@
 <style lang="scss">
   .card {
     margin-bottom: 15px;
+    .form-control{
+      height: 33.5px;
+    }
+    .ivu-input{
+      height: 31.5px;
+      margin-top: -2.5px;
+    }
   }
 </style>

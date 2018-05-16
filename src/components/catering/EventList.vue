@@ -199,7 +199,7 @@
         :class-name="item.classname"
         :show-overflow-tooltip="item.showTip" :key="item.prop">
       </el-table-column>
-      <el-table-column label="操作" width="160">
+      <el-table-column label="操作" width="140">
         <template slot-scope="scope">
           <b-button size="mini" class="Item-button image-btn" type="danger" ></b-button>
           <b-button size="mini" class="Synchronization-button image-btn" type="danger" ></b-button>
@@ -209,8 +209,20 @@
       </el-table-column>
       <template slot="append">
         <b-row class="sum-row">
-          <label class="sumlabel">合计:</label>
-          <label class="sumlabel">5</label>
+          <b-col sm="2">
+            <label class="sumlabel">合计:</label>
+            <label class="sumlabel">{{eventcount}}</label>
+          </b-col>
+          <b-col sm="7"></b-col>
+          <b-col sm="3">
+            <b-form-group>
+              <b-form-radio-group id="radios2" v-model="staselected" name="radioSubComponent">
+                <b-form-radio value="all">所有</b-form-radio>
+                <b-form-radio value="normal">有效</b-form-radio>
+                <b-form-radio value="cancel">取消</b-form-radio>
+              </b-form-radio-group>
+            </b-form-group>
+          </b-col>
         </b-row>
       </template>
     </el-table>
@@ -219,7 +231,16 @@
       <SinglePlace ref="SinglePlace" @placeConfirm="placeConfirm" :eventbdate="expandevent.bdate"></SinglePlace>
     </b-modal>
 
+    <b-modal @shown="reasonShown" id="reasonmodal" ref="reasonmodal" title="理由列表" hide-footer>
+      <Reason ref="Reason" @reasonConfirm="reasonConfirm"></Reason>
+    </b-modal>
+
     <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+      <sysLog></sysLog>
+    </b-modal>
+
+    <b-modal id="remarkModal" size="lg" ref="remarkModal" title="宴会备注" hide-footer>
+      <!--<remark ref="caterRemark"></remark>-->
     </b-modal>
   </div>
 </template>
@@ -230,11 +251,12 @@
   import { mapGetters, mapMutations } from 'vuex'
   import 'font-awesome/css/font-awesome.css'
   import methodinfo from '../../config/MethodConst.js'
-  import eventMixin from '../../common/eventMixin'
   import {dateValid,formatDate} from '../../common/date'
   //其他组件
   import FormatInput from '../FormatInput.vue'
   import SinglePlace from './SinglePlace.vue'
+  import Reason from '../Reason.vue'
+  import remark from '../remark.vue'
   import {TimePicker} from 'iview'
   import sysLog from  '../../components/syslog.vue'
   import '../../css/imgbtn.scss'
@@ -242,14 +264,15 @@
   Vue.use(TimePicker)
 
   const fildes = [
-    {  prop: 'eventid', label:  '事务ID',width:'160',sortable:true,"classname":"text-center" },
+    {  prop: 'eventid', label:  '事务ID',width:'140',sortable:true,"classname":"text-center" },
     {  prop: 'descript', label:  '事务名称',width:'',sortable:true,showTip:true},
-    {  prop: 'stades', label:  '状态',width:'75',sortable:true,showTip:true,"classname":"text-center"},
-    {  prop: 'codedes', label:  '场地',width:'120',sortable:true,showTip:true,"classname":"text-center" },
+    {  prop: 'codedes', label:  '场地',width:'100',sortable:true,showTip:true,"classname":"text-center" },
     {  prop: 'bdate', label:  '日期',width:'100',sortable:true ,"classname":"text-center"},
-    {  prop: 'begintime', label:  '开始',width:'75',sortable:true ,"classname":"text-center"},
-    {  prop: 'endtime', label:  '结束',width:'75',sortable:true,"classname":"text-center" },
-    {  prop: 'attnum', label:  '人数',width:'75',sortable:true,"classname":"text-right" },
+    {  prop: 'begintime', label:  '开始',width:'72',sortable:true ,"classname":"text-center"},
+    {  prop: 'endtime', label:  '结束',width:'72',sortable:true,"classname":"text-center" },
+    {  prop: 'stades', label:  '状态',width:'72',sortable:true,showTip:true,"classname":"text-center"},
+    {  prop: 'typedes', label:  '类型',width:'72',sortable:true,showTip:true,"classname":"text-center"},
+    {  prop: 'attnum', label:  '人数',width:'72',sortable:true,"classname":"text-right" },
     {  prop: 'income', label:  '预测收入',width:'100',sortable:true ,"classname":"text-right"}
   ]
 
@@ -271,6 +294,7 @@
           { value: 'income', text: '不计收入' },
           { value: 'share', text: '共享' }
         ],
+        staselected:'normal',
         // 获取row的key值
         getRowKeys(row) {
           return row.eventid;
@@ -278,24 +302,36 @@
         isClear:false,
         editable:false,
         eventEditable:true,
+        cancelRow:{},
         datepickerOptions: {
           disabledDate(time) {
-            return time.getTime() < Date.now();
+            let now =new Date(new Date() - 24 * 60 * 60 * 1000)
+            return time.getTime() <now;
           }
         }
       }
     },
     mounted(){
-      console.log(this.degreeoptions)
     },
     computed: {
       ...mapGetters([
         'caterid',
         'catering',
-        'eventlist'
-      ])
+        'eventlist',
+        'timeoptions',
+        'typeoptions',
+        'priceoptions',
+        'layoutoptions',
+        'degreeoptions'
+      ]),
+      eventcount(){
+        if(this.eventlist){
+          return this.eventlist.length
+        }else{
+          return 0
+        }
+      }
     },
-    mixins: [eventMixin],
     methods: {
       checkEvent(){
         if(!this.expandevent.descript){
@@ -355,7 +391,9 @@
           if (response.data.errorCode === '0') {
             _this.$message('事务保存成功')
             _this.$store.dispatch("getEventList")
-            _this.$refs.eventtable.toggleRowExpansion(_this.expandevent);
+            _this.$nextTick(()=>{
+              _this.expandRows.push(_this.expandevent.eventid)
+            })
           }
         })
       },
@@ -364,51 +402,82 @@
         let eventdate = new Date(row.bdate.replace(/-/g,"/"));
         if(now >eventdate){
           this.$alert('本日之前的事务不允许取消!')
+        }else if(row.sta==='0'){
+          this.$alert('取消的事务不需要再取消!')
         }else{
-          this.$confirm("是否要取消所选事务?","提示").then(()=>{
-          }).catch(()=>{
-
-          })
+          this.cancelRow = row;
+          this.$refs.reasonmodal.show();
         }
+      },
+      reasonConfirm(reason){
+        let _this=this;
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.cancelevent, {
+            eventid:this.cancelRow.eventid,
+            caterid:this.caterid,
+            cancelreason:reason.code
+          }).then(function (response) {
+            if (response.data.errorCode === '0') {
+              _this.$message('事务取消成功')
+              _this.$store.dispatch("getEventList")
+            }
+          })
+        })
       },
       eventCanEdit(){
-        let now = new Date(new Date() - 24 * 60 * 60 * 1000);
-        let eventdate = new Date(this.expandevent.bdate.replace(/-/g,"/"));
+        if(this.catering.sta==='0'){
+          this.eventEditable =false;
+        }else{
+          let now = new Date(new Date() - 24 * 60 * 60 * 1000);
+          let eventdate = new Date(this.expandevent.bdate.replace(/-/g,"/"));
 
-        this.eventEditable =now <=eventdate;
+          this.eventEditable =now <=eventdate;
+        }
       },
       expandChange:function (row,expandRows) {
-        this.eventtime=[];
-        this.eventtime.push(row.begintime,row.endtime);
-        this.flagselected = [];
-        this.expandevent=Object.assign({},row);
-        if(this.expandevent.flag2==='T'){
-          this.flagselected.push("noise")
-        }
-        if(this.expandevent.flag3==='T'){
-          this.flagselected.push("income")
-        }
-        if(this.expandevent.share==='T'){
-          this.flagselected.push("share")
-        }
 
-        this.eventCanEdit();
-
-        this.expandRows=[];
-        if(expandRows.length>0){
-          this.expandRows.push(row.eventid);
-        }
-        this.$refs.SinglePlace.resetPlace(this.expandevent.code);
-        if(this.expandevent.sta==="W"){
-          this.staoptions = [{ code: '1', descript: '预订' },{ code: 'W', descript: '候补' }];
-        }else if(this.expandevent.sta==="2"){
-          this.staoptions = [{ code: '1', descript: '预订' },{ code: '2', descript: '确认' }];
-        }else if(this.expandevent.sta==="3"){
-          this.staoptions = [{ code: '3', descript: '登记' }];
-        }else if(this.expandevent.sta==="0"){
-          this.staoptions = [{ code: '1', descript: '预订' },{ code: '0', descript: '取消' }];
+        if(row.eventid===this.expandRows[0]){
+          this.expandRows=[];
         }else{
-          this.staoptions = [{ code: '1', descript: '预订' }];
+          this.eventtime=[];
+          this.eventtime.push(row.begintime,row.endtime);
+          this.flagselected = [];
+          this.expandevent=Object.assign({},row);
+          if(this.expandevent.flag2==='T'){
+            this.flagselected.push("noise")
+          }
+          if(this.expandevent.flag3==='T'){
+            this.flagselected.push("income")
+          }
+          if(this.expandevent.share==='T'){
+            this.flagselected.push("share")
+          }
+
+          this.eventCanEdit();
+
+          if(expandRows.length>1){
+            this.expandRows=[];
+            this.expandRows.push(row.eventid);
+          }
+
+          this.$refs.SinglePlace.resetPlace(this.expandevent.code);
+          if(this.expandevent.sta==="W"){
+            this.staoptions = [{ code: '1', descript: '预订' },{ code: 'W', descript: '候补' }];
+          }else if(this.expandevent.sta==="2"){
+            this.staoptions = [{ code: '1', descript: '预订' },{ code: '2', descript: '确认' }];
+          }else if(this.expandevent.sta==="3"){
+            this.staoptions = [{ code: '3', descript: '登记' }];
+          }else if(this.expandevent.sta==="0"){
+            this.staoptions = [{ code: '0', descript: '取消' }];
+            if(this.catering.sta==='0'){
+              this.staoptions.push({ code: '1', descript: '预订' })
+            }
+          }else{
+            this.staoptions = [{ code: '1', descript: '预订' }];
+          }
         }
       },
       priceChange(val){
@@ -453,13 +522,32 @@
       placeConfirm(currentRow){
         this.$set(this.expandevent,'code',currentRow.tableno);
         this.$set(this.expandevent,'codedes',currentRow.descript);
+      },
+      reasonShown(){
+        this.$refs.Reason.clearRow();
       }
     },
     components: {
       sysLog,
       FormatInput,
       TimePicker,
-      SinglePlace
+      SinglePlace,
+      Reason,
+      remark
+    },
+    watch:{
+      staselected(val){
+        if(val==='all'){
+          this.$store.commit('setEventstas','0,1,2,3,W,Q,O');
+        }else if(val==='normal'){
+          this.$store.commit('setEventstas','1,2,3,W,Q');
+        }else {
+          this.$store.commit('setEventstas','0');
+        }
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch("getEventList");
+        })
+      }
     }
   }
 </script>
@@ -490,9 +578,16 @@
       margin-left: 0;
     }
     .sum-row{
+      border-top: 1px solid #dee2e6;
       margin-top: 6px;
       .sumlabel{
+        margin-top: 5px;
+        margin-bottom: 0;
         padding: 0 10px;
+      }
+      #radios2{
+        margin-top: 5px;
+        margin-bottom: 0;
       }
     }
     .eventdiv{
@@ -645,6 +740,12 @@
       .el-table__expanded-cell{
         box-shadow: 1px 5px 5px #dee2e6;
       }
+      .form-group{
+        margin-bottom: 0;
+      }
+    }
+    #radios2{
+      float: right;
     }
   }
 </style>

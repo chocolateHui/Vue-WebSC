@@ -44,8 +44,8 @@
           <b-input-group prepend="标题">
             <b-form-input
               type="text"
-              v-model="localscnotes.title"
-              :disabled="show.descript2disabled"
+              v-model="remarkinfo.title"
+              :disabled="changeshow.descript2disabled"
               required
               placeholder="">
             </b-form-input>
@@ -54,7 +54,7 @@
         <b-col sm="4" class="my-1 paddingright0">
           <b-form-group horizontal :label-cols="4" label="显示在EO单" class="mb-0">
             <b-form-checkbox id="checkbox1"
-                             v-model="localscnotes.flag"
+                             v-model="remarkinfo.flag"
                              value="T"
                              unchecked-value="F">
             </b-form-checkbox>
@@ -64,8 +64,8 @@
           <b-input-group prepend="备注时间">
             <b-form-input
               type="text"
-              v-model="localscnotes.date0"
-              :disabled="show.tablesdisabled"
+              v-model="remarkinfo.date0"
+              :disabled="changeshow.tablesdisabled"
               required
               placeholder="">
             </b-form-input>
@@ -74,7 +74,7 @@
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px">
         <b-form-textarea id="textarea1"
-                         v-model="localscnotes.content"
+                         v-model="remarkinfo.content"
                          placeholder="Enter something"
                          :rows="12"
                          :max-rows="12">
@@ -94,7 +94,6 @@
   import {formatDate} from '../common/date'
   const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
   const newshow = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
-
 
   export default {
 
@@ -194,6 +193,7 @@
                   type: '保存',
                   message: '保存成功!'
                 });
+                this.$emit('onhide');
                this.getremark()
               }
               else{
@@ -234,6 +234,7 @@
                   type: '新建',
                   message: '新建成功!'
                 });
+                this.$emit('onhide');
                 this.getremark()
               }
               else{

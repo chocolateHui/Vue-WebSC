@@ -273,7 +273,7 @@
 </template>
 
 <script>
-import calendar from './calendar.js'
+import calendar from '../../common/calendar.js'
 export default {
     props: {
         // 多选模式
@@ -463,7 +463,6 @@ export default {
                         k++;
                     }
                 }
-
 
                 if (this.range) { // 范围
                     // console.log("日期范围",this.getLunarInfo(this.year,this.month+1,i))
@@ -811,5 +810,4 @@ export default {
         },
     }
 }
-
 </script>

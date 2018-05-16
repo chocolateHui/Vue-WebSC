@@ -119,7 +119,6 @@
             <el-table-column
               prop="descript"
               label="中文描述"
-              sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-input @change="changeplace(scope)" v-model="scope.row.descript" placeholder=""></el-input>
@@ -128,7 +127,6 @@
             <el-table-column
               prop="descript1"
               label="英文描述"
-              sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-input  @change="changeplace(scope)" v-model="scope.row.descript1" placeholder=""></el-input>
@@ -137,7 +135,6 @@
             <el-table-column
               prop="descript2"
               label="第三描述"
-              sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-input @change="changeplace(scope)" v-model="scope.row.descript2" placeholder=""></el-input>
@@ -146,19 +143,17 @@
             <el-table-column
               prop="cover"
               label="人数"
-              width="70"
-              sortable
+              width="60"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <Numberinput class="el-input__inner" type="number" @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></Numberinput>
+                <Numberinput class="el-input__inner" type="number" maxlength="5" @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></Numberinput>
                 <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
               </template>
             </el-table-column>
             <el-table-column
               prop="layout"
               label="布局"
-              sortable
-              width="100"
+              width="135"
               show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-select v-model="scope.row.layoutarr" multiple @change=" handlelaySelectionChange(scope)">
@@ -174,7 +169,6 @@
             <el-table-column
               prop="toplace"
               label="从属场地"
-              sortable
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
@@ -387,7 +381,6 @@
                   }
 
                 }
-
 
               }
             }
