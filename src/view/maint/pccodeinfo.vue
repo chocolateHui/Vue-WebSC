@@ -99,7 +99,7 @@
             border
             stripe
             :height="tableH"
-            @cell-click="tableDbEdit"
+            @cell-click="tableDbEdit"r
             style="width: 100%;font-size: 12px">
             <el-table-column
             prop="tableno"
@@ -312,6 +312,7 @@
         num:0,
       }
     },
+
     mounted() {
        this.getpccodedata();
        this.getlayoutdata();
