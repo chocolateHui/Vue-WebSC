@@ -52,31 +52,62 @@
             width="55">
           </el-table-column>
           <el-table-column
-            v-for="item in fildes"
-            :prop="item.prop"
-            :label="item.label"
-            :width="item.width"
-            :sortable="item.sortable"
-            :show-overflow-tooltip="item.showTip" :key="item.prop">
+            prop="inumber"
+            label="流水号"
+            width="80"
+            sortable
+            show-overflow-tooltip>
           </el-table-column>
-
+          <el-table-column
+            prop="descript"
+            width="120"
+            label="项目名称"
+            show-overflow-tooltip>
+          </el-table-column>
           <el-table-column
             prop="number"
             label="数量"
-            width=""
-            sortable
             show-overflow-tooltip>
             <template slot-scope="scope">
-              <Numberinput class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></Numberinput>
-              <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
-            </template>
+            <Numberinput class="el-input__inner" type="number" maxlength="5"  v-model="scope.row.number" placeholder=""></Numberinput>
+             </template>
+          </el-table-column>
+          <el-table-column
+            prop="unit"
+            label="单位"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="price"
+            label="单价"
+            width="60"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            prop="amount"
+            label="总价"
+            width="85"
+            show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
-            width="70"
-            sortable
+            width="135"
             show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            width="85">
+            <template slot-scope="scope">
+              <b-form inline class="paddingleft0 paddingbottom0">
+                <b-button
+                  size="sm"
+                  variant="primary" @click="deletel(scope.row)" style="margin-top:0px">删</b-button>
+                <b-button
+                  size="sm"
+                  variant="primary" @click="deletel(scope.row)" style="margin-top:0px">存</b-button>
+              </b-form>
+            </template>
           </el-table-column>
         </el-table>
       </b-row>
@@ -92,96 +123,54 @@
   import methodinfo from '../../config/MethodConst.js'
   import Numberinput from  '../../components/FormatInput.vue'
   import MultiEvent from  '../../components/sceventitem/MultiEvent.vue'
-   const fildes = [
-    {  prop: 'code', label:  '项目编号',width:'110',sortable:true,showTip: true},
-    {  prop: 'descript', label:  '宴会名称',width:'',sortable:true,showTip: true},
-    {  prop: 'helpcode', label:  '帮助码',width:'',sortable:true,showTip: true},
-    {  prop: 'unit', label:  '单位',width:'70',sortable:true ,showTip: true},
-    {  prop: 'price', label:  '单价',width:'',sortable:true,showTip: true },
 
-  ]
 
   export default {
 
     data () {
       return {
-        fildes:fildes,
-        localscitem:[],
-        localclasscode:[],
+        localsceventitem:[],
         localbm:[],
-        selectclasscode:"",
         selectbm:"",
-        localeventdes:"",
         filterText:"",
-        selected:{},
-        isselected:"",
       }
     },
     props:{
 
     },
     created(){
-     this.refreshdata();
-     this.getclasscode();
+
     },
     computed:{
+      ...mapGetters([
+        'sceventitemeventid',
+        'sceventitemlist'
+      ]),
       searchitems:function () {
 
-        if(!this.selectclasscode&&!this.selectbm&&!this.filterText&&!this.isselected){
-          return this.localscitem;
+        if(!this.selectbm&&!this.filterText){
+          console.log(this.localsceventitem)
+          return this.localsceventitem;
         }else{
-          return this.localscitem.filter( tableData => {
-            console.log(this.selected);
+          return this.localsceventitem.filter( tableData => {
+
             var s=false;
-            if(this.selectclasscode==tableData.classcode||!this.selectclasscode){
+            if(this.selectbm==tableData.inumber1||!this.selectbm){
               s = true;
-            }
-            if(s){
-              if(this.selectbm==tableData.deptno||!this.selectbm||!tableData.deptno){
-                s = true;
-              }
-              else{
-                s = false;
-              }
             }
             if(s){
               if(!this.filterText){
                 s = true;
               }
               else{
-                if(tableData.code.indexOf(this.filterText)>=0||tableData.descript.indexOf(this.filterText)>=0
-                  ||tableData.helpcode.indexOf(this.filterText)>=0||tableData.helpcode.indexOf(this.unit)>=0
-                  ||tableData.helpcode.indexOf(this.price)>=0 ||tableData.helpcode.indexOf(this.remark)>=0
+                if(tableData.inumber.indexOf(this.filterText)>=0||tableData.descript.indexOf(this.filterText)>=0
+                  ||tableData.number.indexOf(this.filterText)>=0||tableData.unit.indexOf(this.filterText)>=0
+                  ||tableData.helpcode.indexOf(this.filterText)>=0 ||tableData.helpcode.indexOf(this.filterText)>=0
                 ){
                   s = true;
                 }
                 else{
                   s=false
-                }
-              }
-            }
-            if(s){
-              // console.log(this.isselected);
-              // console.log(this.selected);
-              if(!this.isselected){
-                s = true;
-              }
-              else{
-                if(this.isselected==="T"){
-                  if(this.selected[tableData.id]){
-                    s = true;
-                  }
-                  else{
-                    s = false;
-                  }
-                }
-                else{
-                    if(!this.selected[tableData.id]){
-                      s = true;
-                    }
-                    else{
-                      s = false;
-                    }
                 }
               }
             }
@@ -193,7 +182,29 @@
       },
     },
     watch: {
-
+      sceventitemeventid(val,oldvalue){
+        console.log("watcha");
+        this.refreshdata();
+      },
+      sceventitemlist(val,oldvalue){
+        console.log("watch");
+        let bm = [];
+        let item = [];
+        for(let elm of val){
+          if(elm.type=="3"){
+            var type={};
+            type["value"] = elm.inumber;
+            type["label"] = elm.descript;
+            bm.push(type);
+          }
+          if(elm.type=="1"||elm.type=="2"){
+            item.push(elm);
+          }
+        }
+        this.localsceventitem = item;
+        this.localbm = bm;
+        console.log(this.localbm);
+      },
 
     },
     components:{
@@ -209,75 +220,14 @@
         }
       },
       refreshdata(){
-        this.isselected="";
         this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['username'] = this.$store.getters.username
-          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.getitemlist, {
-            type:"1,2,3",
-            halt:"F"
-          }).then((response)=> {
-            if(response.data.errorCode==="0"){
-              if(typeof(response.data.items) != "undefined"){
-                  this.localscitem = [];
-                  this.localbm = [];
-                  for(let pc of response.data.items) {
-                    if(pc.type!="3"){
-                      var type={};
-                      type = pc;
-                      if(typeof (pc.helpcode) == "undefined"){
-                        type["helpcode"]="";
-                      }
-                      type["number"]=1;
-                      this.localscitem.push(type);
-                    }
-                    if(pc.type==="3"){
-                      var type={};
-                      type["value"] = pc.code;
-                      type["label"] = pc.descript;
-                      this.localbm.push(type);
-                    }
-                  }
-                }
-            }
-          })
-        })
-      },
-      getclasscode(){
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['username'] = this.$store.getters.username
-          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.getitemclasslist, {
-
-          }).then((response)=> {
-            if(response.data.errorCode==="0"){
-              if(typeof(response.data.itemclass) != "undefined"){
-                for(let pc of response.data.itemclass) {
-                  if(pc.type!=3&&pc.type!=4&&pc.type!=5){
-                    var type={};
-                    type["value"] = pc.classcode;
-                    type["label"] = pc.descript;
-                    this.localclasscode.push(type);
-                  }
-
-                }
-              }
-            }
-          })
-        })
-      },
-
-      get(){
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch("getScNotots").then(() => {
+          this.$store.dispatch("getsceventitem").then(() => {
           }).catch(function (errorMessage) {
           })
-         });
-        },
+        });
+      },
+
       close:function(){
-        this.$store.commit('setSceventitem',{});
         this.$refs.multiplacemodal.show()
       },
       unclose:function(){
