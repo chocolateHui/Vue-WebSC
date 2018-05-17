@@ -337,9 +337,6 @@
       openCateringInfo(row){
         this.$router.push({ name: '宴会预订详情', params: { caterid: row.caterid }});
       },
-      showModal1 () {
-
-      },
       onhide() {
         this.$refs.myModalRef2.hide()
       },
