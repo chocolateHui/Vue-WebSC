@@ -50,7 +50,7 @@
 
     .wh_content_item {
       font-size: 12px;
-      width: 13.4%;
+      width: 14%;
       padding-bottom: 10.14%;
       text-align: center;
       color: #000;
