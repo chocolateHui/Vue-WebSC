@@ -165,7 +165,7 @@
               else{
                 if(tableData.inumber.indexOf(this.filterText)>=0||tableData.descript.indexOf(this.filterText)>=0
                   ||tableData.number.indexOf(this.filterText)>=0||tableData.unit.indexOf(this.filterText)>=0
-                  ||tableData.helpcode.indexOf(this.filterText)>=0 ||tableData.helpcode.indexOf(this.filterText)>=0
+                  ||tableData.amount.indexOf(this.filterText)>=0 ||tableData.remark.indexOf(this.filterText)>=0
                 ){
                   s = true;
                 }
