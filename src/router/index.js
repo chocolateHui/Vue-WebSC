@@ -22,7 +22,7 @@ const pccodeinfo = () => import(/* webpackChunkName: "group-main" */ '../view/ma
 const sciteminfo = () => import(/* webpackChunkName: "group-main" */ '../view/maint/sciteminfo.vue')
 const caterList = () => import(/* webpackChunkName: "group-main" */ '../view/CaterList.vue')
 const Maint = () => import(/* webpackChunkName: "group-maint" */ '../view/Maint.vue')
-
+const sceventitem = () => import(/* webpackChunkName: "group-main" */ '../view/maint/ScEventItem.vue')
 
 Vue.use(Router)
 
@@ -86,10 +86,11 @@ const router = new Router({
         {
           path: '/main/catering/eventItem',
           name: '宴会事务项目',
-          component: Template,
+          component: sceventitem,
           meta: {
             keepAlive: true // 需要被缓存
-          }
+          },
+          props: true
         },
         {
           path: '/main/EOShare/:caterid',
