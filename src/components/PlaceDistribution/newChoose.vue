@@ -38,7 +38,7 @@
           <li>抵达日期</li>
         </ol>
         <ul>
-          <li v-for="list in cateringlist" @click="btnCatering(list)" :class="{'caterCurrent':ifCaterChoose==list.caterid}">
+          <li v-for="list in cateringitem" @click="btnCatering(list)" :class="{'caterCurrent':ifCaterChoose==list.caterid}">
             <span class="nav1" v-for="colorlist in headlist" :class="colorlist.liStyle" v-if="colorlist.dataid==list.sta"></span>
             <span class="nav2">{{list.caterid}}</span>
             <span class="nav3">{{list.name}}</span>
@@ -74,16 +74,17 @@
             startTime: '',
             endTime: '',
             eventtime:[],
+            cateringitem:[],
           }
       },
       created(){
-
+        this.cateringitem = Object.assign([],this.cateringlist);
       },
       components:{
         TimePicker,
       },
       watch:{
-        thingFlag:function (val,oldval) {
+        cateringlist:function (val,oldval) {
           this.firsttimedata()
         },
       },
@@ -91,12 +92,13 @@
         ...mapGetters(['cateringlist']),
         ...mapGetters(['timechoose']),
       },
-      props:['newChooseTime','newChooseAddr','headlist','newChooseAddrNo','thingFlag'],
+      props:['newChooseTime','newChooseAddr','headlist','newChooseAddrNo'],
       methods:{
           firsttimedata:function () {
             this.timebegin=this.timechoose[0].descript
             this.$set(this.eventtime,0,this.timechoose[0].exts1)
             this.$set(this.eventtime,1,this.timechoose[0].exts2)
+            this.cateringitem = Object.assign([],this.cateringlist);
           },
         configDefault:function () {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
@@ -126,6 +128,7 @@
             }
             console.log(this.ifCaterChoose)
             this.$store.commit('setCaterid',this.ifCaterChoose);
+            this.$emit('closeChoose')
             this.$router.push({ name: '宴会预订详情'})
           }
         },
@@ -143,6 +146,7 @@
             enddate:this.newChooseTime,
           };
           this.catersta='Q'
+          this.$emit('closeChoose')
           this.$router.push({name:'新建宴会问询'})
         },
         addBook:function () {
@@ -159,6 +163,7 @@
             enddate:this.newChooseTime,
           }
           this.catersta='R'
+          this.$emit('closeChoose')
           this.$router.push({name:'新建宴会预订'})
         },
          btntimehide:function (val) {
