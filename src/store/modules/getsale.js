@@ -26,7 +26,8 @@ const state = {
   profileslist: [],
   guestDiary: {},
   placesinfo: [],
-  cateringlist: []
+  cateringlist: [],
+  cateringlist2: []
 }
 // getters
 const getters = {
@@ -37,7 +38,8 @@ const getters = {
   profileslist: state => state.profileslist,
   guestDiary: state => state.guestDiary,
   placesinfo: state => state.placesinfo,
-  cateringlist: state => state.cateringlist
+  cateringlist: state => state.cateringlist,
+  cateringlist2: state => state.cateringlist2
 }
 const getAllMsg = function (store) {
   axiosinstance.defaults.headers.common['username'] = store.getters.username
@@ -102,30 +104,27 @@ const actions = {
   // 查询预定记录
   getcateringlist: function (store, param) {
     getAllMsg(store)
-    if (param.hasOwnProperty('no')) {
-      axiosinstance.post(methodinfo.getcateringlist, {
-        no: param.no
-      }).then(function (response) {
-        if (response.status === 200) {
-          if (response.data.errorCode === '0') {
-            store.commit('setCateringList', response.data.caterings)
-          }
+    axiosinstance.post(methodinfo.getcateringlist, {
+      no: param.no
+    }).then(function (response) {
+      if (response.status === 200) {
+        if (response.data.errorCode === '0') {
+          store.commit('setCateringList', response.data.caterings)
         }
-      })
-    } else {
-      axiosinstance.post(methodinfo.getcateringlist, {
-        begindate: param.begindate,
-        enddate: param.enddate,
-        flag: param.flag,
-        sta: param.sta
-      }).then(function (response) {
-        if (response.status === 200) {
-          if (response.data.errorCode === '0') {
-            store.commit('setCateringList', response.data.caterings)
-          }
+      }
+    })
+    axiosinstance.post(methodinfo.getcateringlist, {
+      begindate: param.begindate,
+      enddate: param.enddate,
+      flag: param.flag,
+      sta: param.sta
+    }).then(function (response) {
+      if (response.status === 200) {
+        if (response.data.errorCode === '0') {
+          store.commit('setCatering2', response.data.caterings)
         }
-      })
-    }
+      }
+    })
   },
   // 添加销售日记
   saveorupdateguestdiary: function (store, param) {
@@ -214,6 +213,9 @@ const mutations = {
   },
   setCateringList (state, cateringlist) {
     state.cateringlist = cateringlist
+  },
+  setCatering2 (state, cateringlist2) {
+    state.cateringlist2 = cateringlist2
   },
   setGuestDiary (state, guestDiary) {
     state.guestDiary = guestDiary

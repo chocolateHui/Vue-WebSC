@@ -197,7 +197,6 @@ const mutations = {
     state.catersta = catersta
   },
   setCatering (state, catering) {
-    console.log(catering)
     state.catering = catering
   },
   setNewEventParam (state, newEventParam) {

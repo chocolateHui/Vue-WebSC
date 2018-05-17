@@ -1,6 +1,6 @@
 <template>
   <b-container fluid>
-    <b-collapse @shown="collapseShow(true)" @hidde="collapseShow(false)" visible :id="id">
+    <b-collapse @shown="collapseShow(true)" @hidden="collapseShow(false)" visible :id="id">
       <b-card header-tag="header">
         <b-row slot="header">
           <b-col sm="1" class="my-1 eventtitle">
@@ -270,15 +270,17 @@
         'newEventParam'
       ])
     },
-    created(){
+    mounted(){
       if(this.eventshow){
         this.id='newCaterEvent'
       }
-      if(this.catering.hasOwnProperty('name')){
-        this.$root.$emit('bv::toggle::collapse','newevent')
-      }
       if(this.newEventParam.hasOwnProperty('begindate')){
         this.initEventParam();
+      }else{
+        this.newEvent ={
+          sta:'1',
+          stdunit:'0'
+        }
       }
     },
     methods: {
@@ -293,6 +295,7 @@
         this.eventtime.push(eventparam.begintime,eventparam.endtime)
         this.newEvent = Object.assign({},this.newEvent ,eventparam)
         this.$store.commit('setNewEventParam',{});
+        console.log(!this.isOpen&&!this.eventshow)
         if(!this.isOpen&&!this.eventshow){
           this.$root.$emit('bv::toggle::collapse','newevent')
         }
@@ -471,13 +474,13 @@
         }
       },
       catering(val,oldval){
-        if(val){
+        if(val.hasOwnProperty('name')){
           this.$set(this.newEvent,'descript',val.name)
-        }
-      },
-      newEventParam(val){
-        if(val.hasOwnProperty('begindate')){
-          this.initEventParam();
+          if(!this.newEventParam.hasOwnProperty('code')){
+            this.$root.$emit('bv::toggle::collapse','newevent')
+          }else{
+            this.initEventParam();
+          }
         }
       },
       defaulttype(val){
