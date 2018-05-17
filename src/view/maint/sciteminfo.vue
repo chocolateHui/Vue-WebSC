@@ -745,6 +745,9 @@
         padding: 0px;
         box-shadow:none;
       }
+      table {
+        font-size: 12px!important;
+      }
     }
 
 
