@@ -230,7 +230,8 @@
         'catersta',
         'saleid',
         'catering',
-        'salelist'
+        'salelist',
+        'newCateringParam'
       ]),
       minDate() {
         if(!this.isNew){
@@ -402,6 +403,13 @@
             this.caterdate = [];
             this.caterdate.push(val.arr,val.dep)
           }
+        }
+      },
+      newCateringParam(val){
+        if(val.hasOwnProperty('arr')){
+          this.localcatering = Object.assign({},val);
+          this.caterdate = [];
+          this.caterdate.push(val.arr,val.dep)
         }
       },
       catersta(val,oldval){

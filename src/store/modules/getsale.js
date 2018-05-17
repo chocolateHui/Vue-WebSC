@@ -108,7 +108,7 @@ const actions = {
       }).then(function (response) {
         if (response.status === 200) {
           if (response.data.errorCode === '0') {
-            store.commit('setCatering', response.data.caterings)
+            store.commit('setCateringList', response.data.caterings)
           }
         }
       })
@@ -121,7 +121,7 @@ const actions = {
       }).then(function (response) {
         if (response.status === 200) {
           if (response.data.errorCode === '0') {
-            store.commit('setCatering', response.data.caterings)
+            store.commit('setCateringList', response.data.caterings)
           }
         }
       })
@@ -212,7 +212,7 @@ const mutations = {
   setProfiles (state, profileslist) {
     state.profileslist = profileslist
   },
-  setCatering (state, cateringlist) {
+  setCateringList (state, cateringlist) {
     state.cateringlist = cateringlist
   },
   setGuestDiary (state, guestDiary) {

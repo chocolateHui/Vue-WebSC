@@ -166,11 +166,9 @@
         }
         if(to.name==='新建宴会问询'){
           this.$store.commit('setCatering', {});
-          this.$store.commit('setCaterid', '');
           this.$store.commit('setCatersta', 'Q');
         }else if(to.name==='新建宴会预订'){
           this.$store.commit('setCatering', {});
-          this.$store.commit('setCaterid', '');
           this.$store.commit('setCatersta', '1');
         }
 

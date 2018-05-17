@@ -8,6 +8,8 @@ import axiosinstance from '../../common/axiosinstance'
 const state = {
   catersta: 'Q',
   catering: {},
+  newEventParam: {},
+  newCateringParam: {},
   eventlist: [],
   defaulttype: '',
   eventstas: '1,2,3,W,Q',
@@ -26,6 +28,10 @@ const getters = {
   catersta: state => state.catersta,
 
   catering: state => state.catering,
+
+  newEventParam: state => state.newEventParam,
+
+  newCateringParam: state => state.newCateringParam,
 
   eventlist: state => state.eventlist,
 
@@ -191,7 +197,14 @@ const mutations = {
     state.catersta = catersta
   },
   setCatering (state, catering) {
+    console.log(catering)
     state.catering = catering
+  },
+  setNewEventParam (state, newEventParam) {
+    state.newEventParam = newEventParam
+  },
+  setNewCateringParam (state, newCateringParam) {
+    state.newCateringParam = newCateringParam
   },
   setEventlist (state, eventlist) {
     state.eventlist = eventlist
