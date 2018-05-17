@@ -204,6 +204,7 @@
   </div>
 </template>
 <script>
+  import { mapGetters, mapMutations } from 'vuex'
 const events = [
   {bdate:'2018-04-10',place:'宴会厅',price:1000000,descript:'宴会事务'},
   {bdate:'2018-04-10',place:'宴会厅',price:0,descript:'宴会事务'},
@@ -216,7 +217,12 @@ export default {
       events:events
     }
   },
-  props:['caterid'],
+  computed: {
+    ...mapGetters([
+      'caterid',
+      'catering'
+    ])
+  },
   methods:{
     exportword:function () {
       let bytes = window.atob(docjson.doc);

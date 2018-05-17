@@ -9,6 +9,7 @@ import sceventitem from './modules/sceventitem'
 import scnote from './modules/scnote'
 import VuexPersistence from 'vuex-persist'
 import getsale from './modules/getsale'
+import scid from './modules/scid'
 
 Vue.use(Vuex)
 
@@ -17,7 +18,7 @@ const debug = process.env.NODE_ENV !== 'production'
 const vuexLocal = new VuexPersistence({
   strictMode: debug,
   storage: window.localStorage,
-  modules: ['token', 'user', 'sysoption', 'getsale', 'scnote']
+  modules: ['token', 'user', 'sysoption', 'scid']
 })
 
 const store = new Vuex.Store({
@@ -28,9 +29,9 @@ const store = new Vuex.Store({
     sysoption,
     catering,
     getsale,
-    catering,
     scnote,
     sceventitem,
+    scid
   },
   plugins: [vuexLocal.plugin],
   mutations: {

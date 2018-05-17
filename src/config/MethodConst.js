@@ -33,7 +33,8 @@ const methodinfo = {
   getsysoptionlist: '/PUB/sysoption/getsysoptionlist',
   // 获取销售员列表
   getsaleidlist: '/PUB/saleid/getsaleidlist',
-
+//获取酒店信息
+  gethotel:'/PUB/hotelid/gethotel',
   /*
  SC业务相关接口
  */
@@ -144,6 +145,7 @@ const methodinfo = {
   /*
  代码维护相关
  */
+
   // 新增营业点
   newpccode: '/SC/reserve/scplacemaint/newpccode',
   // 批量更新场地信息
