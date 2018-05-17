@@ -670,11 +670,10 @@
       cursor:pointer;
     }
     .saleCalendar{
-      top: 50px;
+      top: 30px;
       left:50%;
       position: absolute;
       z-index: 22;
-      margin-left: -140px;
     }
   .modal-lg {
     max-width: 780px;

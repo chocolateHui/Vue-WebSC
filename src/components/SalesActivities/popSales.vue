@@ -453,6 +453,7 @@
       padding: 0!important;
     }
     .timestyle{
+      width: 193px;
       .col-sm-3 {
         flex: 0 0 39%;
         max-width: 39% !important;

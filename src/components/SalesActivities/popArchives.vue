@@ -141,6 +141,7 @@
           this.contacter=''
           this.salesId=''
           this.$store.commit("setProfilesNull")
+          this.cateringlist=[]
         },
         archClose: function () {
           this.clearAll()

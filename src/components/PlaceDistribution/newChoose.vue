@@ -77,19 +77,27 @@
           }
       },
       created(){
-        this.timebegin=this.timechoose[0].descript
-        this.$set(this.eventtime,0,this.timechoose[0].exts1)
-        this.$set(this.eventtime,1,this.timechoose[0].exts2)
+
       },
       components:{
         TimePicker,
+      },
+      watch:{
+        thingFlag:function (val,oldval) {
+          this.firsttimedata()
+        },
       },
       computed:{
         ...mapGetters(['cateringlist']),
         ...mapGetters(['timechoose']),
       },
-      props:['newChooseTime','newChooseAddr','headlist','newChooseAddrNo'],
+      props:['newChooseTime','newChooseAddr','headlist','newChooseAddrNo','thingFlag'],
       methods:{
+          firsttimedata:function () {
+            this.timebegin=this.timechoose[0].descript
+            this.$set(this.eventtime,0,this.timechoose[0].exts1)
+            this.$set(this.eventtime,1,this.timechoose[0].exts2)
+          },
         configDefault:function () {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature

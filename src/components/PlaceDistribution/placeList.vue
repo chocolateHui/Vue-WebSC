@@ -15,7 +15,7 @@
             </ul>
             <ol>
               <li class="current"><i class="fa fa-list"></i>列表</li>
-              <li @click="listChange"><i class="fa fa-bar-chart"></i>图标</li>
+              <li @click="listChange"><i class="fa fa-bar-chart"></i>图表</li>
             </ol>
           </div>
           <table class="placelist_content_list" id="placelist_table">
