@@ -100,7 +100,7 @@
             stripe
             :height="tableH"
             @cell-click="tableDbEdit"r
-            style="width: 100%;font-size: 12px">
+            style="width: 100%;font-size: 12px!important;">
             <el-table-column
             prop="tableno"
             label="场地代码"
@@ -860,6 +860,9 @@
         border: none;
         padding: 0px;
         box-shadow:none;
+      }
+      table {
+        font-size: 12px!important;
       }
     }
     #placemodal{
