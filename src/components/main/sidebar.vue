@@ -93,11 +93,11 @@
     },
     mounted () {
       if(this.hotel.sign===2){
-        this.menus.unshift({ route: '/main/caterList', name: '宴会预订列表',iconClass:"fa-list"});
-        this.menus.unshift({ route: '/main/newQuery', name: '新建宴会问询',iconClass:"fa-clock-o fa-rotate-90"});
-        this.menus.unshift({ route: '/main/newReserve', name: '新建宴会预订',iconClass:"fa-registered"});
-        this.menus.unshift({ route: '/main/place/placeDistribution', name: '宴会场地分布',iconClass:"fa-th"});
         this.menus.unshift({ route: '/main/saleDiary', name: '销售活动日历',iconClass:"fa-calendar"});
+        this.menus.unshift({ route: '/main/place/placeDistribution', name: '宴会场地分布',iconClass:"fa-th"});
+        this.menus.unshift({ route: '/main/newReserve', name: '新建宴会预订',iconClass:"fa-registered"});
+        this.menus.unshift({ route: '/main/newQuery', name: '新建宴会问询',iconClass:"fa-clock-o fa-rotate-90"});
+        this.menus.unshift({ route: '/main/caterList', name: '宴会预订列表',iconClass:"fa-list"});
       }
       this.date= formatDate(new Date(),"yyyy年MM月dd日");
       let lunarinfo= calendarjs.solar2lunar(new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate());

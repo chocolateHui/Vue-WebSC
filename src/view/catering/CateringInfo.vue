@@ -32,20 +32,21 @@
         isNew:true
       };
     },
-    props:['caterid'],
     components: {
       CateringInfo,
       NewEvent,
       EventList,
       RoomInfo
     },
-    ...mapGetters([
-      'catering'
-    ]),
+    computed: {
+      ...mapGetters([
+        'caterid',
+        'catering'
+      ])
+    },
     methods: {
       getCateringData(){
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
-        this.$store.commit('setCaterid',this.caterid);
         this.$store.dispatch('encrypttoken').then(() => {
           if(this.isNew){
             this.$store.dispatch("getPlacelist");
