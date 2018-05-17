@@ -116,7 +116,9 @@
               place:this.newChooseAddrNo,
               placedes:this.newChooseAddr
             }
-            this.$router.push({name:'宴会预订详情',param:{caterid:''}})
+            console.log(this.ifCaterChoose)
+            this.$store.commit('setCaterid',this.ifCaterChoose);
+            this.$router.push({ name: '宴会预订详情'})
           }
         },
         addInquiry:function () {

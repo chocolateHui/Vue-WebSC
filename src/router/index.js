@@ -74,13 +74,12 @@ const router = new Router({
           }
         },
         {
-          path: '/main/catering/cateringInfo/:caterid',
+          path: '/main/catering/cateringInfo',
           name: '宴会预订详情',
           component: CateringInfo,
           meta: {
             keepAlive: true // 需要被缓存
-          },
-          props: true
+          }
         },
         {
           path: '/main/catering/eventItem',
@@ -91,13 +90,12 @@ const router = new Router({
           }
         },
         {
-          path: '/main/EOShare/:caterid',
+          path: '/main/EOShare',
           name: '宴会预订EO单',
           component: EOShare,
           meta: {
             keepAlive: false // 需要被缓存
-          },
-          props: true
+          }
         },
         {
           path: '/main/place/placeDistribution',
