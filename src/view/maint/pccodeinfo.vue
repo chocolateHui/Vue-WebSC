@@ -99,8 +99,8 @@
             border
             stripe
             :height="tableH"
-            @cell-click="tableDbEdit"r
-            style="width: 100%;font-size: 12px!important;">
+            @cell-click="tableDbEdit"
+            style="width: 100%;font-size: 12px">
             <el-table-column
             prop="tableno"
             label="场地代码"
