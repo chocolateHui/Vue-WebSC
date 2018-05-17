@@ -38,13 +38,13 @@
           <li>抵达日期</li>
         </ol>
         <ul>
-          <li v-for="list in cateringlist" @click="btnCatering(list)" :class="{'caterCurrent':ifCaterChoose==list.caterid}">
+          <li v-for="list in cateringitem" @click="btnCatering(list)" :class="{'caterCurrent':ifCaterChoose==list.caterid}">
             <span class="nav1" v-for="colorlist in headlist" :class="colorlist.liStyle" v-if="colorlist.dataid==list.sta"></span>
             <span class="nav2">{{list.caterid}}</span>
             <span class="nav3">{{list.name}}</span>
             <span class="nav4">{{list.stades}}</span>
             <span class="nav5">{{list.saleid_name}}</span>
-            <span class="nav6">{{list.arr}}</span>
+            <span class="nav6">{{list.arr.substring(0,10)}}</span>
           </li>
         </ul>
       </div>
@@ -74,22 +74,32 @@
             startTime: '',
             endTime: '',
             eventtime:[],
+            cateringitem:[],
           }
       },
-      mounted(){
-        this.timebegin=this.timechoose[0].descript
-        this.$set(this.eventtime,0,this.timechoose[0].exts1)
-        this.$set(this.eventtime,1,this.timechoose[0].exts2)
+      created(){
+        this.cateringitem = Object.assign([],this.cateringlist2);
       },
       components:{
         TimePicker,
       },
+      watch:{
+        cateringlist2:function (val,oldval) {
+          this.firsttimedata()
+        },
+      },
       computed:{
-        ...mapGetters(['cateringlist']),
+        ...mapGetters(['cateringlist2']),
         ...mapGetters(['timechoose']),
       },
       props:['newChooseTime','newChooseAddr','headlist','newChooseAddrNo'],
       methods:{
+          firsttimedata:function () {
+            this.timebegin=this.timechoose[0].descript
+            this.$set(this.eventtime,0,this.timechoose[0].exts1)
+            this.$set(this.eventtime,1,this.timechoose[0].exts2)
+            this.cateringitem = Object.assign([],this.cateringlist2);
+          },
         configDefault:function () {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -118,6 +128,7 @@
             }
             this.$store.commit('setCaterid',this.ifCaterChoose);
             this.$store.commit('setNewEventParam',paramNewEvent);
+            this.$emit('closeChoose')
             this.$router.push({ name: '宴会预订详情'})
           }
         },
@@ -134,6 +145,8 @@
             arr:this.newChooseTime,
             dep:this.newChooseTime,
           };
+          this.catersta='Q'
+          this.$emit('closeChoose')
           this.$router.push({name:'新建宴会问询'})
           this.$store.commit('setNewCateringParam',paramNewCatering);
           this.$store.commit('setNewEventParam',paramNewEvent);
@@ -151,6 +164,8 @@
             arr:this.newChooseTime,
             dep:this.newChooseTime,
           }
+          this.catersta='R'
+          this.$emit('closeChoose')
           this.$router.push({name:'新建宴会预订'})
           this.$store.commit('setNewCateringParam',paramNewCatering);
           this.$store.commit('setNewEventParam',paramNewEvent);

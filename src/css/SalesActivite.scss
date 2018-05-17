@@ -14,6 +14,7 @@ $color052:#FA8052;
 $colorD0:#5999D0;
 
 .salesContain{
+  height: 100%;
   ul, ol,li {list-style: none;}
   h1,ul, ol, dl, li, dt, dd, p, table, th, td, input, textarea,  img, label, span, select, strong, b {
     margin: 0px;
@@ -38,7 +39,7 @@ $colorD0:#5999D0;
   .nofb{font-weight: normal;}
 
 .sales_activities{
-  height: calc(100% - 2px);margin:0 10px;overflow-y: auto;
+  height: 100%;margin:0 10px;
   .content_right{
     float: right; width: 220px;
     .select{
@@ -68,7 +69,7 @@ $colorD0:#5999D0;
   }
   .content_left{ margin-right: 240px;height: 100%;
     .content_left_tou{
-      ul{height: 26px;line-height: 26px; margin-bottom: 10px;}
+      ul{height: 26px;line-height: 26px; margin-bottom: 10px;position: relative}
       .btn_left,.btn_right{background:$colorC3;border:none;color:$colorWhite;cursor:pointer;float:left;	height:26px;line-height:26px;padding:0 20px;margin-right:3px;}
       .btn_today{background:$colorC3;border:none;color:$colorWhite;cursor:pointer;float:left;	height:26px;line-height:26px;padding:0 20px;}
       .btn_day,.btn_month{background:$colorC3;border:none;color:$colorWhite;cursor:pointer;float:left;	height:26px;line-height:26px;padding:0 20px;margin-left:3px;}

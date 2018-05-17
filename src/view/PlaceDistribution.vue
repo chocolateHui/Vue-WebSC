@@ -64,8 +64,8 @@
                 <label>{{item.time}}</label>
                 <p>
                   <span v-for="items in timeAll[indexdetail].content" >
-                    <span v-for="(infolist1,infoindex1) in placesinfo" v-if="infolist1.tableno==placeitem.tableno">
-                        <span v-for="infolist in (placesinfo[infoindex1].bdates)" v-if="timelist==infolist.bdate">
+                    <span v-for="(infolist1,infoindex1) in placesinfo1" v-if="infolist1.tableno==placeitem.tableno">
+                        <span v-for="infolist in (placesinfo1[infoindex1].bdates)" v-if="timelist==infolist.bdate">
                             <span v-for="typeitem in typeList" v-if="iftypelist||(typeitem==infolist.eventtype)">
                                <span v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta&&( (items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))"  :data-id="items.dataid" :data-it="items.datait"></span>
                             </span>
@@ -109,8 +109,8 @@
           </li>
           <li class="nav2"  @mouseenter="thingsShow(index1,'0',datatime.substring(0,10),$event)" @mouseleave="thingsHide">
              <span v-for="items in timeToday">
-                <span v-for="(infolist1,infoindex1) in placesinfo" v-if="infolist1.tableno==placeitem.tableno">
-                  <span v-for="(infolist,infoindex) in placesinfo[infoindex1].bdates">
+                <span v-for="(infolist1,infoindex1) in placesinfo1" v-if="infolist1.tableno==placeitem.tableno">
+                  <span v-for="(infolist,infoindex) in placesinfo1[infoindex1].bdates">
                     <span v-for="typeitem in typeList"  v-if="iftypelist||(typeitem==infolist.eventtype)">
                        <span v-for="colorlist in headList" class="bgtime2" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta&&( (items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))"  :data-id="items.dataid" :data-it="items.datait"></span>
                     </span>
@@ -211,6 +211,7 @@
             newChooseAddr:'',
             newChooseAddrNo:'',
             sta:'',
+            placesinfo1:[]
           }
       },
       filters:{
@@ -397,6 +398,7 @@
           this.$store.dispatch('encrypttoken').then(() => {
             //获取工号信息,完成后进行路由
             this.$store.dispatch('getplaceusedinfo',this.placeinfoparam).then(() => {
+              this.placesinfo1 = Object.assign({},this.placesinfo);
               loading.close();
             })
           })
@@ -724,9 +726,6 @@
           return times;
         }
       },
-      // updated(){
-      //   this.$store.commit("set_loading",false);
-      // },
       mounted: function () {
         this.getbasecodelist()
         this.datatimeid=this.today()
@@ -763,7 +762,7 @@
     .calendarShow{
       position: absolute;
       z-index: 22;
-      top: 90px;
+      top: 30px;
       left: 50%;
       margin-left: -90px;
     }
