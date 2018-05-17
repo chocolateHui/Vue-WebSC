@@ -78,18 +78,18 @@
           }
       },
       created(){
-        this.cateringitem = Object.assign([],this.cateringlist);
+        this.cateringitem = Object.assign([],this.cateringlist2);
       },
       components:{
         TimePicker,
       },
       watch:{
-        cateringlist:function (val,oldval) {
+        cateringlist2:function (val,oldval) {
           this.firsttimedata()
         },
       },
       computed:{
-        ...mapGetters(['cateringlist']),
+        ...mapGetters(['cateringlist2']),
         ...mapGetters(['timechoose']),
       },
       props:['newChooseTime','newChooseAddr','headlist','newChooseAddrNo'],
@@ -98,7 +98,7 @@
             this.timebegin=this.timechoose[0].descript
             this.$set(this.eventtime,0,this.timechoose[0].exts1)
             this.$set(this.eventtime,1,this.timechoose[0].exts2)
-            this.cateringitem = Object.assign([],this.cateringlist);
+            this.cateringitem = Object.assign([],this.cateringlist2);
           },
         configDefault:function () {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
