@@ -15,6 +15,7 @@
           :data="maintTree"
           :props="defaultProps"
           @node-click="NodeClick"
+          node-key="eventid"
           default-expand-all
           highlight-current
           :filter-node-method="filterNode"
@@ -39,51 +40,89 @@
   export default {
     data() {
       return {
+
         treeHeight: document.body.clientHeight-150,
         bodyHeight: document.body.clientHeight-110,
         filterText: '',
-        maintTree: [{
-          label: '基础信息',
-          disabled: true,
-          children: [{
-            label: '事务1',
-            disabled: true,
-            eventid:"1000001"
-          }, {
-            label: '事务2',
-
-          }, {
-            label: '事务3',
-
-          }]
-        }],
+        selectnode:[],
+        maintTree: [],
         defaultProps: {
           children: 'children',
           label: 'label'
         }
       };
     },
+    props:['caterid','eventid'],
     computed: {
       ...mapGetters([
-        'isLoading'
+        'isLoading',
+        'eventlist',
+        'catering'
       ]),
     },
     watch: {
       filterText(val) {
         this.$refs.tree2.filter(val);
-      }
+      },
+      catering(val,oldval){
+        this.setdata();
+        this.$nextTick(function() {
+          this.$refs.tree2.setCurrentKey("E180516131601002");
+        })
+      },
+      eventlist(val,oldval){
+        this.setdata();
+      },
     },
 
     methods: {
       filterNode(value, data) {
-        if (!value) return true;
-        return data.label.indexOf(value) !== -1;
+        // if (!value) return true;
+        // return data.label.indexOf(value) !== -1;
       },
       NodeClick(data){
-        this.$router.push({path:data.route})
+        console.log(data.eventid);
+        this.$store.commit('setSceventitemeventid',data.eventid);
+      },
+      setdata(){
+        this.maintTree =[];
+        let datac = [];
+        let cchildren = [];
+        let copyeventlist = this.eventlist;
+        let copycatering = this.catering;
+        for(let elm of copyeventlist){
+          let type={};
+          type["label"] = elm.descript;
+          type["eventid"] = elm.eventid;
+          cchildren.push(type);
+        }
+        datac["label"] =copycatering.name;
+        datac["children"] = cchildren;
+        // this.selectnode = ["E180516131601002"];
+
+        this.maintTree .push(datac);
+
+        // this.$refs.tree2.setCurrentKey();
+      },
+      getCateringData(){
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        console.log("caterid"+this.caterid);
+        this.$store.commit('setCaterid',this.caterid);
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch("getCateringInfo")
+          this.$store.dispatch("getEventList");
+        });
+        setTimeout(() => {
+          loading.close();
+        }, 500);
       },
     },
+    created(){
+      this.getCateringData();
+      this.$store.commit('setSceventitemeventid',this.eventid);
+    },
     mounted ()  {
+      // this.setdata();
 
     },
 
