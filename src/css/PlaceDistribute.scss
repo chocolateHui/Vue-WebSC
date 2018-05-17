@@ -18,7 +18,7 @@ $colorCheckout:#893eff;
 $colorCancel:#ffb933;
 $colorAll:#b4b4b6;
 .place_contain {
-  height: calc(100% - 7px);
+  height: calc(100% - 0px);
   div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, table, th, td, input, textarea, hr, img, label, span, select, strong, b {
     margin: 0px;
     padding: 0px;
@@ -103,6 +103,7 @@ $colorAll:#b4b4b6;
   .place_content_tou{
     border-left:1px solid $colorGray;border-right:1px solid $colorGray;border-top:1px solid $colorGray; padding:6px 0 0;
     ul{
+      position: relative;
       height: 30px;
       .btn_left{ background:$colorHeadBtn; border:none; color:$colorWhite; float:left; height:23px; line-height:23px; margin-left:18px; margin-right:3px; text-align:center; width:36px;}
       .btn_right{ background:$colorHeadBtn; border:none; color:$colorWhite; float:left; height:23px; line-height:23px; margin-right:8px; text-align:center; width:36px;}
@@ -163,7 +164,7 @@ $colorAll:#b4b4b6;
     }
   }
   .place_content_items{
-    height: calc(100% - 52px);
+    height: calc(100% - 45px);
     .item_tou{
       background:#F8F8F8; border:1px solid $colorGray; padding-right: 17px;max-height: 45px;
       ul{
@@ -188,7 +189,7 @@ $colorAll:#b4b4b6;
       }
     }
     .item{
-      height: calc(100% - 29px);
+      height: calc(100% + 0px);
       overflow-x: hidden; overflow-y: auto;
       ul{
         border-bottom:1px solid $colorGray;border-left:1px solid $colorGray;border-right:1px solid $colorGray;
@@ -240,13 +241,13 @@ $colorAll:#b4b4b6;
     }
   }
   .place_content_items2{
-    height: calc(100% - 37px);
+    height: calc(100% - 2px);
     .item_tou{
       background:#F8F8F8; border:1px solid $colorGray; padding-right: 17px;
       ul{
         height: 42px;
         >li{
-          color:$color4C; float:left; font-size:14px; font-weight:bold; height:42px; line-height:42px;
+          color:$color4C; float:left; font-size:14px;height:42px; line-height:42px;
           &.nav1{
             border-right:1px solid $colorGray; padding-left:15px; position:relative; text-align:left; width:200px;
             span{
@@ -269,7 +270,7 @@ $colorAll:#b4b4b6;
       }
     }
     .item{
-      height: calc(100% - 52px); overflow-x: hidden; overflow-y: scroll;
+      height: calc(100% - 42px); overflow-x: hidden; overflow-y: scroll;
       ul{
         border-bottom:1px solid $colorGray;border-left:1px solid $colorGray;border-right:1px solid $colorGray;
         >li{
@@ -277,7 +278,7 @@ $colorAll:#b4b4b6;
           &.nav1{
             border-right:1px solid $colorGray; padding-left:15px; position:relative; text-align:left; width:200px;padding-top: 7px;
             span{color:#4c4c4c;font-size:14px !important;display: inline-block;margin-bottom: 4px; vertical-align: middle; width: 172px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
-            strong{background: #f8f8f8;border: 1px solid #dcdcdc;border-radius: 10px;color: $color4C;display:inline-block;font-size: 12px;font-weight: inherit; height: 20px;line-height: 18px;margin-right:5px;overflow:hidden;text-align: center;width: 75px;padding: 0 8px; text-overflow: ellipsis;white-space: nowrap;}
+            strong{background: #f8f8f8;border: 1px solid #dcdcdc;border-radius: 10px;color: $color4C;display:inline-block;font-size: 12px; height: 20px;line-height: 18px;margin-right:5px;overflow:hidden;text-align: center;width: 75px;padding: 0 8px; text-overflow: ellipsis;white-space: nowrap;}
           }
           &.nav2{
             border-left:none; padding:25px 15px; width:calc(100% - 200px);
@@ -361,7 +362,7 @@ $colorAll:#b4b4b6;
       .select{
         background: $colorF5;border: 1px solid $colorGray; color: $colorBlack;height: 30px;position:relative;margin-bottom:10px;width: 170px;
         p{
-          font-size:13px;font-weight:bold;padding: 0 15px;position: relative;line-height: 30px;
+          font-size:13px;padding: 0 15px;position: relative;line-height: 30px;
           &::before{color: $color9E;content:"\f0dd"; cursor: pointer; position:absolute; right:7px; top:5px; display: inline-block;font: normal normal normal 14px/1 FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}
         }
         ol{
@@ -370,7 +371,7 @@ $colorAll:#b4b4b6;
         }
       }
       ul{
-       font-size: 13px; font-weight: bold; color: $colorBlack;margin-bottom: 20px; text-align: center;margin-top: 10px;padding-left: 0;
+       font-size: 13px; color: $colorBlack;margin-bottom: 20px; text-align: center;margin-top: 10px;padding-left: 0;
         >li{
           height: 30px;line-height: 30px; position: relative;
           p{

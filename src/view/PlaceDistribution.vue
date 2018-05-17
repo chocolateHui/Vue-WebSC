@@ -126,7 +126,7 @@
     </div>
   </div>
   <b-modal id="logmodal" ref="myModalchoose" size="lg" title="销售日记" hide-footer>
-    <new-choose :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>
+    <new-choose :headlist="headList" :thingFlag="thingFlag" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>
   </b-modal>
   <div v-if="isLoading">
     <loading></loading>
@@ -211,6 +211,7 @@
             newChooseAddr:'',
             newChooseAddrNo:'',
             sta:'',
+            thingFlag:1,
           }
       },
       filters:{
@@ -447,6 +448,7 @@
                this.newChooseAddrNo=this.placeslist[t].tableno
              }
           }
+          this.$set(this,"thingFlag",this.thingFlag+1);
           this.$refs.myModalchoose.show()
         },
         typeCheckAll:function () {
@@ -763,7 +765,7 @@
     .calendarShow{
       position: absolute;
       z-index: 22;
-      top: 90px;
+      top: 30px;
       left: 50%;
       margin-left: -90px;
     }

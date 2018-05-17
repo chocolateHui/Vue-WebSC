@@ -220,6 +220,14 @@ const mutations = {
     state.guestDiary=guestDiary
   },
   setPlaceusedinfo(state,placesinfo){
+    if(placesinfo.length>0){
+      for(var t=0;t<placesinfo.length.length;t++){
+        for(var j=0;j<placesinfo[t].bdates.length;j++){
+          placesinfo[t].bdates.begintime=placesinfo[t].bdates.begintime
+        }
+      }
+    }
+    // console.log(JSON.stringify(placesinfo[0].bdates)+'kk')
     state.placesinfo=placesinfo
   },
   //清空列表
