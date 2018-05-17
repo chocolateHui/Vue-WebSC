@@ -88,7 +88,7 @@
     computed: {
       ...mapGetters([
         'corteventlist',
-        'sceventitem',
+        'sceventitemeventid',
       ]),
       searchitems:function () {
         let filterValue = this.filterValue;
@@ -217,7 +217,7 @@
       corteventlist(val,oldval){
         this.items = val;
       },
-      sceventitem(val,oldval){
+      sceventitemeventid(val,oldval){
         this.refreshData();
       },
       searchitems(val,oldval) {
