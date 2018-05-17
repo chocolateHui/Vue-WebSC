@@ -65,50 +65,46 @@
         }, {
           label: '宴会代码',
           children: [{
-            id:'pccode',
-            label: '宴会营业点',
-            route:'/main/maint/pccode'
-          }, {
             id:'item',
             label: '宴会项目',
             route:'/main/maint/item'
           },{
-            id:'sc_event_type',
+            id:'basecode/sc_event_type',
             label: '事务类型',
             route:'/main/maint/basecode',
             cat:'sc_event_type'
           },{
-            id:'sc_time_unit',
+            id:'basecode/sc_time_unit',
             label: '事务常用时间段',
             route:'/main/maint/basecode',
             cat:'sc_time_unit'
           }, {
-            id:'sc_event_degree',
+            id:'basecode/sc_event_degree',
             label: '事务优先等级设置',
             route:'/main/maint/basecode',
             cat:'sc_event_degree'
           },{
-            id:'layout',
+            id:'basecode/layout',
             label: '场地布局',
             route:'/main/maint/basecode',
             cat:'layout'
           }, {
-            id:'sc_cancel_reason',
+            id:'basecode/sc_cancel_reason',
             label: '宴会取消理由',
             route:'/main/maint/basecode',
             cat:'sc_cancel_reason'
           },{
-            id:'sc_place_kind',
+            id:'basecode/sc_place_kind',
             label: '场地类型',
             route:'/main/maint/basecode',
             cat:'sc_place_kind'
           }, {
-            id:'sc_place_style',
+            id:'basecode/sc_place_style',
             label: '场地风格',
             route:'/main/maint/basecode',
             cat:'sc_place_style'
           },{
-            id:'sc_place_location',
+            id:'basecode/sc_place_location',
             label: '场地位置',
             route:'/main/maint/basecode',
             cat:'sc_place_location'
@@ -144,13 +140,22 @@
       }
     },
     mounted ()  {
-      if(!this.$store.getters.hotel.sign){
+      if(this.$store.getters.hotel.sign===0){
         this.maintTree[0].children.splice(1,0,{
           label: '岗位设置',
           route:'/main/maint/hoteldept'
         });
       }
-//      this.$refs.maintTree.setCheckedNodes(['']);
+      if(this.$store.getters.hotel.sign===2){
+        this.maintTree[1].children.splice(0,0,{
+          id:'pccode',
+          label: '宴会营业点',
+          route:'/main/maint/pccode'
+        });
+      }
+      let index = this.$route.path.indexOf('/maint/')
+      let Nodeid = this.$route.path.substring(index+7);
+      this.$refs.maintTree.setCurrentKey(Nodeid);
     },
     components: {
       loading
@@ -168,6 +173,9 @@
     }
     .input-group{
       padding-bottom: 0.5rem;
+    }
+    .form-control{
+      height: 33.5px;
     }
     .col-10{
       border: 1px solid #ced4da;

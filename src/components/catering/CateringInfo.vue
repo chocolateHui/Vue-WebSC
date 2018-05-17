@@ -166,9 +166,9 @@
       <Reason ref="caterReason" @reasonConfirm="reasonConfirm"></Reason>
     </b-modal>
 
-    <b-modal id="profilemodal" size="lg" ref="profilemodal" title="档案列表" hide-footer>
-      <popArchives ref="popArchives" :ifunit="profileType" @btnArchOk="ArchivesConfirm"></popArchives>
-    </b-modal>
+    <el-dialog title="宾客档案查询" id="profilemodal" ref="profilemodal" :visible.sync="dialogVisible">
+      <pop-archives @btnArchClose="btnArchClose" @btnArchOk="ArchivesConfirm" :ifunit="profileType"></pop-archives>
+    </el-dialog>
 
     <b-modal id="remarkModal" size="lg" ref="remarkModal" title="宴会备注" hide-footer>
       <!--<remark ref="caterRemark" :remark="localcatering"></remark>-->
@@ -214,7 +214,8 @@
         ],
         //销售员列表
         saleoptions:[],
-        cancelWidth:'cancelwidth'
+        cancelWidth:'cancelwidth',
+        dialogVisible:false
       }
     },
     props:{
@@ -316,18 +317,23 @@
       },
       profileShow(){
         if(!this.isClear){
-          this.$refs.profilemodal.show();
+          this.dialogVisible = true;
         }else{
           this.isClear =false;
         }
+      },
+      btnArchClose(){
+        this.dialogVisible = false;
       },
       profileClear(){
         this.localcatering.cusno = '';
         this.localcatering.cusno_des = '';
         this.isClear =true;
       },
-      ArchivesConfirm(profile){
-        console.log(profile)
+      ArchivesConfirm(profile,name,no){
+        this.localcatering.cusno = no
+        this.localcatering.cusno_des = name
+        this.dialogVisible = false;
       },
       getDisableDate(time){
         return time<this.minDate;
@@ -410,6 +416,7 @@
   }
 </script>
 <style lang="scss">
+  @import '../../css/color';
   #caterinfo{
     font-size: 0.9rem;
     .row{
@@ -419,16 +426,16 @@
       padding: 0;
     }
     .catertitle{
-      border-right: 1px solid #d9d9d9;
+      border-right: 1px solid $colorBorder;
     }
     .icondiv{
-      border-left: 1px solid #d9d9d9;
+      border-left: 1px solid $colorBorder;
     }
     input{
       font-size: 0.9rem;
     }
     .titleIcon{
-      color: #fcac6f;
+      color: $colorIcon;
       font-size: 20px;
       cursor: pointer;
       padding: 0 2px;
@@ -464,12 +471,12 @@
     //宴会主单主要信息
     #catermain{
       .el-icon-date,.fa{
-        color: #fcac6f;
+        color: $colorIcon;
       }
       .Sta{
         width: 90%;
         height: 65px;
-        background: #ff7266;
+        background: $color11;
         border-radius: 10px;
         padding: 0 20px;
         margin-top: 6px;
@@ -497,7 +504,7 @@
       }
       .form-control{
         border: none;
-        border-bottom: 1px solid #dddddd;
+        border-bottom: 1px solid $colorBorder;
         border-radius: 0;
 
       }
@@ -505,7 +512,7 @@
         width: 100%;
         padding: 0;
         border: none;
-        border-bottom: 1px solid #dddddd;
+        border-bottom: 1px solid $colorBorder;
       }
       .el-input__inner:focus{
         box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
@@ -524,11 +531,11 @@
       }
       .reservebtn{
         width: 48.5%;
-        background-color: #FFB752;
+        background-color: $colorQuitBtn;
       }
       .confirmbtn{
         width: 48.5%;
-        background-color: #FFB752;
+        background-color: $colorQuitBtn;
       }
       .cancelwidth{
         width: 48.5%;
@@ -537,7 +544,7 @@
         width: 99%;
       }
       .cancelbtn{
-        background-color: #2EC5FA;
+        background-color: $color8;
         transition:width .5s;
         -moz-transition:width .5s; /* Firefox 4 */
         -webkit-transition:width .5s; /* Safari and Chrome */
@@ -545,7 +552,7 @@
       }
       .savebtn {
         width: 99%;
-        background-color: #fa8052;
+        background-color: $colorSaveBtn;
         margin-top: 0.25rem;
       }
       .newbtn{
@@ -557,12 +564,15 @@
     //宴会主单附加信息
     #catersub{
       .el-icon-date,.fa{
-        color: #fcac6f;
+        color: $colorIcon;
       }
       .modalinput{
         i{
           padding-top: 9px;
           padding-left: 5px;
+        }
+        .el-input__inner{
+          padding-right: 25px;
         }
       }
       .form-control:focus{
@@ -580,7 +590,7 @@
       }
       .form-control{
         border-radius: 0;
-        border-color:#bce8f1;
+        border-color:$colorForm;
         line-height:1.7;
       }
       .el-input{
@@ -591,7 +601,7 @@
       }
       .el-input__inner{
         width: 101%;
-        border-color: #bce8f1;
+        border-color: $colorForm;
       }
       .col-form-label{
         padding-top: calc(0.375rem + 2px);
@@ -624,13 +634,24 @@
         }
       }
       legend{
-        background-color: #bce8f1;
+        background-color: $colorForm;
         font-size: 0.85rem;
         padding-left: 10px;
       }
       .longinput{
         width: 100%;
       }
+    }
+    .el-dialog{
+      width: 800px;
+      margin: 0 auto;
+      margin-top: 10px !important;
+    }
+    .el-dialog__header{
+      border-bottom: 1px solid $colorBorder;
+    }
+    .el-dialog__body{
+      padding: 30px 10px;
     }
   }
 </style>

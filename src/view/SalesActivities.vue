@@ -28,11 +28,10 @@
             </li>
             <li class="fr"><input type="button" class="btn_month" :class="{'current':ifMonth}" value="月" @click="monthNow"><input type="button" class="btn_day"
                                                                                                                                   value="日" @click="dayNow":class="{'current':!ifMonth}"  ></li>
-            <li class="tc"><span style="display: inline-block;position: relative"><span data-type="1" id="timeData"  ref="refcalendar" @click="ifCalendarShow">{{datetime}}</span>
+            <li class="tc"><span data-type="1" id="timeData"  ref="refcalendar" @click="ifCalendarShow">{{datetime}}</span>
               <div class="saleCalendar"  ref="refcalendar" v-if="calendarShow">
                 <calendar :dataSign="datetimenow" @choseDay="choseDay" ></calendar>
               </div>
-            </span>
             </li>
           </ul>
         </div>
@@ -81,12 +80,9 @@
         </div>
       </div>
     </div>
-      <b-modal id="logmodal" ref="myModalsale" @hidden="onHidden" size="lg" title="销售日记" hide-footer>
-        <!--<notesmodal :remark="remarklist" :num="num"  @onhide="btnNotesCancel"></notesmodal>-->
-        <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>
+      <b-modal id="logmodal" ref="myModalsale" :no-close-on-backdrop="true" :no-close-on-esc="true" @hidden="onHidden" size="lg" title="销售日记" hide-footer>
+         <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>
       </b-modal>
-      <!--<pop-sales :clickdata="clickData" :datadiary="diaryId" @saveorupdateguestdiary="saveorupdateguestdiary" v-if="popsale" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>-->
-      <!--<div id="layer" v-if="popsale"></div>-->
       <div v-if="isLoading">
         <loading></loading>
       </div>
@@ -675,7 +671,7 @@
     }
     .saleCalendar{
       top: 30px;
-      left:1%;
+      left:50%;
       position: absolute;
       z-index: 22;
     }

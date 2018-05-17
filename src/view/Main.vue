@@ -15,9 +15,9 @@
         <i @click="tabLeftClick" class="fa fa-angle-left tabicon"></i>
         <div id="nav" ref="nav" class="navdiv" :style="{width: bodyWidth + 'px'}">
           <b-nav id="navTab" ref="navTab" tabs :style="navStyle">
-            <b-nav-item :active="getTabActive(item)" v-for="item in mainRoutes" :key="item.name" append>
-              <i v-if="item.name==='首页'" @click="tabClick(item)" class="fa fa-home"></i>
-              <span @click="tabClick($event,item)">{{item.name}}</span>
+            <b-nav-item @click="tabClick($event,item)" :active="getTabActive(item)" v-for="item in mainRoutes" :key="item.name" append>
+              <i v-if="item.name==='首页'" class="fa fa-home"></i>
+              <span>{{item.name}}</span>
               <i v-if="item.name!=='首页'" @click="tabRemove(item.name)" class="el-icon-close"></i>
             </b-nav-item>
           </b-nav>
@@ -56,6 +56,7 @@
         bodyWidth: document.body.clientWidth-186,//减去header的60px
         screenHeight: document.body.clientHeight-85,//减去header的60px
         isTabChange:false,
+        isTabRemove:false,
         navTransform:0
       }
     },
@@ -73,12 +74,18 @@
         'delete_tabs'
       ]),
       getTabActive(item){
-        return this.$route.name===item.name;
+        if(this.$route.path.indexOf("/maint/")>0&&item.name==='基础代码维护'){
+          return true;
+        }else{
+          return this.$route.name===item.name;
+        }
       },
       tabClick: function ($event,item) {
-        console.log($event)
-        this.isTabChange = true;
-        this.$router.push({path: item.route});
+        if(!this.isTabRemove){
+          this.isTabChange = true;
+          this.$router.push({path: item.route});
+        }
+        this.isTabRemove = false
       },
       tabRemove: function (name) {
         if(name==="首页"){
@@ -103,6 +110,7 @@
             this.$router.push({path: this.mainRoutes[index-1].route});
           }
         }
+        this.isTabRemove = true
         this.$store.commit('delete_tabs', index);
       },
       tabLeftClick(){
@@ -142,6 +150,18 @@
       //路由监听,侧边栏进行路由跳转后在这里新增tab页,把路由目标转到新的tab页上
       '$route'(to) {
         if(to.path.indexOf("/maint/")>0){
+          let index = 0;
+          for (let option of this.mainRoutes) {
+            if (option.name === '基础代码维护') {
+              break;
+            }
+            index++;
+          }
+          let newRoute ={
+            index:index,
+            route:to.path
+          }
+          this.$store.commit('set_tab_route', newRoute);
           return;
         }
         if(to.name==='新建宴会问询'){
@@ -191,6 +211,7 @@
   }
 </script>
 <style lang="scss"  type="text/scss">
+  @import '../css/color';
   #scmain{
     height: calc(100%);
     /*#tab-首页{*/
@@ -200,7 +221,7 @@
     /*}*/
     .navdiv{
       overflow: hidden;
-      border-bottom: 1px solid #dee2e6;
+      border-bottom: 1px solid $colorBorder;
     }
     .nav-tabs{
       width: auto;
@@ -210,7 +231,7 @@
       display: block;
       float: left;
       margin-top: 3px;
-      border: 1px solid #dee2e6;
+      border: 1px solid $colorBorder;
       border-bottom: none;
       border-radius: 4px 4px 0 0;
       li{
@@ -230,21 +251,25 @@
       .nav-item{
         .nav-link{
           color: #495057;
-          border-left: 1px solid #e4e7ed;
+          border-left: 1px solid $colorBorder;
           border-radius: 0;
         }
         .nav-link.active{
           color: #007bff;
           border: none;
-          border-left: 1px solid #e4e7ed;
+          border-left: 1px solid $colorBorder;
           .el-icon-close{
             display: inline-block;
           }
         }
       }
       .nav-item:first-child{
-        a{
-          border-left: none
+        .nav-link{
+          border-left: none;
+        }
+        .nav-link.active{
+          border-left: none;
+          border-radius: 4px 4px 0 0;
         }
       }
       .nav-item:hover{
@@ -266,7 +291,7 @@
       font-size: 20px;
       padding: 10px 5px;
       cursor: pointer;
-      border-bottom: 1px solid #dee2e6;
+      border-bottom: 1px solid $colorBorder;
     }
     .viewDiv{
       padding-top: 0.75rem;

@@ -48,6 +48,7 @@
                       message: '宴会保存成功!',
                       type: 'success'
                     })
+                    _this.$store.commit('setCaterid',caterid);
                     _this.$router.push({ name: '宴会预订详情', params: { caterid: caterid }});
                   });
                 }else{
@@ -84,8 +85,8 @@
       height: 33.5px;
     }
     .ivu-input{
-      height: 31.5px;
-      margin-top: -2.5px;
+      height: 30px;
+      margin-top: 0;
     }
   }
 </style>

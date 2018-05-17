@@ -14,6 +14,7 @@ $color052:#FA8052;
 $colorD0:#5999D0;
 
 .salesContain{
+  height: 100%;
   ul, ol,li {list-style: none;}
   h1,ul, ol, dl, li, dt, dd, p, table, th, td, input, textarea,  img, label, span, select, strong, b {
     margin: 0px;
@@ -38,7 +39,7 @@ $colorD0:#5999D0;
   .nofb{font-weight: normal;}
 
 .sales_activities{
-  height: calc(100% - 2px);margin:0 10px;overflow-y: auto;
+  height: 100%;margin:0 10px;
   .content_right{
     float: right; width: 220px;
     .select{
@@ -68,7 +69,7 @@ $colorD0:#5999D0;
   }
   .content_left{ margin-right: 240px;height: 100%;
     .content_left_tou{
-      ul{height: 26px;line-height: 26px; margin-bottom: 10px;}
+      ul{height: 26px;line-height: 26px; margin-bottom: 10px;position: relative}
       .btn_left,.btn_right{background:$colorC3;border:none;color:$colorWhite;cursor:pointer;float:left;	height:26px;line-height:26px;padding:0 20px;margin-right:3px;}
       .btn_today{background:$colorC3;border:none;color:$colorWhite;cursor:pointer;float:left;	height:26px;line-height:26px;padding:0 20px;}
       .btn_day,.btn_month{background:$colorC3;border:none;color:$colorWhite;cursor:pointer;float:left;	height:26px;line-height:26px;padding:0 20px;margin-left:3px;}
@@ -193,7 +194,7 @@ $colorD0:#5999D0;
     }
   }
 }
-.pop_sales{background:$colorWhite;height: 440px; width: 580px;
+.pop_sales{background:$colorWhite;height: 440px; width: 600px;
   //position: fixed; left: 50%;top: 50%; margin-left: -300px;margin-top: -220px;z-index: 997;
   .pop_sales_tou {
     background: $colorF5;
@@ -206,7 +207,7 @@ $colorD0:#5999D0;
     i{float: right; color: #9E9E9F; cursor: pointer; height: 14px; line-height: 14px; margin-top: 21px; width: 14px;}
   }
   ul{
-    padding:5px 10px;
+    padding:5px 22px;
     >li{ float: left; margin-bottom: 10px;min-height:25px;line-height: 24px;position: relative;font-size: 12px}
     li{
       .title1{color: #595757;font-size: 12px; display: inline-block; width: 77px; float: left;}

@@ -321,7 +321,8 @@
         })
       },
       openCateringInfo(row){
-        this.$router.push({ name: '宴会预订详情', params: { caterid: row.caterid }});
+        this.$store.commit('setCaterid',row.caterid);
+        this.$router.push({ name: '宴会预订详情'});
       }
     },
     computed: {

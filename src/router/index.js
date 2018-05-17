@@ -11,6 +11,7 @@ const EOShare = () => import(/* webpackChunkName: "group-catering" */ '../view/c
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
 const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfo.vue')
+const Hotelinfoadmin = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfoadmin.vue')
 const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 const BaseCode = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/BaseCode.vue')
@@ -73,13 +74,12 @@ const router = new Router({
           }
         },
         {
-          path: '/main/catering/cateringInfo/:caterid',
+          path: '/main/catering/cateringInfo',
           name: '宴会预订详情',
           component: CateringInfo,
           meta: {
             keepAlive: true // 需要被缓存
-          },
-          props: true
+          }
         },
         {
           path: '/main/catering/eventItem',
@@ -90,13 +90,12 @@ const router = new Router({
           }
         },
         {
-          path: '/main/EOShare/:caterid',
+          path: '/main/EOShare',
           name: '宴会预订EO单',
           component: EOShare,
           meta: {
             keepAlive: false // 需要被缓存
-          },
-          props: true
+          }
         },
         {
           path: '/main/place/placeDistribution',
@@ -153,7 +152,7 @@ const router = new Router({
             {
               path: '/main/maint/hotelinfo',
               name: '酒店信息',
-              component: Hotelinfo
+              component: Hotelinfoadmin
             },
             {
               path: '/main/maint/empnoinfo',
@@ -206,7 +205,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(new Date().getTime())
   loadingInstance = router.app.$loading.service({ fullscreen: true, background: 'rgba(0, 0, 0, 0.7)' })
   if (to.path.indexOf('/login') < 0) {
     // this route requires auth, check if logged in
@@ -235,7 +233,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  console.log(new Date().getTime())
   loadingInstance.close()
 })
 

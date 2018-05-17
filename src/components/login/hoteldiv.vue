@@ -18,7 +18,7 @@
         name: 'hotelDiv',
         data () {
             return {
-                searchtext:""
+              searchtext:"",
             };
         },
         computed:{
@@ -49,7 +49,8 @@
                 this.searchtext=value;
             },
             hotelselect:function (hotel) {
-                this.$store.commit('setHotel',hotel);
+              this.$store.commit('setHotel',hotel);
+              this.$store.commit('setHotelChange',true);
             }
         },
         components: {
