@@ -5,9 +5,10 @@ import user from './modules/user'
 import catering from './modules/catering'
 import maintab from './modules/maintab'
 import sysoption from './modules/sysoption'
+import sceventitem from './modules/sceventitem'
+import scnote from './modules/scnote'
 import VuexPersistence from 'vuex-persist'
 import getsale from './modules/getsale'
-import scnote from './modules/scnote'
 import scid from './modules/scid'
 
 Vue.use(Vuex)
@@ -29,6 +30,7 @@ const store = new Vuex.Store({
     catering,
     getsale,
     scnote,
+    sceventitem,
     scid
   },
   plugins: [vuexLocal.plugin],

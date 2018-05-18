@@ -12,6 +12,7 @@
     },
     watch: {
       inputvalue(val,oldval)  {
+
         if(!val){
           return;
         }
@@ -21,6 +22,7 @@
           return;
         }
         if(this.type==='number'){
+          console.log(val)
           if(val.indexOf('.')>=0){
             this.inputvalue = oldval;
             return;

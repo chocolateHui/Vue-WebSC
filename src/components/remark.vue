@@ -173,7 +173,7 @@
          });
         },
       close:function(){
-        this.$emit('onhide');
+        this.$root.$emit('bv::hide::modal','remarkmodal')
       },
       updatescnotes(){
         this.$store.dispatch('encrypttoken').then(() => {
@@ -234,7 +234,7 @@
                   type: '新建',
                   message: '新建成功!'
                 });
-                this.$emit('onhide');
+                this.$root.$emit('bv::hide::modal','remarkmodal')
                 this.getremark()
               }
               else{
