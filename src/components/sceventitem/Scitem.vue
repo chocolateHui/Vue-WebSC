@@ -134,6 +134,7 @@
         filterText:"",
         selected:{},
         isselected:"",
+        currentselect:[],
       }
     },
     props:{
@@ -290,6 +291,11 @@
       },
       close:function(){
       this.isselected="T";
+      for(let elm of this.localscitem){
+        if(this.this.selected[elm.id]){
+
+        }
+      }
       },
       unclose:function(){
         this.isselected="F";
@@ -376,9 +382,17 @@
       },
 
       handleSelectionChange(val) {
-        for(var i=0;i<val.length;i++){
+        let s = [];
+        for(let i=0;i<val.length;i++){
           this.selected[val[i].id]=true;
+          s.put(val[i].id);
         }
+        if(val.length<this.selected.length){
+          for(let m=0;m<this.selected;m++){
+
+          }
+        }
+        this.currentselect = val;
       },
       }
 
