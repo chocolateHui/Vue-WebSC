@@ -123,7 +123,7 @@
       // }
     },
     created(){
-
+      this.refreshData();
     },
     methods: {
       tablePagination(data=[]){
@@ -172,9 +172,9 @@
       },
       tableCurrentChange(){
         for(let elem of this.currentselect){
-          if (!this.hash[elem.tableno]) {
+          if (!this.hash[elem.eventid]) {
             this.allselect.push(elem);
-            this.hash[elem.tableno] = true;
+            this.hash[elem.eventid] = true;
           }
         }
         this.pageChange = true;
@@ -201,16 +201,19 @@
       },
       placeConfirm(){
         for(let elem of this.currentselect){
-          if (!this.hash[elem.tableno]) {
+          if (!this.hash[elem.eventid]) {
             this.allselect.push(elem);
-            this.hash[elem.tableno] = true;
+            this.hash[elem.eventid] = true;
           }
         }
+        console.log(this.currentselect);
+        console.log(this.allselect);
+        console.log(this.hash);
         this.$emit('placeConfirm',this.allselect)
-        this.$root.$emit('bv::hide::modal','multiplacemodal')
+        this.$root.$emit('bv::hide::modal','multieventmodal')
       },
       exitModal(){
-        this.$root.$emit('bv::hide::modal','multiplacemodal')
+        this.$root.$emit('bv::hide::modal','multieventmodal')
       }
     },
     watch:{
