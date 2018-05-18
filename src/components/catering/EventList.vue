@@ -527,9 +527,9 @@
         this.$refs.Reason.clearRow();
       },
       openEvenitem(row){
-        console.log(this.caterid);
-        console.log(row.eventid);
-        this.$router.push({ name: '宴会事务项目', params: { caterid:this.caterid,eventid: row.eventid }});
+        this.$store.commit('setCaterid',this.caterid);
+        this.$store.commit('setEventid',row.eventid);
+        this.$router.push({ name: '宴会事务项目'});
       },
     },
     components: {
