@@ -229,6 +229,9 @@
         ...mapGetters(['isLoading']),
       },
       created(){
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch('getTimeUnit')
+        })
         loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           for(var num=8;num<=22;num++) {
             if (num <= 12) {
@@ -267,14 +270,6 @@
               this.todayHour.push(num+':00')
             }
           }
-      },
-      beforeRouteEnter(to,from,next){
-        next(vm=>{
-          vm.$store.dispatch('encrypttoken').then(() => {
-            //获取工号信息,完成后进行路由
-            vm.$store.dispatch('getSale')
-          })
-        })
       },
       methods: {
         // 查询事物
