@@ -44,6 +44,7 @@
         treeHeight: document.body.clientHeight-150,
         bodyHeight: document.body.clientHeight-110,
         filterText: '',
+        localdes:"",
         selectnode:[],
         maintTree: [],
         defaultProps: {
@@ -52,9 +53,10 @@
         }
       };
     },
-    props:['caterid','eventid'],
     computed: {
       ...mapGetters([
+        'caterid',
+        'eventid',
         'isLoading',
         'eventlist',
         'catering'
@@ -64,14 +66,19 @@
       filterText(val) {
         this.$refs.tree2.filter(val);
       },
+      caterid(val,oldval){
+       this.getCateringData();
+      },
       catering(val,oldval){
         this.setdata();
-        this.$nextTick(function() {
-          this.$refs.tree2.setCurrentKey("E180516131601002");
-        })
       },
       eventlist(val,oldval){
         this.setdata();
+        this.$nextTick(function() {
+          console.log(this.eventid);
+          this.$refs.tree2.setCurrentKey(this.eventid);
+          this.$store.commit('setEventdes',this.localdes);
+        })
       },
     },
 
@@ -81,8 +88,8 @@
         // return data.label.indexOf(value) !== -1;
       },
       NodeClick(data){
-        console.log(data.eventid);
         this.$store.commit('setSceventitemeventid',data.eventid);
+        this.$store.commit('setEventdes',data.label);
       },
       setdata(){
         this.maintTree =[];
@@ -94,15 +101,16 @@
           let type={};
           type["label"] = elm.descript;
           type["eventid"] = elm.eventid;
+          if(this.eventid===elm.eventid){
+            this.localdes =elm.descript;
+          }
           cchildren.push(type);
         }
         datac["label"] =copycatering.name;
         datac["children"] = cchildren;
-        // this.selectnode = ["E180516131601002"];
 
         this.maintTree .push(datac);
 
-        // this.$refs.tree2.setCurrentKey();
       },
       getCateringData(){
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
@@ -122,7 +130,6 @@
       this.$store.commit('setSceventitemeventid',this.eventid);
     },
     mounted ()  {
-      // this.setdata();
 
     },
 
