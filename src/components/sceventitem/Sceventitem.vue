@@ -128,7 +128,6 @@
   import SingleEvent from  '../../components/sceventitem/SingleEvent.vue'
   import remark from  '../../components/remark.vue'
 
-
   export default {
 
     data () {

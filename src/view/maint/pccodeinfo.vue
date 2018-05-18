@@ -278,8 +278,6 @@
   const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:false,cancel:false}
   const btnmodifyshow ={  new: true, modify:  true,delete:true,place:true ,save:true,cancel:true}
 
-
-
   export default {
     data () {
       return {
@@ -686,7 +684,6 @@
       showModal () {
         this.$refs.myModalRef.show()
       },
-
 
       hideModal () {
         this.$refs.myModalRef.hide()

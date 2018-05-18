@@ -273,7 +273,6 @@
     { value: '4', label: '场租' },
   ]
 
-
   export default {
     data () {
       return {
@@ -350,7 +349,6 @@
                   }
 
                 }
-
 
               }
             }
@@ -484,7 +482,6 @@
                   message:response.data.errorMessage
                 });
               }
-
 
           })
         })

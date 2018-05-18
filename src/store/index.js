@@ -32,7 +32,6 @@ const store = new Vuex.Store({
     SalesActivities,
     scnote,
     sceventitem,
-    scid
     routeParam,
     placeDistribution
   },
