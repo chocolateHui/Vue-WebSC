@@ -27,7 +27,7 @@
             variant="warning" @click="unclose()">转移</b-button>
           <b-button style="float: right"
                     size="sm"
-                    @click="close()">部门备注</b-button>
+                    @click="remarkshow()">部门备注</b-button>
         </b-form>
         <b-input-group style="padding-top: 0.5rem;width: 180px;float: right">
           <b-input-group-text slot="append">
@@ -44,13 +44,8 @@
           :data="searchitems"
           border
           stripe
-          height="160"
-          @selection-change="handleSelectionChange"
+          :height="th"
           style="width: 100%">
-          <el-table-column
-            type="selection"
-            width="55">
-          </el-table-column>
           <el-table-column
             prop="inumber"
             label="流水号"
@@ -67,9 +62,10 @@
           <el-table-column
             prop="number"
             label="数量"
+            width="100"
             show-overflow-tooltip>
             <template slot-scope="scope">
-            <Numberinput class="el-input__inner" type="number" maxlength="5"  v-model="scope.row.number" placeholder=""></Numberinput>
+            <Numberinput class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></Numberinput>
              </template>
           </el-table-column>
           <el-table-column
@@ -80,19 +76,19 @@
           <el-table-column
             prop="price"
             label="单价"
-            width="60"
+            width="100"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="amount"
             label="总价"
-            width="85"
+            width="100"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
-            width="135"
+            width=""
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
@@ -105,14 +101,20 @@
                   variant="primary" @click="deletel(scope.row)" style="margin-top:0px">删</b-button>
                 <b-button
                   size="sm"
-                  variant="primary" @click="deletel(scope.row)" style="margin-top:0px">存</b-button>
+                  variant="primary" @click="saveitem(scope.row)" style="margin-top:0px">存</b-button>
               </b-form>
             </template>
           </el-table-column>
         </el-table>
       </b-row>
-      <b-modal id="multiplacemodal" ref="multiplacemodal" title="场地列表" size="lg" hide-footer>
-        <MultiEvent ref="MultiPlace" ></MultiEvent>
+      <b-modal id="multieventemodal" ref="multieventmodal" title="场地列表" size="lg" hide-footer>
+        <MultiEvent ref="MultiPlace" @placeConfirm="placeConfirm" ></MultiEvent>
+      </b-modal>
+      <b-modal id="singleeventmodal" ref="singleeventmodal" title="场地列表" size="lg" hide-footer>
+        <SingleEvent ref="SingleEvent" @singleeventConfirm="singleeventConfirm" ></SingleEvent>
+      </b-modal>
+      <b-modal id="remarkmodal" ref="remarkmodal"  size="lg" title="宴会备注" hide-footer>
+        <remark></remark>
       </b-modal>
     </b-container>
   </div>
@@ -123,28 +125,31 @@
   import methodinfo from '../../config/MethodConst.js'
   import Numberinput from  '../../components/FormatInput.vue'
   import MultiEvent from  '../../components/sceventitem/MultiEvent.vue'
+  import SingleEvent from  '../../components/sceventitem/SingleEvent.vue'
+  import remark from  '../../components/remark.vue'
 
 
   export default {
 
     data () {
       return {
+
         localsceventitem:[],
         localbm:[],
         selectbm:"",
         filterText:"",
+        sceventitemlist:[],
+        th:document.body.clientHeight-420
       }
     },
-    props:{
-
-    },
     created(){
-
+      this.refreshdata();
     },
     computed:{
       ...mapGetters([
         'sceventitemeventid',
-        'sceventitemlist'
+        'catering',
+        'eventdes'
       ]),
       searchitems:function () {
 
@@ -163,9 +168,9 @@
                 s = true;
               }
               else{
-                if(tableData.inumber.indexOf(this.filterText)>=0||tableData.descript.indexOf(this.filterText)>=0
-                  ||tableData.number.indexOf(this.filterText)>=0||tableData.unit.indexOf(this.filterText)>=0
-                  ||tableData.amount.indexOf(this.filterText)>=0 ||tableData.remark.indexOf(this.filterText)>=0
+                if((tableData.inumber+"").indexOf(this.filterText)>=0||tableData.descript.indexOf(this.filterText)>=0
+                  ||(tableData.number+"").indexOf(this.filterText)>=0||tableData.unit.indexOf(this.filterText)>=0
+                  ||(tableData.amount+"").indexOf(this.filterText)>=0 ||tableData.remark.indexOf(this.filterText)>=0
                 ){
                   s = true;
                 }
@@ -183,7 +188,7 @@
     },
     watch: {
       sceventitemeventid(val,oldvalue){
-        console.log("watcha");
+        this.selectbm="";
         this.refreshdata();
       },
       sceventitemlist(val,oldvalue){
@@ -201,15 +206,17 @@
             item.push(elm);
           }
         }
-        this.localsceventitem = item;
+        this.localsceventitem =  item.slice(0);
         this.localbm = bm;
         console.log(this.localbm);
       },
 
     },
     components:{
+      SingleEvent,
       Numberinput,
-      MultiEvent
+      MultiEvent,
+      remark
     },
     methods: {
       updateValue(event) {
@@ -221,17 +228,43 @@
       },
       refreshdata(){
         this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch("getsceventitem").then(() => {
-          }).catch(function (errorMessage) {
-          })
-        });
-      },
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.geteventitemlist, {
+            eventid: this.sceventitemeventid,
+            sta:"0"
+          }).then((response)=> {
+            if (response.data.errorCode==='0') {
 
+              if(typeof(response.data.eventitems) != "undefined")
+              {
+                console.log(response.data);
+                let type =[];
+                for(let elm of response.data.eventitems){
+                  let event = {};
+                  event =  elm;
+                  if(typeof(elm.descript1) == "undefined"){
+                    event["descript1"] = "";
+                  }
+                  type.push(event);
+                }
+                this.sceventitemlist=type;
+              }
+              else{
+                this.sceventitemlist= [];
+              }
+            }else{
+              console.log(response.data);
+            }
+          })
+        })
+      },
       close:function(){
         this.$refs.multiplacemodal.show()
       },
       unclose:function(){
-        this.isselected="F";
+        this.$refs.singleeventmodal.show()
       },
       updatescnotes(){
         this.$store.dispatch('encrypttoken').then(() => {
@@ -262,65 +295,185 @@
           })
         })
       },
-      newscnotes(){
-        if(!this.localscnotes.title){
+
+      deleteitem(row){
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.deleteeventitem, {
+            eventid: this.sceventitemeventid,
+            inumber: parseInt(row.inumber),
+          }).then((response)=> {
+            if(response.data.errorCode==="0"){
+              this.$message({
+                type: '保存',
+                message: '删除成功!'
+              });
+              this.refreshdata();
+            }
+            else{
+              this.$message.error({
+                type: '保存',
+                message:response.data.errorMessage
+              });
+            }
+          })
+        })
+      },
+
+      saveitem:function(row){
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.updateeventitem, {
+            eventid: this.sceventitemeventid,
+            inumber: parseInt(row.inumber),
+            remark:row.remark,
+            price:row.price*1.0,
+            number:row.number*1.0,
+            flag5:"F",
+          }).then((response)=> {
+            if(response.data.errorCode==="0"){
+              this.$message({
+                type: '保存',
+                message: '更新成功!'
+              });
+              this.refreshdata();
+            }
+            else{
+              this.$message.error({
+                type: '保存',
+                message:response.data.errorMessage
+              });
+            }
+          })
+        })
+      },
+
+      remarkshow:function () {
+        if(!this.selectbm){
           this.$message.error({
-            type: '保存',
-            message:"标题不能为空"
+            message:"请选择一个部门"
           });
           return;
+        }
+        var caterinfo = {};
+        caterinfo["caterid"] = this.caterid;
+        caterinfo["eventid"] = this.sceventitemeventid;
+        caterinfo["itemid"] = parseInt(this.selectbm);
+        caterinfo["type"] = "3";
+        this.$store.commit('setCaterdes',this.catering.name);
+        this.$store.commit('setEventdes',this.eventdes);
+        this.$store.commit('setCaterinfo',caterinfo);
+        this.$refs.remarkmodal.show()
+
+      },
+
+      deletel:function (row) {
+        this.$confirm('此操作将永久删除'+row.descript+'该宴会项目, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          this.deleteitem(row);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+
+      placeConfirm(currentRow){
+
+        let inumbers = [];
+        if(!this.selectbm){
+          for(let elm of this.localbm){
+            let type = {};
+            type["inumber"] = elm.value;
+            inumbers.push(type)
+          }
+        }
+        else{
+          let type = {};
+          type["inumber"] = this.selectbm;
+          inumbers.push(type)
+        }
+       let copye = [];
+       for(let elm of currentRow){
+         let type = {};
+         type["eventid"] = elm.eventid;
+         copye.push(type)
+       }
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.copyeventitem, {
+            eventid: this.sceventitemeventid,
+            copyevents:copye,
+            inumbers:inumbers,
+          }).then((response)=> {
+            if(response.data.errorCode==="0"){
+              this.$message({
+                type: '保存',
+                message: '更新成功!'
+              });
+              this.refreshdata();
+            }
+            else{
+              this.$message.error({
+                type: '保存',
+                message:response.data.errorMessage
+              });
+            }
+          })
+        })
+      },
+
+      singleeventConfirm(currentRow){
+        let inumbers = [];
+        if(!this.selectbm){
+          for(let elm of this.localbm){
+            let type = {};
+            type["inumber"] = elm.value;
+            inumbers.push(type)
+          }
+        }
+        else{
+          let type = {};
+          type["inumber"] = this.selectbm;
+          inumbers.push(type)
         }
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.newscnoteinfo, {
-            blockid: this.localscnotes.blockid,
-            caterid: this.localscnotes.caterid,
-            eventid: this.localscnotes.eventid,
-            itemid: this.localscnotes.itemid,
-            type:this.localscnotes.type,
-            title: this.localscnotes.title,
-            content:this.localscnotes.content,
-            date0:formatDate(new Date(),"yyyy-MM-dd hh:mm:ss"),
-            flag:this.localscnotes.flag,
-            seq:this.localscnotes.seq
+          this.$http.post(methodinfo.sendeventitem, {
+            eventid: this.sceventitemeventid,
+            transfereventid:currentRow.eventid,
+            inumbers:inumbers,
           }).then((response)=> {
-              if(response.data.errorCode==="0"){
-                this.$message({
-                  type: '新建',
-                  message: '新建成功!'
-                });
-                this.getremark()
-              }
-              else{
-                this.$message.error({
-                  type: '保存',
-                  message:response.data.errorMessage
-                });
-              }
-
+            if(response.data.errorCode==="0"){
+              this.$message({
+                type: '保存',
+                message: '更新成功!'
+              });
+              this.refreshdata();
+            }
+            else{
+              this.$message.error({
+                type: '保存',
+                message:response.data.errorMessage
+              });
+            }
           })
         })
       },
-      savescnotes:function(){
-        var url = "";
-        if(this.localscnotes.isnew==="F"){
-          this.updatescnotes();
-        }
-        else{
-          this.newscnotes();
-        }
-
-      },
-
-      handleSelectionChange(val) {
-        // this.selected = {};
-        for(var i=0;i<val.length;i++){
-          this.selected[val[i].id]=true;
-        }
-      },
-      }
+    }
 
   }
 </script>
@@ -343,6 +496,12 @@
       float: right;
       padding-top: 0.5rem;
       padding-right: 0.5rem;
+      .btn {
+        height: 34px;
+        width: 72px;
+        margin-left: 5px;
+        border-radius: 0.25rem;
+      }
     }
     table{
       border-color: #dee2e6;
@@ -366,27 +525,8 @@
         box-shadow: 1px 5px 5px #dee2e6;
       }
 
-    }
-    .el-table .caret-wrapper{
-      width: 20px;
-    }
-    .el-table__expanded-cell{
-      padding: 5px!important;
-      box-shadow: 1px 5px 5px #dee2e6;
-    }
-    .paddingright0 {
-      padding-right: 0px;
-      padding-left: 0px;
-    }
-    .forma{
-      .btn {
-        height: 34px;
-        width: 72px;
-        margin-left: 5px;
-        border-radius: 0.25rem;
-      }
-    }
 
+    }
     .row{
       margin-right: 0;
     }
@@ -404,6 +544,7 @@
       margin-right: 0.5rem;
     }
     #rowrow{
+
       .el-input__inner {
         background-color: transparent;
         border: none;
@@ -416,6 +557,8 @@
         padding: 0px;
         box-shadow:none;
       }
+
     }
+
   }
 </style>
