@@ -66,7 +66,7 @@
           <el-table-column
             prop="remark"
             label="备注"
-            width="70"
+            width="170"
             sortable
             show-overflow-tooltip>
           </el-table-column>
@@ -473,6 +473,9 @@
         border: none;
         padding: 0px;
         box-shadow:none;
+      }
+      .el-checkbox {
+        margin-bottom: 0rem;
       }
     }
   }
