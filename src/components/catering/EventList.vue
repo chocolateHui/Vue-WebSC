@@ -409,24 +409,6 @@
           this.$refs.reasonmodal.show();
         }
       },
-      reasonConfirm(reason){
-        let _this=this;
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['username'] = this.$store.getters.username
-          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-          this.$http.post(methodinfo.cancelevent, {
-            eventid:this.cancelRow.eventid,
-            caterid:this.caterid,
-            cancelreason:reason.code
-          }).then(function (response) {
-            if (response.data.errorCode === '0') {
-              _this.$message('事务取消成功')
-              _this.$store.dispatch("getEventList")
-            }
-          })
-        })
-      },
       eventCanEdit(){
         if(this.catering.sta==='0'){
           this.eventEditable =false;
@@ -437,6 +419,7 @@
           this.eventEditable =now <=eventdate;
         }
       },
+      //行展开数据加载
       expandChange:function (row,expandRows) {
 
         if(row.eventid===this.expandRows[0]){
@@ -480,6 +463,7 @@
           }
         }
       },
+      //场租选择
       priceChange(val){
         for(let option of this.priceoptions){
           if(option.code===val){
@@ -491,6 +475,7 @@
           }
         }
       },
+      //常用时间选择
       timeChange(val){
         for(let option of this.timeoptions){
           if(option.code===val){
@@ -508,6 +493,7 @@
           }
         }
       },
+      //显示事务备注
       showNote(row){
         let remarkinfo = {
           caterid:this.catering.caterid,
@@ -519,6 +505,7 @@
         this.$store.commit('setNoteParam',remarkinfo);
         this.$refs.remarkmodal.show();
       },
+      //显示场地弹窗
       placeshow(){
         if(!this.isClear){
           this.$refs.singleplacemodal.show();
@@ -526,18 +513,44 @@
           this.isClear =false;
         }
       },
+      //展开栏内场地信息清除,同时清除弹窗选择
       placeClear(){
         this.isClear = true;
         this.$refs.SinglePlace.clearSelect();
       },
+      //场地确认
       placeConfirm(currentRow){
         this.$set(this.expandevent,'code',currentRow.tableno);
         this.$set(this.expandevent,'codedes',currentRow.descript);
       },
+      //显示取消原因
       reasonShown(){
         this.$refs.Reason.clearRow();
       },
+      reasonConfirm(reason){
+        let _this=this;
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.cancelevent, {
+            eventid:this.cancelRow.eventid,
+            caterid:this.caterid,
+            cancelreason:reason.code
+          }).then(function (response) {
+            if (response.data.errorCode === '0') {
+              _this.$message('事务取消成功')
+              _this.$store.dispatch("getEventList")
+            }
+          })
+        })
+      },
+      //事务项目点击
       openEvenitem(row){
+        if(row.sta==='0'){
+          this.$message.error("取消状态事务不可进行项目编辑!")
+          return;
+        }
         this.$store.commit('setCaterid',this.caterid);
         this.$store.commit('setEventid',row.eventid);
         this.$router.push({ name: '宴会事务项目'});

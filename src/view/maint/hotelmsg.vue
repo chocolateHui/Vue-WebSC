@@ -4,11 +4,11 @@
 </div>
 </template>
 <script>
-  import hotelinfoadmin from './hotelinfoadmin'
+  import hotelinfo from './hotelinfo'
     export default {
         name: "hotelmsg",
       components:{
-        hotelinfoadmin
+        hotelinfo
       }
     }
 </script>
