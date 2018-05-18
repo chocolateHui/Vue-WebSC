@@ -132,6 +132,7 @@
         bgcolorFlag:['#A0A0A0','#82AF6F','#D15B47','#9585BF','#FEE188','#D6487E','#3A87AD'],
         baseCodeListarc:[],
         salesFlag:1,
+        infoName:'11'
       }
     },
     computed: {
@@ -175,6 +176,7 @@
       },
       //销售类别拖动
       dragstart:function(event){
+        event.dataTransfer.setData("infoName"," ");
         this.dom = event.currentTarget
       },
       allowDrop:function(event){

@@ -9,8 +9,8 @@
           <span class="n3">时间</span>
           <span class="n4">修改人</span>
         </li>
-        <li class="it" v-for="(placeslist,index) in placesinfo">
-          <div v-for="infolist in placesinfo[index].bdates" class="clearfix" v-if="infolist.bdate==timelistthing1&&placeslistp==placeslist.tableno">
+        <li class="it" v-for="(placeslist,index) in placesinfo2">
+          <div v-for="infolist in placesinfo2[index].bdates" class="clearfix" v-if="infolist.bdate==timelistthing1&&placeslistp==placeslist.tableno">
             <span class="n1" :data-id="infolist.caterid">{{infolist.caterdes}}</span>
             <span class="n5">{{infolist.eventdes}}</span>
             <span class="n7" v-for="hlist in headListp" v-if="hlist.dataid==infolist.sta">{{hlist.name}}</span>
@@ -33,7 +33,8 @@
       name: "today-things",
       data(){
         return{
-           timenow:''
+           timenow:'',
+          placesinfo2:[]
         }
       },
       created(){
@@ -43,6 +44,9 @@
         ...mapGetters(['placesinfo']),
       },
       watch:{
+        placesinfo:function (val,oldval) {
+          this.placesinfo2 = Object.assign({},this.placesinfo);
+        }
       },
       props:['datatimeid','timelistthing1','placeslistp','headListp'],
       methods:{

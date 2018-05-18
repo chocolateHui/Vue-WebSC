@@ -38,7 +38,7 @@
             <b-form>
               <b-form-group class="required" label="宴会名称:"
                             horizontal>
-                <b-form-input v-model="localcatering.name" type="text" required></b-form-input>
+                <b-form-input v-model="localcatering.name" type="text"></b-form-input>
               </b-form-group>
               <b-form-group class="required" label="抵离日期:" horizontal>
                 <el-date-picker
@@ -230,7 +230,8 @@
         'catersta',
         'saleid',
         'catering',
-        'salelist'
+        'salelist',
+        'newCateringParam'
       ]),
       minDate() {
         if(!this.isNew){
@@ -258,6 +259,8 @@
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
         this.$emit('saveCatering',this.localcatering);
+        this.localcatering = {};
+        this.caterdate = [];
       },
       updateCatering(){
         if(this.catersta==='0'){
@@ -397,11 +400,18 @@
     watch: {
       catering(val,oldval){
         if(!this.isNew){
-          if(val){
-            this.localcatering = Object.assign({},val);
-            this.caterdate = [];
+          this.localcatering = Object.assign({},val);
+          this.caterdate = [];
+          if(val.hasOwnProperty('arr')){
             this.caterdate.push(val.arr,val.dep)
           }
+        }
+      },
+      newCateringParam(val){
+        if(val.hasOwnProperty('arr')){
+          this.localcatering = Object.assign({},val);
+          this.caterdate = [];
+          this.caterdate.push(val.arr,val.dep)
         }
       },
       catersta(val,oldval){
@@ -424,6 +434,9 @@
     }
     .card-header,.card-body{
       padding: 0;
+    }
+    .card-header{
+      height: 29px;
     }
     .catertitle{
       border-right: 1px solid $colorBorder;

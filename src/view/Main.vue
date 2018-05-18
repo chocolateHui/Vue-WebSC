@@ -148,7 +148,8 @@
     },
     watch: {
       //路由监听,侧边栏进行路由跳转后在这里新增tab页,把路由目标转到新的tab页上
-      '$route'(to) {
+      '$route'(to,from) {
+        let routename = from.name;
         if(to.path.indexOf("/maint/")>0){
           let index = 0;
           for (let option of this.mainRoutes) {
@@ -166,21 +167,19 @@
         }
         if(to.name==='新建宴会问询'){
           this.$store.commit('setCatering', {});
-          this.$store.commit('setCaterid', '');
           this.$store.commit('setCatersta', 'Q');
         }else if(to.name==='新建宴会预订'){
           this.$store.commit('setCatering', {});
-          this.$store.commit('setCaterid', '');
           this.$store.commit('setCatersta', '1');
         }
 
         //如果是从新建宴会跳转到宴会详情，关闭新建界面
         if(!this.isTabChange){
           if(to.path.indexOf("/catering/")>0){
-            if(this.activeIndex==='新建宴会预订'||this.activeIndex==='新建宴会问询'){
+            if(routename==='新建宴会预订'||routename==='新建宴会问询'){
               let index = 0;
               for (let option of this.mainRoutes) {
-                if (option.name === this.activeIndex) {
+                if (option.name === routename) {
                   break;
                 }
                 index++;

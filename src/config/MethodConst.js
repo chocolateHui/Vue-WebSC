@@ -35,6 +35,8 @@ const methodinfo = {
   getsaleidlist: '/PUB/saleid/getsaleidlist',
 //获取酒店信息
   gethotel:'/PUB/hotelid/gethotel',
+  //获取子酒店
+  gethotellist:'/PUB/hotelid/gethotellist',
   /*
  SC业务相关接口
  */

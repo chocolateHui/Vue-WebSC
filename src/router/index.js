@@ -11,6 +11,8 @@ const EOShare = () => import(/* webpackChunkName: "group-catering" */ '../view/c
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
 const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfo.vue')
+const Hotelmsg = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelmsg.vue')
+const Hotelchild = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelchild.vue')
 const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 const BaseCode = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/BaseCode.vue')
@@ -18,11 +20,9 @@ const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../vi
 const placeDistribution = () => import(/* webpackChunkName: "group-place" */ '../view/placeDistribution.vue')
 const placeList = () => import(/* webpackChunkName: "group-place" */ '../components/PlaceDistribution/placeList.vue')
 const index = () => import(/* webpackChunkName: "group-main" */ '../view/Index.vue')
-const pccodeinfo = () => import(/* webpackChunkName: "group-main" */ '../view/maint/pccodeinfo.vue')
-const sciteminfo = () => import(/* webpackChunkName: "group-main" */ '../view/maint/sciteminfo.vue')
 const caterList = () => import(/* webpackChunkName: "group-main" */ '../view/CaterList.vue')
 const Maint = () => import(/* webpackChunkName: "group-maint" */ '../view/Maint.vue')
-const sceventitem = () => import(/* webpackChunkName: "group-main" */ '../view/maint/ScEventItem.vue')
+const pccodeinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/pccodeinfo.vue')
 
 Vue.use(Router)
 
@@ -75,31 +75,28 @@ const router = new Router({
           }
         },
         {
-          path: '/main/catering/cateringInfo/:caterid',
+          path: '/main/catering/cateringInfo',
           name: '宴会预订详情',
           component: CateringInfo,
           meta: {
             keepAlive: true // 需要被缓存
-          },
-          props: true
+          }
         },
         {
           path: '/main/catering/eventItem',
           name: '宴会事务项目',
-          component: sceventitem,
+          component: Template,
           meta: {
             keepAlive: true // 需要被缓存
-          },
-          props: true
+          }
         },
         {
-          path: '/main/EOShare/:caterid',
+          path: '/main/EOShare',
           name: '宴会预订EO单',
           component: EOShare,
           meta: {
             keepAlive: false // 需要被缓存
-          },
-          props: true
+          }
         },
         {
           path: '/main/place/placeDistribution',
@@ -156,12 +153,17 @@ const router = new Router({
             {
               path: '/main/maint/hotelinfo',
               name: '酒店信息',
-              component: Hotelinfo
+              component: Hotelmsg
             },
             {
               path: '/main/maint/empnoinfo',
               name: '用户管理',
               component: Empnoinfo
+            },
+            {
+              path: '/main/maint/hotelchild',
+              name: '岗位设置',
+              component: Hotelchild
             },
             {
               path: '/main/maint/hoteldept',
@@ -181,7 +183,7 @@ const router = new Router({
             {
               path: '/main/maint/item',
               name: '宴会项目',
-              component: sciteminfo
+              component: Hotelinfo
             },
             {
               path: '/main/maint/basecode/:cat',
@@ -209,7 +211,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(new Date().getTime())
   loadingInstance = router.app.$loading.service({ fullscreen: true, background: 'rgba(0, 0, 0, 0.7)' })
   if (to.path.indexOf('/login') < 0) {
     // this route requires auth, check if logged in
@@ -238,7 +239,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  console.log(new Date().getTime())
   loadingInstance.close()
 })
 

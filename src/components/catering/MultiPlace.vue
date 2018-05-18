@@ -235,9 +235,6 @@
       placelist(val,oldval){
         this.items = val;
       },
-      eventbdate(val,oldval){
-        console.log(val)
-      },
       searchitems(val){
         if(this.filterValue==='' || !this.filterValue){
           this.placecount = this.items.length

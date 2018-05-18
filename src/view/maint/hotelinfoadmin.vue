@@ -131,16 +131,6 @@
                   </el-option>
                 </el-select>
               </b-form-group>
-              <!--<b-form-group label="片&#8194;&#8194;&#8194;&#8194;区:" horizontal>-->
-                <!--<el-select v-model="hoteInfo.area" placeholder="请选择">-->
-                  <!--<el-option-->
-                    <!--v-for="item in city"-->
-                    <!--:key="item.id"-->
-                    <!--:label="item.name"-->
-                    <!--:value="item.id">-->
-                  <!--</el-option>-->
-                <!--</el-select>-->
-              <!--</b-form-group>-->
               <b-form-group label="邮&#8194;&#8194;&#8194;&#8194;件:" horizontal>
                 <b-form-input
                   type="text"
@@ -188,7 +178,7 @@
             <b-form-group label="描&#8194;&#8194;&#8194;&#8194;述:" horizontal>
               <b-form-textarea id="textarea1"
                                v-model="hoteInfo.remark "
-                               :rows="2"
+                               :rows="4"
                                :max-rows="6">
               </b-form-textarea>
             </b-form-group>
@@ -300,6 +290,7 @@
   }
   .infofoot{
     padding-top: 30px;
+    padding-bottom: 20px;
     .col{
       .btn{
         float: right;
@@ -321,6 +312,9 @@
   }
   .form-control,.el-input--suffix .el-input__inner{
     height: 35px;
+  }
+  #textarea1{
+    height: 70px !important;
   }
   .el-select{
     width: 100%;
