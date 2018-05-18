@@ -142,8 +142,8 @@
 
 
       </el-tabs>
-      <b-modal id="logmodal" ref="myModalRef2"  size="lg" title="宴会备注" hide-footer>
-        <sysLog @onhide="onhide"></sysLog>
+      <b-modal id="remarkmodal" ref="remarkmodal"  size="lg" title="宴会备注" hide-footer>
+        <sysLog></sysLog>
       </b-modal>
   </div>
 </template>
@@ -338,20 +338,15 @@
         this.$store.commit('setCaterid',row.caterid);
         this.$router.push({ name: '宴会预订详情'});
       },
-      onhide() {
-        this.$refs.myModalRef2.hide()
-      },
-
       remarkshow:function (row) {
         var caterinfo = {};
         caterinfo["caterid"] = row.caterid;
         caterinfo["type"] = "1";
-        // caterinfo["caterdes"] = row.name;
+
         this.$store.commit('setCaterdes',row.name);
         this.$store.commit('setCaterinfo',caterinfo);
-        // this.$set(this.remark,"caterid",row.caterid);
-        // this.$set(this.remark,"caterdes",row.name);
-        this.$refs.myModalRef2.show()
+
+        this.$refs.remarkmodal.show()
       },
     },
     computed: {
