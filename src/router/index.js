@@ -11,7 +11,8 @@ const EOShare = () => import(/* webpackChunkName: "group-catering" */ '../view/c
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
 const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfo.vue')
-const Hotelinfoadmin = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfoadmin.vue')
+const Hotelmsg = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelmsg.vue')
+const Hotelchild = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelchild.vue')
 const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 const BaseCode = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/BaseCode.vue')
@@ -152,12 +153,17 @@ const router = new Router({
             {
               path: '/main/maint/hotelinfo',
               name: '酒店信息',
-              component: Hotelinfoadmin
+              component: Hotelmsg
             },
             {
               path: '/main/maint/empnoinfo',
               name: '用户管理',
               component: Empnoinfo
+            },
+            {
+              path: '/main/maint/hotelchild',
+              name: '岗位设置',
+              component: Hotelchild
             },
             {
               path: '/main/maint/hoteldept',
