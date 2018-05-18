@@ -8,7 +8,7 @@ import methodinfo from '../../config/MethodConst.js'
 // initial state
 const state = {
   token: null,
-  tokentime:null,
+  tokentime: null,
   signature: null,
   secretkey: '',
   loginerror: ''
@@ -29,21 +29,22 @@ const getters = {
 const actions = {
   encrypttoken: function (store) {
     return new Promise((resolve, reject) => {
-      let username = store.getters.username;
+      let username = store.getters.username
       let time = new Date().getTime()
-      let content = username + 0 + time + state.token;
-      let key = CryptoJS.enc.Latin1.parse(state.secretkey);
-      let encrypted = CryptoJS.AES.encrypt(content, key,{
-        iv:key,
-        mode:CryptoJS.mode.CBC,
-        padding:CryptoJS.pad.Pkcs7});
+      let content = username + 0 + time + state.token
+      let key = CryptoJS.enc.Latin1.parse(state.secretkey)
+      let encrypted = CryptoJS.AES.encrypt(content, key, {
+        iv: key,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+      })
       store.commit('setSignature', encrypted.toString())
       resolve()
     })
   },
   gettoken: function (store, tokenparam) {
-    let password = tokenparam.password;
-    let secret = CryptoJS.MD5(password).toString();
+    let password = tokenparam.password
+    let secret = CryptoJS.MD5(password).toString()
     return new Promise((resolve, reject) => {
       axiosinstance.get(methodinfo.auth, {
         params: {
@@ -62,7 +63,7 @@ const actions = {
             resolve()
           } else {
             store.commit('setLoginerror', response.data.errorMessage)
-            reject()
+            reject(response.data.errorMessage)
           }
         }
       })
@@ -74,7 +75,7 @@ const actions = {
 const mutations = {
   setToken (state, token) {
     state.token = token
-    state.tokentime = new Date().getTime();
+    state.tokentime = new Date().getTime()
   },
   setSecretkey (state, secretkey) {
     state.secretkey = secretkey

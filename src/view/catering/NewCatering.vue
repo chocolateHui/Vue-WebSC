@@ -1,7 +1,7 @@
 <template>
   <div>
     <CateringInfo isNew @saveCatering="saveCatering"></CateringInfo>
-    <NewEvent :toggleshow="toggleshow" ref="newevent"></NewEvent>
+    <NewEvent isNew :toggleshow="toggleshow" :eventshow="eventshow" ref="newevent"></NewEvent>
   </div>
 </template>
 
@@ -18,6 +18,7 @@
   export default {
     data () {
       return {
+        eventshow:true,
         toggleshow:false,
         isNew:true
       };
@@ -70,6 +71,7 @@
               loading.close();
             }, 300);
           }
+          this.eventshow = true;
         })
       }
     },

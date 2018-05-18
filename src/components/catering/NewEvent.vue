@@ -1,6 +1,6 @@
 <template>
   <b-container fluid>
-    <b-collapse :visible="eventshow" id="newevent">
+    <b-collapse @shown="collapseShow(true)" @hidden="collapseShow(false)" visible :id="id">
       <b-card header-tag="header">
         <b-row slot="header">
           <b-col sm="1" class="my-1 eventtitle">
@@ -215,6 +215,7 @@
     name: 'NewEvent',
     data () {
       return {
+        id:'newevent',
         newEvent:{
           sta:'1',
           stdunit:'0'
@@ -236,6 +237,7 @@
         isClear:false,
         priceread:true,
         editable:false,
+        isOpen:true,
         datepickerOptions: {
           disabledDate(time) {
             let now =new Date(new Date() - 24 * 60 * 60 * 1000)
@@ -249,6 +251,13 @@
         type:Boolean,
         default:false
       },
+      eventshow:{
+        type:Boolean
+      },
+      isNew:{
+        type:Boolean,
+        default:false
+      }
     },
     computed: {
       ...mapGetters([
@@ -260,15 +269,42 @@
         'typeoptions',
         'priceoptions',
         'layoutoptions',
-        'degreeoptions'
-      ]),
-      eventshow:function () {
-        return !this.caterid;
+        'degreeoptions',
+        'newEventParam'
+      ])
+    },
+    mounted(){
+      if(this.eventshow){
+        this.id='newCaterEvent'
+      }
+      if(this.newEventParam.hasOwnProperty('code')){
+        this.initEventParam();
+      }else{
+        this.newEvent ={
+          sta:'1',
+          stdunit:'0'
+        }
       }
     },
-    created(){
-    },
     methods: {
+      collapseShow(open){
+        this.isOpen = open;
+      },
+      initEventParam(){
+        let eventparam = this.newEventParam;
+        this.eventbdate= [];
+        this.eventtime= [];
+        this.eventbdate.push(eventparam.begindate,eventparam.enddate)
+        this.eventtime.push(eventparam.begintime,eventparam.endtime)
+        this.newEvent = Object.assign({},this.newEvent ,eventparam)
+        this.$store.commit('setNewEventParam',{});
+        console.log(this.isOpen)
+        console.log(this.eventshow)
+        console.log(!this.isOpen&&!this.eventshow)
+        if(!this.isOpen&&!this.eventshow){
+          this.$root.$emit('bv::toggle::collapse','newevent')
+        }
+      },
       eventCheck(catering){
         return new Promise((resolve, reject) => {
           let _this=this;
@@ -435,16 +471,25 @@
     },
     watch:{
       catersta(val, oldval){
+        if(val!==oldval&&!this.catering.hasOwnProperty('name')){
+
+        }
         if(this.catersta==='1'||this.catersta==='Q'){
           this.$set(this.newEvent,'sta',this.catersta)
         }
         if(this.catersta==='2'){
-          this.staoptions.push({ code: '2', descript: '确认' });
+          this.staoptions = [{ code: 'Q', descript: '问询' },{ code: '1', descript: '预订' },{ code: '2', descript: '确认' }];
         }
       },
       catering(val,oldval){
-        if(val){
+        if(val.hasOwnProperty('name')&&!this.isNew){
           this.$set(this.newEvent,'descript',val.name)
+          if(this.isOpen&&!(this.newEventParam.hasOwnProperty('code')||this.newEvent.hasOwnProperty('code'))){
+            this.$root.$emit('bv::toggle::collapse','newevent')
+          }
+        }
+        if(this.newEventParam.hasOwnProperty('code')){
+          this.initEventParam();
         }
       },
       defaulttype(val){
@@ -456,7 +501,7 @@
   }
 </script>
 <style lang="scss">
-  #newevent {
+  #newevent,#newCaterEvent {
     font-size: 0.9rem;
     input{
       font-size: 0.9rem;
@@ -473,6 +518,7 @@
     .card-header{
       background-color: #99a2f5;
       color: white;
+      height: 27px;
     }
     .col-sm-6,.col-sm-9,.col-sm-10,.col-sm-12{
       padding: 0;

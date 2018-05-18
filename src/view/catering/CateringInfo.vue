@@ -1,7 +1,7 @@
 <template>
   <div id="Catering">
     <CateringInfo @updateCatering="updateCatering" :caterid="caterid"></CateringInfo>
-    <NewEvent ref="newevent" :caterid="caterid" :eventshow="eventshow" :toggleshow="toggleshow"></NewEvent>
+    <NewEvent ref="newevent" :eventshow="false" :toggleshow="toggleshow"></NewEvent>
     <b-button v-b-toggle.newevent class="newEventbtn">新建事务</b-button>
     <el-tabs type="border-card">
       <el-tab-pane label="事务列表">
@@ -55,6 +55,7 @@
             this.$store.dispatch("getReasonList");
             this.isNew = false;
           }
+          this.eventshow = false;
           this.$store.dispatch("getCateringInfo")
           this.$store.dispatch("getEventList");
           this.$store.dispatch("getRoomList");

@@ -5,36 +5,19 @@
       <b-row  style="font-size: 12px">
         <b-col sm="4" class="my-1 paddingright0">
           <b-input-group prepend="宴会">
-            <b-form-input
-              type="text"
-            v-model="localcaterdes"
-            required
-            :disabled="show.pccodedisabled"
-            @input.native="updateValue"
-            placeholder="">
+            <b-form-input type="text" v-model="localcaterdes" :disabled="show.pccodedisabled" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
         <b-col sm="4" class="my-1 paddingright0">
           <b-input-group prepend="事务" >
-            <b-form-input
-              type="text"
-              v-model="localeventdes"
-              required
-              :disabled="show.descriptdisabled"
-              @input.native="updateValue"
-              placeholder="">
+            <b-form-input type="text" v-model="localeventdes" :disabled="show.descriptdisabled" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
         <b-col sm="4" class="my-1 paddingright0">
           <b-input-group prepend="排序">
-            <b-form-input
-              type="text"
-              v-model="localscnotes.seq"
-              required
-              :disabled="show.descript1disabled"
-              placeholder="">
+            <b-form-input type="text" v-model="localscnotes.seq" :disabled="show.descript1disabled" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
@@ -42,42 +25,25 @@
       <b-row  style="font-size: 1rem">
         <b-col sm="4" class="my-1 paddingright0">
           <b-input-group prepend="标题">
-            <b-form-input
-              type="text"
-              v-model="localscnotes.title"
-              :disabled="show.descript2disabled"
-              required
-              placeholder="">
+            <b-form-input type="text" v-model="localscnotes.title" :disabled="show.descript2disabled" required placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
         <b-col sm="4" class="my-1 paddingright0">
           <b-form-group horizontal :label-cols="4" label="显示在EO单" class="mb-0">
-            <b-form-checkbox id="checkbox1"
-                             v-model="localscnotes.flag"
-                             value="T"
-                             unchecked-value="F">
+            <b-form-checkbox id="checkbox1" v-model="localscnotes.flag" value="T" unchecked-value="F">
             </b-form-checkbox>
           </b-form-group>
         </b-col>
         <b-col sm="4" class="my-1 paddingright0">
           <b-input-group prepend="备注时间">
-            <b-form-input
-              type="text"
-              v-model="localscnotes.date0"
-              :disabled="show.tablesdisabled"
-              required
-              placeholder="">
+            <b-form-input type="text" v-model="localscnotes.date0"readonly placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px">
-        <b-form-textarea id="textarea1"
-                         v-model="localscnotes.content"
-                         placeholder="Enter something"
-                         :rows="12"
-                         :max-rows="12">
+        <b-form-textarea id="textarea1" v-model="localscnotes.content" :rows="12" :max-rows="12">
         </b-form-textarea>
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px;float: right">
@@ -107,10 +73,7 @@
       }
     },
     props:{
-      // remark: {
-      //   type:Object
-      // },
-      // num:Number
+
     },
     created(){
       // console.log("a");
@@ -140,54 +103,32 @@
         }
       },
       scnote:function (val,oldval) {
-
-        if(val==oldval){
-          this.localscnotes = Object.assign({},val);
-        }else{
-          this.localscnotes = Object.assign({},val);
-        }
-
+        this.localscnotes = Object.assign({},val);
       },
     },
     computed: {
       ...mapGetters([
-        'caterinfo',
-        'caterdes',
-        'eventdes',
         "scnote"
       ]),
     },
     methods: {
-      updateValue(event) {
-        if(!event.isComposing){
-          return event.data;
-        }else{
-          event.preventDefault();
-        }
-      },
       getremark(){
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch("getScNotots").then(() => {
           }).catch(function (errorMessage) {
+            this.$message.error(errorMessage)
           })
          });
         },
       close:function(){
-        this.$emit('onhide');
+        this.$root.$emit('bv::hide::modal','remarkmodal')
       },
       updatescnotes(){
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.updatescnoteinfo, {
-            uuid: this.localscnotes.uuid,
-            title: this.localscnotes.title,
-            content:this.localscnotes.content,
-            type:this.localscnotes.type,
-            sta:this.localscnotes.sta,
-            eoprinted:this.localscnotes.eoprinted
-          }).then((response)=> {
+          this.$http.post(methodinfo.updatescnoteinfo, this.localscnotes).then((response)=> {
               if(response.data.errorCode==="0"){
                 this.$message({
                   type: '保存',
@@ -217,24 +158,14 @@
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.newscnoteinfo, {
-            blockid: this.localscnotes.blockid,
-            caterid: this.localscnotes.caterid,
-            eventid: this.localscnotes.eventid,
-            itemid: this.localscnotes.itemid,
-            type:this.localscnotes.type,
-            title: this.localscnotes.title,
-            content:this.localscnotes.content,
-            date0:formatDate(new Date(),"yyyy-MM-dd hh:mm:ss"),
-            flag:this.localscnotes.flag,
-            seq:this.localscnotes.seq
-          }).then((response)=> {
+          this.localscnotes.date0=formatDate(new Date(),"yyyy-MM-dd hh:mm:ss");
+          this.$http.post(methodinfo.newscnoteinfo, this.localscnotes).then((response)=> {
               if(response.data.errorCode==="0"){
                 this.$message({
                   type: '新建',
                   message: '新建成功!'
                 });
-                this.$emit('onhide');
+                this.$root.$emit('bv::hide::modal','remarkmodal')
                 this.getremark()
               }
               else{
@@ -248,7 +179,6 @@
         })
       },
       savescnotes:function(){
-        var url = "";
         if(this.localscnotes.isnew==="F"){
           this.updatescnotes();
         }

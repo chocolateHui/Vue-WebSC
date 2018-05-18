@@ -201,7 +201,7 @@
       </el-table-column>
       <el-table-column label="操作" width="140">
         <template slot-scope="scope">
-          <b-button size="mini" class="Item-button image-btn" type="danger" ></b-button>
+          <b-button size="mini" class="Item-button image-btn" @click="openEvenitem(scope.row)" type="danger" ></b-button>
           <b-button size="mini" class="Synchronization-button image-btn" type="danger" ></b-button>
           <b-button size="mini" class="Journal-button image-btn" type="danger" ></b-button>
           <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="cancelEvent(scope.row)"></b-button>
@@ -525,7 +525,12 @@
       },
       reasonShown(){
         this.$refs.Reason.clearRow();
-      }
+      },
+      openEvenitem(row){
+        this.$store.commit('setCaterid',this.caterid);
+        this.$store.commit('setEventid',row.eventid);
+        this.$router.push({ name: '宴会事务项目'});
+      },
     },
     components: {
       sysLog,
@@ -577,9 +582,10 @@
       margin-right: 0;
       margin-left: 0;
     }
+    .el-table__empty-block{
+      border-bottom: 1px solid #dee2e6;
+    }
     .sum-row{
-      border-top: 1px solid #dee2e6;
-      margin-top: 6px;
       .sumlabel{
         margin-top: 5px;
         margin-bottom: 0;

@@ -136,7 +136,7 @@
       }
     },
     computed: {
-      ...mapGetters(['baseCodeList']),
+      ...mapGetters(['diaryItemList']),
       ...mapGetters(['salelist']),
       ...mapGetters(['guestdiarylist']),
       ...mapGetters(['guestDiary']),

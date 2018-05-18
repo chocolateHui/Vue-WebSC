@@ -160,10 +160,10 @@
       <div class="wh_content">
         <div class="wh_content_item" v-for="(item,index) in list" @click="clickDay(item,index)">
           <div>
-            <li class="wh_nextDayShow" v-if="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" v-bind:class="{wh_isToday:item.isTodayNow}">
+            <li class="wh_nextDayShow" v-if="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" :class="{wh_isToday:item.isTodayNow}">
               {{item.id}}<br/>{{item.lun}}
             </li>
-            <li v-else="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" v-bind:class="{ wh_isToday: item.isToday,wh_isMark:item.isMark,isTodayNow:item.isTodayNow}">
+            <li v-else="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" :class="{ wh_isToday: item.isToday,wh_isMark:item.isMark,isTodayNow:item.isTodayNow}">
               {{item.id}}<br/>{{item.lun}}
             </li>
           </div>

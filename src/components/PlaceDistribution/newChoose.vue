@@ -112,59 +112,63 @@
           this.ifCaterChoose=list.caterid
         },
         addThing:function () {
-          if(this.ifCaterChoose==''){
+          if(this.ifCaterChoose===''){
             this.$message({
               message: "请选择宴会",
               type: "warning"
             });
           }else{
-            var paramNewEvent={
+            let paramNewEvent={
               begindate:this.newChooseTime,
               enddate:this.newChooseTime,
-              begintime:this.pintime,
-              endtime:this.pouttime,
-              place:this.newChooseAddrNo,
-              placedes:this.newChooseAddr
+              begintime:this.eventtime[0],
+              endtime:this.eventtime[1],
+              code:this.newChooseAddrNo,
+              codedes:this.newChooseAddr
             }
-            console.log(this.ifCaterChoose)
             this.$store.commit('setCaterid',this.ifCaterChoose);
+            this.$store.commit('setNewEventParam',paramNewEvent);
             this.$emit('closeChoose')
             this.$router.push({ name: '宴会预订详情'})
           }
         },
         addInquiry:function () {
-          var paramNewEvent={
+          let paramNewEvent={
             begindate:this.newChooseTime,
             enddate:this.newChooseTime,
             begintime:this.eventtime[0],
             endtime:this.eventtime[1],
-            place:this.newChooseAddrNo,
-            placedes:this.newChooseAddr
+            code:this.newChooseAddrNo,
+            codedes:this.newChooseAddr
           };
-          var paramNewCatering={
-            begindate:this.newChooseTime,
-            enddate:this.newChooseTime,
+          let paramNewCatering={
+            arr:this.newChooseTime,
+            dep:this.newChooseTime,
           };
           this.catersta='Q'
           this.$emit('closeChoose')
           this.$router.push({name:'新建宴会问询'})
+          this.$store.commit('setNewCateringParam',paramNewCatering);
+          this.$store.commit('setNewEventParam',paramNewEvent);
         },
         addBook:function () {
-          var paramNewEvent={
+          let paramNewEvent={
             begindate:this.newChooseTime,
             enddate:this.newChooseTime,
             begintime:this.eventtime[0],
             endtime:this.eventtime[1],
-            place:this.newChooseAddrNo,
-            placedes:this.newChooseAddr
+            code:this.newChooseAddrNo,
+            codedes:this.newChooseAddr
           }
-          var paramNewCatering={
-            begindate:this.newChooseTime,
-            enddate:this.newChooseTime,
+          let paramNewCatering={
+            arr:this.newChooseTime,
+            dep:this.newChooseTime,
           }
           this.catersta='R'
           this.$emit('closeChoose')
           this.$router.push({name:'新建宴会预订'})
+          this.$store.commit('setNewCateringParam',paramNewCatering);
+          this.$store.commit('setNewEventParam',paramNewEvent);
         },
          btntimehide:function (val) {
           for(let option of this.timechoose){
