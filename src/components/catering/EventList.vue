@@ -203,7 +203,7 @@
         <template slot-scope="scope">
           <b-button size="mini" class="Item-button image-btn" @click="openEvenitem(scope.row)" type="danger" ></b-button>
           <b-button size="mini" class="Synchronization-button image-btn" type="danger" ></b-button>
-          <b-button size="mini" class="Journal-button image-btn" type="danger" ></b-button>
+          <b-button size="mini" class="Journal-button image-btn" type="danger" @click="showNote(scope.row)"></b-button>
           <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="cancelEvent(scope.row)"></b-button>
         </template>
       </el-table-column>
@@ -239,8 +239,8 @@
       <sysLog></sysLog>
     </b-modal>
 
-    <b-modal id="remarkModal" size="lg" ref="remarkModal" title="宴会备注" hide-footer>
-      <!--<remark ref="caterRemark"></remark>-->
+    <b-modal id="remarkmodal" size="lg" ref="remarkmodal" title="宴会备注" hide-footer>
+      <remark></remark>
     </b-modal>
   </div>
 </template>
@@ -507,6 +507,17 @@
             return;
           }
         }
+      },
+      showNote(row){
+        let remarkinfo = {
+          caterid:this.catering.caterid,
+          caterdes:this.catering.name,
+          eventid:row.eventid,
+          eventdes:row.descript,
+          type:2
+        };
+        this.$store.commit('setNoteParam',remarkinfo);
+        this.$refs.remarkmodal.show();
       },
       placeshow(){
         if(!this.isClear){

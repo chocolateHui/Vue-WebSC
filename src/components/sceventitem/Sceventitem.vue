@@ -358,16 +358,16 @@
           });
           return;
         }
-        var caterinfo = {};
-        caterinfo["caterid"] = this.caterid;
-        caterinfo["eventid"] = this.sceventitemeventid;
-        caterinfo["itemid"] = parseInt(this.selectbm);
-        caterinfo["type"] = "3";
-        this.$store.commit('setCaterdes',this.catering.name);
-        this.$store.commit('setEventdes',this.eventdes);
-        this.$store.commit('setCaterinfo',caterinfo);
+        let remarkinfo = {
+          caterid:this.caterid,
+          caterdes:this.catering.name,
+          eventid:this.sceventitemeventid,
+          eventdes:this.eventde,
+          itemid:parseInt(this.selectbm),
+          type:"3"
+        };
+        this.$store.commit('setNoteParam',remarkinfo);
         this.$refs.remarkmodal.show()
-
       },
 
       deletel:function (row) {

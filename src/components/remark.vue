@@ -3,41 +3,40 @@
   <div id="remark">
     <b-container fluid>
       <b-row  style="font-size: 12px">
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="5" class="my-1 paddingright0">
           <b-input-group prepend="宴会">
-            <b-form-input type="text" v-model="localcaterdes" :disabled="show.pccodedisabled" placeholder="">
+            <b-form-input type="text" :value="Titleinfo.caterdes" :readonly="show.pccodedisabled" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="5" class="my-1 paddingright0">
           <b-input-group prepend="事务" >
-            <b-form-input type="text" v-model="localeventdes" :disabled="show.descriptdisabled" placeholder="">
+            <b-form-input type="text" :value="Titleinfo.eventdes" :readonly="show.descriptdisabled" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="2" class="my-1 paddingright0">
           <b-input-group prepend="排序">
-            <b-form-input type="text" v-model="localscnotes.seq" :disabled="show.descript1disabled" placeholder="">
-            </b-form-input>
+            <FormatInput type="number" maxlength="5" v-model="localscnotes.seq"></FormatInput>
           </b-input-group>
         </b-col>
       </b-row>
       <b-row  style="font-size: 1rem">
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="5" class="my-1 paddingright0">
           <b-input-group prepend="标题">
-            <b-form-input type="text" v-model="localscnotes.title" :disabled="show.descript2disabled" required placeholder="">
+            <b-form-input type="text" v-model="localscnotes.title" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
-        <b-col sm="4" class="my-1 paddingright0">
-          <b-form-group horizontal :label-cols="4" label="显示在EO单" class="mb-0">
+        <b-col sm="3" class="my-1 paddingright0">
+          <b-form-group horizontal :label-cols="6" label="显示在EO单" class="mb-0">
             <b-form-checkbox id="checkbox1" v-model="localscnotes.flag" value="T" unchecked-value="F">
             </b-form-checkbox>
           </b-form-group>
         </b-col>
         <b-col sm="4" class="my-1 paddingright0">
           <b-input-group prepend="备注时间">
-            <b-form-input type="text" v-model="localscnotes.date0"readonly placeholder="">
+            <b-form-input type="text" v-model="localscnotes.date0" readonly placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
@@ -58,6 +57,10 @@
   import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../config/MethodConst.js'
   import {formatDate} from '../common/date'
+
+  // 组件和参数
+  import FormatInput from './FormatInput.vue'
+
   const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
   const newshow = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
 
@@ -68,8 +71,7 @@
         show: show,
         localscnotes:{},
         ty:"",
-        localcaterdes:"",
-        localeventdes:"",
+        Titleinfo:{},
       }
     },
     props:{
@@ -82,44 +84,51 @@
 
     watch: {
       ty:function (val,oldval) {
-        if(this.ty=="new"){
+        if(this.ty==="new"){
           this.show= show;
         }else{
           this.show=  newshow;
         }
       },
-      caterinfo:function (val,oldval) {
-        if(val==oldval){
-
-          this.localcaterdes =  this.caterdes.toString();
-          this.localeventdes = this.eventdes.toString();
-          this.localscnotes = Object.assign({},this.scnote);
-        }else{
-
-          this.localcaterdes =  this.caterdes.toString();
-          this.localeventdes =  this.eventdes.toString();
-
-          this.getremark();
-        }
-      },
-      scnote:function (val,oldval) {
-        this.localscnotes = Object.assign({},val);
+      noteparam:function (val,oldval) {
+        this.Titleinfo = Object.assign({},val);
+        this.getremark();
       },
     },
     computed: {
       ...mapGetters([
-        "scnote"
+        "noteparam"
       ]),
     },
     methods: {
       getremark(){
+        let _this = this;
         this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch("getScNotots").then(() => {
-          }).catch(function (errorMessage) {
-            this.$message.error(errorMessage)
-          })
-         });
-        },
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.getscnotelist, {
+              caterid: this.noteparam.caterid,
+              eventid: this.noteparam.eventid,
+              itemid: this.noteparam.itemid,
+              type: this.noteparam.type
+            }).then(function (response) {
+              if (response.data.errorCode === '0') {
+                if (typeof (response.data.notes) !== 'undefined') {
+                  let type = response.data.notes[0]
+                  type['isnew'] = 'F'
+                  _this.localscnotes = type;
+                } else {
+                  let type = _this.noteparam
+                  type['isnew'] = 'T'
+                  _this.localscnotes = Object.assign({},type);
+                }
+              } else {
+                this.$message(response.data.errorMessage)
+              }
+            })
+        })
+      },
       close:function(){
         this.$root.$emit('bv::hide::modal','remarkmodal')
       },
@@ -187,8 +196,10 @@
         }
 
       }
-      }
-
+    },
+    components: {
+      FormatInput
+    },
   }
 </script>
 <style lang="scss" type="text/scss">
@@ -207,8 +218,14 @@
     .custom-control {
       min-height: 0.6rem;
     }
+    .form-control[readonly]{
+      background-color: white;
+    }
     .form-row > .col, .form-row > [class*="col-"] {
       padding-right: 0px;
+    }
+    #textarea1{
+      height: 300px;
     }
   }
 </style>

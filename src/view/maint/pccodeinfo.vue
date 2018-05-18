@@ -241,7 +241,6 @@
 </template>
 
 <script>
-  import sysLog from  '../../components/remark.vue'
   import Numberinput from  '../../components/FormatInput.vue'
   import methodinfo from '../../config/MethodConst.js'
   const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
@@ -748,7 +747,6 @@
 
     },
     components: {
-      sysLog,
       Numberinput
     },
     watch: {
