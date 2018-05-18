@@ -254,6 +254,10 @@
       eventshow:{
         type:Boolean,
         default:true
+      },
+      isNew:{
+        type:Boolean,
+        default:false
       }
     },
     computed: {
@@ -466,6 +470,9 @@
     },
     watch:{
       catersta(val, oldval){
+        if(val!==oldval&&!this.catering.hasOwnProperty('name')){
+
+        }
         if(this.catersta==='1'||this.catersta==='Q'){
           this.$set(this.newEvent,'sta',this.catersta)
         }
@@ -474,13 +481,14 @@
         }
       },
       catering(val,oldval){
-        if(val.hasOwnProperty('name')){
+        if(val.hasOwnProperty('name')&&!this.isNew){
           this.$set(this.newEvent,'descript',val.name)
           if(!this.newEventParam.hasOwnProperty('code')){
             this.$root.$emit('bv::toggle::collapse','newevent')
-          }else{
-            this.initEventParam();
           }
+        }
+        if(this.newEventParam.hasOwnProperty('code')){
+          this.initEventParam();
         }
       },
       defaulttype(val){

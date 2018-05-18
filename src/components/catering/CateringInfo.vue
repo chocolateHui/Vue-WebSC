@@ -259,6 +259,8 @@
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
         this.$emit('saveCatering',this.localcatering);
+        this.localcatering = {};
+        this.caterdate = [];
       },
       updateCatering(){
         if(this.catersta==='0'){
@@ -397,10 +399,12 @@
     },
     watch: {
       catering(val,oldval){
-        this.localcatering = Object.assign({},val);
-        this.caterdate = [];
-        if(val.hasOwnProperty('arr')){
-          this.caterdate.push(val.arr,val.dep)
+        if(!this.isNew){
+          this.localcatering = Object.assign({},val);
+          this.caterdate = [];
+          if(val.hasOwnProperty('arr')){
+            this.caterdate.push(val.arr,val.dep)
+          }
         }
       },
       newCateringParam(val){
@@ -430,6 +434,8 @@
     }
     .card-header,.card-body{
       padding: 0;
+    }
+    .card-header{
       height: 29px;
     }
     .catertitle{

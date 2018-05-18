@@ -1,7 +1,7 @@
 <template>
   <div>
     <CateringInfo isNew @saveCatering="saveCatering"></CateringInfo>
-    <NewEvent :toggleshow="toggleshow" :eventshow="eventshow" ref="newevent"></NewEvent>
+    <NewEvent isNew :toggleshow="toggleshow" :eventshow="eventshow" ref="newevent"></NewEvent>
   </div>
 </template>
 
