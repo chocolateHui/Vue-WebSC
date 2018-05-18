@@ -237,7 +237,7 @@
         isClear:false,
         priceread:true,
         editable:false,
-        isOpen:false,
+        isOpen:true,
         datepickerOptions: {
           disabledDate(time) {
             let now =new Date(new Date() - 24 * 60 * 60 * 1000)
@@ -252,8 +252,7 @@
         default:false
       },
       eventshow:{
-        type:Boolean,
-        default:true
+        type:Boolean
       },
       isNew:{
         type:Boolean,
@@ -278,7 +277,7 @@
       if(this.eventshow){
         this.id='newCaterEvent'
       }
-      if(this.newEventParam.hasOwnProperty('begindate')){
+      if(this.newEventParam.hasOwnProperty('code')){
         this.initEventParam();
       }else{
         this.newEvent ={
@@ -299,6 +298,8 @@
         this.eventtime.push(eventparam.begintime,eventparam.endtime)
         this.newEvent = Object.assign({},this.newEvent ,eventparam)
         this.$store.commit('setNewEventParam',{});
+        console.log(this.isOpen)
+        console.log(this.eventshow)
         console.log(!this.isOpen&&!this.eventshow)
         if(!this.isOpen&&!this.eventshow){
           this.$root.$emit('bv::toggle::collapse','newevent')
@@ -483,7 +484,7 @@
       catering(val,oldval){
         if(val.hasOwnProperty('name')&&!this.isNew){
           this.$set(this.newEvent,'descript',val.name)
-          if(!this.newEventParam.hasOwnProperty('code')){
+          if(this.isOpen&&!(this.newEventParam.hasOwnProperty('code')||this.newEvent.hasOwnProperty('code'))){
             this.$root.$emit('bv::toggle::collapse','newevent')
           }
         }
@@ -517,6 +518,7 @@
     .card-header{
       background-color: #99a2f5;
       color: white;
+      height: 27px;
     }
     .col-sm-6,.col-sm-9,.col-sm-10,.col-sm-12{
       padding: 0;
