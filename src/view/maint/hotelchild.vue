@@ -28,13 +28,13 @@
       </b-col>
     </b-row>
   </b-container>
-  <hotelinfoadmin></hotelinfoadmin>
+  <hotelinfo></hotelinfo>
 </div>
 </template>
 
 <script>
   import methodinfo from '../../config/MethodConst.js'
-  import hotelinfoadmin from './hotelinfo'
+  import hotelinfo from './hotelinfo'
   export default {
     name: "hotelchild",
     data(){

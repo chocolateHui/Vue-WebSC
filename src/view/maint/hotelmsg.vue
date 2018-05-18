@@ -1,6 +1,6 @@
 <template>
 <div>
-  <hotelinfoadmin></hotelinfoadmin>
+  <hotelinfo></hotelinfo>
 </div>
 </template>
 <script>
