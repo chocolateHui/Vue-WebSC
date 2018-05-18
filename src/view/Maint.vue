@@ -24,12 +24,7 @@
       </b-col>
       <b-col cols="10">
         <b-container :style="{height: bodyHeight + 'px'}">
-          <div v-if="isLoading">
-            <loading></loading>
-          </div>
-          <div v-if="!isLoading">
-            <router-view></router-view>
-          </div>
+          <router-view></router-view>
         </b-container>
       </b-col>
     </b-row>

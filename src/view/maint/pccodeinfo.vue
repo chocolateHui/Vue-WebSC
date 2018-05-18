@@ -241,7 +241,6 @@
 </template>
 
 <script>
-  import sysLog from  '../../components/remark.vue'
   import Numberinput from  '../../components/FormatInput.vue'
   import methodinfo from '../../config/MethodConst.js'
   const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
@@ -277,8 +276,6 @@
   const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true}
   const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:false,cancel:false}
   const btnmodifyshow ={  new: true, modify:  true,delete:true,place:true ,save:true,cancel:true}
-
-
 
   export default {
     data () {
@@ -687,7 +684,6 @@
         this.$refs.myModalRef.show()
       },
 
-
       hideModal () {
         this.$refs.myModalRef.hide()
       },
@@ -751,7 +747,6 @@
 
     },
     components: {
-      sysLog,
       Numberinput
     },
     watch: {

@@ -153,8 +153,7 @@
             </b-form-group>
           </b-row>
           <b-row style="width: 100%">
-            <b-form-group class="longinput" :label-cols="1" label="备&#8195;&#8195;注"
-                          horizontal>
+            <b-form-group class="longinput" :label-cols="1" label="备&#8195;&#8195;注" horizontal>
               <b-form-input  type="text" v-model="localcatering.remark"></b-form-input>
             </b-form-group>
           </b-row>
@@ -170,8 +169,8 @@
       <pop-archives @btnArchClose="btnArchClose" @btnArchOk="ArchivesConfirm" :ifunit="profileType"></pop-archives>
     </el-dialog>
 
-    <b-modal id="remarkModal" size="lg" ref="remarkModal" title="宴会备注" hide-footer>
-      <!--<remark ref="caterRemark" :remark="localcatering"></remark>-->
+    <b-modal id="remarkmodal" ref="remarkmodal" size="lg" title="宴会备注" hide-footer>
+      <remark></remark>
     </b-modal>
   </b-container>
 </template>
@@ -372,7 +371,13 @@
         this.cancelWidth = 'maxbtnwidth'
       },
       showNote(){
-        this.$refs.remarkModal.show();
+        let caterinfo = {
+          caterid:this.caterid,
+          caterdes:this.catering.name,
+          type:1
+        };
+        this.$store.commit('setNoteParam',caterinfo);
+        this.$refs.remarkmodal.show();
       },
       EOShare(){
         this.$router.push({name: '宴会预订EO单', params: { caterid: this.caterid }});

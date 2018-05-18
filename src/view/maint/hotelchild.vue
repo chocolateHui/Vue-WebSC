@@ -34,7 +34,7 @@
 
 <script>
   import methodinfo from '../../config/MethodConst.js'
-  import hotelinfoadmin from './hotelinfoadmin'
+  import hotelinfoadmin from './hotelinfo'
   export default {
     name: "hotelchild",
     data(){
@@ -44,7 +44,7 @@
       }
     },
     components:{
-      hotelinfoadmin
+      hotelinfo
     },
     methods:{
       configDefault:function () {

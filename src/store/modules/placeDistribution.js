@@ -16,29 +16,14 @@ const axiosinstance = axios.create({
 })
 // initial state
 const state = {
-  // 销售员列表
-  salelist: [],
-  // 查询销售类别
-  baseCodeList: [],
   timechoose: [],
-  // 查询销售活动列表参数
-  guestdiarylist: [],
-  profileslist: [],
-  guestDiary: {},
   placesinfo: [],
-  cateringlist: [],
   cateringlist2: []
 }
 // getters
 const getters = {
-  salelist: state => state.salelist,
-  baseCodeList: state => state.baseCodeList,
   timechoose: state => state.timechoose,
-  guestdiarylist: state => state.guestdiarylist,
-  profileslist: state => state.profileslist,
-  guestDiary: state => state.guestDiary,
   placesinfo: state => state.placesinfo,
-  cateringlist: state => state.cateringlist,
   cateringlist2: state => state.cateringlist2
 }
 const getAllMsg = function (store) {
@@ -46,73 +31,18 @@ const getAllMsg = function (store) {
   axiosinstance.defaults.headers.common['signature'] = store.getters.signature
   axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
 }
-function getsaleidlist () {
-  return axiosinstance.post(methodinfo.getsaleidlist, { sta: 'I' })
-}
-function getbasecodelist () {
-  return axiosinstance.post(methodinfo.getbasecodelist, { cat: 'guest_diary_item' })
-}
-function getbasecodelist2 () {
-  return axiosinstance.post(methodinfo.getbasecodelist, { cat: 'sc_time_unit' })
-}
 // actions
 const actions = {
-  getSale: function (store) {
+  getTimeUnit: function (store) {
     getAllMsg(store)
-    axios.all([getsaleidlist(), getbasecodelist(), getbasecodelist2()]).then(axios.spread((res1, res2, res3) => {
-      store.commit('setSalelist', res1.data.saleids)
-      store.commit('setBaseCodeList', res2.data.basecodes)
-      store.commit('setBaseCodeList2', res3.data.basecodes)
-    }))
-      .catch((error) => {
-        console.log(error)
-      })
-  },
-  getguestdiarylist: function (store, diaryParam) {
-    getAllMsg(store)
-    axiosinstance.post(methodinfo.getguestdiarylist, {
-      bdate: diaryParam.bdate,
-      edate: diaryParam.edate,
-      saleid: diaryParam.saleid
-    }).then(function (response) {
-      if (response.status === 200) {
-        if (response.data.errorCode === '0') {
-          store.commit('setGuestdiarylist', response.data.guestdiarys)
-        }
-      }
-    })
-  },
-  // 查询档案列表
-  getProfiles: function (store, param) {
-    getAllMsg(store)
-    axiosinstance.post(methodinfo.getProfiles, {
-      saleid: param.saleid,
-      mobile: param.mobile,
-      no: param.no,
-      name: param.name,
-      contacter: param.contacter,
-      ischeck: param.ischeck,
-      type: param.type
-    }).then(function (response) {
-      if (response.status === 200) {
-        if (response.data.errorCode === '0') {
-          store.commit('setProfiles', response.data.profiles)
-        }
-      }
+    axiosinstance.post(methodinfo.getbasecodelist, { cat: 'sc_time_unit' }).then((response) => {
+      store.commit('setTimeUnit', response.data.basecodes)
+    }).catch((error) => {
+      console.log(error)
     })
   },
   // 查询预定记录
   getcateringlist: function (store, param) {
-    getAllMsg(store)
-    axiosinstance.post(methodinfo.getcateringlist, {
-      no: param.no
-    }).then(function (response) {
-      if (response.status === 200) {
-        if (response.data.errorCode === '0') {
-          store.commit('setCateringList', response.data.caterings)
-        }
-      }
-    })
     axiosinstance.post(methodinfo.getcateringlist, {
       begindate: param.begindate,
       enddate: param.enddate,
@@ -196,29 +126,11 @@ const actions = {
 }
 // mutations
 const mutations = {
-  setSalelist (state, salelist) {
-    state.salelist = salelist
-  },
-  setBaseCodeList (state, baseCodeList) {
-    state.baseCodeList = baseCodeList
-  },
-  setBaseCodeList2 (state, timechoose) {
+  setTimeUnit (state, timechoose) {
     state.timechoose = timechoose
-  },
-  setGuestdiarylist (state, guestdiarylist) {
-    state.guestdiarylist = guestdiarylist
-  },
-  setProfiles (state, profileslist) {
-    state.profileslist = profileslist
-  },
-  setCateringList (state, cateringlist) {
-    state.cateringlist = cateringlist
   },
   setCatering2 (state, cateringlist2) {
     state.cateringlist2 = cateringlist2
-  },
-  setGuestDiary (state, guestDiary) {
-    state.guestDiary = guestDiary
   },
   setPlaceusedinfo (state, placesinfo) {
     state.placesinfo = placesinfo

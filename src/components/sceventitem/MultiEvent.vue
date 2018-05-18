@@ -189,7 +189,6 @@
       },
       changeTableType(){
 
-
         this.refreshData();
       },
       refreshData(){

@@ -3,81 +3,46 @@
   <div id="remark">
     <b-container fluid>
       <b-row  style="font-size: 12px">
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="5" class="my-1 paddingright0">
           <b-input-group prepend="宴会">
-            <b-form-input
-              type="text"
-            v-model="localcaterdes"
-            required
-            :disabled="show.pccodedisabled"
-            @input.native="updateValue"
-            placeholder="">
+            <b-form-input type="text" :value="Titleinfo.caterdes" :readonly="show.pccodedisabled" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="5" class="my-1 paddingright0">
           <b-input-group prepend="事务" >
-            <b-form-input
-              type="text"
-              v-model="localeventdes"
-              required
-              :disabled="show.descriptdisabled"
-              @input.native="updateValue"
-              placeholder="">
+            <b-form-input type="text" :value="Titleinfo.eventdes" :readonly="show.descriptdisabled" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="2" class="my-1 paddingright0">
           <b-input-group prepend="排序">
-            <b-form-input
-              type="text"
-              v-model="localscnotes.seq"
-              required
-              :disabled="show.descript1disabled"
-              placeholder="">
-            </b-form-input>
+            <FormatInput type="number" maxlength="5" v-model="localscnotes.seq"></FormatInput>
           </b-input-group>
         </b-col>
       </b-row>
       <b-row  style="font-size: 1rem">
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="5" class="my-1 paddingright0">
           <b-input-group prepend="标题">
-            <b-form-input
-              type="text"
-              v-model="localscnotes.title"
-              :disabled="show.descript2disabled"
-              required
-              placeholder="">
+            <b-form-input type="text" v-model="localscnotes.title" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
-        <b-col sm="4" class="my-1 paddingright0">
-          <b-form-group horizontal :label-cols="4" label="显示在EO单" class="mb-0">
-            <b-form-checkbox id="checkbox1"
-                             v-model="localscnotes.flag"
-                             value="T"
-                             unchecked-value="F">
+        <b-col sm="3" class="my-1 paddingright0">
+          <b-form-group horizontal :label-cols="6" label="显示在EO单" class="mb-0">
+            <b-form-checkbox id="checkbox1" v-model="localscnotes.flag" value="T" unchecked-value="F">
             </b-form-checkbox>
           </b-form-group>
         </b-col>
         <b-col sm="4" class="my-1 paddingright0">
           <b-input-group prepend="备注时间">
-            <b-form-input
-              type="text"
-              v-model="localscnotes.date0"
-              :disabled="show.tablesdisabled"
-              required
-              placeholder="">
+            <b-form-input type="text" v-model="localscnotes.date0" readonly placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px">
-        <b-form-textarea id="textarea1"
-                         v-model="localscnotes.content"
-                         placeholder="Enter something"
-                         :rows="12"
-                         :max-rows="12">
+        <b-form-textarea id="textarea1" v-model="localscnotes.content" :rows="12" :max-rows="12">
         </b-form-textarea>
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px;float: right">
@@ -92,6 +57,10 @@
   import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../config/MethodConst.js'
   import {formatDate} from '../common/date'
+
+  // 组件和参数
+  import FormatInput from './FormatInput.vue'
+
   const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
   const newshow = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
 
@@ -102,15 +71,11 @@
         show: show,
         localscnotes:{},
         ty:"",
-        localcaterdes:"",
-        localeventdes:"",
+        Titleinfo:{},
       }
     },
     props:{
-      // remark: {
-      //   type:Object
-      // },
-      // num:Number
+
     },
     created(){
       // console.log("a");
@@ -119,59 +84,51 @@
 
     watch: {
       ty:function (val,oldval) {
-        if(this.ty=="new"){
+        if(this.ty==="new"){
           this.show= show;
         }else{
           this.show=  newshow;
         }
       },
-      caterinfo:function (val,oldval) {
-        if(val==oldval){
-
-          this.localcaterdes =  this.caterdes.toString();
-          this.localeventdes = this.eventdes.toString();
-          this.localscnotes = Object.assign({},this.scnote);
-        }else{
-
-          this.localcaterdes =  this.caterdes.toString();
-          this.localeventdes =  this.eventdes.toString();
-
-          this.getremark();
-        }
-      },
-      scnote:function (val,oldval) {
-
-        if(val==oldval){
-          this.localscnotes = Object.assign({},val);
-        }else{
-          this.localscnotes = Object.assign({},val);
-        }
-
+      noteparam:function (val,oldval) {
+        this.Titleinfo = Object.assign({},val);
+        this.getremark();
       },
     },
     computed: {
       ...mapGetters([
-        'caterinfo',
-        'caterdes',
-        'eventdes',
-        "scnote"
+        "noteparam"
       ]),
     },
     methods: {
-      updateValue(event) {
-        if(!event.isComposing){
-          return event.data;
-        }else{
-          event.preventDefault();
-        }
-      },
       getremark(){
+        let _this = this;
         this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch("getScNotots").then(() => {
-          }).catch(function (errorMessage) {
-          })
-         });
-        },
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.getscnotelist, {
+              caterid: this.noteparam.caterid,
+              eventid: this.noteparam.eventid,
+              itemid: this.noteparam.itemid,
+              type: this.noteparam.type
+            }).then(function (response) {
+              if (response.data.errorCode === '0') {
+                if (typeof (response.data.notes) !== 'undefined') {
+                  let type = response.data.notes[0]
+                  type['isnew'] = 'F'
+                  _this.localscnotes = type;
+                } else {
+                  let type = _this.noteparam
+                  type['isnew'] = 'T'
+                  _this.localscnotes = Object.assign({},type);
+                }
+              } else {
+                this.$message(response.data.errorMessage)
+              }
+            })
+        })
+      },
       close:function(){
         this.$root.$emit('bv::hide::modal','remarkmodal')
       },
@@ -180,14 +137,7 @@
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.updatescnoteinfo, {
-            uuid: this.localscnotes.uuid,
-            title: this.localscnotes.title,
-            content:this.localscnotes.content,
-            type:this.localscnotes.type,
-            sta:this.localscnotes.sta,
-            eoprinted:this.localscnotes.eoprinted
-          }).then((response)=> {
+          this.$http.post(methodinfo.updatescnoteinfo, this.localscnotes).then((response)=> {
               if(response.data.errorCode==="0"){
                 this.$message({
                   type: '保存',
@@ -217,18 +167,8 @@
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.newscnoteinfo, {
-            blockid: this.localscnotes.blockid,
-            caterid: this.localscnotes.caterid,
-            eventid: this.localscnotes.eventid,
-            itemid: this.localscnotes.itemid,
-            type:this.localscnotes.type,
-            title: this.localscnotes.title,
-            content:this.localscnotes.content,
-            date0:formatDate(new Date(),"yyyy-MM-dd hh:mm:ss"),
-            flag:this.localscnotes.flag,
-            seq:this.localscnotes.seq
-          }).then((response)=> {
+          this.localscnotes.date0=formatDate(new Date(),"yyyy-MM-dd hh:mm:ss");
+          this.$http.post(methodinfo.newscnoteinfo, this.localscnotes).then((response)=> {
               if(response.data.errorCode==="0"){
                 this.$message({
                   type: '新建',
@@ -248,7 +188,6 @@
         })
       },
       savescnotes:function(){
-        var url = "";
         if(this.localscnotes.isnew==="F"){
           this.updatescnotes();
         }
@@ -257,8 +196,10 @@
         }
 
       }
-      }
-
+    },
+    components: {
+      FormatInput
+    },
   }
 </script>
 <style lang="scss" type="text/scss">
@@ -277,8 +218,14 @@
     .custom-control {
       min-height: 0.6rem;
     }
+    .form-control[readonly]{
+      background-color: white;
+    }
     .form-row > .col, .form-row > [class*="col-"] {
       padding-right: 0px;
+    }
+    #textarea1{
+      height: 300px;
     }
   }
 </style>
