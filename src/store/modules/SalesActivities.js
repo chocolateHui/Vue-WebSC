@@ -150,7 +150,6 @@ const mutations = {
   },
   // 清空列表
   setProfilesNull (state) {
-    state.cateringlist = []
     state.profileslist = []
   }
 }

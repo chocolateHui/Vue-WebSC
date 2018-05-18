@@ -2,10 +2,10 @@
   <div class="pop_archives" id="pop_archives">
     <div class="search">
       <ul>
-        <li><label>名称</label><input type="text" class="text_input" v-model="name" id="archivesname"></li>
-        <li><label>手机</label><input type="text" class="text_input" v-model="mobile" id="archivesphone"></li>
-        <li><label>档案号</label><input type="text" class="text_input" v-model="no" id="archivesno"></li>
-        <li><label>联系人</label><input type="text" class="text_input" v-model="contacter" id="archivesContacts"></li>
+        <li><label>名称</label><input type="text" class="text_input" v-model.trim="name" id="archivesname"></li>
+        <li><label>手机</label><input type="text" class="text_input" v-model.trim="mobile" id="archivesphone"></li>
+        <li><label>档案号</label><input type="text" class="text_input" v-model.trim="no" id="archivesno"></li>
+        <li><label>联系人</label><input type="text" class="text_input" v-model.trim="contacter" id="archivesContacts"></li>
         <li class="saleChoose">
            <b-form-group label="&#8194;销售员" horizontal>
             <el-select v-model="salesId" filterable>
