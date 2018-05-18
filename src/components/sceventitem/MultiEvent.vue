@@ -1,10 +1,10 @@
 <template>
   <div id="multiplace">
     <b-container fluid>
-      <label>当前选择场地:{{currentplace}}</label>
+      <label>当前选择宴会:{{currentplace}}</label>
       <b-row>
         <b-col sm="2">
-          <b-btn @click="changeTableType" :pressed="false" variant="primary">{{usebtndes}}</b-btn>
+
         </b-col>
         <b-col sm="5"></b-col>
         <b-col sm="4">
@@ -55,11 +55,12 @@
   import methodinfo from '../../config/MethodConst.js'
 
   const fildes = [
-    {  prop: 'tableno', label:  '编码',width:'100',sortable:true,"classname":"text-center" },
+    {  prop: 'eventid', label:  '编码',width:'160',sortable:true,"classname":"text-center" },
     {  prop: 'descript', label:  '场地名称',width:'',sortable:true,showTip:true},
     {  prop: 'descript1', label:  '英文名称',width:'',sortable:true,showTip:true},
-    {  prop: 'pccodedes', label:  '营业点',width:'160',sortable:true,showTip:true,"classname":"text-center"},
-    {  prop: 'kind', label:  '类别',width:'100',sortable:true,showTip:true,"classname":"text-center" }
+    {  prop: 'bdate', label:  '日期',width:'120',sortable:true,showTip:true,"classname":"text-center"},
+    {  prop: 'stades', label:  '状态',width:'100',sortable:true,showTip:true,"classname":"text-center" },
+    {  prop: 'typedes', label:  '类型',width:'100',sortable:true,showTip:true,"classname":"text-center" }
   ]
 
   export default {
@@ -72,12 +73,11 @@
         currentPage:1,
         pageChange:false,
         isunuse:false,
-        usebtndes:'查看空闲场地',
+        placecount:0,
         currentplace:'',
         currentselect:[],
         allselect:[],
-        hash:{},
-        placecount:0
+        hash:{}
       }
     },
     props:{
@@ -87,8 +87,8 @@
     },
     computed: {
       ...mapGetters([
-        'placelist',
-        'eventplace'
+        'corteventlist',
+        'sceventitemeventid',
       ]),
       searchitems:function () {
         let filterValue = this.filterValue;
@@ -96,23 +96,34 @@
           return this.tablePagination(this.items);
         }else{
           return this.tablePagination(this.items.filter(function (item) {
-            if (item.tableno.indexOf(filterValue) >= 0) {
+            if (item.eventid.indexOf(filterValue) >= 0) {
               return true;
             } else if (item.descript.indexOf(filterValue) >= 0) {
               return true;
             }else if (item.descript1.indexOf(filterValue) >= 0) {
               return true;
-            }else if (item.pccodedes.indexOf(filterValue) >= 0) {
+            }else if (item.stades.indexOf(filterValue) >= 0) {
               return true;
-            }else if (item.kind.indexOf(filterValue) >= 0) {
+            }else if (item.typedes.indexOf(filterValue) >= 0) {
+              return true;
+            }else if (item.bdate.indexOf(filterValue) >= 0) {
               return true;
             }
           }));
         }
-      }
+      },
+      // placecount:function () {
+      //   console.log(this.total);
+      //   if(!this.fieldValue){
+      //     return this.items.length;
+      //   }
+      //   else{
+      //     return this.total;
+      //   }
+      // }
     },
     created(){
-
+      this.refreshData();
     },
     methods: {
       tablePagination(data=[]){
@@ -132,8 +143,9 @@
       },
       //页面切换数据处理
       handleSelectionChange(val) {
-        if(this.pageChange&&this.allselect.length>0){
+        if(this.pageChange){
           //换页时清空当前选择并重新赋值
+          this.pageChange=false;
           this.currentselect=[];
           for(let elem of this.allselect){
             this.$refs.multiplacetable.toggleRowSelection(elem);
@@ -150,7 +162,6 @@
               }
             }
           }
-          this.pageChange=false;
           this.currentselect = val;
         }
         this.currentplace = '';
@@ -161,9 +172,9 @@
       },
       tableCurrentChange(){
         for(let elem of this.currentselect){
-          if (!this.hash[elem.tableno]) {
+          if (!this.hash[elem.eventid]) {
             this.allselect.push(elem);
-            this.hash[elem.tableno] = true;
+            this.hash[elem.eventid] = true;
           }
         }
         this.pageChange = true;
@@ -177,75 +188,53 @@
         this.$refs.multiplacetable.clearSelection();
       },
       changeTableType(){
-        if(!this.eventbdate){
-          this.$alert("请先选择事务日期!")
-          return;
-        }
-        if(this.isunuse){
-          this.usebtndes = "查看空闲场地";
-        }else{
-          this.usebtndes = "查看所有场地";
-        }
-        this.isunuse = !this.isunuse;
+
+
         this.refreshData();
       },
       refreshData(){
         this.items=[];
         this.allselect=[];
-        if(this.isunuse){
-          let eventbdate =this.eventbdate
-          let items = this.items;
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.$http.defaults.headers.common['username'] = this.$store.getters.username
-            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-            this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-            this.$http.post(methodinfo.getunuseplacelist, {
-              "begindate":eventbdate[0],
-              "enddate":eventbdate[1]
-            }).then(function (response) {
-              if (response.data.errorCode==='0') {
-                for(let option of response.data.places){
-                  items.push(option)
-                }
-              }
-            })
-          })
-        }else{
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.$store.dispatch("getPlacelist");
-          })
-        }
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch("getcortEventlist");
+        })
       },
       placeConfirm(){
         for(let elem of this.currentselect){
-          if (!this.hash[elem.tableno]) {
+          if (!this.hash[elem.eventid]) {
             this.allselect.push(elem);
-            this.hash[elem.tableno] = true;
+            this.hash[elem.eventid] = true;
           }
         }
-
+        console.log(this.currentselect);
+        console.log(this.allselect);
+        console.log(this.hash);
         this.$emit('placeConfirm',this.allselect)
-        this.$root.$emit('bv::hide::modal','multiplacemodal')
+        this.$root.$emit('bv::hide::modal','multieventmodal')
       },
       exitModal(){
-        this.$root.$emit('bv::hide::modal','multiplacemodal')
+        this.$root.$emit('bv::hide::modal','multieventmodal')
       }
     },
     watch:{
-      placelist(val,oldval){
+      corteventlist(val,oldval){
         this.items = val;
       },
-      searchitems(val){
-        if(this.filterValue==='' || !this.filterValue){
-          this.placecount = this.items.length
-        }else{
-          this.placecount = this.total
+      sceventitemeventid(val,oldval){
+        this.refreshData();
+      },
+      searchitems(val,oldval) {
+        if(this.filterValue===''||!this.filterValue){
+          this.placecount = this.items.length;
+        }
+        else{
+          this.placecount =  this.total;
         }
       }
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" type="text/scss">
   #multiplace{
     -webkit-backface-visibility: hidden;
     .el-table{
@@ -256,15 +245,6 @@
       .caret-wrapper{
         width: 20px;
       }
-      .el-checkbox__input{
-        margin-top: 5px
-      }
-      .form-control{
-        height: 33.5px;
-      }
-      .el-checkbox{
-        margin-bottom: 0;
-      }
     }
     .text-center{
       text-align: center;
@@ -272,6 +252,10 @@
     .pagination{
       float: right;
       padding: 5px 10px;
+    }
+    .el-table__expanded-cell{
+      padding: 5px!important;
+      box-shadow: none!important;
     }
     .row{
       margin-right: 0;

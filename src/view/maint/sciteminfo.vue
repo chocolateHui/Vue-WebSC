@@ -1,12 +1,12 @@
 <!-- 模板组件，用于模拟不同路由下的组件显示 -->
-<template title="营业点维护">
-  <div id="pccodeinfo">
+<template>
+  <div id="classcodeinfo">
     <b-container>
       <b-row id="rowrow">
         <b-col   class="paddingright0 paddingtop5 maxwidth20">
           <el-table
             ref="aaa"
-            :data="pccodedata"
+            :data="classcodedata"
             border
             stripe
             highlight-current-row
@@ -14,7 +14,7 @@
             max-height="tableHeight"
             style="width: 100%">
             <el-table-column
-              v-for="item in pccodefildes"
+              v-for="item in classcodefildes"
               :prop="item.prop"
               :label="item.label"
               :width="item.width"
@@ -29,9 +29,9 @@
               <b-form-group horizontal label="编码" class="mb-0">
                 <b-form-input
                   type="text"
-                  v-model="pcinfo.pccode"
+                  v-model="pcinfo.classcode"
                   required
-                  :disabled="changeshow.pccodedisabled"
+                  :disabled="changeshow.classcodedisabled"
                   placeholder="">
                 </b-form-input>
               </b-form-group>
@@ -72,21 +72,23 @@
               </b-form-group>
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="所属类型" class="mb-0">
-                <b-form-input
-                  type="text"
-                  v-model="pcinfo.kinddes"
-                  :disabled="changeshow.kinddesdisabled"
-                  required
-                  placeholder="">
-                </b-form-input>
+              <b-form-group horizontal label="项目属性" class="mb-0">
+                <el-select v-model="pcinfo.type">
+                  <el-option
+                    :disabled="changeshow.kinddesdisabled"
+                    v-for="item in typearry"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
               </b-form-group>
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="场地数" class="mb-0">
+              <b-form-group horizontal label="排序码" class="mb-0">
                 <b-form-input
                   type="text"
-                  v-model="pcinfo.tables"
+                  v-model="pcinfo.seq"
                   :disabled="changeshow.tablesdisabled"
                   required
                   placeholder="">
@@ -95,30 +97,31 @@
             </b-col>
           </b-row>
           <el-table
+            id="itemtable"
             :data="placedata"
             border
             stripe
-            :height="tableH"
-            @cell-click="tableDbEdit"
+            :height="tableHeight"
             style="width: 100%;font-size: 12px">
             <el-table-column
-            prop="tableno"
-            label="场地代码"
-            width="80"
+            prop="code"
+            label="代码"
+            width="55"
             sortable
             show-overflow-tooltip>
               <template slot-scope="scope" >
                 <div @change="changeplace(scope)" v-if="scope.row.add === 'T'">
-                  <el-input  v-model="scope.row.tableno" placeholder=""></el-input>
+                  <el-input  v-model="scope.row.code" placeholder=""></el-input>
                 </div>
                 <div v-else>
-                  <el-input disabled v-model="scope.row.tableno" placeholder=""></el-input>
+                  <el-input disabled v-model="scope.row.code" placeholder=""></el-input>
                 </div>
               </template>
           </el-table-column>
             <el-table-column
               prop="descript"
               label="中文描述"
+              sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-input @change="changeplace(scope)" v-model="scope.row.descript" placeholder=""></el-input>
@@ -127,36 +130,49 @@
             <el-table-column
               prop="descript1"
               label="英文描述"
+              sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-input  @change="changeplace(scope)" v-model="scope.row.descript1" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
-              prop="descript2"
-              label="第三描述"
+              prop="price"
+              label="单价"
+              width="55"
+              sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input @change="changeplace(scope)" v-model="scope.row.descript2" placeholder=""></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="cover"
-              label="人数"
-              width="60"
-              show-overflow-tooltip>
-              <template slot-scope="scope">
-                <Numberinput class="el-input__inner" type="number" maxlength="5" @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></Numberinput>
+                <Numberinput class="el-input__inner" type="float" @change="changeplace(scope)" v-model="scope.row.price" placeholder=""></Numberinput>
                 <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
               </template>
             </el-table-column>
             <el-table-column
-              prop="layout"
-              label="布局"
-              width="135"
+              prop="unit"
+              label="单位"
+              width="45"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-select v-model="scope.row.layoutarr" multiple @change=" handlelaySelectionChange(scope)">
+                <el-input  @change="changeplace(scope)" v-model="scope.row.unit" placeholder=""></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="remark"
+              label="备注"
+              width="50"
+              show-overflow-tooltip>
+              <template slot-scope="scope">
+                <el-input  @change="changeplace(scope)" v-model="scope.row.remark" placeholder=""></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="deptno"
+              label="执行部门"
+              sortable
+              width="80"
+              show-overflow-tooltip>
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.deptno"  @change=" handlelaySelectionChange(scope)">
                   <el-option
                     v-for="item in tableData3"
                     :key="item.value"
@@ -167,9 +183,38 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="toplace"
-              label="从属场地"
+              prop="flag1"
+              label="可改名称"
+              sortable
+              width="80"
               show-overflow-tooltip>
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.flag1"  @change=" handlelaySelectionChange(scope)">
+                  <el-option
+                    v-for="item in confirm"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="flag2"
+              label="是否外借"
+              sortable
+              width="80"
+              show-overflow-tooltip>
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.flag2"  @change=" handlelaySelectionChange(scope)">
+                  <el-option
+                    v-for="item in confirm"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </template>
             </el-table-column>
             <el-table-column
               label="操作"
@@ -187,120 +232,63 @@
         <b-col class="paddingright0 paddingleft5 maxwidth15">
           <div>
             <b-button-group vertical>
-              <b-button :disabled="btnshow.new" @click="newp" variant="primary">新建营业点</b-button>
-              <b-button :disabled="btnshow.modify" @click="modifyp" variant="primary">修改营业点</b-button>
-              <b-button :disabled="btnshow.delete" @click="deletep" variant="primary">删除营业点</b-button>
-              <b-button :disabled="btnshow.place" @click="addplace" variant="primary">新建场地</b-button>
-              <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
-              <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
+              <b-button @click="newp" variant="primary">新建类别</b-button>
+              <b-button @click="modifyp" variant="primary">修改类别</b-button>
+              <b-button @click="deletep" variant="primary">删除类别</b-button>
+              <b-button @click="addplace" variant="primary">新建项目</b-button>
+              <b-button @click="savep" variant="primary">保存</b-button>
+              <b-button @click="cancel" variant="primary">取消</b-button>
             </b-button-group>
           </div>
         </b-col>
       </b-row>
-      <b-modal id="placemodal" ref="myModalRef" hide-footer title="修改从属场地">
-
-        <div class="d-block text-center">
-            <el-input
-            style="width: 30%;float: right; padding-bottom: 0.5rem;"
-            prefix-icon="el-icon-search"
-            v-model="seachplace">
-          </el-input>
-            <el-table
-              ref="multipleTable"
-              :data="searchitems"
-              tooltip-effect="dark"
-              style="width:100%"
-              height="350"
-              border
-              stripe
-              @selection-change="handleSelectionChange">
-              <el-table-column
-                type="selection"
-                width="55">
-              </el-table-column>
-              <el-table-column
-                v-for="item in topplacefildes"
-                :prop="item.prop"
-                :label="item.label"
-                :width="item.width"
-                :sortable="item.sortable"
-                :show-overflow-tooltip="item.showTip" :key="item.prop">
-              </el-table-column>
-            </el-table>
-
-        </div>
-        <b-row style="float: right;">
-          <b-btn class="mt-3" variant="outline-danger" block @click="hideModal">取消</b-btn>
-          <b-btn class="mt-3" variant="outline-danger" block @click="rowset">确认</b-btn>
-        </b-row>
-
-      </b-modal>
 
     </b-container>
   </div>
 </template>
 
 <script>
-  import sysLog from  '../../components/remark.vue'
   import Numberinput from  '../../components/FormatInput.vue'
   import methodinfo from '../../config/MethodConst.js'
-  const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
-  const newshow = {  pccodedisabled: false, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:true,tablesdisabled:true}
-  const modifyshow = {  pccodedisabled: true, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:true,tablesdisabled:true}
+  const show = {  classcodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
+  const newshow = {  classcodedisabled: false, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
+  const modifyshow = {  classcodedisabled: true, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
 
-  const pccodemoren = {  pccode: "", descript:""  ,descript1:"",descript2:"" ,kinddes:"宴会",kind:"3",tables:"0"}
-  const placemoren = {  tableno: "", descript:""  ,descript1:"",descript2:"" ,layout:"",cover:"0",topplace:"",add:"T",layoutarr:[]}
+  const classcodemoren = {  classcode: "", descript:""  ,descript1:"",descript2:"" ,type:"3",seq:"0"}
+  const placemoren = {  code: "", descript:""  ,descript1:"",descript2:"" ,price:0,unit:"",remark:"",deptno:"",flag1:"",flag2:"",classcode:"",halt:"F",type:"",add:"T"}
 
-  const pccodefildes = [
-    {  prop: 'pccode', label:  '编号',width:'70',sortable:true },
+  const classcodefildes = [
+    {  prop: 'classcode', label:  '编号',width:'70',sortable:true },
     {  prop: 'descript', label:  '名称',width:'',sortable:true,showTip:true},
   ]
-  const topplacefildes = [
-    {  prop: 'tableno', label:  '场地代码',width:'100',sortable:true },
-    {  prop: 'descript', label:  '名称',width:'300',sortable:true,showTip:true},
-  ]
-  const basefildes = [
-    {  prop: 'code', label:  '场地代码',width:'100',sortable:true },
-    {  prop: 'descript', label:  '名称',width:'300',sortable:true,showTip:true},
-  ]
 
-  const placefildes = [
-    {  prop: 'tableno', label:  '场地代码',width:'100',sortable:true,showTip:true },
-    {  prop: 'descript', label:  '中文描述',width:'',sortable:true,showTip:true},
-    {  prop: 'descript1', label:  '英文描述',width:'',sortable:true,showTip:true},
-    {  prop: 'descript2', label:  '第三描述',width:'',sortable:true ,showTip:true},
-    {  prop: 'cover', label:  '人数',width:'65',sortable:true ,showTip:true},
-    {  prop: 'layout', label:  '布局',width:'70',sortable:true ,showTip:true},
-    {  prop: 'toplace', label:  '从属场地',width:'',sortable:true,showTip:true }
+  const confirm = [
+    { value: 'T', label: '是' },
+    { value: 'F', label: '否' },
   ]
-
-  const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true}
-  const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:false,cancel:false}
-  const btnmodifyshow ={  new: true, modify:  true,delete:true,place:true ,save:true,cancel:true}
-
+  const typearry = [
+    { value: '1', label: '内部项目' },
+    { value: '2', label: '赠送项目' },
+    { value: '3', label: '部门' },
+    { value: '4', label: '场租' },
+  ]
 
 
   export default {
     data () {
       return {
-        pccodedata:[],
+        classcodedata:[],
         placedata:[],
         tableData3:[],
-        pccodefildes :pccodefildes,
-        placefildes :placefildes,
-        topplacefildes:topplacefildes,
-        basefildes:basefildes,
+        classcodefildes :classcodefildes,
+        confirm:confirm,
         showchange:'',
-        btnshow :btnshow,
         placesavetype: '',
-        pcinfo: pccodemoren,
-        multipleSelection:"",
-        multiplelayoutSelection:[],
+        pcinfo: classcodemoren,
+        typearry:typearry,
         changedplaceinfo:{},
         oldcurrentRow:null,
-        pccodesavetype:"",
-        seachplace:"",
-        seachlayout:"",
+        classcodesavetype:"",
         // 获取row的key值
         getRowKeys(row) {
           return row.empno;
@@ -308,14 +296,13 @@
         currentRow: null,
         placeRow: null,
         // 要展开的行，数值的元素是row的key值
-        tableH: document.body.clientHeight-205,//减去header的60px
+        tableHeight: document.body.clientHeight-205,//减去header的60px
         num:0,
       }
     },
-
     mounted() {
-       this.getpccodedata();
-       this.getlayoutdata();
+       this.getclasscodedata();
+       this.getbm();
     },
     computed: {
       changeshow:function () {
@@ -325,54 +312,35 @@
           return this.showchange
         }
       },
-      searchitems:function () {
-        if(!this.seachplace){
-          var m = Object.assign([],this.placedata);
-          var s = [];
-          for(let a of m){
-            if(a.add!="T"){
-              s.push(a);
-            }
-          }
-          return  s;
-        }else{
-          return Object.assign([],this.placedata).filter( placedata => {
-              if (placedata.tableno.indexOf(this.seachplace)>=0||placedata.descript.indexOf(this.seachplace)>=0){
-                return placedata;
-              }
-          });
-        }
-      },
     },
     methods: {
-      getpccodedata(rows){
+      getclasscodedata(rows){
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.getpccodelist, {
-            isall: "T",
+          this.$http.post(methodinfo.getitemclasslist, {
             kind: "3"
           }).then((response)=> {
 
             if (response.data.errorCode=="0") {
 
               // this.pccodedata = [];
-              if(typeof(response.data.pccodes) != "undefined"){
+              if(typeof(response.data.itemclass) != "undefined"){
 
-                this.pccodedata = response.data.pccodes;
+                this.classcodedata = response.data.itemclass;
 
                 if(typeof(rows) == "undefined"||rows==null){
                   this.$nextTick(function(){
-                    this.$refs.aaa.setCurrentRow( this.pccodedata[0]);
+                    this.$refs.aaa.setCurrentRow( this.classcodedata[0]);
                     this.oldcurrentRow = null;
                     this.showchange = '';
                   })
                 }
                 else{
-
-                  for(let pc of response.data.pccodes){
-                    if(pc.pccode == rows.pccode){
+                  // console.log(rows);
+                  for(let pc of response.data.itemclass){
+                    if(pc.classcode == rows.classcode){
                       this.$nextTick(function(){
                         this.$refs.aaa.setCurrentRow( pc);
                         this.oldcurrentRow = null;
@@ -383,56 +351,49 @@
 
                 }
 
+
               }
             }
           })
         })
       },
-      getlayoutdata(){
+      getbm(){
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.getbasecodelist, {
-            cat: "layout",
-            halt: "F"
+          this.$http.post(methodinfo.getitemlist, {
+            type: "3",
           }).then((response)=> {
 
-            if (response.data.errorCode=="0") {
+            if (response.data.errorCode==="0") {
               this.tableData3 = [];
-              if(typeof(response.data.basecodes) != "undefined"){
-                for(let basecodes of response.data.basecodes){
+              if(typeof(response.data.items) != "undefined"){
+                for(let items of response.data.items){
                   var types = {};
-                  types["value"]=basecodes.code;
-                  types["label"]=basecodes.descript;
+                  types["value"]=items.code;
+                  types["label"]=items.descript;
                   this.tableData3.push(types);
                 }
-
               }
             }
           })
         })
       },
-      getplacedata(pccode){
+      getplacedata(classcode){
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.getplacelist, {
-            pccode: pccode
+          this.$http.post(methodinfo.getitemlist, {
+            classcode: classcode
           }).then((response)=> {
             if (response.data.errorCode=="0") {
               this.placedata = [];
-              if(typeof(response.data.places) != "undefined"){
-                for(let places of response.data.places){
+              if(typeof(response.data.items) != "undefined"){
+                for(let items of response.data.items){
                   var types = {};
-                  types = places;
-                  if(!places.layout){
-                    types["layoutarr"] = [];
-                  }
-                  else{
-                     types["layoutarr"] = places.layout.split(',');
-                  }
+                  types = items;
                   this.placedata .push(types);
                 }
 
@@ -447,44 +408,20 @@
       setCurrent(row) {
         this.$refs.aaa.setCurrentRow(row);
       },
-      deletepccode(){
+      deleteclasscode(){
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.deletepccode, {
-          pccode:this.pcinfo.pccode
+          this.$http.post(methodinfo.deletescitemclass, {
+            classcode:this.pcinfo.classcode
           }).then((response)=> {
             if (response.data.errorCode=="0") {
               this.$message({
                 type: 'success',
                 message: '删除成功!'
               });
-              this.getpccodedata();
-            }
-            else{
-              this.$message.error({
-                type: 'shanchu',
-                message:response.data.errorMessage
-              });
-            }
-          })
-        })
-      },
-      deleteplace(row){
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['username'] = this.$store.getters.username
-          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.deleteplace, {
-            tableno:row.tableno
-          }).then((response)=> {
-            if (response.data.errorCode=="0") {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              });
-              this.getplacedata(this.currentRow.pccode);
+              this.getclasscodedata();
             }
             else{
               this.$message.error({
@@ -492,30 +429,54 @@
                 message:response.data.errorMessage
               });
             }
-
           })
         })
       },
-      savepccode(url,item){
+      deleteplace(row){
+        console.log(row.id);
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.deletescitem, {
+            id:row.id
+          }).then((response)=> {
+            if (response.data.errorCode=="0") {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              this.getplacedata(this.currentRow.classcode);
+            }
+            else{
+              this.$message.error({
+                type: '保存',
+                message:response.data.errorMessage
+              });
+            }
+          })
+        })
+      },
+      saveclasscode(url,item){
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(url, {
-            pccode:item.pccode,
+            classcode:item.classcode,
             descript:item.descript,
             descript1:item.descript1,
             descript2:item.descript2,
-            kind:item.kind,
-            tables:item.tables
+            type:item.type,
+            seq:item.seq
           }).then((response)=> {
+
               if(response.data.errorCode=="0"){
                 this.$message({
                   type: '保存',
                   message: '保存成功!'
                 });
-                this.getpccodedata(this.pcinfo);
-                this.btnshow = btnshow;
+                this.getclasscodedata(this.pcinfo);
               }
              else{
                 this.$message.error({
@@ -523,18 +484,18 @@
                   message:response.data.errorMessage
                 });
               }
+
+
           })
         })
       },
       saveplace(item){
-        var pccode = this.currentRow.pccode;
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.updateplaces, {
-            pccode:pccode,
-            places:item
+          this.$http.post(methodinfo.savescitemlist, {
+            scitems:item
           }).then((response)=> {
 
               if(response.data.errorCode=="0"){
@@ -542,8 +503,7 @@
                   type: '保存',
                   message: '保存成功!'
                 });
-                this.getplacedata(pccode);
-                this.btnshow = btnshow;
+                this.getplacedata(classcode);
               }
               else{
                 this.$message.error({
@@ -556,21 +516,18 @@
         })
       },
       changeplace(scope) {
-
         if(scope.row.add!="T"){
-          this.changedplaceinfo[scope.row.tableno] = scope.row;
+          this.changedplaceinfo[scope.row.code] = scope.row;
           this.placesavetype="update";
-
         }
         else{
-
-          if(scope.row.tableno){
+          if(scope.row.code){
 
             for(var i=0;i<this.placedata.length;i++){
               var types = this.placedata[i];
-              if(scope.row.tableno==types.tableno&&scope.$index!=i){
+              if(scope.row.code==types.code&&scope.$index!=i){
                 this.$message.error('桌号不能重复');
-                scope.row.tableno="";
+                scope.row.code="";
               }
             }
           }
@@ -584,7 +541,7 @@
           type: 'warning',
           center: true
         }).then(() => {
-          this.deletepccode();
+          this.deleteclasscode();
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -594,7 +551,6 @@
 
       },
       deletel:function (row) {
-
         this.$confirm('此操作将永久删除'+row.descript+'该场地, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -611,23 +567,19 @@
       },
       newp:function () {
         this.showchange = Object.assign({},newshow);
-        this.pcinfo = Object.assign({},pccodemoren);
+        this.pcinfo = Object.assign({},classcodemoren);
         this.oldcurrentRow = Object.assign({},this.currentRow);
         this.placedata = [];
-        this.pccodesavetype ="new";
-        this.btnshow = btnnewshow;
+        this.classcodesavetype ="new";
       },
       modifyp:function () {
         this.showchange =  Object.assign({},modifyshow);
         this.oldcurrentRow = Object.assign({},this.currentRow);
-        this.pccodesavetype ="update";
-        this.btnshow = btnnewshow;
+        this.classcodesavetype ="update";
       },
       cancel:function () {
         this.showchange = Object.assign({},show);
-        this.getpccodedata(this.oldcurrentRow);
-        this.btnshow = btnshow;
-        this.placesavetype="";
+        this.getclasscodedata(this.oldcurrentRow);
       },
       addplace:function () {
         var newplace =  Object.assign({},placemoren);
@@ -635,30 +587,30 @@
         this.placesavetype = "update";
       },
       savep:function () {
-
-        if(this.pccodesavetype){
+        console.log(this.placesavetype);
+        if(this.classcodesavetype){
           var url = "";
-          if(!this.pcinfo.pccode){
-            this.$message.error('营业点编号不能为空');
+          if(!this.pcinfo.classcode){
+            this.$message.error('项目类别不能为空');
             return
           }
           if(!this.pcinfo.descript){
-            this.$message.error('营业点描述不能为空');
+            this.$message.error('项目类别描述不能为空');
             return
           }
           if(!this.pcinfo.descript1){
             this.pcinfo.descript1 = this.pcinfo.descript;
           }
-          if(this.pccodesavetype =="new"){
-            url = methodinfo.newpccode;
+          if(this.classcodesavetype =="new"){
+            url = methodinfo.savescitemclass;
           }
-          if(this.pccodesavetype =="update"){
-            url = methodinfo.updatepccode;
+          if(this.classcodesavetype =="update"){
+            url = methodinfo.updatescitemclass;
           }
-          this.savepccode(url,this.pcinfo);
+          this.saveclasscode(url,this.pcinfo);
         }
         if(this.placesavetype){
-          var url =methodinfo.updateplaces;
+          var url =methodinfo.savescitemlist;
           var copydata = Object.assign([],this.changedplaceinfo)
           for(let pl of this.placedata){
             var data = pl;
@@ -666,16 +618,16 @@
               copydata.push(data);
             }
           }
-
+          console.log(copydata);
           var finnaldata = [];
           for(var cd in copydata){
-
-            if(!copydata[cd].tableno){
-              this.$message.error('桌号不能为空');
+            console.log(cd);
+            if(!copydata[cd].code){
+              this.$message.error('项目不能为空');
               return
             }
             if(!copydata[cd].descript){
-              this.$message.error('桌号描述不能为空');
+              this.$message.error('项目描述不能为空');
               return
             }
             finnaldata.push(copydata[cd]);
@@ -683,75 +635,15 @@
           this.saveplace(finnaldata);
         }
       },
-      showModal () {
-        this.$refs.myModalRef.show()
-      },
-
-
-      hideModal () {
-        this.$refs.myModalRef.hide()
-      },
-
-      handleSelectionChange(val) {
-        var a ="";
-        for(var i=0;i<val.length;i++){
-           a = a+","+val[i].tableno;
-        }
-        a = a.substring(1);
-        this.multipleSelection = a;
-      },
       handlelaySelectionChange(val) {
-
+        console.log(val);
         if(val.row.add!="T"){
-          var a = val.row.layoutarr.slice().toString();
-          val.row.layout = a;
-          this.changedplaceinfo[val.row.tableno] = val.row;
+          this.changedplaceinfo[val.row.code] = val.row;
           this.placesavetype="update";
-
         }
       },
-      rowset(){
-
-        this.$set( this.placeRow,"toplace",this.multipleSelection)
-            this.$nextTick(function(){
-              this.placesavetype = "update";
-            })
-           this.hideModal();
-      },
-      tableDbEdit(row, column, cell, event) {
-        this.multipleSelection = "";
-        this.multiplelayoutSelection = "";
-        if (column.property ==="toplace") {
-          this.$refs.multipleTable.clearSelection();
-          this.placeRow = row;
-          if(typeof(row.toplace) != "undefined"){
-            var top = row.toplace.split(",")
-            var m = Object.assign([],this.placedata);
-            var s = [];
-            for(let a of m){
-              if(a.add!="T"){
-                s.push(a);
-              }
-            }
-            for(let pc of Object.assign([],s)){
-              // if(pc)
-              for(let tp of Object.assign([],top)) {
-                if(tp===pc.tableno){
-                  this.$nextTick(function(){
-                    this.$refs.multipleTable.toggleRowSelection(pc,true);
-                  })
-                }
-              }
-
-            }
-          }
-          this.showModal();
-        };
-      }
-
     },
     components: {
-      sysLog,
       Numberinput
     },
     watch: {
@@ -759,29 +651,23 @@
 
         this.pcinfo =Object.assign({},newVal);
         if(typeof(newVal) != "undefined"&&newVal!=null){
-          this.getplacedata(newVal.pccode);
+          this.getplacedata(newVal.classcode);
           this.showchange = '';
 
         }
       },
-      placesavetype(newVal, oldVal){
-        if(newVal==="update"){
-          this.btnshow = btnnewshow;
-        }
-       else{
-          this.btnshow = btnshow;
-        }
+      classcodedata(newVal, oldVal){
+
       },
 
     }
   }
 </script>
 <style lang="scss" type="text/scss">
-  #pccodeinfo{
+  #classcodeinfo{
     .el-date-editor .el-range-separator{
       padding: 0;
     }
-
     .btn{
       width: 90px;
       margin-top:5px ;
@@ -823,9 +709,7 @@
           padding-left: 5px;
           padding-right: 5px;
         }
-
       }
-
       .el-input__inner{
         height: 36px;
       }
@@ -848,7 +732,7 @@
     .el-input__prefix {
       padding-bottom: 0.5rem;
     }
-    #rowrow{
+    #itemtable{
       .el-input__inner {
         background-color: transparent;
         border: none;
@@ -865,19 +749,8 @@
         font-size: 12px!important;
       }
     }
-    #placemodal{
-      .el-table {
-        overflow: auto;
-      }
-      .btn{
-        margin-left:15px ;
-      }
-    }
 
-    #layputmodal {
-      .el-table {
-        overflow: auto;
-      }
-    }
+
+
   }
 </style>

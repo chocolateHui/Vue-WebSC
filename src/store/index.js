@@ -5,6 +5,7 @@ import user from './modules/user'
 import catering from './modules/catering'
 import routeTab from './modules/routeTab'
 import sysoption from './modules/sysoption'
+import sceventitem from './modules/sceventitem'
 import VuexPersistence from 'vuex-persist'
 import SalesActivities from './modules/SalesActivities'
 import scnote from './modules/scnote'
@@ -30,6 +31,8 @@ const store = new Vuex.Store({
     catering,
     SalesActivities,
     scnote,
+    sceventitem,
+    scid
     routeParam,
     placeDistribution
   },
