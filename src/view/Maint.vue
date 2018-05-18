@@ -142,6 +142,10 @@
     mounted ()  {
       if(this.$store.getters.hotel.sign===0){
         this.maintTree[0].children.splice(1,0,{
+          label: '子酒店信息维护',
+          route:'/main/maint/hotelchild'
+        });
+        this.maintTree[0].children.splice(2,0,{
           label: '岗位设置',
           route:'/main/maint/hoteldept'
         });
