@@ -223,6 +223,7 @@
             this.hash[elem.tableno] = true;
           }
         }
+
         this.$emit('placeConfirm',this.allselect)
         this.$root.$emit('bv::hide::modal','multiplacemodal')
       },
