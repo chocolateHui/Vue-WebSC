@@ -170,8 +170,8 @@
       <pop-archives @btnArchClose="btnArchClose" @btnArchOk="ArchivesConfirm" :ifunit="profileType"></pop-archives>
     </el-dialog>
 
-    <b-modal id="remarkModal" size="lg" ref="remarkModal" title="宴会备注" hide-footer>
-      <!--<remark ref="caterRemark" :remark="localcatering"></remark>-->
+    <b-modal id="remarkModal" size="lg" title="宴会备注" hide-footer>
+      <remark></remark>
     </b-modal>
   </b-container>
 </template>
