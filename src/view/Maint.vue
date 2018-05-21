@@ -156,7 +156,6 @@
       this.$refs.maintTree.setCurrentKey(Nodeid);
     },
     components: {
-      loading
     }
   };
 </script>
