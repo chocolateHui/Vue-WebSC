@@ -203,8 +203,7 @@
     },
     components: {
       sidebar,
-      navbar,
-      loading
+      navbar
     }
   }
 </script>

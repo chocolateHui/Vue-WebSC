@@ -128,9 +128,6 @@
   <b-modal id="logmodal" ref="myModalchoose" size="lg" title="销售日记" hide-footer>
     <new-choose :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>
   </b-modal>
-  <div v-if="isLoading">
-    <loading></loading>
-  </div>
 </div>
 </template>
 <script>
