@@ -32,7 +32,6 @@
 </template>
 
 <script>
-  import loading from '../components/loading.vue'
   import { mapGetters} from 'vuex'
   import '../css/imgbtn.scss'
 

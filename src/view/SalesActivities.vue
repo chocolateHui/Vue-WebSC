@@ -94,7 +94,6 @@
   import popSales from '../components/SalesActivities/popSales'
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
   import methodinfo from '../config/MethodConst.js'
-  import loading from '../components/loading.vue'
   import '../css/SalesActivite.scss';
   export default {
     name: "sales-activities",

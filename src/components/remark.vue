@@ -102,7 +102,6 @@
     },
     methods: {
       getremark(){
-        let _this = this;
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -112,16 +111,16 @@
               eventid: this.noteparam.eventid,
               itemid: this.noteparam.itemid,
               type: this.noteparam.type
-            }).then(function (response) {
+            }).then((response) =>{
               if (response.data.errorCode === '0') {
                 if (typeof (response.data.notes) !== 'undefined') {
                   let type = response.data.notes[0]
                   type['isnew'] = 'F'
-                  _this.localscnotes = type;
+                  this.localscnotes = type;
                 } else {
-                  let type = _this.noteparam
+                  let type = this.noteparam
                   type['isnew'] = 'T'
-                  _this.localscnotes = Object.assign({},type);
+                  this.localscnotes = Object.assign({},type);
                 }
               } else {
                 this.$message(response.data.errorMessage)

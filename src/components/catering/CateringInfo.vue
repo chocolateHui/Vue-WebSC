@@ -273,7 +273,6 @@
         this.$emit('updateCatering',this.localcatering);
       },
       updateCateringSta(sta){
-        let _this = this;
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -281,14 +280,14 @@
           this.$http.post(methodinfo.updatecateringsta, {
             caterid: this.localcatering.caterid,
             sta: sta
-          }).then(function (response) {
+          }).then((response)=>{
             if (response.data.errorCode === '0') {
-              _this.localcatering.sta = sta;
-              _this.$store.commit('setCatering', _this.localcatering)
-              _this.$store.commit('setCatersta', sta)
-              _this.$store.dispatch("getEventList");
+              this.localcatering.sta = sta;
+              this.$store.commit('setCatering', this.localcatering)
+              this.$store.commit('setCatersta', sta)
+              this.$store.dispatch("getEventList");
             } else {
-              _this.$alert(response.data.errorMessage)
+              this.$alert(response.data.errorMessage)
             }
           });
         })
@@ -300,7 +299,6 @@
         this.$refs.caterReason.clearRow();
       },
       reasonConfirm(reason){
-        let _this = this;
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -310,10 +308,10 @@
             sta: '0',
             cancelreason:reason.code
           }).then(()=>{
-            _this.localcatering.sta = '0';
-            _this.$store.commit('setCatering', _this.localcatering)
-            _this.$store.commit('setCatersta', '0')
-            _this.$store.dispatch("getEventList");
+            this.localcatering.sta = '0';
+            this.$store.commit('setCatering', this.localcatering)
+            this.$store.commit('setCatersta', '0')
+            this.$store.dispatch("getEventList");
           })
         })
       },

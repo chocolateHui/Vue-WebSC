@@ -361,38 +361,36 @@
           let event = this.expandevent;
           event.begindate = event.bdate;
           event.enddate = event.bdate;
-          let _this=this;
           this.$store.dispatch('encrypttoken').then(() => {
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
             this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-            this.$http.post(methodinfo.checkevent, event).then(function (response) {
+            this.$http.post(methodinfo.checkevent, event).then((response)=> {
               if (response.data.errorCode === '0') {
-                _this.updateEvent();
+                this.updateEvent();
               }else if(response.data.errorCode === '2000'){
-                _this.$confirm(response.data.errorMessage).then(() =>{
-                  _this.updateEvent();
+                this.$confirm(response.data.errorMessage).then(() =>{
+                  this.updateEvent();
                 })
               }else{
-                _this.$alert(response.data.errorMessage)
+                this.$alert(response.data.errorMessage)
               }
             }).catch(function () {
-              _this.$alert("事务校验请求异常!")
+              this.$alert("事务校验请求异常!")
             })
           })
         }
       },
       updateEvent(){
-        let _this=this;
         this.$http.defaults.headers.common['username'] = this.$store.getters.username
         this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-        this.$http.post(methodinfo.updateevent, this.expandevent).then(function (response) {
+        this.$http.post(methodinfo.updateevent, this.expandevent).then((response)=> {
           if (response.data.errorCode === '0') {
-            _this.$message('事务保存成功')
-            _this.$store.dispatch("getEventList")
-            _this.$nextTick(()=>{
-              _this.expandRows.push(_this.expandevent.eventid)
+            this.$message('事务保存成功')
+            this.$store.dispatch("getEventList")
+            this.$nextTick(()=>{
+              this.expandRows.push(this.expandevent.eventid)
             })
           }
         })
@@ -528,7 +526,6 @@
         this.$refs.Reason.clearRow();
       },
       reasonConfirm(reason){
-        let _this=this;
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -537,10 +534,10 @@
             eventid:this.cancelRow.eventid,
             caterid:this.caterid,
             cancelreason:reason.code
-          }).then(function (response) {
+          }).then((response)=> {
             if (response.data.errorCode === '0') {
-              _this.$message('事务取消成功')
-              _this.$store.dispatch("getEventList")
+              this.$message('事务取消成功')
+              this.$store.dispatch("getEventList")
             }
           })
         })
