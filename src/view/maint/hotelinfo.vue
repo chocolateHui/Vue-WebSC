@@ -267,7 +267,10 @@
     props:['innhotel','sign'],
     watch:{
       innhotel:function (val,oldval) {
-        this.getpccodelist()
+        this.hoteInfo=Object.assign({},{});
+        if(this.innhotel!=''){
+          this.getpccodelist()
+        }
       }
     },
     components:{
@@ -395,9 +398,11 @@
       }
     },
     created(){
-      this.getcitylist()
-      this.getarealist()
-      this.getpccodelist()
+      if(this.sign!=1) {
+        this.getcitylist()
+        this.getarealist()
+        this.getpccodelist()
+      }
     }
   }
 </script>
