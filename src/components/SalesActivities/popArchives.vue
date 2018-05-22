@@ -2,10 +2,14 @@
   <div class="pop_archives" id="pop_archives">
     <div class="search">
       <ul>
-        <li><label>名称</label><input type="text" class="text_input" v-model.trim="name" id="archivesname"></li>
-        <li><label>手机</label><input type="text" class="text_input" v-model.trim="mobile" id="archivesphone"></li>
-        <li><label>档案号</label><input type="text" class="text_input" v-model.trim="no" id="archivesno"></li>
-        <li><label>联系人</label><input type="text" class="text_input" v-model.trim="contacter" id="archivesContacts"></li>
+        <li><label>名称</label><input type="text" class="text_input" v-model.trim="name" maxlength="20" id="archivesname"></li>
+        <li><label>手机</label>
+           <FormatInput type="number" maxlength="15" v-model="mobile" class="text_input"id="archivesphone"></FormatInput>
+        </li>
+        <li><label>档案号</label>
+           <FormatInput type="number" maxlength="15" v-model="no" class="text_input"id="archivesno"></FormatInput>
+        </li>
+        <li><label>联系人</label><input type="text" class="text_input" v-model.trim="contacter" maxlength="20" id="archivesContacts"></li>
         <li class="saleChoose">
            <b-form-group label="&#8194;销售员" horizontal>
             <el-select v-model="salesId" filterable>
@@ -78,7 +82,7 @@
 <script>
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
   import methodinfo from '../../config/MethodConst.js'
-
+  import FormatInput from './../FormatInput'
     export default {
         name: "pop-archives",
       data(){
@@ -112,6 +116,9 @@
         archFlag:function (val,oldval) {
           this.poparchdata()
         },
+      },
+      components:{
+        FormatInput
       },
       created:function () {
         this.poparchdata()
@@ -232,7 +239,7 @@
           }
           #archivesname{width: 120px;}
           #archivesphone{width: 120px;}
-          #archivesno{width: 190px;}
+          #archivesno{width: 190px;display: inline-block}
           #archivesContacts{width: 120px;}
           #archivessale{width: 120px;}
           #archivestype{width: 190px; background: $colorF5;}

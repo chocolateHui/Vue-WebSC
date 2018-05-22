@@ -5,8 +5,11 @@
     <ul class="clearfix">
       <li><label class="title1">单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位</label><input type="text" v-model="popunit" class="unit" @click="btnUnit" readonly="readonly"></li>
       <li><label class="title2">宾客</label><input type="text" class="guests" @click="btnGuests" v-model="popguest" readonly="readonly"></li>
-      <li><label class="title1 nofb">单位联系人</label><input type="text" v-model="contact" class="contact" maxlength="25"></li>
-      <li><label class="title2 nofb">单位联系方式</label><input type="text" class="contactinfor" v-model.trim="contactinfor" maxlength="20"></li>
+      <li><label class="title1 nofb">单位联系人</label>
+        <input type="text" v-model="contact" class="contact" maxlength="25"></li>
+      <li><label class="title2 nofb">单位联系方式</label>
+        <FormatInput type="number" maxlength="15" v-model="contactinfor" class="contactinfor"></FormatInput>
+       </li>
       <li><label class="title1">日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期</label>
         <el-date-picker
           v-model="datetime"
@@ -39,7 +42,10 @@
           </el-select>
         </b-form-group>
       </li>
-      <li><label class="title2">金额</label><input type="text" id="amount" v-model.trim="amount" maxlength="20"></li>
+      <li><label class="title2">金额</label>
+        <!--<input type="text" id="amount" v-model.trim="amount" maxlength="20">-->
+        <FormatInput type="float" maxlength="20" v-model="amount" id="amount"></FormatInput>
+      </li>
       <li><label class="title1 nofb">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label><textarea id="remarks" v-model="remarks" maxlength="200"></textarea></li>
       <li><label class="title1 nofb">结&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;果</label><textarea id="result" v-model="result" maxlength="200"></textarea></li>
       <li class="signstyle">
@@ -90,7 +96,7 @@
 </template>
 <script>
   import methodinfo from '../../config/MethodConst.js'
-  import { formatDate } from '../../common/date.js'
+  import FormatInput from './../FormatInput'
   import popArchives from './popArchives'
   import popInstructions from './popInstructions'
   import calendar from '../../components/vue-calendar-component/calendar'
@@ -158,7 +164,8 @@
       components:{
         calendar,
         popArchives,
-        popInstructions
+        popInstructions,
+        FormatInput
       },
       watch:{
         salesFlag:function (val,oldval) {
@@ -216,19 +223,13 @@
           this.$set(this,"instruFlag",this.instruFlag+1);
         },
         btnSaveas:function () {
-          var phone = /^1(3|4|5|7|8)\d{9}$/;
           var money=/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,9})?)$/;
           if(this.popunit==''&&this.popguest==''){
             this.$message({
               message: "单位和宾客至少填写一项",
               type: "warning"
             });
-          }else if(this.contactinfor!=''&&!phone.test(this.contactinfor)){
-            this.$message({
-              message: "请填写正确的手机号码",
-              type: "warning"
-            });
-          }else if(this.amount==''||this.amount<=0||!money.test(this.amount)){
+          } else if(this.amount==''||this.amount<=0||!money.test(this.amount)){
             this.$message({
               message: "请填写正确金额",
               type: "warning"
@@ -261,16 +262,10 @@
           }
         },
         btnSave:function () {
-          var phone = /^1(3|4|5|7|8)\d{9}$/;
           var money=/^([1-9]\d{0,9}|0)([.]?|(\.\d{1,9})?)$/;
           if(this.popunit==''&&this.popguest==''){
             this.$message({
               message: "单位和宾客至少填写一项",
-              type: "warning"
-            });
-          }else if(this.contactinfor!=''&&!phone.test(this.contactinfor)){
-            this.$message({
-              message: "请填写正确的手机号码",
               type: "warning"
             });
           }else if(this.amount==''||this.amount<=0||!money.test(this.amount)){
