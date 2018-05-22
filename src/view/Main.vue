@@ -40,7 +40,6 @@
   import 'font-awesome/css/font-awesome.css'
   import navbar from '../components/main/navbar.vue'
   import sidebar from '../components/main/sidebar.vue'
-  import loading from '../components/loading.vue'
   // 组件和参数
 
   export default {
@@ -143,7 +142,7 @@
         }
       },
       screenChange(){
-        this.screenHeight = document.body.clientHeight-105
+        this.screenHeight = document.body.clientHeight-85
       }
     },
     watch: {
@@ -204,8 +203,7 @@
     },
     components: {
       sidebar,
-      navbar,
-      loading
+      navbar
     }
   }
 </script>

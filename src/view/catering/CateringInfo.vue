@@ -65,7 +65,6 @@
         }, 500);
       },
       updateCatering(localcatering){
-        let _this=this;
         this.$refs.newevent.eventCheck(localcatering).then((checked) => {
           if(checked){
             this.$store.dispatch('encrypttoken').then(() => {
@@ -74,17 +73,17 @@
               this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
               this.$http.post(methodinfo.updatecatering, localcatering).then(function (response) {
                 if (response.data.errorCode === '0') {
-                  _this.$refs.newevent.batchSaveEvent(localcatering.caterid).then(() => {
-                    _this.$message({
+                  this.$refs.newevent.batchSaveEvent(localcatering.caterid).then(() => {
+                    this.$message({
                       message: '宴会保存成功!',
                       type: 'success'
                     })
-                    _this.$store.commit('setCatering', localcatering)
-                    _this.$store.commit('setCatersta', localcatering.sta)
-                    _this.$store.dispatch("getEventList");
+                    this.$store.commit('setCatering', localcatering)
+                    this.$store.commit('setCatersta', localcatering.sta)
+                    this.$store.dispatch("getEventList");
                   });
                 }else{
-                  _this.$alert(response.data.errorMessage)
+                  this.$alert(response.data.errorMessage)
                 }
               });
             })

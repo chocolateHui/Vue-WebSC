@@ -32,7 +32,6 @@
 </template>
 
 <script>
-  import loading from '../components/loading.vue'
   import { mapGetters} from 'vuex'
   import '../css/imgbtn.scss'
 
@@ -157,7 +156,6 @@
       this.$refs.maintTree.setCurrentKey(Nodeid);
     },
     components: {
-      loading
     }
   };
 </script>

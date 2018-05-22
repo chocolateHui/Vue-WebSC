@@ -79,10 +79,6 @@
               </el-table-column>
             </el-table>
           </b-row>
-
-
-
-
         </el-tab-pane>
         <el-tab-pane label="历史宴会订单">
           <b-row>
@@ -114,7 +110,6 @@
               :data="searchHitems"
               border
               stripe
-
               style="width: 100%">
               <el-table-column
                 v-for="item in fildes"
@@ -138,12 +133,9 @@
             </el-table>
           </b-row>
         </el-tab-pane>
-
-
-
       </el-tabs>
       <b-modal id="remarkmodal" ref="remarkmodal"  size="lg" title="宴会备注" hide-footer>
-        <sysLog></sysLog>
+        <scnote></scnote>
       </b-modal>
   </div>
 </template>
@@ -155,7 +147,7 @@
   import {datevalid}  from '../common/date.js'
   import methodinfo from '../config/MethodConst.js'
   import 'font-awesome/css/font-awesome.css'
-  import sysLog from  '../components/remark.vue'
+  import scnote from  '../components/remark.vue'
 
   const fildes = [
     {  prop: 'caterid', label:  '账号',width:'160',sortable:true,showTip: true},
@@ -339,13 +331,12 @@
         this.$router.push({ name: '宴会预订详情'});
       },
       remarkshow:function (row) {
-        var caterinfo = {};
-        caterinfo["caterid"] = row.caterid;
-        caterinfo["type"] = "1";
-
-        this.$store.commit('setCaterdes',row.name);
-        this.$store.commit('setCaterinfo',caterinfo);
-
+        let caterinfo = {
+          caterid:row.caterid,
+          caterdes:row.name,
+          type:1
+        };
+        this.$store.commit('setNoteParam',caterinfo);
         this.$refs.remarkmodal.show()
       },
     },
@@ -392,7 +383,7 @@
       }
     },
     components: {
-      sysLog,
+      scnote,
     },
     watch: {
       selected(newVal, oldVal) {

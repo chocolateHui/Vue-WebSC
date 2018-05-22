@@ -153,8 +153,7 @@
             </b-form-group>
           </b-row>
           <b-row style="width: 100%">
-            <b-form-group class="longinput" :label-cols="1" label="备&#8195;&#8195;注"
-                          horizontal>
+            <b-form-group class="longinput" :label-cols="1" label="备&#8195;&#8195;注" horizontal>
               <b-form-input  type="text" v-model="localcatering.remark"></b-form-input>
             </b-form-group>
           </b-row>
@@ -170,7 +169,7 @@
       <pop-archives @btnArchClose="btnArchClose" @btnArchOk="ArchivesConfirm" :ifunit="profileType"></pop-archives>
     </el-dialog>
 
-    <b-modal id="remarkModal" size="lg" title="宴会备注" hide-footer>
+    <b-modal id="remarkmodal" ref="remarkmodal" size="lg" title="宴会备注" hide-footer>
       <remark></remark>
     </b-modal>
   </b-container>
@@ -274,7 +273,6 @@
         this.$emit('updateCatering',this.localcatering);
       },
       updateCateringSta(sta){
-        let _this = this;
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -282,14 +280,14 @@
           this.$http.post(methodinfo.updatecateringsta, {
             caterid: this.localcatering.caterid,
             sta: sta
-          }).then(function (response) {
+          }).then((response)=>{
             if (response.data.errorCode === '0') {
-              _this.localcatering.sta = sta;
-              _this.$store.commit('setCatering', _this.localcatering)
-              _this.$store.commit('setCatersta', sta)
-              _this.$store.dispatch("getEventList");
+              this.localcatering.sta = sta;
+              this.$store.commit('setCatering', this.localcatering)
+              this.$store.commit('setCatersta', sta)
+              this.$store.dispatch("getEventList");
             } else {
-              _this.$alert(response.data.errorMessage)
+              this.$alert(response.data.errorMessage)
             }
           });
         })
@@ -301,7 +299,6 @@
         this.$refs.caterReason.clearRow();
       },
       reasonConfirm(reason){
-        let _this = this;
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -311,10 +308,10 @@
             sta: '0',
             cancelreason:reason.code
           }).then(()=>{
-            _this.localcatering.sta = '0';
-            _this.$store.commit('setCatering', _this.localcatering)
-            _this.$store.commit('setCatersta', '0')
-            _this.$store.dispatch("getEventList");
+            this.localcatering.sta = '0';
+            this.$store.commit('setCatering', this.localcatering)
+            this.$store.commit('setCatersta', '0')
+            this.$store.dispatch("getEventList");
           })
         })
       },
@@ -372,7 +369,13 @@
         this.cancelWidth = 'maxbtnwidth'
       },
       showNote(){
-        this.$refs.remarkModal.show();
+        let caterinfo = {
+          caterid:this.caterid,
+          caterdes:this.catering.name,
+          type:1
+        };
+        this.$store.commit('setNoteParam',caterinfo);
+        this.$refs.remarkmodal.show();
       },
       EOShare(){
         this.$router.push({name: '宴会预订EO单', params: { caterid: this.caterid }});

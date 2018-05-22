@@ -34,26 +34,25 @@
     },
     methods: {
       saveCatering(localcatering){
-        let _this=this;
         this.$refs.newevent.eventCheck(localcatering).then((checked) => {
           if(checked){
             this.$store.dispatch('encrypttoken').then(() => {
               this.$http.defaults.headers.common['username'] = this.$store.getters.username
               this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
               this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-              this.$http.post(methodinfo.newcatering, localcatering).then(function (response) {
+              this.$http.post(methodinfo.newcatering, localcatering).then((response) =>{
                 if (response.data.errorCode === '0') {
                   let caterid = response.data.caterid;
-                  _this.$refs.newevent.batchSaveEvent(caterid).then(() => {
-                    _this.$message({
+                  this.$refs.newevent.batchSaveEvent(caterid).then(() => {
+                    this.$message({
                       message: '宴会保存成功!',
                       type: 'success'
                     })
-                    _this.$store.commit('setCaterid',caterid);
-                    _this.$router.push({ name: '宴会预订详情', params: { caterid: caterid }});
+                    this.$store.commit('setCaterid',caterid);
+                    this.$router.push({ name: '宴会预订详情', params: { caterid: caterid }});
                   });
                 }else{
-                  _this.$alert(response.data.errorMessage)
+                  this.$alert(response.data.errorMessage)
                 }
               });
             })

@@ -3,27 +3,33 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 const login = () => import(/* webpackChunkName: "group-login" */ '../view/Login.vue')
+// 主界面相关
 const main = () => import(/* webpackChunkName: "group-main" */ '../view/Main.vue')
-const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Template.vue')
+const index = () => import(/* webpackChunkName: "group-main" */ '../view/Index.vue')
+const caterList = () => import(/* webpackChunkName: "group-main" */ '../view/CaterList.vue')
+const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
+// 宴会预订相关
 const NewCatering = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/NewCatering.vue')
 const CateringInfo = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/CateringInfo.vue')
-const EOShare = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/EOShare.vue')
-const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
+const ScEventItem = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/ScEventItem.vue')
+// 报表相关
+const EOShare = () => import(/* webpackChunkName: "group-report" */ '../view/catering/EOShare.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
-const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfo.vue')
+
+const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
+
+const placeDistribution = () => import(/* webpackChunkName: "group-place" */ '../view/placeDistribution.vue')
+const placeList = () => import(/* webpackChunkName: "group-place" */ '../components/PlaceDistribution/placeList.vue')
+
+// 维护相关
+const Maint = () => import(/* webpackChunkName: "group-maint" */ '../view/Maint.vue')
+const pccodeinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/pccodeinfo.vue')
 const Hotelmsg = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelmsg.vue')
 const Hotelchild = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelchild.vue')
 const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 const BaseCode = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/BaseCode.vue')
-const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
-const placeDistribution = () => import(/* webpackChunkName: "group-place" */ '../view/placeDistribution.vue')
-const placeList = () => import(/* webpackChunkName: "group-place" */ '../components/PlaceDistribution/placeList.vue')
-const index = () => import(/* webpackChunkName: "group-main" */ '../view/Index.vue')
-const caterList = () => import(/* webpackChunkName: "group-main" */ '../view/CaterList.vue')
-const Maint = () => import(/* webpackChunkName: "group-maint" */ '../view/Maint.vue')
-const pccodeinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/pccodeinfo.vue')
-
+const ScItemInfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/sciteminfo.vue')
 Vue.use(Router)
 
 let loadingInstance
@@ -85,7 +91,7 @@ const router = new Router({
         {
           path: '/main/catering/eventItem',
           name: '宴会事务项目',
-          component: Template,
+          component: ScEventItem,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -148,7 +154,7 @@ const router = new Router({
             {
               path: '',
               name: '基础代码维护',
-              component: Hotelinfo
+              component: Hotelmsg
             },
             {
               path: '/main/maint/hotelinfo',
@@ -167,8 +173,7 @@ const router = new Router({
             },
             {
               path: '/main/maint/hoteldept',
-              name: '岗位设置',
-              component: Hotelinfo
+              name: '岗位设置'
             },
             {
               path: '/main/maint/sysoption',
@@ -183,7 +188,7 @@ const router = new Router({
             {
               path: '/main/maint/item',
               name: '宴会项目',
-              component: Hotelinfo
+              component: ScItemInfo
             },
             {
               path: '/main/maint/basecode/:cat',

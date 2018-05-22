@@ -28,7 +28,7 @@
       </b-col>
     </b-row>
   </b-container>
-  <hotelinfo :innhotel="innhotel" :sign="sign"></hotelinfo>
+<hotelinfo :innhotel="innhotel" :sign="sign"></hotelinfo>
 </div>
 </template>
 
@@ -48,7 +48,7 @@
       }
     },
     components:{
-      hotelinfo,
+       hotelinfo,
     },
     methods:{
       configDefault:function () {
@@ -57,7 +57,6 @@
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
       },
       getbrandlist:function(){
-        var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
           // 获取营业点
