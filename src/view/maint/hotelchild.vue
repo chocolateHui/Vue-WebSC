@@ -28,13 +28,13 @@
       </b-col>
     </b-row>
   </b-container>
-  <hotelinfoadmin :innhotel="innhotel" :sign="sign"></hotelinfoadmin>
+  <hotelinfo :innhotel="innhotel" :sign="sign"></hotelinfo>
 </div>
 </template>
 
 <script>
   import methodinfo from '../../config/MethodConst.js'
-  import hotelinfoadmin from './hotelinfoadmin'
+  import hotelinfo from './hotelinfo'
   export default {
     name: "hotelchild",
     data(){
@@ -48,7 +48,7 @@
       }
     },
     components:{
-      hotelinfoadmin,
+      hotelinfo,
     },
     methods:{
       configDefault:function () {
