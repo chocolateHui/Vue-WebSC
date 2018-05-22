@@ -180,6 +180,7 @@ const methodinfo = {
   /*
  代码维护相关
  */
+
   // 新增营业点
   newpccode: '/SC/reserve/scplacemaint/newpccode',
   // 批量更新场地信息
