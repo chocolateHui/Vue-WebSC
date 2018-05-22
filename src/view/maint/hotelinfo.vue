@@ -51,10 +51,7 @@
               </el-select>
             </b-form-group>
             <b-form-group label="东&#8194;&#8194;&#8194;&#8194;经:" horizontal>
-              <b-form-input
-                type="text"
-                v-model="hoteInfo.longitude " >
-              </b-form-input>
+              <FormatInput type="float" maxlength="20" v-model="hoteInfo.longitude"></FormatInput>
             </b-form-group>
           </b-form>
         </b-col>
@@ -102,10 +99,7 @@
               </el-select>
             </b-form-group>
             <b-form-group label="北&#8194;&#8194;&#8194;&#8194;纬:" horizontal>
-              <b-form-input
-                type="text"
-                v-model="hoteInfo.latitude " >
-              </b-form-input>
+              <FormatInput type="float" maxlength="20" v-model="hoteInfo.latitude"></FormatInput>
             </b-form-group>
           </b-form>
         </b-col>
@@ -144,22 +138,16 @@
             <b-form-group label="联&#8194;系&#8194;人:" horizontal>
               <b-form-input
                 type="text"
-                v-model="hoteInfo.contactor " >
+                v-model="hoteInfo.contactor "
+                 maxlength="25"
+              >
               </b-form-input>
             </b-form-group>
             <b-form-group label="手&#8194;&#8194;&#8194;&#8194;机:" horizontal>
-              <b-form-input
-                type="text"
-                v-model="hoteInfo.phone "
-              >
-              </b-form-input>
+              <FormatInput type="number" maxlength="11" v-model="hoteInfo.phone"></FormatInput>
             </b-form-group>
             <b-form-group label="电&#8194;&#8194;&#8194;&#8194;话:" horizontal>
-              <b-form-input
-                type="text"
-                v-model="hoteInfo.telephone "
-              >
-              </b-form-input>
+              <FormatInput type="number" maxlength="15" v-model="hoteInfo.telephone"></FormatInput>
             </b-form-group>
           </b-form>
         </b-col>
@@ -169,44 +157,43 @@
           <b-form-group label="地&#8194;&#8194;&#8194;&#8194;址:" horizontal>
             <b-form-input
               type="text"
-              v-model="hoteInfo.address " >
+              v-model="hoteInfo.address "
+              maxlength="50"
+            >
             </b-form-input>
           </b-form-group>
           <b-form-group label="搜索关键字:" horizontal>
             <b-form-input
               type="text"
-              v-model="hoteInfo.keyword " >
+              v-model="hoteInfo.keyword "
+              maxlength="50"
+            >
             </b-form-input>
           </b-form-group>
           <b-form-group label="描&#8194;&#8194;&#8194;&#8194;述:" horizontal>
             <b-form-textarea id="textarea1"
                              v-model="hoteInfo.remark "
                              :rows="4"
-                             :max-rows="6">
+                             :max-rows="6"
+                             maxlength="100"
+            >
             </b-form-textarea>
           </b-form-group>
         </b-col>
         <b-col>
           <b-form-group label="邮&#8194;&#8194;&#8194;&#8194;件:" horizontal>
             <b-form-input
-              type="text"
+              type="email"
               v-model="hoteInfo.email "
+              maxlength="30"
             >
             </b-form-input>
           </b-form-group>
           <b-form-group label="传&#8194;&#8194;&#8194;&#8194;真:" horizontal>
-            <b-form-input
-              type="text"
-              v-model="hoteInfo.photo "
-            >
-            </b-form-input>
+            <FormatInput type="number" maxlength="15" v-model="hoteInfo.photo"></FormatInput>
           </b-form-group>
           <b-form-group label="排&#8194;&#8194;&#8194;&#8194;序:" horizontal>
-            <b-form-input
-              type="text"
-              v-model="hoteInfo.seq "
-            >
-            </b-form-input>
+            <FormatInput type="number" maxlength="10" v-model="hoteInfo.seq "></FormatInput>
           </b-form-group>
         </b-col>
       </b-row>
@@ -234,6 +221,7 @@
 </template>
 
 <script>
+  import FormatInput from './../../components/FormatInput'
   import initalize from './initalize'
   import initalizeFirst from './initializeFirst'
   import methodinfo from '../../config/MethodConst.js'
@@ -274,7 +262,7 @@
       }
     },
     components:{
-      initalizeFirst,initalize
+      initalizeFirst,initalize,FormatInput
     },
     computed: {
 
@@ -374,6 +362,12 @@
         this.getcityarealist()
       },
       btnSave:function () {
+        var emailreg= /(\S)+[@]{1}(\S)+[.]{1}(\w)+/;
+        if(this.sign==1&&this.innhotel==''){
+          this.$message({message: "请选择酒店", type: 'warning'});
+        }else if(this.hoteInfo.email!=''&&!emailreg.test(this.hoteInfo.email)){
+          this.$message({message: "邮箱格式不正确", type: 'warning'});
+        }else{
         var _this=this
         this.$set(this.hoteInfo,"hotel",this.hoteInfo.hotelid);
         this.$store.dispatch('encrypttoken').then(() => {
@@ -389,6 +383,7 @@
             }
           })
         })
+        }
       },
       btnInitalize:function () {
         this.$refs.myModalInitalize.show()

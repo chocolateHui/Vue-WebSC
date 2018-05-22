@@ -3,7 +3,7 @@
     <ul class="clearfix">
       <li>
         <p>批示内容</p>
-        <textarea class="text" v-model.trim="instruText"></textarea>
+        <textarea class="text" v-model.trim="instruText" maxlength="200"></textarea>
       </li>
       <li class="mr10">
         <p>批示人</p>
