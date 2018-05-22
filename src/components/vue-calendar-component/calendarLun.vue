@@ -16,7 +16,7 @@
       background-color: #fff;
       width: 100%;
       overflow: hidden;
-      padding-bottom: 10px;
+      padding-bottom: 25px;
       box-shadow: 0 6px 12px rgba(0,0,0,.175);
       border: 1px solid rgba(0,0,0,.15);
       border-radius: 4px;
@@ -50,7 +50,7 @@
 
     .wh_content_item {
       font-size: 12px;
-      width: 13.4%;
+      width: 14%;
       padding-bottom: 10.14%;
       text-align: center;
       color: #000;
@@ -160,10 +160,10 @@
       <div class="wh_content">
         <div class="wh_content_item" v-for="(item,index) in list" @click="clickDay(item,index)">
           <div>
-            <li class="wh_nextDayShow" v-if="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" v-bind:class="{wh_isToday:item.isTodayNow}">
+            <li class="wh_nextDayShow" v-if="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" :class="{wh_isToday:item.isTodayNow}">
               {{item.id}}<br/>{{item.lun}}
             </li>
-            <li v-else="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" v-bind:class="{ wh_isToday: item.isToday,wh_isMark:item.isMark,isTodayNow:item.isTodayNow}">
+            <li v-else="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" :class="{ wh_isToday: item.isToday,wh_isMark:item.isMark,isTodayNow:item.isTodayNow}">
               {{item.id}}<br/>{{item.lun}}
             </li>
           </div>
@@ -173,8 +173,7 @@
   </section>
 </template>
 <script>
-  import { GetLunarDay } from './Lunar'
-  import {getCookie,setCookie} from './../../js/cookie'
+  import calendarjs from './../../common/calendar'
   export default {
     data() {
       return {
@@ -315,13 +314,13 @@
           var nowTime = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + (i + 1);
           var timeList=this.dateFormat(new Date(date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + (i + 1)))
           timeList=this.signFormat(timeList)
-          var lunar1=GetLunarDay( date.getFullYear(), (date.getMonth() + 1),i+1)
+          var lunar1=calendarjs.solar2lunar( date.getFullYear(), (date.getMonth() + 1),i+1)
           if (
             datatimechoose == timeList
           ) {
             array = array.concat({
               id: i + 1,
-              lun:lunar1.lunarDayStr,
+              lun:lunar1.IDayCn,
               date: nowTime,
               isTodayNow: true,
               isToday: true,
@@ -338,7 +337,7 @@
           } else {
             array = array.concat({
               id: i + 1,
-              lun:lunar1.lunarDayStr,
+              lun:lunar1.IDayCn,
               date: nowTime,
               isTodayNow: false,
               isToday: chooseDay == nowTime && isChosedDay,
@@ -357,12 +356,12 @@
         //上个月多少开始
         for (var i = 0; i < this.getMonthweek(date); i++) {
           var nowTime = preDate.getFullYear() + '/' + (preDate.getMonth() + 1) + '/' + (num + i);
-          var lunar=GetLunarDay( preDate.getFullYear(), (preDate.getMonth() + 1),num + i)
+          var lunar=calendarjs.solar2lunar( preDate.getFullYear(), (preDate.getMonth() + 1),num + i)
           array2 = array2.concat(
             {
               id: num + i,
               date: nowTime,
-              lun:lunar.lunarDayStr,
+              lun:lunar.IDayCn,
               dayHide: new Date(nowTime).getTime() < parseInt(this.agoDayHide) || new Date(nowTime).getTime() > parseInt(this.futureDayHide),
               nextDayShow:
               new Date(nowTime).getTime() >
@@ -375,10 +374,10 @@
         if (_length < 7) {
           var nowTime = nextDate.getFullYear() + '/' + (nextDate.getMonth() + 1) + '/' + (i + 1);
           for (let i = 0; i < _length; i++) {
-            var lunar=GetLunarDay( nextDate.getFullYear(), (nextDate.getMonth() + 1),i+1)
+            var lunar=calendarjs.solar2lunar( nextDate.getFullYear(), (nextDate.getMonth() + 1),i+1)
             array.push({
               id: i + 1,
-              lun:lunar.lunarDayStr,
+              lun:lunar.IDayCn,
               date: nextDate.getFullYear() + '/' + (nextDate.getMonth() + 1) + '/' + (i + 1),
               dayHide: new Date(nowTime).getTime() < parseInt(this.agoDayHide) || new Date(nowTime).getTime() > parseInt(this.futureDayHide),
               nextDayShow:

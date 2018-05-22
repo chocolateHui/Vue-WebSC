@@ -4,7 +4,6 @@
       <label>当前选择场地:{{currentplace}}</label>
       <b-row>
         <b-col sm="2">
-          <b-btn @click="changeTableType" :pressed="false" variant="primary">{{usebtndes}}</b-btn>
         </b-col>
         <b-col sm="5"></b-col>
         <b-col sm="4">
@@ -37,7 +36,7 @@
       <b-row class="footer-row">
         <b-col sm="8"></b-col>
         <b-col sm="2">
-          <b-btn @click="placeConfirm" variant="primary">确认</b-btn>
+          <b-btn @click="sigleeventConfirm" variant="primary">确认</b-btn>
         </b-col>
         <b-col sm="2">
           <b-btn @click="exitModal">退出</b-btn>
@@ -51,11 +50,12 @@
   import methodinfo from '../../config/MethodConst.js'
 
   const fildes = [
-    {  prop: 'tableno', label:  '编码',width:'100',sortable:true,"classname":"text-center" },
+    {  prop: 'eventid', label:  '编码',width:'160',sortable:true,"classname":"text-center" },
     {  prop: 'descript', label:  '场地名称',width:'',sortable:true,showTip:true},
     {  prop: 'descript1', label:  '英文名称',width:'',sortable:true,showTip:true},
-    {  prop: 'pccodedes', label:  '营业点',width:'160',sortable:true,showTip:true,"classname":"text-center"},
-    {  prop: 'kind', label:  '类别',width:'100',sortable:true,showTip:true,"classname":"text-center" }
+    {  prop: 'bdate', label:  '日期',width:'120',sortable:true,showTip:true,"classname":"text-center"},
+    {  prop: 'stades', label:  '状态',width:'100',sortable:true,showTip:true,"classname":"text-center" },
+    {  prop: 'typedes', label:  '类型',width:'100',sortable:true,showTip:true,"classname":"text-center" }
   ]
 
   export default {
@@ -70,8 +70,7 @@
         currentPage:1,
         pageChange:false,
         isunuse:false,
-        usebtndes:'查看空闲场地'
-
+        placecount:0
       }
     },
     props:{
@@ -81,8 +80,8 @@
     },
     computed: {
       ...mapGetters([
-        'placelist',
-        'eventplace'
+        'corteventlist',
+        'sceventitemeventid',
       ]),
       searchitems:function () {
         let filterValue = this.filterValue;
@@ -90,26 +89,25 @@
           return this.tablePagination(this.items);
         }else{
           return this.tablePagination(this.items.filter(function (item) {
-            if (item.tableno.indexOf(filterValue) >= 0) {
+            if (item.eventid.indexOf(filterValue) >= 0) {
               return true;
             } else if (item.descript.indexOf(filterValue) >= 0) {
               return true;
             }else if (item.descript1.indexOf(filterValue) >= 0) {
               return true;
-            }else if (item.pccodedes.indexOf(filterValue) >= 0) {
+            }else if (item.stades.indexOf(filterValue) >= 0) {
               return true;
-            }else if (item.kind.indexOf(filterValue) >= 0) {
+            }else if (item.typedes.indexOf(filterValue) >= 0) {
+              return true;
+            }else if (item.bdate.indexOf(filterValue) >= 0) {
               return true;
             }
           }));
         }
-      },
-      placecount:function () {
-        return this.items.length;
       }
     },
     created(){
-
+      this.refreshData();
     },
     methods: {
       tablePagination(data=[]){
@@ -129,8 +127,13 @@
       },
       handleCurrentChange(val) {
         if(!this.pageChange){
-          this.currentRow = val;
-          this.currentplace = val.descript;
+          if(val){
+            this.currentRow = val;
+            this.currentplace = val.descript;
+          }else{
+            this.currentRow = {};
+            this.currentplace = '';
+          }
         }else{
           this.pageChange = false;
         }
@@ -139,10 +142,10 @@
         this.$refs.singleplacetable.setCurrentRow(this.currentRow);
         this.pageChange = true;
       },
-      resetPlace(tableno){
+      resetPlace(eventid){
         for(let index=0;index< this.items.length;index++){
           let item = this.items[index];
-          if(item.tableno===tableno){
+          if(item.eventid===eventid){
             this.currentPage = Math.ceil(index/13);
             this.$refs.singleplacetable.setCurrentRow(item);
             break;
@@ -153,64 +156,48 @@
         this.$refs.singleplacetable.setCurrentRow();
       },
       changeTableType(){
-        if(!this.eventbdate){
-          this.$alert("请先选择事务日期!")
-          return;
-        }
-        if(this.isunuse){
-          this.usebtndes = "查看空闲场地";
-        }else{
-          this.usebtndes = "查看所有场地";
-        }
-        this.isunuse = !this.isunuse;
         this.refreshData();
       },
       refreshData(){
         this.items=[];
         this.currentRow = {};
         this.currentplace = '';
-        if(this.isunuse){
-          let eventbdate =this.eventbdate
-          let items = this.items;
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.$http.defaults.headers.common['username'] = this.$store.getters.username
-            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-            this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-            this.$http.post(methodinfo.getunuseplacelist, {
-              "begindate":eventbdate,
-              "enddate":eventbdate
-            }).then(function (response) {
-              if (response.data.errorCode==='0') {
-                for(let option of response.data.places){
-                  items.push(option)
-                }
-              }
-            })
-          })
-        }else{
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.$store.dispatch("getPlacelist");
-          })
-        }
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch("getcortEventlist");
+        })
+
       },
-      placeConfirm(){
-        this.$emit('placeConfirm',this.currentRow)
-        this.$root.$emit('bv::hide::modal','singleplacemodal')
+      sigleeventConfirm(){
+        if(!this.currentRow){
+          this.$alert("请选择一个宴会!")
+          return
+        }
+        console.log("this.currentRow");
+        console.log(this.currentRow);
+        this.$emit('singleeventConfirm',this.currentRow)
+        this.$root.$emit('bv::hide::modal','singleeventmodal')
       },
       exitModal(){
-        this.$root.$emit('bv::hide::modal','singleplacemodal')
+        this.$root.$emit('bv::hide::modal','singleeventmodal')
       }
     },
     watch:{
-      placelist(val,oldval){
-        this.items = val;
+      corteventlist(val,oldval){
+        if(val){
+          this.items = val;
+        }
       },
-      eventbdate(val,oldval){
+      searchitems(val){
+        if(this.filterValue==='' || !this.filterValue){
+          this.placecount = this.items.length
+        }else{
+          this.placecount = this.total
+        }
       }
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" type="text/scss">
   #singleplace{
     -webkit-backface-visibility: hidden;
     .el-table{
@@ -228,10 +215,6 @@
     .pagination{
       float: right;
       padding: 5px 10px;
-    }
-    .el-table__expanded-cell{
-      padding: 5px!important;
-      box-shadow: 0 !important;
     }
     .row{
       margin-right: 0;

@@ -12,23 +12,19 @@
         <el-tree
           :style="{height: treeHeight + 'px'}"
           class="filter-tree"
+          node-key="id"
           :data="maintTree"
           :props="defaultProps"
           @node-click="NodeClick"
           default-expand-all
           highlight-current
           :filter-node-method="filterNode"
-          ref="tree2">
+          ref="maintTree">
         </el-tree>
       </b-col>
       <b-col cols="10">
         <b-container :style="{height: bodyHeight + 'px'}">
-          <div v-if="isLoading">
-            <loading></loading>
-          </div>
-          <div v-if="!isLoading">
-            <router-view></router-view>
-          </div>
+          <router-view></router-view>
         </b-container>
       </b-col>
     </b-row>
@@ -36,67 +32,76 @@
 </template>
 
 <script>
-  import loading from '../components/loading.vue'
   import { mapGetters} from 'vuex'
+  import '../css/imgbtn.scss'
 
   export default {
     data() {
       return {
         treeHeight: document.body.clientHeight-150,
-        bodyHeight: document.body.clientHeight-110,
+        bodyHeight: document.body.clientHeight-120,
         filterText: '',
         maintTree: [{
           label: '基础信息',
           children: [{
+            id:'hotelinfo',
             label: '酒店信息',
             route:'/main/maint/hotelinfo'
           }, {
+            id:'empnoinfo',
             label: '用户管理',
             route:'/main/maint/empnoinfo'
           }, {
+            id:'sysoption',
             label: '系统参数',
             route:'/main/maint/sysoption'
           }]
         }, {
           label: '宴会代码',
           children: [{
-            label: '宴会营业点',
-            route:'/main/maint/pccode'
-          }, {
+            id:'item',
             label: '宴会项目',
             route:'/main/maint/item'
           },{
+            id:'basecode/sc_event_type',
             label: '事务类型',
             route:'/main/maint/basecode',
-            car:'sc_event_type'
+            cat:'sc_event_type'
           },{
+            id:'basecode/sc_time_unit',
             label: '事务常用时间段',
             route:'/main/maint/basecode',
-            car:'sc_time_unit'
+            cat:'sc_time_unit'
           }, {
+            id:'basecode/sc_event_degree',
             label: '事务优先等级设置',
             route:'/main/maint/basecode',
-            car:'sc_event_degree'
+            cat:'sc_event_degree'
           },{
+            id:'basecode/layout',
             label: '场地布局',
             route:'/main/maint/basecode',
-            car:'layout'
+            cat:'layout'
           }, {
+            id:'basecode/sc_cancel_reason',
             label: '宴会取消理由',
             route:'/main/maint/basecode',
-            car:'sc_cancel_reason'
+            cat:'sc_cancel_reason'
           },{
+            id:'basecode/sc_place_kind',
             label: '场地类型',
             route:'/main/maint/basecode',
-            car:'sc_place_kind'
+            cat:'sc_place_kind'
           }, {
+            id:'basecode/sc_place_style',
             label: '场地风格',
             route:'/main/maint/basecode',
-            car:'sc_place_style'
+            cat:'sc_place_style'
           },{
+            id:'basecode/sc_place_location',
             label: '场地位置',
             route:'/main/maint/basecode',
-            car:'sc_place_location'
+            cat:'sc_place_location'
           }]
         }],
         defaultProps: {
@@ -115,26 +120,42 @@
         this.$refs.tree2.filter(val);
       }
     },
-
     methods: {
       filterNode(value, data) {
         if (!value) return true;
         return data.label.indexOf(value) !== -1;
       },
       NodeClick(data){
-        this.$router.push({path:data.route, params: { cat: data.cat }})
+        if (data.hasOwnProperty('cat')) {
+          this.$router.push({name: "通用基础代码", params: {cat: data.cat}})
+        } else {
+          this.$router.push({path: data.route})
+        }
       }
     },
     mounted ()  {
-      if(!this.$store.getters.hotel.sign){
+      if(this.$store.getters.hotel.sign===0){
         this.maintTree[0].children.splice(1,0,{
+          label: '子酒店信息维护',
+          route:'/main/maint/hotelchild'
+        });
+        this.maintTree[0].children.splice(2,0,{
           label: '岗位设置',
           route:'/main/maint/hoteldept'
         });
       }
+      if(this.$store.getters.hotel.sign===2){
+        this.maintTree[1].children.splice(0,0,{
+          id:'pccode',
+          label: '宴会营业点',
+          route:'/main/maint/pccode'
+        });
+      }
+      let index = this.$route.path.indexOf('/maint/')
+      let Nodeid = this.$route.path.substring(index+7);
+      this.$refs.maintTree.setCurrentKey(Nodeid);
     },
     components: {
-      loading
     }
   };
 </script>
@@ -150,9 +171,13 @@
     .input-group{
       padding-bottom: 0.5rem;
     }
+    .form-control{
+      height: 33.5px;
+    }
     .col-10{
       border: 1px solid #ced4da;
       border-radius: 5px;
+      padding-top: 10px;
     }
     .el-tree{
       border: 1px solid #ced4da;

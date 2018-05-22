@@ -1,5 +1,5 @@
 <template>
-    <div class="salesContain">
+    <div id="salesContain" class="salesContain">
     <div class="sales_activities">
       <div class="content_right">
         <div class="select">
@@ -28,11 +28,10 @@
             </li>
             <li class="fr"><input type="button" class="btn_month" :class="{'current':ifMonth}" value="月" @click="monthNow"><input type="button" class="btn_day"
                                                                                                                                   value="日" @click="dayNow":class="{'current':!ifMonth}"  ></li>
-            <li class="tc"><span style="display: inline-block;position: relative"><span data-type="1" id="timeData"  ref="refcalendar" @click="ifCalendarShow">{{datetime}}</span>
+            <li class="tc"><span data-type="1" id="timeData"  ref="refcalendar" @click="ifCalendarShow">{{datetime}}</span>
               <div class="saleCalendar"  ref="refcalendar" v-if="calendarShow">
                 <calendar :dataSign="datetimenow" @choseDay="choseDay" ></calendar>
               </div>
-            </span>
             </li>
           </ul>
         </div>
@@ -47,14 +46,14 @@
             <li>星期日</li>
           </ol>
           <ul class="clearfix">
-            <li v-for="item in list" v-if="item.otherMonth==-1" v-bind:class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
+            <li v-for="item in list" v-if="item.otherMonth==-1" :class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
               {{item.id}}
             </li>
-            <li @drop='monthdrop($event,item.id)' @dragover='allowDrop($event)' v-for="item in list" v-if="!item.otherMonth"  @click="monthPopSaleShow(item)" class="Wselday" v-bind:class="{wh_isToday: item.isToday,wh_isMark:item.isMark,todaySelect:item.isTodayNow}">
+            <li @drop='monthdrop($event,item.id)' @dragover='allowDrop($event)' v-for="item in list" v-if="!item.otherMonth"  @click="monthPopSaleShow(item)" class="Wselday" :class="{wh_isToday: item.isToday,wh_isMark:item.isMark,todaySelect:item.isTodayNow}">
               <p class="title"> {{item.id}}</p>
               <h1 @click="btnDetail(diaryList)" v-for="diaryList in guestdiarylist" v-if="guestdiarylist?item.id==diaryList.date.substring(8,10):false"><h1 :style="{background:salesTypecontain.bgcolor}" v-for="salesTypecontain in baseCodeListarc" v-if="diaryList.item==salesTypecontain.code"><span v-for="salesType in baseCodeListarc" v-if="diaryList.item==salesType.code">{{salesType.descript}}</span><strong v-for="sales in salelist" v-if="diaryList.saleid==sales.code">{{sales.name}}</strong></h1></h1>
             </li>
-            <li v-for="item in list" v-if="item.otherMonth==1" v-bind:class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
+            <li v-for="item in list" v-if="item.otherMonth==1" :class="{isTodayNow:item.isTodayNow,nextMonth: item.otherMonth}">
               {{item.id}}
             </li>
           </ul>
@@ -81,11 +80,9 @@
         </div>
       </div>
     </div>
-      <pop-sales :clickdata="clickData" :datadiary="diaryId" @saveorupdateguestdiary="saveorupdateguestdiary" v-if="popsale" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>
-      <div id="layer" v-if="popsale"></div>
-      <div v-if="isLoading">
-        <loading></loading>
-      </div>
+      <b-modal id="logmodal" ref="myModalsale" :no-close-on-backdrop="true" :no-close-on-esc="true" @hidden="onHidden" size="lg" title="销售日记" hide-footer>
+         <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>
+      </b-modal>
       <div id="layer2"></div>
   </div>
 </template>
@@ -94,15 +91,15 @@
   import popSales from '../components/SalesActivities/popSales'
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
   import methodinfo from '../config/MethodConst.js'
-  import loading from '../components/loading.vue'
   import '../css/SalesActivite.scss';
   export default {
     name: "sales-activities",
     data() {
       return {
+        status: 'accepted',
         datetime: "",
         today: '',
-        popsale: false,
+        // popsale: false,
         ifMonth: true,
         timeType: "本月",
         dataType: '1',
@@ -130,9 +127,12 @@
         datetimenow:'',
         bgcolorFlag:['#A0A0A0','#82AF6F','#D15B47','#9585BF','#FEE188','#D6487E','#3A87AD'],
         baseCodeListarc:[],
+        salesFlag:1,
+        infoName:'11'
       }
     },
     computed: {
+      ...mapGetters(['diaryItemList']),
       ...mapGetters(['salelist']),
       ...mapGetters(['guestdiarylist']),
       ...mapGetters(['guestDiary']),
@@ -150,25 +150,28 @@
     },
     components: {
       popSales,
-      calendar,
-      loading
+      calendar
     },
     methods:{
       btnDetail:function (id) {
          this.diaryId=id.id
-        this.popsale=true
+         // this.popsale=true
+        this.$set(this,"salesFlag",this.salesFlag+1);
+        this.$refs.myModalsale.show()
       },
       saveorupdateguestdiary:function (param) {
         this.$store.dispatch('encrypttoken').then(() => {
           //获取工号信息,完成后进行路由
           this.$store.dispatch('saveorupdateguestdiary',param).then(() => {
             this.SalesSelect()
-            this.popsale=false
+            // this.popsale=false
+            this.$refs.myModalsale.hide()
           })
         })
       },
       //销售类别拖动
       dragstart:function(event){
+        event.dataTransfer.setData("infoName"," ");
         this.dom = event.currentTarget
       },
       allowDrop:function(event){
@@ -181,7 +184,9 @@
         this.popSalesTime=this.dataTime+'-'+e
         this.popSaller=this.salesName
         this.clickData=''
-        this.popsale=true
+        // this.popsale=true
+        this.$set(this,"salesFlag",this.salesFlag+1);
+        this.$refs.myModalsale.show()
       },
       daydrop:function(event,name,saleid,time,timedetail){
         event.preventDefault();
@@ -193,7 +198,9 @@
         this.clickData=''
         this.timeDetail=timedetail
         this.timeDetailId=time
-        this.popsale=true
+        // this.popsale=true
+        this.$set(this,"salesFlag",this.salesFlag+1);
+        this.$refs.myModalsale.show()
       },
       //销售员选择
       salesShow:function () {
@@ -455,7 +462,9 @@
         this.clickData=''
         this.timeDetail=timedetail
         this.timeDetailId=time
-        this.popsale=true
+        // this.popsale=true
+        this.$set(this,"salesFlag",this.salesFlag+1);
+        this.$refs.myModalsale.show()
       },
       monthPopSaleShow :function (item) {
         var data=item.id
@@ -463,16 +472,24 @@
           data="0"+data
         }
           this.clickData=this.dataTime+'-'+data
-          this.popsale=true;
+          // this.popsale=true;
+        this.$set(this,"salesFlag",this.salesFlag+1);
+          this.$refs.myModalsale.show()
           this.popSaller=this.salesName
       },
       btnExit:function(){
-        this.popsale=false;
+        // this.popsale=false;
+        this.diaryId='0'
+        this.$refs.myModalsale.hide()
+      },
+      onHidden:function () {
         this.diaryId='0'
       },
       monthNow:function (date, isChosedDay = true) {
         this.ifMonth=true
         this.timeType="本月"
+        this.salesId=''
+        this.salesName='全部'
         this.datetime=this.$options.methods.toMonth().substring(0,4)+"年"+this.$options.methods.toMonth().substring(5,7)+"月"
         this.dataTime=this.$options.methods.toMonth()
         this.datetimenow=this.$options.methods.toDay().substring(0,4)+"-"+this.$options.methods.toDay().substring(5,7)+"-"+this.$options.methods.toDay().substring(8,10)
@@ -579,12 +596,14 @@
             cat:'guest_diary_item'
           }).then((response) => {
             if (response.status === 200) {
-              _this.baseCodeListarc=response.data.basecodes
-              _this.baseCodeListarc.forEach(function(item,index){
-                if(typeof item.bgcolor=='undefined'){
-                  _this.$set(item,"bgcolor",_this.bgcolorFlag[index%7])
-                }
-              })
+              if (response.data.errorCode === '0') {
+                _this.baseCodeListarc = response.data.basecodes
+                _this.baseCodeListarc.forEach(function (item, index) {
+                  if (typeof item.bgcolor == 'undefined') {
+                    _this.$set(item, "bgcolor", _this.bgcolorFlag[index % 7])
+                  }
+                })
+              }
             }
           })
         })
@@ -636,20 +655,32 @@
   }
 </script>
 
-<style scoped  lang="scss">
-  .nextMonth{
-    color: #DBDCDC;
+<style  lang="scss">
+  #salesContain{
+    .nextMonth{
+      color: #DBDCDC;
+    }
+    .todaySelect{
+      background: rgb(255, 255, 204);
+    }
+    .tc span{
+      cursor:pointer;
+    }
+    .saleCalendar{
+      top: 30px;
+      left:50%;
+      position: absolute;
+      z-index: 22;
+    }
+  .modal-lg {
+    max-width: 780px;
   }
-  .todaySelect{
-    background: rgb(255, 255, 204);
-  }
-  .tc span{
-    cursor:pointer;
-  }
-  .saleCalendar{
-    top: 30px;
-    left:1%;
-    position: absolute;
-    z-index: 22;
+    .modal-header{
+      display: none;
+    }
+    .modal-content{
+      background: transparent;
+      border:none;
+    }
   }
 </style>

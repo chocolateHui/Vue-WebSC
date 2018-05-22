@@ -3,7 +3,7 @@
 </template>
 <script>
   export default {
-    props: ['value', 'text','type','max'],
+    props: ['value','text','type','max'],
     name: 'Numberinput',
     data() {
       return {

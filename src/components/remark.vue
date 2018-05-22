@@ -3,81 +3,46 @@
   <div id="remark">
     <b-container fluid>
       <b-row  style="font-size: 12px">
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="5" class="my-1 paddingright0">
           <b-input-group prepend="宴会">
-            <b-form-input
-              type="text"
-            v-model="remarkinfo.caterdes"
-            required
-            :disabled="changeshow.pccodedisabled"
-            @input.native="updateValue"
-            placeholder="">
+            <b-form-input type="text" :value="Titleinfo.caterdes" :readonly="show.pccodedisabled" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="5" class="my-1 paddingright0">
           <b-input-group prepend="事务" >
-            <b-form-input
-              type="text"
-              v-model="remarkinfo.eventdes"
-              required
-              :disabled="changeshow.descriptdisabled"
-              @input.native="updateValue"
-              placeholder="">
+            <b-form-input type="text" :value="Titleinfo.eventdes" :readonly="show.descriptdisabled" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="2" class="my-1 paddingright0">
           <b-input-group prepend="排序">
-            <b-form-input
-              type="text"
-              v-model="remarkinfo.seq"
-              required
-              :disabled="changeshow.descript1disabled"
-              placeholder="">
-            </b-form-input>
+            <FormatInput type="number" maxlength="5" v-model="localscnotes.seq"></FormatInput>
           </b-input-group>
         </b-col>
       </b-row>
       <b-row  style="font-size: 1rem">
-        <b-col sm="4" class="my-1 paddingright0">
+        <b-col sm="5" class="my-1 paddingright0">
           <b-input-group prepend="标题">
-            <b-form-input
-              type="text"
-              v-model="remarkinfo.title"
-              :disabled="changeshow.descript2disabled"
-              required
-              placeholder="">
+            <b-form-input type="text" v-model="localscnotes.title" placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
-        <b-col sm="4" class="my-1 paddingright0">
-          <b-form-group horizontal :label-cols="4" label="显示在EO单" class="mb-0">
-            <b-form-checkbox id="checkbox1"
-                             v-model="remarkinfo.flag"
-                             value="T"
-                             unchecked-value="F">
+        <b-col sm="3" class="my-1 paddingright0">
+          <b-form-group horizontal :label-cols="6" label="显示在EO单" class="mb-0">
+            <b-form-checkbox id="checkbox1" v-model="localscnotes.flag" value="T" unchecked-value="F">
             </b-form-checkbox>
           </b-form-group>
         </b-col>
         <b-col sm="4" class="my-1 paddingright0">
           <b-input-group prepend="备注时间">
-            <b-form-input
-              type="text"
-              v-model="remarkinfo.date0"
-              :disabled="changeshow.tablesdisabled"
-              required
-              placeholder="">
+            <b-form-input type="text" v-model="localscnotes.date0" readonly placeholder="">
             </b-form-input>
           </b-input-group>
         </b-col>
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px">
-        <b-form-textarea id="textarea1"
-                         v-model="remarkinfo.content"
-                         placeholder="Enter something"
-                         :rows="12"
-                         :max-rows="12">
+        <b-form-textarea id="textarea1" v-model="localscnotes.content" :rows="12" :max-rows="12">
         </b-form-textarea>
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px;float: right">
@@ -88,136 +53,141 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue'
+  import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../config/MethodConst.js'
-  const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
-  const newshow = {  pccodedisabled: false, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:true,tablesdisabled:true}
+  import {formatDate} from '../common/date'
+
+  // 组件和参数
+  import FormatInput from './FormatInput.vue'
+
+  const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
+  const newshow = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
 
   export default {
+
     data () {
       return {
         show: show,
-        remarkinfo:this.remark,
+        localscnotes:{},
         ty:"",
+        Titleinfo:{},
       }
     },
     props:{
-      remark: {
-        type:Object
-      },
+
     },
     created(){
-      console.log("a");
-      this.getremark()
+      // console.log("a");
+      // this.getremark()
     },
 
     watch: {
-      remarkinfo:function (val,oldval) {
-       this.getremark();
-      }
+      ty:function (val,oldval) {
+        if(this.ty==="new"){
+          this.show= show;
+        }else{
+          this.show=  newshow;
+        }
+      },
+      noteparam:function (val,oldval) {
+        this.Titleinfo = Object.assign({},val);
+        this.getremark();
+      },
     },
-
+    computed: {
+      ...mapGetters([
+        "noteparam"
+      ]),
+    },
     methods: {
-      changeshow() {
-        if(this.ty=="new"){
-          return show;
-        }else{
-          return newshow;
-        }
-      },
-      updateValue(event) {
-        console.log(event);
-        if(!event.isComposing){
-          return event.data;
-        }else{
-          event.preventDefault();
-        }
-      },
       getremark(){
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.$http.defaults.headers.common['username'] = this.$store.getters.username
-            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-            this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-            this.$http.post(methodinfo.getscnotelist, {
-              caterid: this.remarkinfo.caterid,
-              eventid: this.remarkinfo.eventid,
-              itemid:this.remarkinfo.itemid,
-              type:this.remarkinfo.type,
-            }).then((response)=> {
-              if (response.status === 200) {
-                if(typeof(response.data.notes) != "undefined"){
-                  var s = response.data.notes[0];
-                  this.remarkinfo.seq = s.seq;
-                  this.remarkinfo.content = s.content;
-                  this.remarkinfo.title = s.title;
-                  this.remarkinfo.flag = s.flag;
-                  this.remarkinfo.date0 = s.date0;
-                  this.remarkinfo.uuid= s.uuid;
-                  this.ty="update";
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.getscnotelist, {
+              caterid: this.noteparam.caterid,
+              eventid: this.noteparam.eventid,
+              itemid: this.noteparam.itemid,
+              type: this.noteparam.type
+            }).then((response) =>{
+              if (response.data.errorCode === '0') {
+                if (typeof (response.data.notes) !== 'undefined') {
+                  let type = response.data.notes[0]
+                  type['isnew'] = 'F'
+                  this.localscnotes = type;
+                } else {
+                  let type = this.noteparam
+                  type['isnew'] = 'T'
+                  this.localscnotes = Object.assign({},type);
                 }
-                else{
-                  this.ty="new";
-                }
+              } else {
+                this.$message(response.data.errorMessage)
               }
             })
-          })
-        },
+        })
+      },
       close:function(){
-        // console.log(this.$store.getters.username);
-        // console.log(this.$store.getters.empno);
-        // this.$emit('onhide');
+        this.$root.$emit('bv::hide::modal','remarkmodal')
       },
       updatescnotes(){
-        console.log(this.remarkinfo)
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.updatescnoteinfo, {
-            uuid: this.remarkinfo.uuid,
-            title: this.remarkinfo.title,
-            content:this.remarkinfo.content,
-            type:this.remarkinfo.type,
-            sta:this.remarkinfo.sta,
-            eoprinted:this.remarkinfo.eoprinted
-          }).then((response)=> {
-            if (response.status === 200) {
-              console.log(response.data.errorCode);
-            }
+          this.$http.post(methodinfo.updatescnoteinfo, this.localscnotes).then((response)=> {
+              if(response.data.errorCode==="0"){
+                this.$message({
+                  type: '保存',
+                  message: '保存成功!'
+                });
+                this.$emit('onhide');
+               this.getremark()
+              }
+              else{
+                this.$message.error({
+                  type: '保存',
+                  message:response.data.errorMessage
+                });
+              }
           })
         })
       },
       newscnotes(){
+        if(!this.localscnotes.title){
+          this.$message.error({
+            type: '保存',
+            message:"标题不能为空"
+          });
+          return;
+        }
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.newscnoteinfo, {
-            blockid: this.remarkinfo.blockid,
-            caterid: this.remarkinfo.caterid,
-            eventid: this.remarkinfo.eventid,
-            itemid: this.remarkinfo.itemid,
-            type:this.remarkinfo.type,
-            title: this.remarkinfo.title,
-            content:this.remarkinfo.content,
-            date0:new Date().getTime(),
-            flag:this.remarkinfo.flag,
-            seq:this.remarkinfo.seq
-          }).then((response)=> {
-            if (response.status === 200) {
-
-              if(response.data.errorcode == "0"){
-
+          this.localscnotes.date0=formatDate(new Date(),"yyyy-MM-dd hh:mm:ss");
+          this.$http.post(methodinfo.newscnoteinfo, this.localscnotes).then((response)=> {
+              if(response.data.errorCode==="0"){
+                this.$message({
+                  type: '新建',
+                  message: '新建成功!'
+                });
+                this.$root.$emit('bv::hide::modal','remarkmodal')
+                this.getremark()
               }
               else{
-
+                this.$message.error({
+                  type: '保存',
+                  message:response.data.errorMessage
+                });
               }
-            }
+
           })
         })
       },
       savescnotes:function(){
-        var url = "";
-        if(this.ty==="update"){
+        if(this.localscnotes.isnew==="F"){
           this.updatescnotes();
         }
         else{
@@ -225,12 +195,17 @@
         }
 
       }
-      }
-
+    },
+    components: {
+      FormatInput
+    },
   }
 </script>
 <style lang="scss" type="text/scss">
   #remark{
+    .paddingright0 {
+      padding-right: 0px;
+    }
    .btn {
       width: 92px;
       margin-left: 5px;
@@ -241,6 +216,15 @@
     }
     .custom-control {
       min-height: 0.6rem;
+    }
+    .form-control[readonly]{
+      background-color: white;
+    }
+    .form-row > .col, .form-row > [class*="col-"] {
+      padding-right: 0px;
+    }
+    #textarea1{
+      height: 300px;
     }
   }
 </style>

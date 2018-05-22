@@ -3,7 +3,7 @@
   <div id="indexpanel" class="router-template2">
     <div class="template-wrap2" >
       <b-container class="height100 width99">
-        <b-row class="paddingbottom15">
+        <b-row ref="tu" class="paddingbottom15">
           <b-col cols="8" class="paddingright0">
             <b-card border-variant="info" header="未来一周宴会会场走势图"  header-tag="header" align="left" class="height100">
               <div id="myChart" :style="{width: '760px', height: '260px'}"></div>
@@ -47,7 +47,7 @@
                 :data="tableData1"
                 border
                 stripe
-                height="180"
+                :height="tableHeight"
                 style="width: 100%">
                 <el-table-column
                   property="descript"
@@ -71,13 +71,13 @@
                   property="bdate"
                   :show-overflow-tooltip=true
                   label="事务日期"
-                  width="80">
+                  width="70">
                 </el-table-column>
                 <el-table-column
                   property="begintime"
                   :show-overflow-tooltip=true
                   label="开始日期"
-                  width="80">
+                  width="70">
                 </el-table-column>
               </el-table>
             </b-card>
@@ -92,7 +92,7 @@
                 :data="tableData2"
                 border
                 stripe
-                height="180"
+                :height="tableHeight"
                 style="width: 100%">
                 <el-table-column
                   property="name"
@@ -131,7 +131,7 @@
                 :data="tableData3"
                 border
                 stripe
-                height="180"
+                :height="tableHeight"
                 style="width: 100%">
                 <el-table-column
                   property="name"
@@ -143,7 +143,7 @@
                   property="saleid_name"
                   :show-overflow-tooltip=true
                   label="销售员"
-                  width="180">
+                  width="tableHeight">
                 </el-table-column>
               </el-table>
             </b-card>
@@ -188,7 +188,12 @@
         piedata:[],
         zhuydata:[],
         zhuxdata:[],
+        tuHeight:"",
+        tableHeight: ""
       }
+    },
+    created(){
+      this.tableHeight = document.body.clientHeight-480
     },
     mounted() {
 
@@ -576,12 +581,15 @@
       font-size: 15px;
       font-weight: 400;
       height: 100%;
+
     }
     .template-wrap2 {
       height: 100%;
       display: flex;
       flex-flow: row wrap;
       align-items: left;
+      padding-left: 15px;
+      padding-right: 15px;
     }
     .width100{
       width: 100%;
@@ -595,7 +603,9 @@
     .height100{
       height: 100%;
     }
-
+    .card {
+      margin-bottom: 0px;
+    }
     .card-text{
       height: 70px;
       float: left;
@@ -636,6 +646,8 @@
       float: right;
       padding-top: 4px;
     }
+
+
   }
 
 </style>

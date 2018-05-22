@@ -9,8 +9,8 @@
           <span class="n3">时间</span>
           <span class="n4">修改人</span>
         </li>
-        <li class="it" v-for="(placeslist,index) in placesinfo">
-          <div v-for="infolist in placesinfo[index].bdates" class="clearfix" v-if="infolist.bdate==timelistthing1&&placeslistp==placeslist.tableno">
+        <li class="it" v-for="(placeslist,index) in placesinfo2">
+          <div v-for="infolist in placesinfo2[index].bdates" class="clearfix" v-if="infolist.bdate==timelistthing1&&placeslistp==placeslist.tableno">
             <span class="n1" :data-id="infolist.caterid">{{infolist.caterdes}}</span>
             <span class="n5">{{infolist.eventdes}}</span>
             <span class="n7" v-for="hlist in headListp" v-if="hlist.dataid==infolist.sta">{{hlist.name}}</span>
@@ -21,17 +21,20 @@
           </div>
         </li>
         <li></li>
-        <a class="btn_add" v-if=" new Date(timenow)<=new Date(timelistthing1)" @click="addThings">添加宴会事务</a>
+        <a class="btn_add" v-if=" new Date(timenow)<=new Date(timelistthing1)" @click="addThings"><i style="font-size: 1rem" class="fa fa-plus-circle"></i>   添加宴会事务</a>
       </ol>
  </template>
 <script>
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
   import '../../css/PlaceDistribute.scss';
+  import Icon from "iview/src/components/icon/icon";
     export default {
-        name: "today-things",
+      components: {Icon},
+      name: "today-things",
       data(){
         return{
-           timenow:''
+           timenow:'',
+          placesinfo2:[]
         }
       },
       created(){
@@ -41,6 +44,9 @@
         ...mapGetters(['placesinfo']),
       },
       watch:{
+        placesinfo:function (val,oldval) {
+          this.placesinfo2 = Object.assign({},this.placesinfo);
+        }
       },
       props:['datatimeid','timelistthing1','placeslistp','headListp'],
       methods:{

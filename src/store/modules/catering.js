@@ -6,9 +6,10 @@ import axiosinstance from '../../common/axiosinstance'
 
 // initial state
 const state = {
-  caterid: '',
   catersta: 'Q',
   catering: {},
+  newEventParam: {},
+  newCateringParam: {},
   eventlist: [],
   defaulttype: '',
   eventstas: '1,2,3,W,Q',
@@ -24,11 +25,13 @@ const state = {
 
 // getters
 const getters = {
-  caterid: state => state.caterid,
-
   catersta: state => state.catersta,
 
   catering: state => state.catering,
+
+  newEventParam: state => state.newEventParam,
+
+  newCateringParam: state => state.newCateringParam,
 
   eventlist: state => state.eventlist,
 
@@ -113,12 +116,12 @@ const actions = {
     })
   },
   getCateringInfo (store) {
-    if (state.caterid) {
+    if (store.getters.caterid) {
       axiosinstance.defaults.headers.common['username'] = store.getters.username
       axiosinstance.defaults.headers.common['signature'] = store.getters.signature
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
       axiosinstance.post(methodinfo.getcateringinfo, {
-        caterid: state.caterid
+        caterid: store.getters.caterid
       }).then(function (response) {
         if (response.data.errorCode === '0') {
           store.commit('setCatering', response.data)
@@ -130,11 +133,12 @@ const actions = {
     }
   },
   getEventList (store) {
+    store.commit('setEventlist', [])
     axiosinstance.defaults.headers.common['username'] = store.getters.username
     axiosinstance.defaults.headers.common['signature'] = store.getters.signature
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
     axiosinstance.post(methodinfo.geteventlist, {
-      caterid: state.caterid,
+      caterid: store.getters.caterid,
       sta: state.eventstas
     }).then(function (response) {
       if (response.data.errorCode === '0') {
@@ -189,14 +193,17 @@ const actions = {
 // mutations
 const mutations = {
 
-  setCaterid (state, caterid) {
-    state.caterid = caterid
-  },
   setCatersta (state, catersta) {
     state.catersta = catersta
   },
   setCatering (state, catering) {
     state.catering = catering
+  },
+  setNewEventParam (state, newEventParam) {
+    state.newEventParam = newEventParam
+  },
+  setNewCateringParam (state, newCateringParam) {
+    state.newCateringParam = newCateringParam
   },
   setEventlist (state, eventlist) {
     state.eventlist = eventlist

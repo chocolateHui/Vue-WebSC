@@ -19,21 +19,19 @@ const state = {
   // 销售员列表
   salelist: [],
   // 查询销售类别
-  baseCodeList: [],
+  diaryItemList: [],
   // 查询销售活动列表参数
   guestdiarylist: [],
   profileslist: [],
-  guestDiary: {},
-  placesinfo: []
+  guestDiary: {}
 }
 // getters
 const getters = {
   salelist: state => state.salelist,
-  baseCodeList: state => state.baseCodeList,
+  diaryItemList: state => state.diaryItemList,
   guestdiarylist: state => state.guestdiarylist,
   profileslist: state => state.profileslist,
-  guestDiary: state => state.guestDiary,
-  placesinfo: state => state.placesinfo
+  guestDiary: state => state.guestDiary
 }
 const getAllMsg = function (store) {
   axiosinstance.defaults.headers.common['username'] = store.getters.username
@@ -52,7 +50,7 @@ const actions = {
     getAllMsg(store)
     axios.all([getsaleidlist(), getbasecodelist()]).then(axios.spread((res1, res2) => {
       store.commit('setSalelist', res1.data.saleids)
-      store.commit('setBaseCodeList', res2.data.basecodes)
+      store.commit('setDiaryItemList', res2.data.basecodes)
     }))
       .catch((error) => {
         console.log(error)
@@ -65,17 +63,29 @@ const actions = {
       edate: diaryParam.edate,
       saleid: diaryParam.saleid
     }).then(function (response) {
-      if (response.data.errorCode === '0') {
-        store.commit('setGuestdiarylist', response.data.guestdiarys)
+      if (response.status === 200) {
+        if (response.data.errorCode === '0') {
+          store.commit('setGuestdiarylist', response.data.guestdiarys)
+        }
       }
     })
   },
   // 查询档案列表
   getProfiles: function (store, param) {
     getAllMsg(store)
-    axiosinstance.post(methodinfo.getProfiles, param).then(function (response) {
-      if (response.data.errorCode === '0') {
-        store.commit('setProfiles', response.data.profiles)
+    axiosinstance.post(methodinfo.getProfiles, {
+      saleid: param.saleid,
+      mobile: param.mobile,
+      no: param.no,
+      name: param.name,
+      contacter: param.contacter,
+      ischeck: param.ischeck,
+      type: param.type
+    }).then(function (response) {
+      if (response.status === 200) {
+        if (response.data.errorCode === '0') {
+          store.commit('setProfiles', response.data.profiles)
+        }
       }
     })
   },
@@ -83,10 +93,26 @@ const actions = {
   saveorupdateguestdiary: function (store, param) {
     return new Promise((resolve, reject) => {
       getAllMsg(store)
-      axiosinstance.post(methodinfo.saveorupdateguestdiary, param).then(function (response) {
-        if (response.data.errorCode === '0') {
-          resolve()
-        }
+      axiosinstance.post(methodinfo.saveorupdateguestdiary, {
+        amount: param.amount,
+        applname: param.applname,
+        appltel: param.appltel,
+        ctime: param.ctime,
+        cusno: param.cusno,
+        cusnodes: param.cusnodes,
+        no: param.no,
+        nodes: param.nodes,
+        date: param.date,
+        feedback: param.feedback,
+        id: param.id,
+        item: param.item,
+        memorandum: param.memorandum,
+        memsta: param.memsta,
+        saleid: param.saleid,
+        ref: param.ref,
+        tag: param.tag
+      }).then(function (response) {
+        resolve()
       })
     })
   },
@@ -97,31 +123,10 @@ const actions = {
       axiosinstance.post(methodinfo.getguestdiary, {
         id: param
       }).then(function (response) {
-        if (response.status === 200) {
+        if (response.data.errorCode === '0') {
           store.commit('setGuestDiary', response.data)
+          resolve()
         }
-        resolve()
-      })
-    })
-  },
-  // 查询场地状态
-  getplaceusedinfo: function (store, param) {
-    return new Promise((resolve, reject) => {
-      getAllMsg(store)
-      axiosinstance.post(methodinfo.getplaceusedinfo, param).then(function (response) {
-        if (response.status === 200) {
-          let placedata = []
-          if (response.data.errorCode === '0') {
-            if (response.data.places !== null) {
-              placedata = response.data.places
-              for (let i = 0; i < placedata.length; i++) {
-                placedata[i].bdates.reverse()
-              }
-            }
-          }
-          store.commit('setPlaceusedinfo', placedata)
-        }
-        resolve()
       })
     })
   }
@@ -131,8 +136,8 @@ const mutations = {
   setSalelist (state, salelist) {
     state.salelist = salelist
   },
-  setBaseCodeList (state, baseCodeList) {
-    state.baseCodeList = baseCodeList
+  setDiaryItemList (state, diaryItemList) {
+    state.diaryItemList = diaryItemList
   },
   setGuestdiarylist (state, guestdiarylist) {
     state.guestdiarylist = guestdiarylist
@@ -142,9 +147,6 @@ const mutations = {
   },
   setGuestDiary (state, guestDiary) {
     state.guestDiary = guestDiary
-  },
-  setPlaceusedinfo (state, placesinfo) {
-    state.placesinfo = placesinfo
   },
   // 清空列表
   setProfilesNull (state) {

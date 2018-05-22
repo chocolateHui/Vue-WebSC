@@ -201,9 +201,9 @@
       </el-table-column>
       <el-table-column label="操作" width="140">
         <template slot-scope="scope">
-          <b-button size="mini" class="Item-button image-btn" type="danger" ></b-button>
+          <b-button size="mini" class="Item-button image-btn" @click="openEvenitem(scope.row)" type="danger" ></b-button>
           <b-button size="mini" class="Synchronization-button image-btn" type="danger" ></b-button>
-          <b-button size="mini" class="Journal-button image-btn" type="danger" ></b-button>
+          <b-button size="mini" class="Journal-button image-btn" type="danger" @click="showNote(scope.row)"></b-button>
           <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="cancelEvent(scope.row)"></b-button>
         </template>
       </el-table-column>
@@ -239,8 +239,8 @@
       <sysLog></sysLog>
     </b-modal>
 
-    <b-modal id="remarkModal" size="lg" ref="remarkModal" title="宴会备注" hide-footer>
-      <!--<remark ref="caterRemark"></remark>-->
+    <b-modal id="remarkmodal" size="lg" ref="remarkmodal" title="宴会备注" hide-footer>
+      <remark></remark>
     </b-modal>
   </div>
 </template>
@@ -361,38 +361,36 @@
           let event = this.expandevent;
           event.begindate = event.bdate;
           event.enddate = event.bdate;
-          let _this=this;
           this.$store.dispatch('encrypttoken').then(() => {
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
             this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-            this.$http.post(methodinfo.checkevent, event).then(function (response) {
+            this.$http.post(methodinfo.checkevent, event).then((response)=> {
               if (response.data.errorCode === '0') {
-                _this.updateEvent();
+                this.updateEvent();
               }else if(response.data.errorCode === '2000'){
-                _this.$confirm(response.data.errorMessage).then(() =>{
-                  _this.updateEvent();
+                this.$confirm(response.data.errorMessage).then(() =>{
+                  this.updateEvent();
                 })
               }else{
-                _this.$alert(response.data.errorMessage)
+                this.$alert(response.data.errorMessage)
               }
             }).catch(function () {
-              _this.$alert("事务校验请求异常!")
+              this.$alert("事务校验请求异常!")
             })
           })
         }
       },
       updateEvent(){
-        let _this=this;
         this.$http.defaults.headers.common['username'] = this.$store.getters.username
         this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-        this.$http.post(methodinfo.updateevent, this.expandevent).then(function (response) {
+        this.$http.post(methodinfo.updateevent, this.expandevent).then((response)=> {
           if (response.data.errorCode === '0') {
-            _this.$message('事务保存成功')
-            _this.$store.dispatch("getEventList")
-            _this.$nextTick(()=>{
-              _this.expandRows.push(_this.expandevent.eventid)
+            this.$message('事务保存成功')
+            this.$store.dispatch("getEventList")
+            this.$nextTick(()=>{
+              this.expandRows.push(this.expandevent.eventid)
             })
           }
         })
@@ -409,24 +407,6 @@
           this.$refs.reasonmodal.show();
         }
       },
-      reasonConfirm(reason){
-        let _this=this;
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['username'] = this.$store.getters.username
-          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-          this.$http.post(methodinfo.cancelevent, {
-            eventid:this.cancelRow.eventid,
-            caterid:this.caterid,
-            cancelreason:reason.code
-          }).then(function (response) {
-            if (response.data.errorCode === '0') {
-              _this.$message('事务取消成功')
-              _this.$store.dispatch("getEventList")
-            }
-          })
-        })
-      },
       eventCanEdit(){
         if(this.catering.sta==='0'){
           this.eventEditable =false;
@@ -437,6 +417,7 @@
           this.eventEditable =now <=eventdate;
         }
       },
+      //行展开数据加载
       expandChange:function (row,expandRows) {
 
         if(row.eventid===this.expandRows[0]){
@@ -480,6 +461,7 @@
           }
         }
       },
+      //场租选择
       priceChange(val){
         for(let option of this.priceoptions){
           if(option.code===val){
@@ -491,6 +473,7 @@
           }
         }
       },
+      //常用时间选择
       timeChange(val){
         for(let option of this.timeoptions){
           if(option.code===val){
@@ -508,6 +491,19 @@
           }
         }
       },
+      //显示事务备注
+      showNote(row){
+        let remarkinfo = {
+          caterid:this.catering.caterid,
+          caterdes:this.catering.name,
+          eventid:row.eventid,
+          eventdes:row.descript,
+          type:2
+        };
+        this.$store.commit('setNoteParam',remarkinfo);
+        this.$refs.remarkmodal.show();
+      },
+      //显示场地弹窗
       placeshow(){
         if(!this.isClear){
           this.$refs.singleplacemodal.show();
@@ -515,17 +511,47 @@
           this.isClear =false;
         }
       },
+      //展开栏内场地信息清除,同时清除弹窗选择
       placeClear(){
         this.isClear = true;
         this.$refs.SinglePlace.clearSelect();
       },
+      //场地确认
       placeConfirm(currentRow){
         this.$set(this.expandevent,'code',currentRow.tableno);
         this.$set(this.expandevent,'codedes',currentRow.descript);
       },
+      //显示取消原因
       reasonShown(){
         this.$refs.Reason.clearRow();
-      }
+      },
+      reasonConfirm(reason){
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.cancelevent, {
+            eventid:this.cancelRow.eventid,
+            caterid:this.caterid,
+            cancelreason:reason.code
+          }).then((response)=> {
+            if (response.data.errorCode === '0') {
+              this.$message('事务取消成功')
+              this.$store.dispatch("getEventList")
+            }
+          })
+        })
+      },
+      //事务项目点击
+      openEvenitem(row){
+        if(row.sta==='0'){
+          this.$message.error("取消状态事务不可进行项目编辑!")
+          return;
+        }
+        this.$store.commit('setCaterid',this.caterid);
+        this.$store.commit('setEventid',row.eventid);
+        this.$router.push({ name: '宴会事务项目'});
+      },
     },
     components: {
       sysLog,
@@ -577,10 +603,18 @@
       margin-right: 0;
       margin-left: 0;
     }
+    .el-table__empty-block{
+      border-bottom: 1px solid #dee2e6;
+    }
     .sum-row{
-      margin-top: 6px;
       .sumlabel{
+        margin-top: 5px;
+        margin-bottom: 0;
         padding: 0 10px;
+      }
+      #radios2{
+        margin-top: 5px;
+        margin-bottom: 0;
       }
     }
     .eventdiv{

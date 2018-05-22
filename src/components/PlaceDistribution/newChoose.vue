@@ -1,5 +1,5 @@
 <template>
-  <div class="pop_place">
+  <div class="pop_place" id="pop_place">
     <div class="pop_place_tou">
       <i class="fa fa-close" @click="closeChoose"></i>
       <ul>
@@ -11,32 +11,24 @@
     <div class="content">
       <div class="content_right">
         <h1>起止时间</h1>
-        <div class="select">
-          <p @click="btntimeselect" ref="regtimebegin">{{timebegin}}</p>
-          <ol v-if="iftimeselect">
-            <li @click="btntimehide(item)" v-for="item in basecodelist">{{item.descript}}</li>
-          </ol>
-        </div>
+        <el-select v-model="timebegin" @change="btntimehide" filterable>
+          <el-option
+            v-for="item in timechoose"
+            :key="item.code"
+            :label="item.descript"
+            :value="item.code">
+          </el-option>
+        </el-select>
         <ul>
-          <li id="pintime">
-            <p @click="btnpintimeshow" ref="regpintime">{{pintime}}</p>
-            <ol v-if="ifpintime">
-              <li @click="btnpintimehide(list)" v-for="list in todayHour">{{list}}</li>
-            </ol>
-          </li>
-          <li class="title">至</li>
-          <li id="pouttime">
-            <p  @click="btnpouttimeshow" ref="regpouttime">{{pouttime}}</p>
-            <ol v-if="ifpouttime">
-              <li @click="btnpouttimehide(list)" v-for="list in todayHour">{{list}}</li>
-            </ol>
+          <li>
+            <TimePicker :steps="[1, 30, 15]" v-model="eventtime" format="HH:mm" type="timerange"></TimePicker>
           </li>
         </ul>
-        <input type="button" class="btn_addThing" @click="addThing" value="新建事务" />
+         <button type="button" class="btn_addThing" @click="addThing">新建事务</button>
         <button type="button" class="btn_addInquiry" @click="addInquiry">新建宴会问询</button>
         <button type="button" class="btn_addBook" @click="addBook">新建宴会预订</button>
-        <input type="button" class="btn_cancel" @click="closeChoose" value="退出" />
-      </div>
+        <button type="button" class="btn_cancel" @click="closeChoose">退出</button>
+       </div>
       <div class="content_left">
         <ol>
           <li>订单号</li>
@@ -46,7 +38,7 @@
           <li>抵达日期</li>
         </ol>
         <ul>
-          <li v-for="list in caterings" @click="btnCatering(list)" :class="{'caterCurrent':ifCaterChoose==list.caterid}">
+          <li v-for="list in cateringitem" @click="btnCatering(list)" :class="{'caterCurrent':ifCaterChoose==list.caterid}">
             <span class="nav1" v-for="colorlist in headlist" :class="colorlist.liStyle" v-if="colorlist.dataid==list.sta"></span>
             <span class="nav2">{{list.caterid}}</span>
             <span class="nav3">{{list.name}}</span>
@@ -61,51 +53,53 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import '../../css/PlaceDistribute.scss';
   import methodinfo from '../../config/MethodConst.js'
+  //时间组件
+  import {TimePicker} from 'iview'
+  import '../../css/iviewpicker.css'
+  import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
+  Vue.use(TimePicker)
     export default {
         name: "new-choose",
       data(){
           return{
-            pintime:'',
-            pouttime:'',
-            newParam:{},
-            caterings:[],
-            basecodelist:[],
             timebegin:'',
             iftimeselect:false,
-            todayHour:[],
             ifpintime:false,
             ifpouttime:false,
             ifCaterChoose:'',
-            catersta:''
+            catersta:'',
+            startTime: '',
+            endTime: '',
+            eventtime:[],
+            cateringitem:[],
           }
       },
       created(){
-        for(var num=8;num<=22;num++) {
-            var dataId = num
-            if (dataId < 10) {
-              dataId = "0" + dataId
-            }
-            for (var m = 1; m <= 2; m++) {
-              var datatime=''
-              if(m==1){
-                datatime=dataId+':00'
-              }else if(num<22){
-                datatime=dataId+':30'
-              }
-              this.todayHour.push(datatime)
-            }
-        }
-       this.newParam={
-         begindate:this.newChooseTime,
-         enddate:this.newChooseTime,
-         flag:'T',
-         sta:'1,2,3,W,Q',
-       }
+        this.cateringitem = Object.assign([],this.cateringlist2);
+      },
+      components:{
+        TimePicker,
+      },
+      watch:{
+        cateringlist2:function (val,oldval) {
+          this.firsttimedata()
+        },
+      },
+      computed:{
+        ...mapGetters(['cateringlist2']),
+        ...mapGetters(['timechoose']),
       },
       props:['newChooseTime','newChooseAddr','headlist','newChooseAddrNo'],
       methods:{
+          firsttimedata:function () {
+            this.timebegin=this.timechoose[0].descript
+            this.$set(this.eventtime,0,this.timechoose[0].exts1)
+            this.$set(this.eventtime,1,this.timechoose[0].exts2)
+            this.cateringitem = Object.assign([],this.cateringlist2);
+          },
         configDefault:function () {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -118,152 +112,114 @@
           this.ifCaterChoose=list.caterid
         },
         addThing:function () {
-          if(this.ifCaterChoose==''){
+          if(this.ifCaterChoose===''){
             this.$message({
               message: "请选择宴会",
               type: "warning"
             });
           }else{
-            var paramNewEvent={
+            let paramNewEvent={
               begindate:this.newChooseTime,
               enddate:this.newChooseTime,
-              begintime:this.pintime,
-              endtime:this.pouttime,
-              place:this.newChooseAddrNo,
-              placedes:this.newChooseAddr
+              begintime:this.eventtime[0],
+              endtime:this.eventtime[1],
+              code:this.newChooseAddrNo,
+              codedes:this.newChooseAddr
             }
-            this.$router.push({name:'宴会预订详情',param:{caterid:''}})
+            this.$store.commit('setCaterid',this.ifCaterChoose);
+            this.$store.commit('setNewEventParam',paramNewEvent);
+            this.$emit('closeChoose')
+            this.$router.push({ name: '宴会预订详情'})
           }
         },
         addInquiry:function () {
-          var paramNewEvent={
+          let paramNewEvent={
             begindate:this.newChooseTime,
             enddate:this.newChooseTime,
-            begintime:this.pintime,
-            endtime:this.pouttime,
-            place:this.newChooseAddrNo,
-            placedes:this.newChooseAddr
+            begintime:this.eventtime[0],
+            endtime:this.eventtime[1],
+            code:this.newChooseAddrNo,
+            codedes:this.newChooseAddr
           };
-          var paramNewCatering={
-            begindate:this.newChooseTime,
-            enddate:this.newChooseTime,
+          let paramNewCatering={
+            arr:this.newChooseTime,
+            dep:this.newChooseTime,
           };
           this.catersta='Q'
+          this.$emit('closeChoose')
           this.$router.push({name:'新建宴会问询'})
+          this.$store.commit('setNewCateringParam',paramNewCatering);
+          this.$store.commit('setNewEventParam',paramNewEvent);
         },
         addBook:function () {
-          var paramNewEvent={
+          let paramNewEvent={
             begindate:this.newChooseTime,
             enddate:this.newChooseTime,
-            begintime:this.pintime,
-            endtime:this.pouttime,
-            place:this.newChooseAddrNo,
-            placedes:this.newChooseAddr
+            begintime:this.eventtime[0],
+            endtime:this.eventtime[1],
+            code:this.newChooseAddrNo,
+            codedes:this.newChooseAddr
           }
-          var paramNewCatering={
-            begindate:this.newChooseTime,
-            enddate:this.newChooseTime,
+          let paramNewCatering={
+            arr:this.newChooseTime,
+            dep:this.newChooseTime,
           }
           this.catersta='R'
+          this.$emit('closeChoose')
           this.$router.push({name:'新建宴会预订'})
+          this.$store.commit('setNewCateringParam',paramNewCatering);
+          this.$store.commit('setNewEventParam',paramNewEvent);
         },
-        getcateringlist:function (param) {
-          var _this=this
-          this.$store.dispatch('encrypttoken').then(() => {
-            _this.configDefault()
-            this.$http.post(methodinfo.getcateringlist, {
-              begindate:param.begindate,
-              enddate:param.enddate,
-              flag:param.flag,
-              sta:param.sta,
-            }).then((response) => {
-              if (response.status === 200) {
-                if (response.data.errorCode=="0") {
-                  _this.caterings=response.data.caterings
-                }
+         btntimehide:function (val) {
+          for(let option of this.timechoose){
+            if(option.code===val){
+              if(option.exts1){
+                this.$set(this.eventtime,0,option.exts1)
+              }else{
+                this.$set(this.eventtime,0,'00:00')
               }
-            })
-          })
-        },
-        getbasecodelist:function (param) {
-          var _this=this
-          this.$store.dispatch('encrypttoken').then(() => {
-            _this.configDefault()
-            this.$http.post(methodinfo.getbasecodelist, {
-              cat:"sc_time_unit"
-            }).then((response) => {
-              if (response.status === 200) {
-                if (response.data.errorCode=="0") {
-                  _this.basecodelist=response.data.basecodes
-                  if(response.data.basecodes){
-                    _this.timebegin=response.data.basecodes[0].descript
-                    _this.pintime=response.data.basecodes[0].exts1
-                    _this.pouttime=response.data.basecodes[0].exts2
-                  }
-                }
+              if(option.exts2){
+                this.$set(this.eventtime,1,option.exts2)
+              }else{
+                this.$set(this.eventtime,1,'00:00')
               }
-            })
-          })
-        },
-        btntimeselect:function () {
-          this.iftimeselect=true
-        },
-        btntimehide:function (item) {
-          this.timebegin=item.descript
+              return;
+            }
+          }
           this.pintime=item.exts1
           this.pouttime=item.exts2
           this.iftimeselect=false
         },
-        btnpintimeshow:function () {
-          this.ifpintime=true
-        },
-        btnpintimehide:function (list) {
-          this.pintime=list
-          this.ifpintime=false
-        },
-        btnpouttimeshow:function () {
-         this.ifpouttime=true
-        },
-        btnpouttimehide:function (list) {
-          this.pouttime=list
-          this.ifpouttime=false
-        },
       },
       mounted:function () {
-        this.getcateringlist(this.newParam)
-        this.getbasecodelist()
-        document.addEventListener('click',(e)=> {
-          if (this.$refs.regtimebegin) {
-            if (!this.$refs.regtimebegin.contains(e.target)) {
-              this.iftimeselect = false
-            }
-          }
-          if (this.$refs.regpintime) {
-            if (!this.$refs.regpintime.contains(e.target)) {
-              this.ifpintime = false
-            }
-          }
-          if (this.$refs.regpouttime) {
-            if (!this.$refs.regpouttime.contains(e.target)) {
-              this.ifpouttime = false
-            }
-          }
-        })
       }
     }
 </script>
 
-<style scoped lang="scss">
-  .content_left{
+<style lang="scss">
+  #pop_place{
+    .content_left{
       ol{
         border-right: 1px solid #DBDCDC;
       }
       ul{
         border-right: 1px solid #DBDCDC;
       }
+    }
+    .caterCurrent{
+      background: #F5F5F5;
+    }
+    .el-input__inner{
+      padding-left: 5px;
+      border-radius: 0;
+      height: 30px;
+      line-height: 30px;
+    }
+    .ivu-input{
+      padding: 0 0.75rem !important;
+      line-height: 30px;
+      height: 30px;
+      border: 1px solid #DBDCDC;
+    }
   }
-  .caterCurrent{
-    background: #F5F5F5;
-  }
-
 </style>

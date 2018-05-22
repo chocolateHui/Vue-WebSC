@@ -1,6 +1,5 @@
 <template>
   <div class="pop_instructions">
-    <div class="pop_instructions_tou">批示内容<i class="fa fa-close" @click="btnClose"></i></div>
     <ul class="clearfix">
       <li>
         <p>批示内容</p>
@@ -29,8 +28,21 @@
            insTime:''
          }
       },
-      props:['instructtext','instructtime','instructperson'],
+      created:function () {
+        this.popInstruData()
+      },
+      watch:{
+        instruFlag:function (val,oldval) {
+          this.popInstruData()
+        },
+      },
+      props:['instructtext','instructtime','instructperson','instruFlag'],
       methods:{
+        popInstruData:function () {
+          this.instruText=this.instructtext
+          this.insPerson=this.instructperson
+          this.insTime=this.instructtime
+        },
         btnClose:function () {
           this.$emit('InstructClose')
         },
@@ -46,13 +58,32 @@
         }
       },
       mounted:function () {
-        this.instruText=this.instructtext
-        this.insPerson=this.instructperson
-        this.insTime=this.instructtime
       }
     }
 </script>
-
-<style scoped lang="scss">
-
+<style lang="scss">
+  @import '../../css/color';
+  .pop_instructions{background: $colorWhite;width: 780px;
+    ul, ol,li {list-style: none;}
+    .mr10 {
+      margin-right: 10px;
+    }
+    h1,ul, ol, dl, li, dt, dd, p, table, th, td, input, textarea,  img, label, span, select, strong, b {
+      margin: 0px;
+      padding: 0px;
+    }
+    .pop_instructions_tou{background: $colorF5;border-bottom: 1px solid $colorGray; color: $colorD0;font-size: 16px;height: 54px;line-height: 54px;padding: 0 35px;margin-bottom: 10px;
+      i{color: #9E9E9F;cursor: pointer;display: inline-block;float: right;height: 14px;line-height: 14px;margin-top:24px;text-align: center;width: 14px;}
+    }
+    ul{
+      padding-left: 35px;
+      li{float: left;
+        p{line-height: 30px;}
+      }
+    }
+    .text{border: 1px solid $colorGray; width: 710px;height: 225px;padding: 5px; resize: none;}
+    .text_input{background: $colorF5; border: 1px solid $colorGray;font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif ; width: 350px;height:30px;line-height:30px;padding: 5px;}
+    .btn_ok{background: $colorSaveBtn;border: none;color: $colorWhite;font-size: 14px;height: 28px;line-height: 28px;margin-right:35px;text-align: center;width: 80px;float: right;margin-top: 20px}
+    .tr{height: 48px}
+  }
 </style>

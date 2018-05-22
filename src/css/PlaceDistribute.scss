@@ -17,7 +17,8 @@ $colorAlternate:#4487c7;
 $colorCheckout:#893eff;
 $colorCancel:#ffb933;
 $colorAll:#b4b4b6;
-.place_contain{
+.place_contain {
+  height: calc(100% - 0px);
   div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, table, th, td, input, textarea, hr, img, label, span, select, strong, b {
     margin: 0px;
     padding: 0px;
@@ -84,8 +85,7 @@ $colorAll:#b4b4b6;
       background:$colorWhite; border:1px solid $colorHeadBtn; color:#4c4c4c; cursor:pointer; font-size:14px; float:left; height:28px; line-height:28px; padding:0 10px;
       i{ color:$colorHeadBtn; margin-right:6px;}
       &:last-child{
-        background-image:url(./../../static/images/SCweb-57.png); background-position:7px center; background-repeat:no-repeat; background-size:12px auto; padding-left:24px;
-        &.current{background-image:url(./../../static/images/SCweb-32.png);}
+         background-position:7px center; background-repeat:no-repeat; background-size:12px auto;
       }
       &.current{
         background-color:$colorHeadBtn; color:$colorWhite;
@@ -103,6 +103,7 @@ $colorAll:#b4b4b6;
   .place_content_tou{
     border-left:1px solid $colorGray;border-right:1px solid $colorGray;border-top:1px solid $colorGray; padding:6px 0 0;
     ul{
+      position: relative;
       height: 30px;
       .btn_left{ background:$colorHeadBtn; border:none; color:$colorWhite; float:left; height:23px; line-height:23px; margin-left:18px; margin-right:3px; text-align:center; width:36px;}
       .btn_right{ background:$colorHeadBtn; border:none; color:$colorWhite; float:left; height:23px; line-height:23px; margin-right:8px; text-align:center; width:36px;}
@@ -163,7 +164,7 @@ $colorAll:#b4b4b6;
     }
   }
   .place_content_items{
-    height: calc(100% - 52px);
+    height: calc(100% - 45px);
     .item_tou{
       background:#F8F8F8; border:1px solid $colorGray; padding-right: 17px;max-height: 45px;
       ul{
@@ -188,7 +189,8 @@ $colorAll:#b4b4b6;
       }
     }
     .item{
-      height: calc(100% - 29px); overflow-x: hidden; overflow-y: auto;
+      height: calc(100% + 0px);
+      overflow-x: hidden; overflow-y: auto;
       ul{
         border-bottom:1px solid $colorGray;border-left:1px solid $colorGray;border-right:1px solid $colorGray;
         >li{
@@ -232,20 +234,20 @@ $colorAll:#b4b4b6;
               .n7{width: 45px;}
               &:first-child{ color:$colorHeadBtn; height:30px; line-height:30px; text-align:center;}
             }
-            >.btn_add{ background: url(./../../static/images/SCweb-68.png) no-repeat left center; background-size: 13px; color: $color752;cursor:pointer;display: inline-block;margin-left: 182px;margin-top: 8px; padding-left: 17px;}
+            >.btn_add{ background-size: 13px; color: $color752;cursor:pointer;display: inline-block;margin-left: 182px;margin-top: 8px; padding-left: 17px;}
           }
         }
       }
     }
   }
   .place_content_items2{
-    height: calc(100% - 37px);
+    height: calc(100% - 2px);
     .item_tou{
       background:#F8F8F8; border:1px solid $colorGray; padding-right: 17px;
       ul{
         height: 42px;
         >li{
-          color:$color4C; float:left; font-size:14px; font-weight:bold; height:42px; line-height:42px;
+          color:$color4C; float:left; font-size:14px;height:42px; line-height:42px;
           &.nav1{
             border-right:1px solid $colorGray; padding-left:15px; position:relative; text-align:left; width:200px;
             span{
@@ -268,7 +270,7 @@ $colorAll:#b4b4b6;
       }
     }
     .item{
-      height: calc(100% - 52px); overflow-x: hidden; overflow-y: scroll;
+      height: calc(100% - 42px); overflow-x: hidden; overflow-y: scroll;
       ul{
         border-bottom:1px solid $colorGray;border-left:1px solid $colorGray;border-right:1px solid $colorGray;
         >li{
@@ -276,7 +278,7 @@ $colorAll:#b4b4b6;
           &.nav1{
             border-right:1px solid $colorGray; padding-left:15px; position:relative; text-align:left; width:200px;padding-top: 7px;
             span{color:#4c4c4c;font-size:14px !important;display: inline-block;margin-bottom: 4px; vertical-align: middle; width: 172px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
-            strong{background: #f8f8f8;border: 1px solid #dcdcdc;border-radius: 10px;color: $color4C;display:inline-block;font-size: 12px;font-weight: inherit; height: 20px;line-height: 18px;margin-right:5px;overflow:hidden;text-align: center;width: 75px;padding: 0 8px; text-overflow: ellipsis;white-space: nowrap;}
+            strong{background: #f8f8f8;border: 1px solid #dcdcdc;border-radius: 10px;color: $color4C;display:inline-block;font-size: 12px; height: 20px;line-height: 18px;margin-right:5px;overflow:hidden;text-align: center;width: 75px;padding: 0 8px; text-overflow: ellipsis;white-space: nowrap;}
           }
           &.nav2{
             border-left:none; padding:25px 15px; width:calc(100% - 200px);
@@ -303,7 +305,7 @@ $colorAll:#b4b4b6;
               .n7{width: 45px;}
               &:first-child{ color:$colorHeadBtn; height:30px; line-height:30px; text-align:center;}
             }
-            .btn_add{background: url(./../../static/images/SCweb-68.png) no-repeat left center; background-size: 13px; color: $color752;cursor:pointer;display: inline-block;margin-left: 182px;margin-top: 8px; padding-left: 17px;}
+            .btn_add{background-size: 13px; color: $color752;cursor:pointer;display: inline-block;margin-left: 182px;margin-top: 8px; padding-left: 17px;}
           }
         }
       }
@@ -311,7 +313,7 @@ $colorAll:#b4b4b6;
   }
 }
 .pop_place{
-  background: $colorWhite;height: 410px;width: 695px;position: fixed;left: 50%;top: 50%; margin-left: -347px; margin-top: -205px;z-index: 999;
+  background: $colorWhite;height: 410px;width: 695px;
   .pop_place_tou{
     background: $colorF5;height: 54px; padding: 15px 23px;
     i{float: right; color: $color9E;cursor: pointer; margin-top:5px;}
@@ -360,7 +362,7 @@ $colorAll:#b4b4b6;
       .select{
         background: $colorF5;border: 1px solid $colorGray; color: $colorBlack;height: 30px;position:relative;margin-bottom:10px;width: 170px;
         p{
-          font-size:13px;font-weight:bold;padding: 0 15px;position: relative;line-height: 30px;
+          font-size:13px;padding: 0 15px;position: relative;line-height: 30px;
           &::before{color: $color9E;content:"\f0dd"; cursor: pointer; position:absolute; right:7px; top:5px; display: inline-block;font: normal normal normal 14px/1 FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}
         }
         ol{
@@ -369,9 +371,9 @@ $colorAll:#b4b4b6;
         }
       }
       ul{
-        border: 1px solid $colorGray; font-size: 13px; font-weight: bold; color: $colorBlack;margin-bottom: 20px; text-align: center;
+       font-size: 13px; color: $colorBlack;margin-bottom: 20px; text-align: center;margin-top: 10px;padding-left: 0;
         >li{
-          height: 35px;line-height: 35px; position: relative;
+          height: 30px;line-height: 30px; position: relative;
           p{
             cursor: pointer;position: relative;
             ::before{color: $color9E;content:"\f0dd"; cursor: pointer; position:absolute; right:44px; top:8px; display: inline-block;font: normal normal normal 14px/1 FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}
@@ -383,29 +385,34 @@ $colorAll:#b4b4b6;
         }
       }
       .title{border-bottom:  1px solid $colorGray; height: 5px; line-height: 9px;}
-      .btn_addThing{background: #D15B47 url(./../../static/images/SCweb-63.png) no-repeat 10px center; border: none; color: $colorWhite;cursor:pointer;font-size: 12px; height: 32px;padding-left:35px;margin-bottom:8px;text-align:left;width: 170px;}
+      .btn_addThing{
+        background:rgb(209, 91, 71);border: none; color: $colorWhite;cursor:pointer;font-size: 12px; height: 32px;position:relative;padding-left:35px;margin-bottom:8px;text-align:left;width: 170px;
+        &::before{color: $colorWhite;content:"\f1e0"; cursor: pointer; position:absolute; left:10px; top:7px; display: inline-block;font-family: FontAwesome;}
+      }
       .btn_addInquiry{
         background: #82AF6F; border: none; color: $colorWhite;cursor:pointer;font-size: 12px; height: 32px;position:relative;padding-left:35px;margin-bottom:8px;text-align:left;width: 170px;
-        &::before{color: $colorWhite;content:"\e023"; cursor: pointer; position:absolute; left:10px; top:9px; display: inline-block;font: normal normal normal 14px/1 Glyphicons Halflings; font-size: 14px; text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}
+        &::before{color: $colorWhite;content:"\f016"; cursor: pointer; position:absolute; left:10px; top:7px; display: inline-block; font-family: FontAwesome;}
       }
       .btn_addBook{
         background: #9585BF; border: none; color: $colorWhite;cursor:pointer;font-size: 12px; height: 32px;position: relative; padding-left:35px;margin-bottom:8px;text-align:left;width: 170px;
-       &::before{color: $colorWhite;content:"\e195"; cursor: pointer; position:absolute; left:10px; top:9px; display: inline-block;font: normal normal normal 14px/1 Glyphicons Halflings; font-size: 14px; text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}
+       &::before{color: $colorWhite;content:"\f02d"; cursor: pointer; position:absolute; left:10px; top:6px; display: inline-block; font-size: 14px; font-family: FontAwesome;}
       }
-      .btn_cancel{background: #3A87AD url(./../../static/images/SCweb-66.png) no-repeat 11px center; border: none; color: $colorWhite;cursor:pointer;font-size: 12px; height: 32px;padding-left:35px;text-align:left;width: 170px;}
+      .btn_cancel{background: #3A87AD; border: none; color: $colorWhite;cursor:pointer;font-size: 12px; height: 32px;position:relative;padding-left:35px;text-align:left;width: 170px;
+        &::before{color: $colorWhite;content:"\f2d3"; cursor: pointer; position:absolute; left:10px; top:5px; display: inline-block; font-size: 14px; font-family: FontAwesome;}
+      }
     }
   }
 }
 /*列表*/
 .placelist{
-  background:$colorWhite;padding: 10px;
+  background:$colorWhite;padding:0 10px 10px;
   .placelist_head{
     border-bottom: 1px solid #cbd5df; border-left: 1px solid #cbd5df;height: 29px;line-height: 28px;
     ul{
       float: left;
       li{
         background: #F9F9F9;border-right: 1px solid #cbd5df;border-top: 1px solid #cbd5df;color: #8fa1ad; cursor: pointer;float: left; font-size: 14px;height: 28px;padding: 0 10px;
-        &.current{background: $colorWhite; border-top: 2px solid #003784; height: 29px;}
+        &.current{background: $colorWhite; height: 29px;}
       }
     }
   }
@@ -420,8 +427,7 @@ $colorAll:#b4b4b6;
       ol{ float:right;
         li{ background:$colorWhite; border:1px solid $colorHeadBtn; color:#4c4c4c; cursor:pointer; font-size:14px; float:left; height:28px; line-height:28px; padding:0 10px;
           i{ color:$colorHeadBtn; margin-right:6px;}
-          &:last-child{ background-image:url(./../../static/images/SCweb-57.png); background-position:7px center; background-repeat:no-repeat; background-size:12px auto; padding-left:24px;
-            &.current{background-image:url(./../../static/images/SCweb-32.png);}
+          &:last-child{background-position:7px center; background-repeat:no-repeat; background-size:12px auto;
           }
           &.current{ background-color:$colorHeadBtn; color:$colorWhite;
             i{ color:$colorWhite;}
@@ -466,10 +472,10 @@ $colorAll:#b4b4b6;
       td{
         a{
           cursor: pointer;display: inline-block;height: 25px;margin:1px 2px 0; width: 25px;
-          &.icon1{background: url(./../../static/images/SCweb-45.png) no-repeat center;}
-          &.icon2{background: url(./../../static/images/SCweb-46.png) no-repeat center;}
-          &.icon3{background: url(./../../static/images/SCweb-47.png) no-repeat center;}
-          &.icon4{background: url(./../../static/images/SCweb-67.png) no-repeat center;}
+          &.icon1{background: url(./../../static/SCweb-icon03.png) no-repeat center;}
+          &.icon2{background: url(./../../static/SCweb-icon04.png) no-repeat center;}
+          &.icon3{background: url(./../../static/SCweb-icon05.png) no-repeat center;}
+          &.icon4{background: url(./../../static/SCweb-icon07.png) no-repeat center;}
         }
       }
     }

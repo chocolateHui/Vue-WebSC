@@ -3,24 +3,33 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 const login = () => import(/* webpackChunkName: "group-login" */ '../view/Login.vue')
+// 主界面相关
 const main = () => import(/* webpackChunkName: "group-main" */ '../view/Main.vue')
-const Template = () => import(/* webpackChunkName: "group-main" */ '../view/Template.vue')
-const NewCatering = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/NewCatering.vue')
-const CateringInfo = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/CateringInfo.vue')
-const EOShare = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/EOShare.vue')
-const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
-const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
-const Hotelinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelinfo.vue')
-const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
-const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
-const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
-const placeDistribution = () => import(/* webpackChunkName: "group-place" */ '../view/placeDistribution.vue')
-const placeList = () => import(/* webpackChunkName: "group-place" */ '../components/PlaceDistribution/placeList.vue')
 const index = () => import(/* webpackChunkName: "group-main" */ '../view/Index.vue')
 const caterList = () => import(/* webpackChunkName: "group-main" */ '../view/CaterList.vue')
+const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
+// 宴会预订相关
+const NewCatering = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/NewCatering.vue')
+const CateringInfo = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/CateringInfo.vue')
+const ScEventItem = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/ScEventItem.vue')
+const EOShare = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/EOShare.vue')
+
+const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
+
+const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
+
+const placeDistribution = () => import(/* webpackChunkName: "group-place" */ '../view/placeDistribution.vue')
+const placeList = () => import(/* webpackChunkName: "group-place" */ '../components/PlaceDistribution/placeList.vue')
+
+// 维护相关
 const Maint = () => import(/* webpackChunkName: "group-maint" */ '../view/Maint.vue')
 const pccodeinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/pccodeinfo.vue')
-
+const Hotelmsg = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelmsg.vue')
+const Hotelchild = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/hotelchild.vue')
+const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/empnoinfo.vue')
+const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
+const BaseCode = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/BaseCode.vue')
+const ScItemInfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/sciteminfo.vue')
 Vue.use(Router)
 
 let loadingInstance
@@ -39,7 +48,7 @@ const router = new Router({
         // 当 /main 匹配成功，
         // DashBoard 会被渲染在 main 的 <router-view> 中
         {
-          path: '',
+          path: '/main/index',
           name: '首页',
           component: index,
           meta: {
@@ -72,30 +81,28 @@ const router = new Router({
           }
         },
         {
-          path: '/main/catering/cateringInfo/:caterid',
+          path: '/main/catering/cateringInfo',
           name: '宴会预订详情',
           component: CateringInfo,
-          meta: {
-            keepAlive: true // 需要被缓存
-          },
-          props: true
-        },
-        {
-          path: '/main/catering/eventItem',
-          name: '宴会事务项目',
-          component: Template,
           meta: {
             keepAlive: true // 需要被缓存
           }
         },
         {
-          path: '/main/EOShare/:caterid',
+          path: '/main/catering/eventItem',
+          name: '宴会事务项目',
+          component: ScEventItem,
+          meta: {
+            keepAlive: true // 需要被缓存
+          }
+        },
+        {
+          path: '/main/EOShare',
           name: '宴会预订EO单',
           component: EOShare,
           meta: {
             keepAlive: false // 需要被缓存
-          },
-          props: true
+          }
         },
         {
           path: '/main/place/placeDistribution',
@@ -147,12 +154,12 @@ const router = new Router({
             {
               path: '',
               name: '基础代码维护',
-              component: Hotelinfo
+              component: Hotelmsg
             },
             {
               path: '/main/maint/hotelinfo',
               name: '酒店信息',
-              component: Hotelinfo
+              component: Hotelmsg
             },
             {
               path: '/main/maint/empnoinfo',
@@ -160,9 +167,13 @@ const router = new Router({
               component: Empnoinfo
             },
             {
-              path: '/main/maint/hoteldept',
+              path: '/main/maint/hotelchild',
               name: '岗位设置',
-              component: Hotelinfo
+              component: Hotelchild
+            },
+            {
+              path: '/main/maint/hoteldept',
+              name: '岗位设置'
             },
             {
               path: '/main/maint/sysoption',
@@ -177,12 +188,13 @@ const router = new Router({
             {
               path: '/main/maint/item',
               name: '宴会项目',
-              component: Hotelinfo
+              component: ScItemInfo
             },
             {
-              path: '/main/maint/basecode',
-              name: '基础代码',
-              component: Hotelinfo
+              path: '/main/maint/basecode/:cat',
+              name: '通用基础代码',
+              component: BaseCode,
+              props: true
             }
           ]
         }
@@ -195,13 +207,16 @@ const router = new Router({
     {
       path: '/',
       redirect: '/login'
+    },
+    {
+      path: '/main',
+      redirect: '/main/index'
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(new Date().getTime())
-  loadingInstance = router.app.$loading.service({ fullscreen: true })
+  loadingInstance = router.app.$loading.service({ fullscreen: true, background: 'rgba(0, 0, 0, 0.7)' })
   if (to.path.indexOf('/login') < 0) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.
@@ -229,7 +244,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  console.log(new Date().getTime())
   loadingInstance.close()
 })
 

@@ -1,7 +1,7 @@
 <template>
   <div id="Catering">
     <CateringInfo @updateCatering="updateCatering" :caterid="caterid"></CateringInfo>
-    <NewEvent ref="newevent" :caterid="caterid" :eventshow="eventshow" :toggleshow="toggleshow"></NewEvent>
+    <NewEvent ref="newevent" :eventshow="false" :toggleshow="toggleshow"></NewEvent>
     <b-button v-b-toggle.newevent class="newEventbtn">新建事务</b-button>
     <el-tabs type="border-card">
       <el-tab-pane label="事务列表">
@@ -32,20 +32,21 @@
         isNew:true
       };
     },
-    props:['caterid'],
     components: {
       CateringInfo,
       NewEvent,
       EventList,
       RoomInfo
     },
-    ...mapGetters([
-      'catering'
-    ]),
+    computed: {
+      ...mapGetters([
+        'caterid',
+        'catering'
+      ])
+    },
     methods: {
       getCateringData(){
-        const loading = this.$loading.service({fullscreen:true});
-        this.$store.commit('setCaterid',this.caterid);
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         this.$store.dispatch('encrypttoken').then(() => {
           if(this.isNew){
             this.$store.dispatch("getPlacelist");
@@ -54,6 +55,7 @@
             this.$store.dispatch("getReasonList");
             this.isNew = false;
           }
+          this.eventshow = false;
           this.$store.dispatch("getCateringInfo")
           this.$store.dispatch("getEventList");
           this.$store.dispatch("getRoomList");
@@ -63,7 +65,6 @@
         }, 500);
       },
       updateCatering(localcatering){
-        let _this=this;
         this.$refs.newevent.eventCheck(localcatering).then((checked) => {
           if(checked){
             this.$store.dispatch('encrypttoken').then(() => {
@@ -72,17 +73,17 @@
               this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
               this.$http.post(methodinfo.updatecatering, localcatering).then(function (response) {
                 if (response.data.errorCode === '0') {
-                  _this.$refs.newevent.batchSaveEvent(localcatering.caterid).then(() => {
-                    _this.$message({
+                  this.$refs.newevent.batchSaveEvent(localcatering.caterid).then(() => {
+                    this.$message({
                       message: '宴会保存成功!',
                       type: 'success'
                     })
-                    _this.$store.commit('setCatering', localcatering)
-                    _this.$store.commit('setCatersta', localcatering.sta)
-                    _this.$store.dispatch("getEventList");
+                    this.$store.commit('setCatering', localcatering)
+                    this.$store.commit('setCatersta', localcatering.sta)
+                    this.$store.dispatch("getEventList");
                   });
                 }else{
-                  _this.$alert(response.data.errorMessage)
+                  this.$alert(response.data.errorMessage)
                 }
               });
             })
@@ -124,7 +125,7 @@
     height: 33.5px;
   }
   .ivu-input{
-    height: 33px;
+    height: 30px;
     margin-top: 0;
   }
 </style>

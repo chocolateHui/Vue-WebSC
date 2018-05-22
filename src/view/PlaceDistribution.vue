@@ -1,5 +1,5 @@
 <template>
-<div class="place_contain" ref="contain">
+<div class="place_contain" id="place_contain" ref="contain">
   <div class="place_head clearfix">
     <ul>
       <li class="all" @click="btnAllCheck"><i class="fa" :class="{'fa-check':ifAllCheck}"></i>所有</li>
@@ -7,7 +7,7 @@
     </ul>
     <ol>
       <li @click="listChange"><i class="fa fa-list"></i>列表</li>
-      <li class="current">图标</li>
+      <li class="current"><i class="fa fa-bar-chart"></i>图表</li>
     </ol>
     <button class="btn_refresh" @click="btnrefresh"><i class="fa fa-refresh"></i>刷新</button>
   </div>
@@ -64,8 +64,8 @@
                 <label>{{item.time}}</label>
                 <p>
                   <span v-for="items in timeAll[indexdetail].content" >
-                    <span v-for="(infolist1,infoindex1) in placesinfo" v-if="infolist1.tableno==placeitem.tableno">
-                        <span v-for="infolist in (placesinfo[infoindex1].bdates)" v-if="timelist==infolist.bdate">
+                    <span v-for="(infolist1,infoindex1) in placesinfo1" v-if="infolist1.tableno==placeitem.tableno">
+                        <span v-for="infolist in (placesinfo1[infoindex1].bdates)" v-if="timelist==infolist.bdate">
                             <span v-for="typeitem in typeList" v-if="iftypelist||(typeitem==infolist.eventtype)">
                                <span v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta&&( (items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))"  :data-id="items.dataid" :data-it="items.datait"></span>
                             </span>
@@ -109,8 +109,8 @@
           </li>
           <li class="nav2"  @mouseenter="thingsShow(index1,'0',datatime.substring(0,10),$event)" @mouseleave="thingsHide">
              <span v-for="items in timeToday">
-                <span v-for="(infolist1,infoindex1) in placesinfo" v-if="infolist1.tableno==placeitem.tableno">
-                  <span v-for="(infolist,infoindex) in placesinfo[infoindex1].bdates">
+                <span v-for="(infolist1,infoindex1) in placesinfo1" v-if="infolist1.tableno==placeitem.tableno">
+                  <span v-for="(infolist,infoindex) in placesinfo1[infoindex1].bdates">
                     <span v-for="typeitem in typeList"  v-if="iftypelist||(typeitem==infolist.eventtype)">
                        <span v-for="colorlist in headList" class="bgtime2" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta&&( (items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))"  :data-id="items.dataid" :data-it="items.datait"></span>
                     </span>
@@ -125,8 +125,9 @@
       </div>
     </div>
   </div>
-  <new-choose v-if="ifNewChoose" :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>
-  <div id="layer" v-if="ifNewChoose"></div>
+  <b-modal id="logmodal" ref="myModalchoose" size="lg" title="销售日记" hide-footer>
+    <new-choose :headlist="headList" :newChooseAddr="newChooseAddr" :newChooseAddrNo="newChooseAddrNo" :newChooseTime="newChooseTime" @closeChoose="closeChoose" ></new-choose>
+  </b-modal>
 </div>
 </template>
 <script>
@@ -137,10 +138,8 @@
   import newChoose from '../components/PlaceDistribution/newChoose';
   import methodinfo from '../config/MethodConst.js'
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
-  import { GetLunarDay } from './../js/lun'
-
+  import calendarjs from './../common/calendar'
   let loading
-
     export default {
         name: "place-distribution",
       data(){
@@ -209,6 +208,7 @@
             newChooseAddr:'',
             newChooseAddrNo:'',
             sta:'',
+            placesinfo1:[]
           }
       },
       filters:{
@@ -226,7 +226,10 @@
         ...mapGetters(['isLoading']),
       },
       created(){
-        loading = this.$loading.service({fullscreen:true});
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch('getTimeUnit')
+        })
+        loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           for(var num=8;num<=22;num++) {
             if (num <= 12) {
               var dataId = num
@@ -264,9 +267,9 @@
               this.todayHour.push(num+':00')
             }
           }
-
       },
       methods: {
+        // 查询事物
         getbasecodelist:function () {
           var _this=this
           this.$store.dispatch('encrypttoken').then(() => {
@@ -317,8 +320,6 @@
                   }
                 }
                 this.getplacelist()
-                this.getplaceusedinfo()
-                this.gettoplacelist()
               }
             })
           })
@@ -336,6 +337,8 @@
                 if (response.data.errorCode=="0") {
                   _this.placeslist=response.data.places
                 }
+                this.getplaceusedinfo()
+                this.gettoplacelist()
               }
             })
           })
@@ -387,6 +390,7 @@
           this.$store.dispatch('encrypttoken').then(() => {
             //获取工号信息,完成后进行路由
             this.$store.dispatch('getplaceusedinfo',this.placeinfoparam).then(() => {
+              this.placesinfo1 = Object.assign({},this.placesinfo);
               loading.close();
             })
           })
@@ -417,17 +421,27 @@
           })
         },
         closeChoose:function () {
-          this.ifNewChoose=false
+          this.$refs.myModalchoose.hide()
         },
         addThings:function (time,addr) {
-           this.newChooseTime=time
+          this.newChooseTime=time
+          var newParam={
+            begindate:time,
+            enddate:time,
+            flag:'T',
+            sta:'1,2,3,W,Q',
+          }
+          var _this=this
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$store.dispatch('getcateringlist',newParam)
+          })
           for(var t=0;t<this.placeslist.length;t++){
              if(addr==this.placeslist[t].tableno){
                this.newChooseAddr=this.placeslist[t].descript
                this.newChooseAddrNo=this.placeslist[t].tableno
              }
           }
-          this.ifNewChoose=true
+          this.$refs.myModalchoose.show()
         },
         typeCheckAll:function () {
           this.ifTypeCheckAll=!this.ifTypeCheckAll
@@ -524,11 +538,11 @@
             var data1=this.adddateday(datanow,i)
             var data2=this.adddateday(datanow,i).substring(5,10);
             var dataS=data1.split("-")
-            var lunar1=GetLunarDay( dataS[0], dataS[1],dataS[2]).lunarDayStr
+            var lunar1=calendarjs.solar2lunar( dataS[0], dataS[1],dataS[2])
             var formL={
               data:data2,
               dataAll:data1,
-              dataLun:lunar1
+              dataLun:lunar1.IMonthCn+lunar1.IDayCn
             }
             this.formdata.push(formL)
           }
@@ -605,7 +619,7 @@
           }
         },
         listChange:function () {
-          this.$router.push({name:'宴会事务列表'})
+          this.$router.push({path:'/main/place/placeList/0'})
         },
         btnCheck:function (idx) {
           var check = this.headList[idx].checked;
@@ -704,9 +718,6 @@
           return times;
         }
       },
-      // updated(){
-      //   this.$store.commit("set_loading",false);
-      // },
       mounted: function () {
         this.getbasecodelist()
         this.datatimeid=this.today()
@@ -738,61 +749,80 @@
     }
 </script>
 
-<style scoped  lang="scss">
-  .calendarShow{
-    position: absolute;
-    z-index: 22;
-    left:50%;
-  }
-  .thingsLeft{
-  left:0;
-  right:inherit;
-  }
-  .thingsRight{
-    left:inherit;
-    right:0;
-  }
-.thingsBottom{
-bottom:75px;
-top:inherit
-}
-  .thingsTop{
-    bottom:inherit;
-    top:70px
-  }
-  .bgtime{
-    float: left;
-    height: 13px;
-    width: 100%;
-  }
-  .bgtime2{
-    float: left;
-    height: 24px;
-    width: 100%;
-  }
-  .todayThings{
-    background: #fff;
-    position: absolute;
-    min-height: 100px;
-    padding-bottom: 10px;
-    width: 470px;
-    z-index: 9;
-    border-radius:3px;
-    box-shadow:0 0 15px #C1C1C1;
-  }
-  .borderleft{border-left: 2px solid #fff;}
-  .gettochild{
-    position: absolute;
-    width: auto;
-    display: inline-block;
-    background: #ffffff;
-    z-index: 22;
-    left: 60%;
-    top: 82px;
-    border: 1px solid #4C4C4C;
-    span{
-      width: auto !important;
-      margin-bottom: 0 !important;
+<style  lang="scss">
+  #place_contain{
+    .calendarShow{
+      position: absolute;
+      z-index: 22;
+      top: 30px;
+      left: 50%;
+      margin-left: -90px;
+    }
+    .thingsLeft{
+      left:0;
+      right:inherit;
+    }
+    .thingsRight{
+      left:inherit;
+      right:0;
+    }
+    .thingsBottom{
+      bottom:75px;
+      top:inherit
+    }
+    .thingsTop{
+      bottom:inherit;
+      top:70px
+    }
+    .bgtime{
+      float: left;
+      height: 13px;
+      width: 100%;
+    }
+    .bgtime2{
+      float: left;
+      height: 24px;
+      width: 100%;
+    }
+    .todayThings{
+      background: #fff;
+      position: absolute;
+      min-height: 100px;
+      padding-bottom: 10px;
+      width: 470px;
+      z-index: 9;
+      border-radius:3px;
+      box-shadow:0 0 15px #C1C1C1;
+    }
+    .borderleft{border-left: 2px solid #fff;}
+    .gettochild{
+      position: absolute;
+      width: auto;
+      display: inline-block;
+      background: #ffffff;
+      z-index: 22;
+      left: 60%;
+      top: 82px;
+      border: 1px solid #4C4C4C;
+      span{
+        width: auto !important;
+        margin-bottom: 0 !important;
+      }
+    }
+    .modal-content{
+      background: transparent;
+      border:none;
+    }
+    .modal-header{
+      display: none;
+    }
+    .modal-dialog{
+      margin: 1.75rem auto;
+      padding: 10px!important;
+    }
+    .modal-lg {
+      max-width: 700px;
     }
   }
+
 </style>

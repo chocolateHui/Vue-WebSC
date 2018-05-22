@@ -3,29 +3,37 @@ import Vuex from 'vuex'
 import token from './modules/token'
 import user from './modules/user'
 import catering from './modules/catering'
-import maintab from './modules/maintab'
+import routeTab from './modules/routeTab'
 import sysoption from './modules/sysoption'
+import sceventitem from './modules/sceventitem'
 import VuexPersistence from 'vuex-persist'
-import getsale from './modules/getsale'
+import SalesActivities from './modules/SalesActivities'
+import scnote from './modules/scnote'
+import routeParam from './modules/routeParam'
+import placeDistribution from './modules/placeDistribution'
 
 Vue.use(Vuex)
 
 const debug = process.env.NODE_ENV !== 'production'
 
 const vuexLocal = new VuexPersistence({
-  strictMode :debug,
+  strictMode: debug,
   storage: window.localStorage,
-  modules: ['token', 'user','sysoption','getsale']
+  modules: ['token', 'user', 'sysoption', 'routeParam']
 })
 
 const store = new Vuex.Store({
   modules: {
     token,
     user,
-    maintab,
+    routeTab,
     sysoption,
     catering,
-    getsale,
+    SalesActivities,
+    scnote,
+    sceventitem,
+    routeParam,
+    placeDistribution
   },
   plugins: [vuexLocal.plugin],
   mutations: {

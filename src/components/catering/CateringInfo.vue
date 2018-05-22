@@ -38,7 +38,7 @@
             <b-form>
               <b-form-group class="required" label="宴会名称:"
                             horizontal>
-                <b-form-input v-model="localcatering.name" type="text" required></b-form-input>
+                <b-form-input v-model="localcatering.name" type="text"></b-form-input>
               </b-form-group>
               <b-form-group class="required" label="抵离日期:" horizontal>
                 <el-date-picker
@@ -153,8 +153,7 @@
             </b-form-group>
           </b-row>
           <b-row style="width: 100%">
-            <b-form-group class="longinput" :label-cols="1" label="备&#8195;&#8195;注"
-                          horizontal>
+            <b-form-group class="longinput" :label-cols="1" label="备&#8195;&#8195;注" horizontal>
               <b-form-input  type="text" v-model="localcatering.remark"></b-form-input>
             </b-form-group>
           </b-row>
@@ -166,12 +165,12 @@
       <Reason ref="caterReason" @reasonConfirm="reasonConfirm"></Reason>
     </b-modal>
 
-    <b-modal id="profilemodal" size="lg" ref="profilemodal" title="档案列表" hide-footer>
-      <popArchives ref="popArchives" :ifunit="profileType" @btnArchOk="ArchivesConfirm"></popArchives>
-    </b-modal>
+    <el-dialog title="宾客档案查询" id="profilemodal" ref="profilemodal" :visible.sync="dialogVisible">
+      <pop-archives @btnArchClose="btnArchClose" @btnArchOk="ArchivesConfirm" :ifunit="profileType"></pop-archives>
+    </el-dialog>
 
-    <b-modal id="remarkModal" size="lg" ref="remarkModal" title="宴会备注" hide-footer>
-      <!--<remark ref="caterRemark" :remark="localcatering"></remark>-->
+    <b-modal id="remarkmodal" ref="remarkmodal" size="lg" title="宴会备注" hide-footer>
+      <remark></remark>
     </b-modal>
   </b-container>
 </template>
@@ -214,7 +213,8 @@
         ],
         //销售员列表
         saleoptions:[],
-        cancelWidth:'cancelwidth'
+        cancelWidth:'cancelwidth',
+        dialogVisible:false
       }
     },
     props:{
@@ -229,7 +229,8 @@
         'catersta',
         'saleid',
         'catering',
-        'salelist'
+        'salelist',
+        'newCateringParam'
       ]),
       minDate() {
         if(!this.isNew){
@@ -257,6 +258,8 @@
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
         this.$emit('saveCatering',this.localcatering);
+        this.localcatering = {};
+        this.caterdate = [];
       },
       updateCatering(){
         if(this.catersta==='0'){
@@ -270,7 +273,6 @@
         this.$emit('updateCatering',this.localcatering);
       },
       updateCateringSta(sta){
-        let _this = this;
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -278,14 +280,14 @@
           this.$http.post(methodinfo.updatecateringsta, {
             caterid: this.localcatering.caterid,
             sta: sta
-          }).then(function (response) {
+          }).then((response)=>{
             if (response.data.errorCode === '0') {
-              _this.localcatering.sta = sta;
-              _this.$store.commit('setCatering', _this.localcatering)
-              _this.$store.commit('setCatersta', sta)
-              _this.$store.dispatch("getEventList");
+              this.localcatering.sta = sta;
+              this.$store.commit('setCatering', this.localcatering)
+              this.$store.commit('setCatersta', sta)
+              this.$store.dispatch("getEventList");
             } else {
-              _this.$alert(response.data.errorMessage)
+              this.$alert(response.data.errorMessage)
             }
           });
         })
@@ -297,7 +299,6 @@
         this.$refs.caterReason.clearRow();
       },
       reasonConfirm(reason){
-        let _this = this;
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -307,27 +308,32 @@
             sta: '0',
             cancelreason:reason.code
           }).then(()=>{
-            _this.localcatering.sta = '0';
-            _this.$store.commit('setCatering', _this.localcatering)
-            _this.$store.commit('setCatersta', '0')
-            _this.$store.dispatch("getEventList");
+            this.localcatering.sta = '0';
+            this.$store.commit('setCatering', this.localcatering)
+            this.$store.commit('setCatersta', '0')
+            this.$store.dispatch("getEventList");
           })
         })
       },
       profileShow(){
         if(!this.isClear){
-          this.$refs.profilemodal.show();
+          this.dialogVisible = true;
         }else{
           this.isClear =false;
         }
+      },
+      btnArchClose(){
+        this.dialogVisible = false;
       },
       profileClear(){
         this.localcatering.cusno = '';
         this.localcatering.cusno_des = '';
         this.isClear =true;
       },
-      ArchivesConfirm(profile){
-        console.log(profile)
+      ArchivesConfirm(profile,name,no){
+        this.localcatering.cusno = no
+        this.localcatering.cusno_des = name
+        this.dialogVisible = false;
       },
       getDisableDate(time){
         return time<this.minDate;
@@ -363,13 +369,19 @@
         this.cancelWidth = 'maxbtnwidth'
       },
       showNote(){
-        this.$refs.remarkModal.show();
+        let caterinfo = {
+          caterid:this.caterid,
+          caterdes:this.catering.name,
+          type:1
+        };
+        this.$store.commit('setNoteParam',caterinfo);
+        this.$refs.remarkmodal.show();
       },
       EOShare(){
         this.$router.push({name: '宴会预订EO单', params: { caterid: this.caterid }});
       },
       refreshData(){
-        const loading = this.$loading.service({fullscreen:true});
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         setTimeout(() => {
           loading.close();
         }, 500);
@@ -391,11 +403,18 @@
     watch: {
       catering(val,oldval){
         if(!this.isNew){
-          if(val){
-            this.localcatering = Object.assign({},val);
-            this.caterdate = [];
+          this.localcatering = Object.assign({},val);
+          this.caterdate = [];
+          if(val.hasOwnProperty('arr')){
             this.caterdate.push(val.arr,val.dep)
           }
+        }
+      },
+      newCateringParam(val){
+        if(val.hasOwnProperty('arr')){
+          this.localcatering = Object.assign({},val);
+          this.caterdate = [];
+          this.caterdate.push(val.arr,val.dep)
         }
       },
       catersta(val,oldval){
@@ -410,6 +429,7 @@
   }
 </script>
 <style lang="scss">
+  @import '../../css/color';
   #caterinfo{
     font-size: 0.9rem;
     .row{
@@ -418,17 +438,20 @@
     .card-header,.card-body{
       padding: 0;
     }
+    .card-header{
+      height: 29px;
+    }
     .catertitle{
-      border-right: 1px solid #d9d9d9;
+      border-right: 1px solid $colorBorder;
     }
     .icondiv{
-      border-left: 1px solid #d9d9d9;
+      border-left: 1px solid $colorBorder;
     }
     input{
       font-size: 0.9rem;
     }
     .titleIcon{
-      color: #fcac6f;
+      color: $colorIcon;
       font-size: 20px;
       cursor: pointer;
       padding: 0 2px;
@@ -464,12 +487,12 @@
     //宴会主单主要信息
     #catermain{
       .el-icon-date,.fa{
-        color: #fcac6f;
+        color: $colorIcon;
       }
       .Sta{
         width: 90%;
         height: 65px;
-        background: #ff7266;
+        background: $color11;
         border-radius: 10px;
         padding: 0 20px;
         margin-top: 6px;
@@ -497,7 +520,7 @@
       }
       .form-control{
         border: none;
-        border-bottom: 1px solid #dddddd;
+        border-bottom: 1px solid $colorBorder;
         border-radius: 0;
 
       }
@@ -505,7 +528,7 @@
         width: 100%;
         padding: 0;
         border: none;
-        border-bottom: 1px solid #dddddd;
+        border-bottom: 1px solid $colorBorder;
       }
       .el-input__inner:focus{
         box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
@@ -524,11 +547,11 @@
       }
       .reservebtn{
         width: 48.5%;
-        background-color: #FFB752;
+        background-color: $colorQuitBtn;
       }
       .confirmbtn{
         width: 48.5%;
-        background-color: #FFB752;
+        background-color: $colorQuitBtn;
       }
       .cancelwidth{
         width: 48.5%;
@@ -537,7 +560,7 @@
         width: 99%;
       }
       .cancelbtn{
-        background-color: #2EC5FA;
+        background-color: $color8;
         transition:width .5s;
         -moz-transition:width .5s; /* Firefox 4 */
         -webkit-transition:width .5s; /* Safari and Chrome */
@@ -545,7 +568,7 @@
       }
       .savebtn {
         width: 99%;
-        background-color: #fa8052;
+        background-color: $colorSaveBtn;
         margin-top: 0.25rem;
       }
       .newbtn{
@@ -557,12 +580,15 @@
     //宴会主单附加信息
     #catersub{
       .el-icon-date,.fa{
-        color: #fcac6f;
+        color: $colorIcon;
       }
       .modalinput{
         i{
           padding-top: 9px;
           padding-left: 5px;
+        }
+        .el-input__inner{
+          padding-right: 25px;
         }
       }
       .form-control:focus{
@@ -580,7 +606,7 @@
       }
       .form-control{
         border-radius: 0;
-        border-color:#bce8f1;
+        border-color:$colorForm;
         line-height:1.7;
       }
       .el-input{
@@ -591,7 +617,7 @@
       }
       .el-input__inner{
         width: 101%;
-        border-color: #bce8f1;
+        border-color: $colorForm;
       }
       .col-form-label{
         padding-top: calc(0.375rem + 2px);
@@ -624,13 +650,24 @@
         }
       }
       legend{
-        background-color: #bce8f1;
+        background-color: $colorForm;
         font-size: 0.85rem;
         padding-left: 10px;
       }
       .longinput{
         width: 100%;
       }
+    }
+    .el-dialog{
+      width: 800px;
+      margin: 0 auto;
+      margin-top: 10px !important;
+    }
+    .el-dialog__header{
+      border-bottom: 1px solid $colorBorder;
+    }
+    .el-dialog__body{
+      padding: 30px 10px;
     }
   }
 </style>

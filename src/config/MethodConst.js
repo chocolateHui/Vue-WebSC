@@ -11,10 +11,12 @@ const methodinfo = {
   modifypassword: '/PUB/sysempno/modifypassword',
   // 根据工号获取酒店信息
   getempnohotellist: '/PUB/sysempno/getempnohotellist',
-  // 获取工号信息列表
-  getempnolist: '/PUB/sysempno/getempnolist',
   // 获取工号详情
   getempnoinfo: '/PUB/sysempno/getempnoinfo',
+  // 获取工号列表
+  getempnolist: '/PUB/sysempno/getempnolist',
+  // 更新工号信息
+  savesysempno: '/PUB/sysempno/savesysempno',
   // 获取站点信息
   getpcidstatus: '/PUB/station/getpcidstatus',
   // 获取基础代码列表
@@ -31,7 +33,9 @@ const methodinfo = {
   getsysoptionlist: '/PUB/sysoption/getsysoptionlist',
   // 获取销售员列表
   getsaleidlist: '/PUB/saleid/getsaleidlist',
-// 获取酒店信息列表
+//获取酒店信息
+  gethotel:'/PUB/hotelid/gethotel',
+  // 获取酒店信息列表
   gethotellist: '/PUB/hotelid/gethotellist',
   // 获取酒店编号查询条件
   getcond: '/PUB/hotelid/getcond',

@@ -1,6 +1,6 @@
 <template>
   <b-container fluid>
-    <b-collapse :visible="eventshow" id="newevent">
+    <b-collapse @shown="collapseShow(true)" @hidden="collapseShow(false)" visible :id="id">
       <b-card header-tag="header">
         <b-row slot="header">
           <b-col sm="1" class="my-1 eventtitle">
@@ -24,7 +24,7 @@
                       <el-input class="eventname" v-model="newEvent.descript"></el-input>
                     </b-form-group>
                     <b-form-group label="时&#8195;&#8195;段&#8194;|" horizontal>
-                      <TimePicker :steps="[1, 10, 15]" v-model="eventtime" format="HH:mm" type="timerange" placeholder="Select time"></TimePicker>
+                      <TimePicker :steps="[1, 10, 15]" v-model="eventtime" format="HH:mm" type="timerange" placeholder=""></TimePicker>
                       <el-select class="timeselect" v-model="stdunit" @change="timeChange" placeholder="请选择">
                         <el-option
                           v-for="item in timeoptions"
@@ -215,6 +215,7 @@
     name: 'NewEvent',
     data () {
       return {
+        id:'newevent',
         newEvent:{
           sta:'1',
           stdunit:'0'
@@ -236,6 +237,7 @@
         isClear:false,
         priceread:true,
         editable:false,
+        isOpen:true,
         datepickerOptions: {
           disabledDate(time) {
             let now =new Date(new Date() - 24 * 60 * 60 * 1000)
@@ -245,14 +247,17 @@
       }
     },
     props:{
-      eventshow :{
-        type:Boolean,
-        default:true
-      },
       toggleshow:{
         type:Boolean,
         default:false
       },
+      eventshow:{
+        type:Boolean
+      },
+      isNew:{
+        type:Boolean,
+        default:false
+      }
     },
     computed: {
       ...mapGetters([
@@ -264,15 +269,41 @@
         'typeoptions',
         'priceoptions',
         'layoutoptions',
-        'degreeoptions'
+        'degreeoptions',
+        'newEventParam'
       ])
     },
     mounted(){
+      if(this.eventshow){
+        this.id='newCaterEvent'
+      }
+      if(this.newEventParam.hasOwnProperty('code')){
+        this.initEventParam();
+      }else{
+        this.newEvent ={
+          sta:'1',
+          stdunit:'0'
+        }
+      }
     },
     methods: {
+      collapseShow(open){
+        this.isOpen = open;
+      },
+      initEventParam(){
+        let eventparam = this.newEventParam;
+        this.eventbdate= [];
+        this.eventtime= [];
+        this.eventbdate.push(eventparam.begindate,eventparam.enddate)
+        this.eventtime.push(eventparam.begintime,eventparam.endtime)
+        this.newEvent = Object.assign({},this.newEvent ,eventparam)
+        this.$store.commit('setNewEventParam',{});
+        if(!this.isOpen&&!this.eventshow){
+          this.$root.$emit('bv::toggle::collapse','newevent')
+        }
+      },
       eventCheck(catering){
         return new Promise((resolve, reject) => {
-          let _this=this;
           let newEvent = this.newEvent;
           if(newEvent.code||this.eventbdate[0]){
             if(!newEvent.descript){
@@ -308,7 +339,6 @@
               resolve(false)
               return
             }
-            console.log(this.newEvent);
             this.newEvent.begindate = this.eventbdate[0];
             this.newEvent.enddate = this.eventbdate[1];
             this.newEvent.begintime = this.eventtime[0];
@@ -332,17 +362,17 @@
               this.$http.defaults.headers.common['username'] = this.$store.getters.username
               this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
               this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-              this.$http.post(methodinfo.checkevent, newEvent).then(function (response) {
+              this.$http.post(methodinfo.checkevent, newEvent).then((response)=> {
                 if (response.data.errorCode === '0') {
                   resolve(true)
                 }else if(response.data.errorCode === '2000'){
-                  _this.$confirm(response.data.errorMessage).then(() =>{
+                  this.$confirm(response.data.errorMessage).then(() =>{
                     resolve(true)
                   }).catch(() =>{
                     resolve(false)
                   })
                 }else{
-                  _this.$alert(response.data.errorMessage)
+                  this.$alert(response.data.errorMessage)
                   resolve(false)
                 }
               }).catch(function () {
@@ -355,7 +385,6 @@
         })
       },
       batchSaveEvent(caterid){
-        let _this = this;
         return new Promise((resolve, reject) => {
           if(this.newEvent.code||this.eventbdate[0]){
             this.newEvent.caterid = caterid;
@@ -365,7 +394,7 @@
               commitEvent.code = eventplaces[i];
               if(i===eventplaces.length-1){
                 this.$http.post(methodinfo.newbatchevent, commitEvent).then(()=>{
-                  _this.$root.$emit("bv::toggle::collapse","newevent")
+                  this.$root.$emit("bv::toggle::collapse","newevent")
                   resolve()
                 })
               }else{
@@ -411,14 +440,12 @@
         }else{
           this.isClear =false;
         }
-
       },
       placeClear(){
         this.isClear = true;
         this.$refs.MultiPlace.clearSelect();
       },
       placeConfirm(allselect){
-        console.log(allselect);
         let eventcode = '';
         let eventcodedes='';
         for(let elem of allselect){
@@ -438,16 +465,25 @@
     },
     watch:{
       catersta(val, oldval){
+        if(val!==oldval&&!this.catering.hasOwnProperty('name')){
+
+        }
         if(this.catersta==='1'||this.catersta==='Q'){
           this.$set(this.newEvent,'sta',this.catersta)
         }
         if(this.catersta==='2'){
-          this.staoptions.push({ code: '2', descript: '确认' });
+          this.staoptions = [{ code: 'Q', descript: '问询' },{ code: '1', descript: '预订' },{ code: '2', descript: '确认' }];
         }
       },
       catering(val,oldval){
-        if(val){
+        if(val.hasOwnProperty('name')&&!this.isNew){
           this.$set(this.newEvent,'descript',val.name)
+          if(this.isOpen&&!(this.newEventParam.hasOwnProperty('code')||this.newEvent.hasOwnProperty('code'))){
+            this.$root.$emit('bv::toggle::collapse','newevent')
+          }
+        }
+        if(this.newEventParam.hasOwnProperty('code')){
+          this.initEventParam();
         }
       },
       defaulttype(val){
@@ -459,7 +495,7 @@
   }
 </script>
 <style lang="scss">
-  #newevent {
+  #newevent,#newCaterEvent {
     font-size: 0.9rem;
     input{
       font-size: 0.9rem;
@@ -476,6 +512,7 @@
     .card-header{
       background-color: #99a2f5;
       color: white;
+      height: 27px;
     }
     .col-sm-6,.col-sm-9,.col-sm-10,.col-sm-12{
       padding: 0;
