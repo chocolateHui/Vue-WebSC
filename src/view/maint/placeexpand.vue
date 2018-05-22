@@ -6,6 +6,7 @@
           ref="logtable"
           :data="searchitems"
           border
+          highlight-current-row
           style="width: 100%">
           <el-table-column
             v-for="item in fildes"
@@ -22,12 +23,12 @@
           <b-col sm="2"></b-col>
           <b-col sm="4">
             <label>场地代码:</label>
-            <span>1001</span>
+            <span>{{selectedexpand.tableno}}</span>
           </b-col>
           <b-col sm="2"></b-col>
           <b-col sm="4">
             <label>场地名称:</label>
-            <span>宴会厅</span>
+            <span>{{selectedexpand.descript}}</span>
           </b-col>
         </b-row>
         <b-row>
@@ -105,7 +106,7 @@
 </template>
 <script>
   import axios from 'axios'
-
+  import methodinfo from '../../config/MethodConst.js'
   const fileserver = "https://files.foxhis.com/FoxhisFileServer/action?groupid=C0000001&access=dsajlkda1";
   const filetoken = "71DFD83564CD06366DA6C6E35496B61D";
   const items = [
@@ -113,14 +114,15 @@
     {code: '1002', cby: '会议室'},
   ]
   const fildes = [
-    {prop: 'code', label: '代码', width: '70'},
-    {prop: 'cby', label: '描述', width: '', sortable: true, showTip: true}
+    {prop: 'tableno', label: '代码', width: '70'},
+    {prop: 'descript', label: '描述', width: '', sortable: false, showTip: true}
   ]
 
   export default {
     data () {
       return {
-        items: items,
+        selectedexpand:{},
+        items: this.litems,
         fildes: fildes,
         fileserver:fileserver,
         expand: {},
@@ -131,14 +133,27 @@
         dialogVisible: false
       }
     },
-    prop: {
+    props: {
       pkid: {
         type: String
       },
+      litems:Array
     },
     computed: {
       searchitems: function () {
         return this.items;
+      }
+    },
+    watch:{
+      litems(val,oldval){
+        this.items = val;
+        this.selectedexpand = val[0];
+        this.$nextTick(function(){
+          this.$refs.logtable.setCurrentRow( this.items[0]);
+        })
+      },
+      selectedexpand(){
+        this.refreshdata();
       }
     },
     methods: {
@@ -179,12 +194,36 @@
           }).catch(response => {
           console.log(response)
         })
+      },
+      refreshdata(){
+        console.log("xxxxxxxx");
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.getplaceexpandinfo, {
+            pccode: this.selectedexpand.pccode,
+            tableno:this.selectedexpand.tableno
+          }).then((response)=> {
+            if (response.data.errorCode=="0") {
+              this.expand = {};
+              if(typeof(response.data.expands) != "undefined"){
+                console.log(response.data);
+                this.expand = response.data.expands[0];
+              }
+            }
+          })
+        })
       }
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss"  type="text/scss">
   #placeexpand {
+    body, span, input, label {
+      font-family: 'Open Sans',sans-serif;
+      overflow-y: inherit;
+    }
     .el-table {
       td, th {
         border-color: #dee2e6;
