@@ -41,12 +41,12 @@
                 </b-form-input>
               </b-form-group>
               <b-form-group label="城&#8194;&#8194;&#8194;&#8194;市:" horizontal>
-                <el-select v-model="hoteInfo.city" placeholder="请选择">
+                <el-select @change="citychange" v-model="hoteInfo.city" placeholder="请选择">
                   <el-option
-                    v-for="item in city"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
+                    v-for="item in cityList"
+                    :key="item.code"
+                    :label="item.descript"
+                    :value="item.code">
                   </el-option>
                 </el-select>
               </b-form-group>
@@ -94,10 +94,10 @@
               <b-form-group label="城&#8194;&#8194;&#8194;&#8194;区:" horizontal>
                 <el-select v-model="hoteInfo.cityarea" placeholder="请选择">
                   <el-option
-                    v-for="item in city"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
+                    v-for="item in cityareaList"
+                    :key="item.code"
+                    :label="item.descript"
+                    :value="item.code">
                   </el-option>
                 </el-select>
               </b-form-group>
@@ -131,12 +131,15 @@
                   </el-option>
                 </el-select>
               </b-form-group>
-              <b-form-group label="邮&#8194;&#8194;&#8194;&#8194;件:" horizontal>
-                <b-form-input
-                  type="text"
-                  v-model="hoteInfo.email "
-                >
-                </b-form-input>
+              <b-form-group label="片&#8194;&#8194;&#8194;&#8194;区:" horizontal>
+                <el-select v-model="hoteInfo.area" placeholder="请选择">
+                  <el-option
+                    v-for="item in areaList"
+                    :key="item.code"
+                    :label="item.descript"
+                    :value="item.code">
+                  </el-option>
+                </el-select>
               </b-form-group>
               <b-form-group label="联&#8194;系&#8194;人:" horizontal>
                 <b-form-input
@@ -184,7 +187,13 @@
             </b-form-group>
           </b-col>
           <b-col>
-
+            <b-form-group label="邮&#8194;&#8194;&#8194;&#8194;件:" horizontal>
+              <b-form-input
+                type="text"
+                v-model="hoteInfo.email "
+              >
+              </b-form-input>
+            </b-form-group>
             <b-form-group label="传&#8194;&#8194;&#8194;&#8194;真:" horizontal>
               <b-form-input
                 type="text"
@@ -211,16 +220,22 @@
               </b-form-checkbox>
           </b-col>
           <b-col>
-            <b-button>周边设施</b-button>
-            <b-button>保存</b-button>
-            <b-button>初始化</b-button>
+            <!--<b-button>周边设施</b-button>-->
+            <b-button @click="btnSave">保存</b-button>
+            <b-button @click="btnInitalize">初始化</b-button>
           </b-col>
         </b-row>
       </b-container>
+      <b-modal id="logmodal" ref="myModalInitalize" size="lg" title="初始化" hide-footer>
+        <initalize-first v-if="ifFirst"></initalize-first>
+        <initalize v-else @btnExit="btnExit"></initalize>
+      </b-modal>
     </div>
 </template>
 
 <script>
+  import initalize from './initalize'
+  import initalizeFirst from './initializeFirst'
   import methodinfo from '../../config/MethodConst.js'
     export default {
         name: "hotelinfoadmin",
@@ -240,12 +255,23 @@
             ],
             hoteInfo:{},
             value:'',
-            form: {
-              name: '',
-            },
-            city:[{name:'上海',id:1},{name:'北京',id:2},{name:'武汉',id:3}],
-            status: 'T'
+            status: 'T',
+            areaList:[],
+            cityList:[],
+            cityareaList:[],
+            citycode:'',
+            hotelid:'',
+            ifFirst:false
           }
+      },
+      props:['innhotel','sign'],
+      watch:{
+        innhotel:function (val,oldval) {
+          this.getpccodelist()
+        }
+      },
+      components:{
+        initalizeFirst,initalize
       },
       computed: {
 
@@ -256,24 +282,121 @@
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
         },
+        gethotelid:function () {
+          if(this.sign===1){
+            this.hotelid=this.innhotel
+          }else{
+            this.hotelid=this.$store.getters.hotel.hotelid
+          }
+        },
         getpccodelist:function(){
+          this.gethotelid()
           var _this=this
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
             // 获取营业点
             this.$http.post(methodinfo.gethotel, {
-              hotelid:this.$store.getters.hotel.hotelid
+              hotel:this.hotelid
             }).then((response) => {
               if (response.status === 200) {
                 if (response.data.errorCode=="0") {
                 this.hoteInfo=response.data
+                  this.hoteInfo.cityarea=''
                 }
               }
             })
           })
         },
+        // 获取片区
+        getarealist:function(){
+          var _this=this
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            // 获取营业点
+            this.$http.post(methodinfo.getbasecodelist, {
+              cat: 'area',
+              halt:'F'
+            }).then((response) => {
+              if (response.status === 200) {
+                if (response.data.errorCode=="0") {
+                  this.areaList=response.data.basecodes
+                }
+              }
+            })
+          })
+        },
+        //获取城市
+        getcitylist:function(){
+          var _this=this
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            // 获取营业点
+            this.$http.post(methodinfo.getcntcode, {
+              city: 'T'
+            }).then((response) => {
+              if (response.status === 200) {
+                if (response.data.errorCode=="0") {
+                  this.cityList=response.data.citycodes
+                }
+              }
+            })
+          })
+        },
+        //获取城区
+        getcityarealist:function(){
+          var _this=this
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            // 获取营业点
+            this.$http.post(methodinfo.getcntcode, {
+              citycode:_this.citycode
+            }).then((response) => {
+              if (response.status === 200) {
+                if (response.data.errorCode=="0") {
+                  this.cityareaList=response.data.citycodes
+                  this.hoteInfo.cityarea=this.cityareaList[0]
+                }
+              }
+            })
+          })
+        },
+        citychange:function (val) {
+          if(this.cityList.length){
+            for(var t=0;t<this.cityList.length;t++){
+              if(this.cityList[t].code==val){
+                this.citycode=this.cityList[t].citycode
+              }
+            }
+          }
+           this.getcityarealist()
+        },
+        btnSave:function () {
+          var _this=this
+           this.$set(this.hoteInfo,"hotel",this.hoteInfo.hotelid);
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            // 获取营业点
+            this.$http.post(methodinfo.modifyhotel,
+              this.hoteInfo
+            ).then((response) => {
+              if (response.status === 200) {
+                if (response.data.errorCode=="0") {
+                  _this.$message('保存成功')
+                }
+              }
+            })
+          })
+        },
+        btnInitalize:function () {
+          this.$refs.myModalInitalize.show()
+        },
+        btnExit:function () {
+          this.$refs.myModalInitalize.hide()
+        }
       },
       created(){
+        this.getcitylist()
+        this.getarealist()
         this.getpccodelist()
       }
     }
@@ -283,8 +406,17 @@
   $colorE0:#6FB3E0;
   $colorCC:#71A2CC;
 #hotelinfoadmin{
+  .col-sm-3{
+    flex: 0 0 28%;
+    max-width: 35%;
+  }
+  .col-sm-9{
+    flex: 0 0 72%;
+    max-width: 75%;
+  }
+
   .infohead{
-    padding: 15px;
+    padding: 5px 15px;
     color:$colorCC;
     font-size: 1.1rem;
   }
@@ -296,22 +428,22 @@
         float: right;
         margin-right: 15px;
         &:last-child{background:$colorE0;border-color:$colorE0}
-        &:first-child{background: $colorCC;border-color:$colorCC}
+        /*<!--&:first-child{background: $colorCC;border-color:$colorCC}-->*/
       }
     }
   }
   .addrcol{
     .col-sm-3{
-      flex: 0 0 12.5%;
-      max-width: 12.5%;
+      flex: 0 0 14%;
+      max-width: 14%;
     }
     .col-sm-9 {
-      flex: 0 0 87.5%;
-      max-width: 87.5%;
+      flex: 0 0 86%;
+      max-width: 86%;
     }
   }
   .form-control,.el-input--suffix .el-input__inner{
-    height: 35px;
+    height: 33px;
   }
   #textarea1{
     height: 70px !important;
