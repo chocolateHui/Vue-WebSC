@@ -39,6 +39,8 @@ const methodinfo = {
   getdeptlist: '/PUB/authfunction/getdeptlist',
 // 获取角色列表
   getjoblist: '/PUB/authfunction/getjoblist',
+// 修改工号信息
+  modifyempnoinfo: '/PUB/sysempno/modifyempnoinfo',
 
 
   /*
