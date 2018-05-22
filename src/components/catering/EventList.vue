@@ -86,14 +86,15 @@
                       <b-form-group label="场&#8195;&#8195;租&#8194;|" :label-cols="2"
                                     horizontal>
                         <b-form inline>
-                          <b-form-input v-model="expandevent.price" class="priceinput" type="text"></b-form-input>
+                          <FormatInput class="priceinput" type="float" maxlength="19" :readonly="priceread" v-model="expandevent.price"></FormatInput>
                           <span class="input-separator">/</span>
                           <el-select @change="priceChange" v-model="expandevent.unit" class="priceselect">
                             <el-option
                               v-for="item in priceoptions"
                               :key="item.code"
                               :label="item.descript"
-                              :value="item.code">
+                              :value="item"
+                              :value-key="item.id">
                               <span style="float: left">{{ item.descript }}</span>
                               <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.price }}</span>
                             </el-option>
@@ -299,6 +300,7 @@
         getRowKeys(row) {
           return row.eventid;
         },
+        priceread:false,
         isClear:false,
         editable:false,
         eventEditable:true,
@@ -427,6 +429,7 @@
           this.eventtime.push(row.begintime,row.endtime);
           this.flagselected = [];
           this.expandevent=Object.assign({},row);
+          this.priceread = this.expandevent.price!==0.00
           if(this.expandevent.flag2==='T'){
             this.flagselected.push("noise")
           }
@@ -462,16 +465,11 @@
         }
       },
       //场租选择
-      priceChange(val){
-        for(let option of this.priceoptions){
-          if(option.code===val){
-            this.priceread = option.price !== 0.00;
-            this.expandevent.price = option.price;
-            this.expandevent.id = option.id;
-            this.expandevent.unit = option.descript;
-            return;
-          }
-        }
+      priceChange(item){
+        this.priceread = item.price !== 0.00;
+        this.expandevent.price = item.price;
+        this.expandevent.id = item.id;
+        this.expandevent.unit = item.descript;
       },
       //常用时间选择
       timeChange(val){

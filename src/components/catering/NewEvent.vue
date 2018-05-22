@@ -95,7 +95,8 @@
                             v-for="item in priceoptions"
                             :key="item.id"
                             :label="item.descript"
-                            :value="item.id">
+                            :value="item"
+                            :value-key="item.id">
                             <span style="float: left">{{ item.descript }}</span>
                             <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.price }}</span>
                           </el-option>
@@ -406,16 +407,11 @@
           }
         })
       },
-      priceChange(val){
-        for(let option of this.priceoptions){
-          if(option.code===val){
-            this.priceread = option.price !== 0.00;
-            this.newEvent.price = option.price;
-            this.newEvent.id = option.id;
-            this.newEvent.unit = option.descript;
-            return;
-          }
-        }
+      priceChange(item){
+        this.priceread = item.price !== 0.00;
+        this.newEvent.price = item.price;
+        this.newEvent.id = item.id;
+        this.newEvent.unit = item.descript;
       },
       timeChange(val){
         for(let option of this.timeoptions){

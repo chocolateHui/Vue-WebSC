@@ -21,12 +21,13 @@
           return;
         }
         if(this.type==='number'){
-          if(val.indexOf('.')>=0){
+          let r = /^[0-9]*[1-9][0-9]*$/ ;
+          if (!r.test(val)){
             this.inputvalue = oldval;
             return;
           }
         }
-        if(this.type==='number'||this.type==='float'){
+        if(this.type==='float'){
           let numval = Number(val);
           if(Number.isNaN(numval)){
             if(Number.isNaN(oldval)){

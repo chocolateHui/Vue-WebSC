@@ -12,8 +12,8 @@ const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report
 const NewCatering = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/NewCatering.vue')
 const CateringInfo = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/CateringInfo.vue')
 const ScEventItem = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/ScEventItem.vue')
-const EOShare = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/EOShare.vue')
-
+// 报表相关
+const EOShare = () => import(/* webpackChunkName: "group-report" */ '../view/catering/EOShare.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
 
 const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
