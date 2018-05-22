@@ -3,9 +3,9 @@
   <div id="scitem">
     <b-container fluid>
       <b-row  style="font-size: 12px">
-        <b-col sm="5" class="my-1 paddingright0">
+        <div style="width: 100%">
           <b-input-group prepend="项目类别" id="sel">
-            <el-select clearable  v-model="selectclasscode">
+            <el-select clearable @change="clear" v-model="selectclasscode">
               <el-option
                 v-for="item in localclasscode"
                 :key="item.value"
@@ -14,21 +14,37 @@
               </el-option>
             </el-select>
           </b-input-group>
-        </b-col>
 
-        <b-col sm="3" class="my-1 paddingright0">
-        </b-col>
-        <b-col sm="3" class="my-1 paddingright0">
-          <b-input-group>
-            <b-input-group-text slot="append">
+
+          <b-input-group prepend="部门" id="sel2">
+            <el-select @change="clear2" v-model="selectbm">
+              <el-option
+                v-for="item in localbm"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </b-input-group>
+
+          <div class="input-group res">
+            <div class="input-group-append" style="height: 33px;">
+              <div class="input-group-text" style="border-radius: 0.25rem;background-color: #6FB3E0">
+                <i class="fa fa-refresh" @click="refreshdata" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+
+          <b-input-group style="padding-top: 0.5rem;width: 180px;float: right;padding-right: 0.5rem;">
+            <b-input-group-text slot="append" style="background-color: #6FB3E0">
               <i class="fa fa-search"></i>
             </b-input-group-text>
             <b-form-input v-model="filterText" placeholder="请输入关键字搜索"></b-form-input>
           </b-input-group>
-        </b-col>
-        <b-col sm="1" class="my-1 paddingright0">
-          <i class="fa fa-refresh refresh" @click="refreshdata" aria-hidden="true"></i>
-        </b-col>
+
+
+
+        </div>
       </b-row>
       <b-row id="rowrow" style="font-size: 1rem">
         <el-table
@@ -72,32 +88,21 @@
           </el-table-column>
         </el-table>
       </b-row>
-      <b-row  style="font-size: 12px ">
-        <b-form inline>
+      <b-row  style="font-size: 12px; padding-bottom: 0.5rem;">
+
+        <div style="width: 100%">
+
+            <b-button
+              size="sm"
+              variant="primary" @click="close()">已选</b-button>
+            <b-button
+              size="sm"
+              variant="warning"  @click="unclose()">未选</b-button>
           <b-button
+            style="float: right"
             size="sm"
-            variant="primary" @click="close()">已选</b-button>
-          <b-button
-            size="sm"
-            variant="warning" @click="unclose()">未选</b-button>
-
-
-
-          <b-input-group prepend="部门" id="sel2">
-            <el-select clearable  v-model="selectbm">
-              <el-option
-                v-for="item in localbm"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </b-input-group>
-          <b-button
-            size="sm"
-            @click="close()">确定</b-button>
-
-        </b-form>
+            @click="addnew()">确定</b-button>
+        </div>
 
 
 
@@ -130,11 +135,14 @@
         localbm:[],
         selectclasscode:"",
         selectbm:"",
+        selectbmdeptno:"",
         localeventdes:"",
         filterText:"",
         selected:{},
         isselected:"",
-        currentselect:[],
+        currentselect:{},
+        change:false,
+        first:true,
       }
     },
     props:{
@@ -147,17 +155,16 @@
     computed:{
       searchitems:function () {
 
-        if(!this.selectclasscode&&!this.selectbm&&!this.filterText&&!this.isselected){
+        if(!this.selectclasscode&&!this.selectbmdeptno&&!this.filterText&&!this.isselected){
           return this.localscitem;
         }else{
           return this.localscitem.filter( tableData => {
-            console.log(this.selected);
             var s=false;
             if(this.selectclasscode==tableData.classcode||!this.selectclasscode){
               s = true;
             }
             if(s){
-              if(this.selectbm==tableData.deptno||!this.selectbm||!tableData.deptno){
+              if(this.selectbmdeptno==tableData.deptno||!this.selectbmdeptno||!tableData.deptno){
                 s = true;
               }
               else{
@@ -165,6 +172,7 @@
               }
             }
             if(s){
+
               if(!this.filterText){
                 s = true;
               }
@@ -211,9 +219,18 @@
           });
         }
       },
+      ...mapGetters([
+        'sceventitemeventid'
+      ]),
     },
     watch: {
-
+      filterText(val,oldval){
+        if(!this.select){
+          this.first = true;
+        }
+        this.change = true;
+        this.selected=Object.assign({},this.currentselect);
+      }
     },
     update(){
      console.log("aaaaaaaa");
@@ -231,6 +248,7 @@
       },
       refreshdata(){
         this.isselected="";
+        this.first = true;
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -243,6 +261,7 @@
               if(typeof(response.data.items) != "undefined"){
                   this.localscitem = [];
                   this.localbm = [];
+                  let first = true;
                   for(let pc of response.data.items) {
                     if(pc.type!="3"){
                       var type={};
@@ -255,9 +274,15 @@
                     }
                     if(pc.type==="3"){
                       var type={};
-                      type["value"] = pc.code;
+                      type["value"] = pc.id;
                       type["label"] = pc.descript;
+                      type["classcode"] = pc.classcode;
                       this.localbm.push(type);
+                      if(first){
+                        this.selectbm = pc.id;
+                        this.selectbmdeptno = pc.classcode;
+                        first = false;
+                      }
                     }
                   }
                 }
@@ -290,128 +315,134 @@
         })
       },
       close:function(){
-      this.isselected="T";
-      for(let elm of this.localscitem){
-        if(this.this.selected[elm.id]){
+        this.change = true;
 
-        }
-      }
+        this.selected=Object.assign({},this.currentselect);
+        console.log(this.currentselect);
+        this.isselected="T";
+
       },
       unclose:function(){
+        if(!this.select){
+          this.first = true;
+        }
+        this.change = true;
+
+        this.selected=Object.assign({},this.currentselect);
         this.isselected="F";
-      },
-      updatescnotes(){
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['username'] = this.$store.getters.username
-          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.updatescnoteinfo, {
-            uuid: this.localscnotes.uuid,
-            title: this.localscnotes.title,
-            content:this.localscnotes.content,
-            type:this.localscnotes.type,
-            sta:this.localscnotes.sta,
-            eoprinted:this.localscnotes.eoprinted
-          }).then((response)=> {
-              if(response.data.errorCode==="0"){
-                this.$message({
-                  type: '保存',
-                  message: '保存成功!'
-                });
-               this.getremark()
-              }
-              else{
-                this.$message.error({
-                  type: '保存',
-                  message:response.data.errorMessage
-                });
-              }
-          })
-        })
-      },
-      newscnotes(){
-        if(!this.localscnotes.title){
-          this.$message.error({
-            type: '保存',
-            message:"标题不能为空"
-          });
-          return;
-        }
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['username'] = this.$store.getters.username
-          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.newscnoteinfo, {
-            blockid: this.localscnotes.blockid,
-            caterid: this.localscnotes.caterid,
-            eventid: this.localscnotes.eventid,
-            itemid: this.localscnotes.itemid,
-            type:this.localscnotes.type,
-            title: this.localscnotes.title,
-            content:this.localscnotes.content,
-            date0:formatDate(new Date(),"yyyy-MM-dd hh:mm:ss"),
-            flag:this.localscnotes.flag,
-            seq:this.localscnotes.seq
-          }).then((response)=> {
-              if(response.data.errorCode==="0"){
-                this.$message({
-                  type: '新建',
-                  message: '新建成功!'
-                });
-                this.getremark()
-              }
-              else{
-                this.$message.error({
-                  type: '保存',
-                  message:response.data.errorMessage
-                });
-              }
-
-          })
-        })
-      },
-      savescnotes:function(){
-        var url = "";
-        if(this.localscnotes.isnew==="F"){
-          this.updatescnotes();
-        }
-        else{
-          this.newscnotes();
-        }
 
       },
-
-      handleSelectionChange(val) {
-        let s = [];
-        for(let i=0;i<val.length;i++){
-          this.selected[val[i].id]=true;
-          s.put(val[i].id);
-        }
-        if(val.length<this.selected.length){
-          for(let m=0;m<this.selected;m++){
-
+      clear:function (val) {
+        this.isselected="";
+        this.selected = {};
+        this.first = true;
+      },
+      clear2:function (val) {
+        console.log(val);
+        this.isselected="";
+        this.selected = {};
+        this.first = true;
+        for(let option of this.loclbm){
+          if(option.value===val){
+            this.selectbmdeptno = option.classcode;
+            return;
           }
         }
-        this.currentselect = val;
       },
+      handleSelectionChange(val) {
+        if(this.first){
+          this.first = false;
+          this.currentselect = {};
+          for(let i=0;i<val.length;i++){
+            this.currentselect[val[i].id]=true;
+          }
+        }
+        if(this.change){
+          this.change = false;
+          for(let elm of this.localscitem){
+            if(this.selected[elm.id]){
+              this.$refs.multiplacetable.toggleRowSelection(elm);
+            }
+          }
+        }
+        else{
+          console.log(val);
+          this.currentselect = {};
+          for(let i=0;i<val.length;i++){
+            this.currentselect[val[i].id]=true;
+          }
+        }
+      },
+      addnew:function () {
+        let sel=Object.assign({},this.currentselect);
+        let addsel = [];
+        for(let elm of this.localscitem){
+          if(sel[elm.id]){
+            let type = {};
+            type["id"] = elm.id;
+            type["sta"] = '0';
+            type["number"] = elm.number*1.0;
+            if(elm.number*1.0<=0){
+              this.$message.error({
+                message:"数量不能为0或者为负"
+              });
+              return;
+            }
+            addsel.push(type);
+          }
+        }
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.addeventitem, {
+            eventid :this.sceventitemeventid,
+            id:this.selectbm,
+            eventitems:addsel
+          }).then((response)=> {
+            if(response.data.errorCode==="0"){
+              this.$message({
+                message: '保存成功!'
+              });
+              this.refreshdata();
+              this.$store.commit('setIsrefresh',"T");
+            }
+            else{
+              this.$message.error({
+                message:response.data.errorMessage
+              });
+            }
+          })
+        })
+      }
       }
 
   }
 </script>
 <style lang="scss" type="text/scss">
   #scitem{
+    padding-bottom: 0.5rem;
+    .container-fluid{
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      background-color: #F2F2F2;
+    }
     #sel{
-      .el-input--suffix .el-input__inner {
-        padding-right: 30px;
-        flex: 1 1 auto;
-        height: 34px;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-      }
+        padding-top: 0.5rem;
+        width: 300px;
+        float: left;
+        .el-input--suffix .el-input__inner {
+          padding-right: 30px;
+          flex: 1 1 auto;
+          height: 34px;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
     }
     #sel2{
-      margin-left: 5px;
       padding-top: 0.5rem;
+      width: 300px;
+      float: left;
       .el-input--suffix .el-input__inner {
         padding-right: 30px;
         flex: 1 1 auto;
@@ -455,13 +486,18 @@
       padding-left: 0px;
     }
    .btn {
-     height: 34px;
-      width: 92px;
-      margin-left: 5px;
-      border-radius: 0.25rem;
+     height: 33px;
+     width: 72px;
+     margin-left: 5px;
+     border-radius: 0.25rem;
+     background-color:#6FB3E0;
+     color: white;
+     border-color: transparent;
+
     }
     .row{
       margin-right: 0;
+      margin-left: 0;
     }
     .custom-control {
       min-height: 0.6rem;
@@ -470,11 +506,23 @@
       padding-right: 0px;
     }
     .refresh {
-      font-size: 14px;
       float: right;
-      padding-top: 10px;
+      font-size: 14px;
+      padding-top: 1.2rem;
+      padding-bottom: 0.5rem;
+      padding-left: 0.5rem;
+    }
+    .res {
+      width: 33px;
+      position: relative;
+      float: right;
+      padding-top:0.5rem ;
+    }
+    .fa{
+      color: white;
     }
     #rowrow{
+      padding-bottom: 0.5rem;
       .el-input__inner {
         background-color: transparent;
         border: none;
