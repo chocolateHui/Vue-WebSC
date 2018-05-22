@@ -95,7 +95,8 @@
                             v-for="item in priceoptions"
                             :key="item.id"
                             :label="item.descript"
-                            :value="item.id">
+                            :value="item"
+                            :value-key="item.id">
                             <span style="float: left">{{ item.descript }}</span>
                             <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.price }}</span>
                           </el-option>
@@ -298,16 +299,12 @@
         this.eventtime.push(eventparam.begintime,eventparam.endtime)
         this.newEvent = Object.assign({},this.newEvent ,eventparam)
         this.$store.commit('setNewEventParam',{});
-        console.log(this.isOpen)
-        console.log(this.eventshow)
-        console.log(!this.isOpen&&!this.eventshow)
         if(!this.isOpen&&!this.eventshow){
           this.$root.$emit('bv::toggle::collapse','newevent')
         }
       },
       eventCheck(catering){
         return new Promise((resolve, reject) => {
-          let _this=this;
           let newEvent = this.newEvent;
           if(newEvent.code||this.eventbdate[0]){
             if(!newEvent.descript){
@@ -366,17 +363,17 @@
               this.$http.defaults.headers.common['username'] = this.$store.getters.username
               this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
               this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-              this.$http.post(methodinfo.checkevent, newEvent).then(function (response) {
+              this.$http.post(methodinfo.checkevent, newEvent).then((response)=> {
                 if (response.data.errorCode === '0') {
                   resolve(true)
                 }else if(response.data.errorCode === '2000'){
-                  _this.$confirm(response.data.errorMessage).then(() =>{
+                  this.$confirm(response.data.errorMessage).then(() =>{
                     resolve(true)
                   }).catch(() =>{
                     resolve(false)
                   })
                 }else{
-                  _this.$alert(response.data.errorMessage)
+                  this.$alert(response.data.errorMessage)
                   resolve(false)
                 }
               }).catch(function () {
@@ -389,7 +386,6 @@
         })
       },
       batchSaveEvent(caterid){
-        let _this = this;
         return new Promise((resolve, reject) => {
           if(this.newEvent.code||this.eventbdate[0]){
             this.newEvent.caterid = caterid;
@@ -399,7 +395,7 @@
               commitEvent.code = eventplaces[i];
               if(i===eventplaces.length-1){
                 this.$http.post(methodinfo.newbatchevent, commitEvent).then(()=>{
-                  _this.$root.$emit("bv::toggle::collapse","newevent")
+                  this.$root.$emit("bv::toggle::collapse","newevent")
                   resolve()
                 })
               }else{
@@ -411,16 +407,11 @@
           }
         })
       },
-      priceChange(val){
-        for(let option of this.priceoptions){
-          if(option.code===val){
-            this.priceread = option.price !== 0.00;
-            this.newEvent.price = option.price;
-            this.newEvent.id = option.id;
-            this.newEvent.unit = option.descript;
-            return;
-          }
-        }
+      priceChange(item){
+        this.priceread = item.price !== 0.00;
+        this.newEvent.price = item.price;
+        this.newEvent.id = item.id;
+        this.newEvent.unit = item.descript;
       },
       timeChange(val){
         for(let option of this.timeoptions){
@@ -445,7 +436,6 @@
         }else{
           this.isClear =false;
         }
-
       },
       placeClear(){
         this.isClear = true;

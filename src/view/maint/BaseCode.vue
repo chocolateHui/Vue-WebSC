@@ -134,7 +134,6 @@
     },
     methods: {
       refreshData(){
-        let _this = this;
         this.editRows=[];
         this.items=[];
         this.$store.dispatch('encrypttoken').then(() => {
@@ -147,7 +146,7 @@
               if (response.data.errorCode === "0") {
                 for(let elem of response.data.basecodes){
                   elem.editable = elem.hotelid.indexOf('G') < 0;
-                  _this.items.push(elem);
+                  this.items.push(elem);
                 }
               }
             })
@@ -181,7 +180,6 @@
         let row = scope.row;
         let index = scope.$index;
         this.$confirm("是否要删除该基础代码？","提示").then(()=>{
-          let _this=this;
           this.$store.dispatch('encrypttoken').then(() => {
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -191,13 +189,13 @@
               code:row.code
             }).then((response)=>{
               if(response.data.errorCode==='0'){
-                _this.$message({
+                this.$message({
                   message: '基础代码删除成功!',
                   type: 'success'
                 })
                 this.items.splice(index,1);
               }else{
-                _this.$message.error(response.data.errorMessage)
+                this.$message.error(response.data.errorMessage)
               }
             })
           })
@@ -205,7 +203,6 @@
 
       },
       saveBaseCode(){
-        let _this=this;
         for(let elem of this.editRows){
           if(!elem.hasOwnProperty('code')||!elem.code){
             this.$message.error("编码不能为空!")
@@ -237,12 +234,12 @@
             basecodes:this.editRows
           }).then((response)=>{
             if(response.data.errorCode==='0'){
-              _this.$message({
+              this.$message({
                 message: '基础代码保存成功!',
                 type: 'success'
               })
             }else{
-              _this.$message.error(response.data.errorMessage)
+              this.$message.error(response.data.errorMessage)
             }
           })
         })

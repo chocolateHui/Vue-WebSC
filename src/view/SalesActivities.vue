@@ -83,9 +83,6 @@
       <b-modal id="logmodal" ref="myModalsale" :no-close-on-backdrop="true" :no-close-on-esc="true" @hidden="onHidden" size="lg" title="销售日记" hide-footer>
          <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>
       </b-modal>
-      <div v-if="isLoading">
-        <loading></loading>
-      </div>
       <div id="layer2"></div>
   </div>
 </template>
@@ -94,7 +91,6 @@
   import popSales from '../components/SalesActivities/popSales'
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
   import methodinfo from '../config/MethodConst.js'
-  import loading from '../components/loading.vue'
   import '../css/SalesActivite.scss';
   export default {
     name: "sales-activities",
@@ -154,8 +150,7 @@
     },
     components: {
       popSales,
-      calendar,
-      loading
+      calendar
     },
     methods:{
       btnDetail:function (id) {

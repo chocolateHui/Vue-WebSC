@@ -60,8 +60,8 @@
     <b-modal @shown="reasonShown" id="reasonmodal" size="lg" ref="reasonmodal" title="理由列表" hide-footer>
       <Reason ref="Reason" @reasonConfirm="reasonConfirm"></Reason>
     </b-modal>
-    <b-modal id="logmodal" ref="myModalRef" size="lg" title="宴会备注" hide-footer>
-      <notesmodal  @onhide="btnNotesCancel"></notesmodal>
+    <b-modal id="remarkmodal" ref="remarkmodal" size="lg" title="宴会备注" hide-footer>
+      <notesmodal></notesmodal>
     </b-modal>
   </div>
 </template>
@@ -329,18 +329,15 @@
           }
         },
         remark(list){
-          var remarkinfo={};
-          remarkinfo['caterid']=list.caterid
-          remarkinfo['eventid']=list.eventid
-          remarkinfo['itemid']=null
-          remarkinfo['seq']=''
-          this.$store.commit('setCaterdes',list.catername)
-          this.$store.commit('setEventdes',list.descript)
-          this.$store.commit('setCaterinfo',remarkinfo)
-          this.$refs.myModalRef.show()
-        },
-        btnNotesCancel:function () {
-          this.$refs.myModalRef.hide()
+          let remarkinfo = {
+            caterid:list.caterid,
+            caterdes:list.catername,
+            eventid:list.eventid,
+            eventdes:list.descript,
+            type:2
+          };
+          this.$store.commit('setNoteParam',remarkinfo);
+          this.$refs.remarkmodal.show()
         },
         btnItem:function (list) {
           this.eventidC=list.eventid

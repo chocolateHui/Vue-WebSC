@@ -28,13 +28,13 @@
       </b-col>
     </b-row>
   </b-container>
-  <hotelinfoadmin :innhotel="innhotel" :sign="sign"></hotelinfoadmin>
+<hotelinfo :innhotel="innhotel" :sign="sign"></hotelinfo>
 </div>
 </template>
 
 <script>
   import methodinfo from '../../config/MethodConst.js'
-  import hotelinfoadmin from './hotelinfoadmin'
+  import hotelinfo from './hotelinfo'
   export default {
     name: "hotelchild",
     data(){
@@ -48,7 +48,7 @@
       }
     },
     components:{
-      hotelinfoadmin,
+       hotelinfo,
     },
     methods:{
       configDefault:function () {
@@ -57,7 +57,6 @@
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
       },
       getbrandlist:function(){
-        var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
           // 获取营业点
