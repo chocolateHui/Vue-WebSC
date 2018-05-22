@@ -193,6 +193,7 @@
               <b-button :disabled="btnshow.place" @click="addplace" variant="primary">新建场地</b-button>
               <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
               <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
+              <b-button  @click="expand" variant="primary">扩展属性</b-button>
             </b-button-group>
           </div>
         </b-col>
@@ -235,7 +236,9 @@
         </b-row>
 
       </b-modal>
-
+      <b-modal id="logmodal" ref="placeexpandmodel" size="lg" title="操作日志" ok-only ok-title="确认">
+        <placeexpand :litems="placedata"></placeexpand>
+      </b-modal>
     </b-container>
   </div>
 </template>
@@ -243,6 +246,8 @@
 <script>
   import Numberinput from  '../../components/FormatInput.vue'
   import methodinfo from '../../config/MethodConst.js'
+  import placeexpand from '../maint/placeexpand.vue'
+
   const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
   const newshow = {  pccodedisabled: false, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:true,tablesdisabled:true}
   const modifyshow = {  pccodedisabled: true, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:true,tablesdisabled:true}
@@ -743,11 +748,15 @@
           }
           this.showModal();
         };
-      }
+      },
+      expand:function () {
+        this.$refs.placeexpandmodel.show()
+      },
 
     },
     components: {
-      Numberinput
+      Numberinput,
+      placeexpand
     },
     watch: {
       currentRow(newVal, oldVal) {
