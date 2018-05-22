@@ -7,6 +7,7 @@
             <el-select v-model="descript" clearable filterable placeholder="请选择" :disabled="disabled">
               <el-option
                 v-for="item in gethotellist"
+                :key="item.hotelid"
                 :value="item.descript">
               </el-option>
             </el-select>
@@ -17,6 +18,7 @@
             <el-select v-model="value1" clearable filterable placeholder="请选择">
               <el-option
                 v-for="item in getjoblist"
+                :key="item.code"
                 :value="item.descript">
               </el-option>
             </el-select>
@@ -71,6 +73,7 @@
                     <el-select v-model="descript" clearable filterable placeholder="请选择" :disabled="disabled">
                       <el-option
                         v-for="item in gethotellist"
+                        :key="item.hotelid"
                         :value="item.descript">
                       </el-option>
                     </el-select>
@@ -122,6 +125,7 @@
                     <el-select v-model="salename" clearable filterable placeholder="请选择">
                       <el-option
                         v-for="item in salelist"
+                        :key="item.code"
                         :value="item.code"
                         :label="item.name">
                       </el-option>
@@ -132,6 +136,7 @@
                     <el-select v-model="deptdescript" clearable filterable placeholder="请选择">
                       <el-option
                         v-for="item in getdeptlist"
+                        :key="item.code"
                         :value="item.code"
                         :label="item.descript">
                       </el-option>
@@ -142,6 +147,7 @@
                     <el-select v-model="htljob" clearable filterable placeholder="请选择">
                       <el-option
                         v-for="item in getjoblist"
+                        :key="item.code"
                         :value="item.code"
                         :label="item.descript">
                       </el-option>

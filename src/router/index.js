@@ -168,7 +168,7 @@ const router = new Router({
             },
             {
               path: '/main/maint/hotelchild',
-              name: '岗位设置',
+              name: '子酒店信息维护',
               component: Hotelchild
             },
             {
