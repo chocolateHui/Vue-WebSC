@@ -37,6 +37,9 @@ const methodinfo = {
   gethotel:'/PUB/hotelid/gethotel',
   //获取子酒店
   gethotellist:'/PUB/hotelid/gethotellist',
+  //获取城市列表
+  getcntcode:'/PUB/syscode/getcntcode',
+  modifyhotel:'/PUB/hotelid/modifyhotel',
   /*
  SC业务相关接口
  */

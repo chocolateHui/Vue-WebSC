@@ -548,6 +548,7 @@
           }
         },
         btnLeft:function () {
+          loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           if( this.todayNow==true){
             this.flagdata=this.flagdata-1;
             this.datatime=this.adddateday(this.dataNow,this.flagdata)
@@ -567,6 +568,7 @@
           }
         },
         btnRight:function () {
+          loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           if (this.todayNow == true) {
             this.flagdata = this.flagdata + 1;
             this.formdata = []
@@ -593,6 +595,7 @@
           }
         },
         chooseDay: function () {
+          loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           this.flagdata=0
           if(this.ifToday=="查看今天"){
             this.ifToday="最近七天"
@@ -669,6 +672,7 @@
           this.calenShow=true
         },
         choseDayLun(data) {
+          loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           var data1=data.split("/")
           if(data1[1]<10){
             data1[1]='0'+data1[1]

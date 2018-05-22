@@ -4,9 +4,9 @@
     <b-row class="childContain">
       <b-col>
         <b-form-group label="酒店品牌:" horizontal>
-          <el-select v-model="hoteInfo" placeholder="请选择酒店品牌">
+          <el-select @change="gethotellist" v-model="brandid" placeholder="请选择酒店品牌">
             <el-option
-              v-for="item in hoteList"
+              v-for="item in brandList"
               :key="item.hotelid"
               :label="item.descript"
               :value="item.hotelid">
@@ -16,10 +16,10 @@
       </b-col>
       <b-col>
         <b-form-group label="子酒店:" horizontal>
-          <el-select v-model="hoteInfo" placeholder="请选择子酒店">
+          <el-select v-model="innhotel" placeholder="请选择子酒店">
             <el-option
-              v-for="item in hoteList"
               :key="item.hotelid"
+              v-for="item in hotelList"
               :label="item.descript"
               :value="item.hotelid">
             </el-option>
@@ -28,7 +28,7 @@
       </b-col>
     </b-row>
   </b-container>
-  <hotelinfo></hotelinfo>
+<hotelinfo :innhotel="innhotel" :sign="sign"></hotelinfo>
 </div>
 </template>
 
@@ -39,12 +39,16 @@
     name: "hotelchild",
     data(){
       return{
-        hoteList:[],
+        brandList:[],
+        hotelList:[],
         hoteInfo:'',
+        brandid:'',
+        innhotel:'',
+        sign:1,
       }
     },
     components:{
-      hotelinfo
+       hotelinfo,
     },
     methods:{
       configDefault:function () {
@@ -57,12 +61,32 @@
           this.configDefault()
           // 获取营业点
           this.$http.post(methodinfo.gethotellist, {
-            hotelid:this.$store.getters.hotel.hotelid
+            sign:1
           }).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
-                this.hoteList=response.data.hotels
-                // console.log(JSON.stringify( this.hoteList)+' this.hoteList')
+                this.brandList=response.data.hotels
+              }else{
+                this.brandList=[]
+              }
+            }
+          })
+        })
+      },
+      gethotellist:function(){
+        this.innhotel=''
+        var _this=this
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.configDefault()
+          // 获取营业点
+          this.$http.post(methodinfo.gethotellist, {
+            brandid:_this.brandid,
+          }).then((response) => {
+            if (response.status === 200) {
+              if (response.data.errorCode=="0") {
+                this.hotelList=response.data.hotels
+              }else{
+                this.hotelList=[]
               }
             }
           })
