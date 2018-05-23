@@ -270,6 +270,8 @@
           this.$alert("宴会名称不允许为空!")
           return;
         }
+        this.localcatering.arr = this.caterdate[0];
+        this.localcatering.dep = this.caterdate[1];
         this.$emit('updateCatering',this.localcatering);
       },
       updateCateringSta(sta){

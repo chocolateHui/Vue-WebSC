@@ -65,13 +65,14 @@
         }, 500);
       },
       updateCatering(localcatering){
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         this.$refs.newevent.eventCheck(localcatering).then((checked) => {
           if(checked){
             this.$store.dispatch('encrypttoken').then(() => {
               this.$http.defaults.headers.common['username'] = this.$store.getters.username
               this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
               this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-              this.$http.post(methodinfo.updatecatering, localcatering).then(function (response) {
+              this.$http.post(methodinfo.updatecatering, localcatering).then((response)=>{
                 if (response.data.errorCode === '0') {
                   this.$refs.newevent.batchSaveEvent(localcatering.caterid).then(() => {
                     this.$message({
@@ -81,6 +82,7 @@
                     this.$store.commit('setCatering', localcatering)
                     this.$store.commit('setCatersta', localcatering.sta)
                     this.$store.dispatch("getEventList");
+                    loading.close();
                   });
                 }else{
                   this.$alert(response.data.errorMessage)
