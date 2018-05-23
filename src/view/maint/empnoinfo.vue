@@ -502,29 +502,6 @@
       .el-date-editor .el-range-separator{
         padding: 0;
       }
-      .custom-control-label {
-        cursor: pointer;
-        margin-left:5px;
-        &::before{
-          border: 1px solid #D9DADB;
-          border-radius: 0px;
-          background-color: #FFFFFF;
-           width: 1.5rem;
-           height: 1.5rem;
-           top:0rem;
-         }
-      }
-      .custom-control-input:checked ~ .custom-control-label {
-        &::before{
-           background-color: rgba(0,0,0,0);
-
-         }
-        &::after {
-           width: 1.5rem;
-           height: 1.5rem;
-           top:0rem;
-        }
-      }
       .btn-primary{
         margin-right: 10px;
         padding: 5px 25px;

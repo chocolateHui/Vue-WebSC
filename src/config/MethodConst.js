@@ -19,12 +19,6 @@ const methodinfo = {
   savesysempno: '/PUB/sysempno/savesysempno',
   // 获取站点信息
   getpcidstatus: '/PUB/station/getpcidstatus',
-  // 获取基础代码列表
-  getbasecodelist: '/PUB/pubcode/getbasecodelist',
-  // 批量更新基础代码
-  updatebasecodes: '/PUB/pubcode/updatebasecodes',
-  // 删除基础代码
-  deletebasecode: '/PUB/pubcode/deletebasecode',
   // 获取系统代码列表
   getsystemcode: '/PUB/pubcode/getsystemcode',
   // 获取系统参数
@@ -47,10 +41,20 @@ const methodinfo = {
   getjoblist: '/PUB/authfunction/getjoblist',
   // 修改工号信息
   modifyempnoinfo: '/PUB/sysempno/modifyempnoinfo',
-
+  // 删除工号
+  deleteempnoinfo: '/PUB/sysempno/deleteempnoinfo',
   /*
  SC业务相关接口
  */
+  /*
+  基础代码
+   */
+  // 获取基础代码列表
+  getbasecodelist: '/PUB/pubcode/getbasecodelist',
+  // 批量更新基础代码
+  updatebasecodes: '/PUB/pubcode/updatebasecodes',
+  // 删除基础代码
+  deletebasecode: '/PUB/pubcode/deletebasecode',
   /*
  宴会相关
  */
@@ -168,6 +172,14 @@ const methodinfo = {
   deletepccode: '/SC/reserve/scplacemaint/deletepccode',
   // 删除酒店场地信息
   deleteplace: '/SC/reserve/scplacemaint/deleteplace',
+  // 新增保存场地扩展属性
+  saveplaceexpandinfo: '/SC/reserve/scplacemaint/saveplaceexpandinfo',
+  // 获取酒店场地图片信息
+  getplacepicinfo: '/SC/reserve/scplacemaint/getplacepicinfo',
+  // 新增酒店场地图片信息
+  saveplacepicinfo: '/SC/reserve/scplacemaint/saveplacepicinfo',
+  // 删除酒店场地图片信息
+  deleteplacepicinfo: '/SC/reserve/scplacemaint/deleteplacepicinfo',
   // 新增项目类别
   savescitemclass: '/SC/reserve/scitemmaint/savescitemclass',
   // 更新项目类别
