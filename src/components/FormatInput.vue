@@ -59,4 +59,7 @@
   .ime{
     ime-mode: disabled;
   }
+  .ime::placeholder{
+    color: #c0c4cc;
+  }
 </style>
