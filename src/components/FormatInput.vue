@@ -13,6 +13,8 @@
     watch: {
       inputvalue(val,oldval)  {
         if(!val){
+          this.$emit('input', '')
+          this.$emit('change', '')
           return;
         }
         let re = /[\u4E00-\u9FA5]/g;
