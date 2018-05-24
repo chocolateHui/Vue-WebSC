@@ -1,7 +1,7 @@
 <template>
   <div id="login">
       <div class="logo"><img src="/static/SCweb-index-09.png"></div>
-      <b-container>
+      <b-container id="loginContainer">
         <b-row>
           <b-col sm="4" class="col-sm-offset-1">
               <div>
@@ -48,6 +48,21 @@
               </div>
           </b-col>
         </b-row>
+        <b-btn id="helpbtn" title="帮助说明" class="help-btn">
+        </b-btn>
+        <b-popover target="helpbtn" triggers="click" placement="top" container="loginContainer" ref="popover">
+          <li>
+            <label v-if="!hasGroupid">1.系统首次登录时</label>
+            <label v-else>1.当前登录集团为</label>
+            <Numberinput @change="setGroupid" class="gorupid-input" v-model="groupid" placeholder="请输入集团ID"></Numberinput>
+          </li>
+          <li v-if="!isFirefox">2.本系统推荐使用火狐浏览器。
+            <br>请前往：<a href="http://www.firefox.com.cn/"  target="_blank">http://www.firefox.com.cn/</a>下载
+          </li>
+          <li>3.在系统运行中遇到无法解决的问题，请联系西软维护部。<br>
+            （☎维护热线：0571-88231188）
+          </li>
+        </b-popover>
       </b-container>
   </div>
 </template>
@@ -66,6 +81,8 @@
         userErrorShow:false,
         passwordErrorShow:false,
         hotelErrorShow:false,
+        hasGroupid:false,
+        isFirefox:true,
     };
     export default {
         name: 'Login',
@@ -74,25 +91,39 @@
         },
         computed:{
             ...mapGetters([
-                'groupid',
                 'hotel',
                 'hotels',
                 'empno',
                 'loginerror',
-              'isHotelChange'
+                'isHotelChange'
             ]),
           username:{
             get () {
               return this.$store.getters.username
             },
             set (value) {
+              console.log(value)
               this.$store.commit('setUsername', value)
             }
+          },
+          groupid:{
+            get () {
+              return this.$store.getters.groupid
+            },
+            set (value) {
+              this.$store.commit('setGroupid', value)
+            }
           }
+        },
+        created(){
+          this.hasGroupid = this.groupid!==''
+          let userAgent = navigator.userAgent
+          this.isFirefox = userAgent.indexOf("Firefox")>=0
         },
         methods:{
             ...mapMutations([
                 'setUsername',
+                'setGroupid',
             ]),
             updatevalue:function (value) {
                 this.password = value;
@@ -107,6 +138,10 @@
                 this.hotelShow = false;
             },
             login:function () {
+              if(!this.groupid||this.groupid===''){
+                this.$root.$emit('bv::show::popover', 'helpbtn');
+                return;
+              }
                 if(!this.username){
                     this.userErrorShow = true;
                     return;
@@ -218,6 +253,46 @@
     font-size: 0.9rem;
     color: red;
     padding-left: 5px
+  }
+  .help-btn{
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+    cursor: help;
+    color: #4C8FBD;
+    background: url(/static/help.png) no-repeat 50% 50%;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    box-shadow: none;
+  }
+  .popover{
+    max-width: 400px;
+
+  }
+  .popover-body{
+    li{
+      font-size: 0.9rem;
+      list-style: none;
+      margin-bottom: 5px;
+      label{
+        display: inline;
+      }
+    }
+    a:not([href]){
+      color: #007bff;
+    }
+    .gorupid-input{
+      height: 21px;
+      border: none;
+      display: inline;
+      width: 150px;
+      padding: 0;
+    }
+    .gorupid-input::placeholder{
+      color: #007bff;
+    }
   }
 }
 </style>

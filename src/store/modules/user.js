@@ -6,7 +6,7 @@ import axiosinstance from '../../common/axiosinstance'
 
 // initial state
 const state = {
-  groupid: 'G000001',
+  groupid: '',
   username: '',
   hotel: {
     hotelid: '',
