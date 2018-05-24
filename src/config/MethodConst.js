@@ -29,6 +29,8 @@ const methodinfo = {
   getsaleidlist: '/PUB/saleid/getsaleidlist',
   // 获取酒店信息
   gethotel: '/PUB/hotelid/gethotel',
+  // 判断是否是新建酒店
+  getisnewhotel: '/PUB/hotelid/getisnewhotel',
   // 获取子酒店
   gethotellist: '/PUB/hotelid/gethotellist',
   // 获取城市列表
@@ -190,6 +192,9 @@ const methodinfo = {
   deletescitemclass: '/SC/reserve/scitemmaint/deletescitemclass',
   // 删除项目
   deletescitem: '/SC/reserve/scitemmaint/deletescitem',
+  // SC系统初始化
+  initscdata: '/SC/reserve/system/initscdata',
+
   /*
  接口相关
  */
