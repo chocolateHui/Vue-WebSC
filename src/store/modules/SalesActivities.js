@@ -89,33 +89,6 @@ const actions = {
       }
     })
   },
-  // 添加销售日记
-  saveorupdateguestdiary: function (store, param) {
-    return new Promise((resolve, reject) => {
-      getAllMsg(store)
-      axiosinstance.post(methodinfo.saveorupdateguestdiary, {
-        amount: param.amount,
-        applname: param.applname,
-        appltel: param.appltel,
-        ctime: param.ctime,
-        cusno: param.cusno,
-        cusnodes: param.cusnodes,
-        no: param.no,
-        nodes: param.nodes,
-        date: param.date,
-        feedback: param.feedback,
-        id: param.id,
-        item: param.item,
-        memorandum: param.memorandum,
-        memsta: param.memsta,
-        saleid: param.saleid,
-        ref: param.ref,
-        tag: param.tag
-      }).then(function (response) {
-        resolve()
-      })
-    })
-  },
   // 查看销售详情
   getguestdiary: function (store, param) {
     return new Promise((resolve, reject) => {
