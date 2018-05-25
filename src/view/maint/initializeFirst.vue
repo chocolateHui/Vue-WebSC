@@ -6,9 +6,9 @@
           <el-select v-model="hotelModel" placeholder="请选择">
             <el-option
               v-for="item in hotelList"
-              :key="item.code"
+              :key="item.hotelid"
               :label="item.descript"
-              :value="item.code">
+              :value="item.hotelid">
             </el-option>
           </el-select>
         </b-form-group>
@@ -34,22 +34,91 @@
     </b-row>
     <b-row class="initfoot">
       <b-col>
-         <b-button >开始安装</b-button>
-        <b-button>取消</b-button>
+         <b-button @click="btnInstall">开始安装</b-button>
+        <b-button @click="btnExit">取消</b-button>
       </b-col>
     </b-row>
   </b-container>
 </template>
 <script>
+  import methodinfo from '../../config/MethodConst.js'
     export default {
       name: "initialize",
       data(){
           return{
-            hotelList:[{descript:'a',code:1},{descript:'b',code:2}],
+            hotelList:[],
             BusinesHours:'',
-            tiptext:'',
-            hotelModel:''
+            tiptext:'请先选择酒店模板',
+            hotelModel:'',
+            signflag:''
           }
+      },
+      created(){
+        if(this.sign!=0){
+          this.signflag=2
+        }else{
+          this.signflag=0
+        }
+        this.BusinesHours=this.dateFormat()
+        this.gethotellist()
+      },
+      props:['hotelid','sign'],
+      methods:{
+        dateFormat: function () {
+          let date = new Date()
+          return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+        },
+        configDefault:function () {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+        },
+        gethotellist:function(){
+          var _this=this
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            // 获取营业点
+            this.$http.post(methodinfo.gethotellist, {
+              istemplate:'T',
+              sign:_this.signflag
+            }).then((response) => {
+              if (response.status === 200) {
+                if (response.data.errorCode=="0") {
+                  this.hotelList=response.data.hotels
+                }
+              }
+            })
+          })
+        },
+        hotelinitalize:function(){
+          var _this=this
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            // 获取营业点
+            this.$http.post(methodinfo.initscdata,{
+              cat:'R',
+              hotel:_this.hotelid,
+              templatehotel:_this.hotelModel
+            }).then((response) => {
+              if (response.status === 200) {
+                if (response.data.errorCode=="0") {
+                  this.$message({message: "安装成功", type: 'success'});
+                  this.$emit('btnExit2')
+                }
+              }
+            })
+          })
+        },
+        btnInstall:function () {
+          if(this.hotelModel==''){
+            this.$message({message: "请选择酒店模板", type: 'warning'});
+          }else{
+            this.hotelinitalize()
+          }
+        },
+        btnExit:function () {
+          this.$emit('btnExit1')
+        }
       }
     }
 </script>
