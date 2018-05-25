@@ -161,11 +161,17 @@
       },
       saveorupdateguestdiary:function (param) {
         this.$store.dispatch('encrypttoken').then(() => {
-          //获取工号信息,完成后进行路由
-          this.$store.dispatch('saveorupdateguestdiary',param).then(() => {
-            this.SalesSelect()
-            // this.popsale=false
-            this.$refs.myModalsale.hide()
+          this.configDefault()
+          // 获取营业点
+          this.$http.post(methodinfo.saveorupdateguestdiary,param).then((response) => {
+            if (response.status === 200) {
+              if (response.data.errorCode=="0") {
+                this.SalesSelect()
+                this.$refs.myModalsale.hide()
+              }else{
+
+              }
+            }
           })
         })
       },

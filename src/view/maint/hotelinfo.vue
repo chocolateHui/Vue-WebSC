@@ -200,7 +200,7 @@
       <b-row class="infofoot">
         <b-col cols="8">
           <b-form-checkbox
-            v-model="status"
+            v-model="hoteInfo.istemplate "
             value="T"
             unchecked-value="F">
             作为模板
@@ -214,8 +214,8 @@
       </b-row>
     </b-container>
     <b-modal id="logmodal" ref="myModalInitalize" size="lg" title="初始化" hide-footer>
-      <initalize-first v-if="ifFirst"></initalize-first>
-      <initalize v-else @btnExit="btnExit"></initalize>
+      <initalize-first v-if="ifFirst" :sign="hoteInfo.sign" @btnExit2="btnExit2" @btnExit1="btnExit1" :hotelid="hotelid"></initalize-first>
+      <initalize v-else @btnExit="btnExit" :hotelid="hotelid"></initalize>
     </b-modal>
   </div>
 </template>
@@ -243,13 +243,13 @@
         ],
         hoteInfo:{},
         value:'',
-        status: 'T',
         areaList:[],
         cityList:[],
         cityareaList:[],
         citycode:'',
         hotelid:'',
-        ifFirst:false
+        ifFirst:false,
+        hotelStatusNow:'',
       }
     },
     props:['innhotel','sign'],
@@ -258,6 +258,7 @@
         this.hoteInfo=Object.assign({},{});
         if(this.innhotel!=''){
           this.getpccodelist()
+          this.getisnewhotel()
         }
       }
     },
@@ -280,6 +281,27 @@
           this.hotelid=this.$store.getters.hotel.hotelid
         }
       },
+      getisnewhotel:function () {
+        this.gethotelid()
+        var _this=this
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.configDefault()
+          // 获取营业点
+          this.$http.post(methodinfo.getisnewhotel, {
+            hotel:this.hotelid
+          }).then((response) => {
+            if (response.status === 200) {
+              if (response.data.errorCode=="0") {
+                if(response.data.isnew=='F'){
+                  _this.ifFirst=false
+                } else{
+                  _this.ifFirst=true
+                }
+              }
+            }
+          })
+        })
+      },
       getpccodelist:function(){
         this.gethotelid()
         var _this=this
@@ -293,6 +315,10 @@
               if (response.data.errorCode=="0") {
                 this.hoteInfo=response.data
                 this.hoteInfo.cityarea=''
+                this.hotelStatusNow=this.hoteInfo.sta
+                if(this.hoteInfo.sign==0){
+                  this.getisnewhotel()
+                }
               }
             }
           })
@@ -378,6 +404,7 @@
           ).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
+                this.hotelStatusNow=this.hoteInfo.sta
                 _this.$message('保存成功')
               }
             }
@@ -386,9 +413,23 @@
         }
       },
       btnInitalize:function () {
-        this.$refs.myModalInitalize.show()
+        if(this.sign==1&&this.innhotel==''){
+          this.$message({message: "请选择酒店", type: 'warning'});
+        }else if(this.hotelStatusNow!='R'){
+          this.$message({message: "此状态下酒店不能进行初始化", type: 'warning'});
+        }else{
+          console.log(this.hotelid)
+          this.$refs.myModalInitalize.show()
+        }
       },
       btnExit:function () {
+        this.$refs.myModalInitalize.hide()
+      },
+      btnExit1:function () {
+        this.$refs.myModalInitalize.hide()
+      },
+      btnExit2:function () {
+        this.getisnewhotel()
         this.$refs.myModalInitalize.hide()
       }
     },
@@ -453,6 +494,9 @@
     }
     .col-form-label{
       font-size: 0.9rem;
+    }
+    .el-input__icon{
+      line-height: 30px;
     }
   }
 </style>
