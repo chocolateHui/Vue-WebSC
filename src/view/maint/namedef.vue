@@ -22,8 +22,7 @@
         style="width: 100%">
         <el-table-column prop="code" label="编码" width="50" align="center">
           <template slot-scope="scope" >
-            <Numberinput @change="rowChange(scope)" v-if="cat==='sc_event_type' | cat==='sc_event_degree'" :disabled="scope.row.add !== 'T'"  class="el-input__inner" type="number" maxlength="1" v-model="scope.row.code" placeholder=""></Numberinput>
-            <el-input @change="rowChange(scope)" v-else :disabled="scope.row.add !== 'T'" :maxlength="codelength" v-model="scope.row.code" placeholder=""></el-input>
+            <Numberinput @change="rowChange(scope)" :disabled="scope.row.add !== 'T'"  class="el-input__inner" type="number" maxlength="3" v-model="scope.row.code" placeholder=""></Numberinput>
           </template>
         </el-table-column>
         <el-table-column prop="descript" label="中文描述" align="center">
@@ -39,40 +38,6 @@
         <el-table-column prop="descript2" label="其他描述" align="center">
           <template slot-scope="scope">
             <el-input @change="rowChange(scope)" :readonly="!scope.row.editable" maxlength="50" v-model="scope.row.descript2" placeholder=""></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="grp" label="类别" width="60" align="center">
-          <template slot-scope="scope">
-            <el-input @change="rowChange(scope)" :readonly="!scope.row.editable" maxlength="10" v-model="scope.row.grp" placeholder=""></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="cat==='sc_event_type'" prop="exts1" label="同步" width="75" align="center">
-          <template slot-scope="scope">
-            <el-select @change="rowChange(scope)" :disabled="!scope.row.editable" v-model="scope.row.exts1" placeholder="">
-              <el-option label="同步" value="T"></el-option>
-              <el-option label="不同步" value="F"></el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="cat==='sc_event_type'" prop="exts2" label="周期" width="65" align="center">
-          <template slot-scope="scope">
-            <el-select @change="rowChange(scope)" :disabled="!scope.row.editable" v-model="scope.row.exts2" placeholder="">
-              <el-option label="无" value="0"></el-option>
-              <el-option label="月" value="1"></el-option>
-              <el-option label="季" value="2"></el-option>
-              <el-option label="半年" value="3"></el-option>
-              <el-option label="年" value="4"></el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column  v-if="cat==='sc_time_unit'"  width="65" prop="exts1" label="开始" align="center">
-          <template slot-scope="scope">
-            <TimePicker @on-change="rowChange(scope)" :disabled="!scope.row.editable" :steps="[1, 10, 15]" v-model="scope.row.exts1" format="HH:mm" placeholder=""></TimePicker>
-          </template>
-        </el-table-column>
-        <el-table-column  v-if="cat==='sc_time_unit'"  width="65" prop="exts2" label="结束" align="center">
-          <template slot-scope="scope">
-            <TimePicker @on-change="rowChange(scope)" :disabled="!scope.row.editable" :steps="[1, 10, 15]" v-model="scope.row.exts2" format="HH:mm" placeholder=""></TimePicker>
           </template>
         </el-table-column>
         <el-table-column prop="share" label="共享" width="75" align="center">
@@ -112,9 +77,6 @@
   import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../../config/MethodConst'
   import Numberinput from  '../../components/FormatInput.vue'
-  import {TimePicker} from 'iview'
-  import '../../css/iviewpicker.css'
-  Vue.use(TimePicker)
 
   export default {
     data () {
@@ -158,7 +120,7 @@
           for(let i=0;i<this.items.length;i++){
             let item = this.items[i];
             if(row.code===item.code&&scope.$index!==i){
-              this.$message.error('对应的基础代码已存在!');
+              this.$message.error('对应的报表数据项已存在!');
               row.code="";
               return;
             }
