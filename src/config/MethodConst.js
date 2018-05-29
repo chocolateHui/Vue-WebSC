@@ -15,6 +15,8 @@ const methodinfo = {
   getempnolist: '/PUB/sysempno/getempnolist',
   // 获取工号详情
   getempnoinfo: '/PUB/sysempno/getempnoinfo',
+  // 更新工号信息
+  savesysempno: '/PUB/sysempno/savesysempno',
   // 获取站点信息
   getpcidstatus: '/PUB/station/getpcidstatus',
   // 获取基础代码列表
@@ -31,17 +33,22 @@ const methodinfo = {
   getsysoptionlist: '/PUB/sysoption/getsysoptionlist',
   // 获取销售员列表
   getsaleidlist: '/PUB/saleid/getsaleidlist',
-// 获取酒店信息列表
+  // 获取酒店信息
+  gethotel: '/PUB/hotelid/gethotel',
+  // 获取子酒店
   gethotellist: '/PUB/hotelid/gethotellist',
-  // 获取酒店编号查询条件
-  getcond: '/PUB/hotelid/getcond',
+  // 获取城市列表
+  getcntcode: '/PUB/syscode/getcntcode',
+  // 修改酒店
+  modifyhotel: '/PUB/hotelid/modifyhotel',
   // 获取岗位列表
   getdeptlist: '/PUB/authfunction/getdeptlist',
-// 获取角色列表
+  // 获取角色列表
   getjoblist: '/PUB/authfunction/getjoblist',
-// 修改工号信息
+  // 修改工号信息
   modifyempnoinfo: '/PUB/sysempno/modifyempnoinfo',
-
+  // 删除工号
+  deleteempnoinfo: '/PUB//sysempno/deleteempnoinfo',
 
   /*
  SC业务相关接口
@@ -191,6 +198,6 @@ const methodinfo = {
   auth: '/userauth',
   getloginhotellist: '/getloginhotellist',
 
-  url :'http://172.10.60.61:8083/'
+  url: 'http://172.10.60.61:8083/'
 }
 module.exports = exports = methodinfo
