@@ -45,6 +45,7 @@ const methodinfo = {
   modifyempnoinfo: '/PUB/sysempno/modifyempnoinfo',
   // 删除工号
   deleteempnoinfo: '/PUB/sysempno/deleteempnoinfo',
+
   /*
  SC业务相关接口
  */
