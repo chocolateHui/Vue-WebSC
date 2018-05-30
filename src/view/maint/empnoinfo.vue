@@ -159,7 +159,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <b-button size="mini" type="danger" class="Delete-button" @click="deleteempno(scope)"></b-button>
+            <b-button size="mini" type="danger" class="Cancel-button" @click="deleteempno(scope)"></b-button>
           </template>
         </el-table-column>
       </el-table>
