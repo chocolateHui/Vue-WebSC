@@ -452,6 +452,11 @@
         eventcodedes=eventcodedes.substr(0,eventcodedes.length-1)
         this.$set(this.newEvent,'code',eventcode);
         this.$set(this.newEvent,'codedes',eventcodedes);
+      },
+      clearData(){
+        this.newEvent = {};
+        this.eventbdate= [];
+        this.eventtime= [];
       }
     },
     components: {
