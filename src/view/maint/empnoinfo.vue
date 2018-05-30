@@ -7,7 +7,7 @@
             <el-select v-model="descript" clearable filterable placeholder="请选择" :disabled="disabled">
               <el-option
                 v-for="item in gethotellist"
-
+                :key="item.descript"
                 :value="item.descript">
               </el-option>
             </el-select>
