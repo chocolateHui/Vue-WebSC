@@ -7,7 +7,7 @@
             <el-select v-model="descript" clearable filterable placeholder="请选择" :disabled="disabled">
               <el-option
                 v-for="item in gethotellist"
-                :key="item.descript"
+                :key = item.hotelid
                 :value="item.descript">
               </el-option>
             </el-select>
@@ -67,6 +67,7 @@
                     <el-select v-model="descript" clearable filterable placeholder="请选择" :disabled="disabled">
                       <el-option
                         v-for="item in gethotellist"
+                        :key = item.hotelid
                         :value="item.descript">
                       </el-option>
                     </el-select>
@@ -113,6 +114,7 @@
                     <el-select v-model="salename" clearable filterable placeholder="请选择">
                       <el-option
                         v-for="item in salelist"
+                        :key = item.code
                         :value="item.code"
                         :label="item.name">
                       </el-option>
@@ -123,6 +125,7 @@
                     <el-select v-model="deptdescript" clearable filterable placeholder="请选择">
                       <el-option
                         v-for="item in getdeptlist"
+                        :key = item.code
                         :value="item.code"
                         :label="item.descript">
                       </el-option>
@@ -397,7 +400,6 @@
         }else{
           this.$message.error('正在新建员工');
         }
-
       },
       getHotel:function () {
         var _this = this

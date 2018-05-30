@@ -236,6 +236,7 @@
                 message: '基础代码保存成功!',
                 type: 'success'
               })
+              this.refreshData();
             }else{
               this.$message.error(response.data.errorMessage)
             }

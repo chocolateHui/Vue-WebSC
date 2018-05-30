@@ -23,7 +23,7 @@
           return;
         }
         if(this.type==='number'){
-          let r = /^[0-9]*[1-9][0-9]*$/ ;
+          let r = /^[0-9]*[0-9][0-9]*$/ ;
           if (!r.test(val)){
             this.inputvalue = oldval;
             return;
