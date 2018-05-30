@@ -17,8 +17,8 @@
           <b-form-group horizontal label="角色" class="mb-0">
             <el-select v-model="value1" clearable filterable placeholder="请选择">
               <el-option
-                v-for="item in getjoblist"
-                :key = item.code
+                v-for="item in joblist"
+                :key="item.label"
                 :value="item.descript">
               </el-option>
             </el-select>
@@ -37,6 +37,7 @@
         stripe
         ref = "empnotable"
         :row-key="getRowKeys"
+        :expand-row-keys="expands"
         @expand-change = "expandChange"
         :data="getempnolist"
         border
@@ -56,22 +57,14 @@
                   </b-form-group>
                   <b-form-group label="姓名:"
                                 horizontal>
-                    <b-form-input type="text"
-                                  v-model="props.row.empname"
-                                  required
-                                  placeholder="Enter name">
+                    <b-form-input type="text" v-model="props.row.empname" required placeholder="Enter name">
                     </b-form-input>
                   </b-form-group>
-                  <b-form-group label="电话:"
-                                horizontal>
-                    <b-form-input type="text"
-                                  v-model="props.row.phone"
-                                  maxlength="11"
-                                  placeholder="">
-                    </b-form-input>
+                  <b-form-group label="电话:" horizontal>
+                    <FormatInput type="number" v-model="props.row.phone" maxlength="11" placeholder=""></FormatInput>
                   </b-form-group>
                   <b-form-group horizontal label="酒店:" class="mb-0">
-                    <el-select v-model="props.row.hoteldes" clearable filterable placeholder="请选择" :disabled="disabled">
+                    <el-select v-model="descript" clearable filterable placeholder="请选择" :disabled="disabled">
                       <el-option
                         v-for="item in gethotellist"
                         :key = item.hotelid
@@ -100,7 +93,7 @@
                   </div>
                   <b-form-group label="QQ:"
                                 horizontal>
-                    <b-form-input type="text"
+                    <b-form-input type="number"
                                   v-model="props.row.qq"
                                   placeholder="">
                     </b-form-input>
@@ -142,10 +135,9 @@
                                 horizontal>
                     <el-select v-model="htljob" clearable filterable placeholder="请选择">
                       <el-option
-                        v-for="item in getjoblist"
-                        :key = item.code
-                        :value="item.code"
-                        :label="item.descript">
+                        v-for="item in joblist"
+                        :key="item.label"
+                        :value="item.descript">
                       </el-option>
                     </el-select>
                   </b-form-group>
@@ -170,7 +162,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <b-button size="mini" type="danger" class="Delete-button" @click="deleteempno(scope)"></b-button>
+            <b-button size="mini" type="danger" class="Cancel-button" @click="deleteempno(scope)"></b-button>
           </template>
         </el-table-column>
       </el-table>
@@ -218,6 +210,7 @@
 </template>
 
 <script>
+  import FormatInput from './../../components/FormatInput'
   import sysLog from  '../../components/syslog.vue'
   import methodinfo from '../../config/MethodConst.js'
   import { mapGetters, mapMutations } from 'vuex'
@@ -238,11 +231,30 @@
   export default {
     data () {
       return {
+        newp:true,
         getempnolist: [],
         fildes :fildes,
         saleid: '',
         gethotellist: [],
-        getjoblist: [],
+        joblist: [{
+          label:'00',
+          descript:'酒店EDP'
+        },{
+          label:'01',
+          descript:'预订文员'
+        },{
+          label:'02',
+          descript:'全职销售员'
+        },{
+          label:'03',
+          descript:'兼职销售员'
+        },{
+          label:'04',
+          descript:'销售总监'
+        },{
+          label:'05',
+          descript:'销售协调员'
+        }],
         getdeptlist: [],
         descript:'',
         deptdescript:'',
@@ -250,10 +262,7 @@
         salename:'',
         deptno:'',
         htljob:'',
-        expands:'',
         hotelid:'',
-        flag:true,
-//        disable:disable,
         disabled:'',
         able:able,
         oldpassword: '',
@@ -266,6 +275,7 @@
           return row.empno;
         },
         // 要展开的行，数值的元素是row的key值
+        expands: [],
         tableHeight: document.body.clientHeight-202,//减去header的60px
 
       }
@@ -383,9 +393,13 @@
         }
       },
       newProp:function(){
-        this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'' ,flag:true});
-        console.log(this.getempnolist)
-
+        if(this.newp){
+          this.newp = false;
+          this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'' ,flag:true});
+          this.expands.push('');
+        }else{
+          this.$message.error('正在新建员工');
+        }
       },
       getHotel:function () {
         var _this = this
@@ -403,20 +417,6 @@
                 this.disabled = true;
               }else{
                 this.disabled = false;
-              }
-            }
-          });
-        })
-      },
-      getJoblist:function(){
-        var _this = this
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.configDefault()
-          // 获取营业点
-          this.$http.post(methodinfo.getjoblist, {}).then((response) => {
-            if (response.status === 200) {
-              if (response.data.errorCode == "0") {
-                _this.getjoblist = response.data.jobs;
               }
             }
           });
@@ -452,66 +452,76 @@
       },
       modifyempnoinfo:function(val) {
         var _this = this
-        if (val.flag) {
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.configDefault()
-            // 获取营业点
-            this.$http.post(methodinfo.addempnoinfo, {
-              hotelid: _this.hotelid,
-              birth: _this.datavalue,
-              empname: val.empname,
-              email: val.email,
-              qq: val.qq,
-              sex: val.sex,
-              phone: val.phone,
-              deptno: _this.deptdescript,
-              htljob: _this.htljob,
-              username: val.empno
+        if (_this.deptdescript!=='' && val.empname!=='' && _this.htljob!=='' && val.empno!=='') {
+          if (val.flag) {
+            this.$store.dispatch('encrypttoken').then(() => {
+              this.configDefault()
+              // 获取营业点
+              this.$http.post(methodinfo.addempnoinfo, {
+                hotelid: _this.hotelid,
+                birth: _this.datavalue,
+                empname: val.empname,
+                email: val.email,
+                qq: val.qq,
+                sex: val.sex,
+                phone: val.phone,
+                deptno: _this.deptdescript,
+                htljob: _this.htljob,
+                username: val.empno
 
-            }).then((response) => {
-              if (response.status === 200) {
-                if (response.data.errorCode == "0") {
-                  _this.$message('保存成功')
+              }).then((response) => {
+                if (response.status === 200) {
+                  if (response.data.errorCode == "0") {
+                    _this.$message('保存成功')
+                    _this.newp = true;
+                  } else {
+                    _this.$message.error(response.data.errorMessage)
+                  }
                 }
-              }
-            });
-          })
-        } else {
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.configDefault()
-            // 获取营业点
-            this.$http.post(methodinfo.modifyempnoinfo, {
-              hotelid: _this.hotelid,
-              birth: _this.datavalue,
-              empname: val.empname,
-              email: val.email,
-              qq: val.qq,
-              sex: val.sex,
-              phone: val.phone,
-              deptno: _this.deptdescript,
-              htljob: _this.htljob,
-              username: val.empno
+              });
+            })
+          } else {
+            this.$store.dispatch('encrypttoken').then(() => {
+              this.configDefault()
+              // 获取营业点
+              this.$http.post(methodinfo.modifyempnoinfo, {
+                hotelid: _this.hotelid,
+                birth: _this.datavalue,
+                empname: val.empname,
+                email: val.email,
+                qq: val.qq,
+                sex: val.sex,
+                phone: val.phone,
+                deptno: _this.deptdescript,
+                htljob: _this.htljob,
+                username: val.empno
 
-            }).then((response) => {
-              if (response.status === 200) {
-                if (response.data.errorCode == "0") {
-                  console.log(12)
-                  _this.$message('保存成功')
+              }).then((response) => {
+                if (response.status === 200) {
+                  if (response.data.errorCode == "0") {
+                    console.log(12)
+                    _this.$message('保存成功')
+                  }
                 }
-              }
-            });
-          })
+              });
+            })
+          }
+        }else{
+          _this.$message.error("请将'工号、姓名、部门、角色、岗位'信息填写完整")
         }
       }
     },
+    watch:{
+
+    },
     mounted: function (){
       this.getHotel();
-      this.getJoblist();
       this.getEmpnolist();
       this.getDeptlist();
+
     },
     components: {
-      sysLog
+      sysLog,FormatInput
     }
   }
 </script>
