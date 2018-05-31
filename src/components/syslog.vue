@@ -24,19 +24,22 @@
           :show-overflow-tooltip="item.showTip" :key="item.prop">
         </el-table-column>
       </el-table>
+      <b-pagination @input="tableCurrentChange" :total-rows="totalrow" :per-page="pageSize" v-model="currentPage" class="my-0" ></b-pagination>
     </b-container>
   </div>
 </template>
 <script>
+  import methodinfo from '../config/MethodConst.js'
+
   const items = [
-    {  code: 'FOX',cby:'FOX', changed:  '2018-04-08 12:00:00',items:'工号,姓名',logdata:[{item:'工号',newval:'FOX',oldval:'FOX1',},{item:'姓名',newval:'FOX',oldval:'FOX1'}] },
-    {  code: 'FOX',cby:'TEST1', changed: '2018-04-08 13:00:00',items:'工号,姓名',logdata:[{item:'工号',newval:'TEST1',oldval:'FOX',},{item:'姓名',newval:'FOX',oldval:'FOX1'}] },
+    {  contexttype : 'FOX',empno :'FOX', create :  '2018-04-08 12:00:00',contextkey :'工号,姓名',context :[{item:'工号',newval:'FOX',oldval:'FOX1',},{item:'姓名',newval:'FOX',oldval:'FOX1'}] },
+    {  contexttype: 'FOX',empno :'TEST1', create : '2018-04-08 13:00:00',contextkey :'工号,姓名',context :[{item:'工号',newval:'TEST1',oldval:'FOX',},{item:'姓名',newval:'FOX',oldval:'FOX1'}] },
   ]
   const fildes = [
-    {  prop: 'code', label:  '代码',width:'100' },
-    {  prop: 'cby', label:  '操作员',width:'100',sortable:true,showTip:true},
-    {  prop: 'changed', label:  '操作时间',width:'160',sortable:true,showTip:true},
-    {  prop: 'items', label:  '项目',width:'',sortable:true,showTip:true }
+    {  prop: 'contexttype', label:  '日志类别',width:'100' },
+    {  prop: 'empno', label:  '操作员',width:'100',sortable:true,showTip:true},
+    {  prop: 'create', label:  '操作时间',width:'160',sortable:true,showTip:true},
+    {  prop: 'contextkey', label:  '日志项目',width:'',sortable:true,showTip:true }
   ]
 
   export default {
@@ -44,24 +47,55 @@
       return {
         items: items,
         fildes :fildes,
-        eloptions: []
+        filtervalue:'',
+        pageSize:10,
+        currentPage:1,
       }
     },
     prop:{
-      pkid: {
+      logtype: {
+        type: String
+      },
+      logkey: {
         type: String
       },
     },
     computed: {
       searchitems:function () {
-        return this.items;
-//        if(!this.saleid){
-//        }else{
-//          return this.items.filter( item => (~item.name.indexOf(this.saleid)));
-//        }
+        if(this.filtervalue){
+          return this.items.filter( item => (~item.contexttype.indexOf(this.filtervalue)));
+        }else{
+          return this.items;
+        }
       }
     },
     methods: {
+      tableCurrentChange(){
+        for(let elem of this.currentselect){
+          if (!this.hash[elem.tableno]) {
+            this.allselect.push(elem);
+            this.hash[elem.tableno] = true;
+          }
+        }
+        this.pageChange = true;
+      },
+      getLogData(){
+        this.$store.dispatch('encrypttoken').then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+            this.$http.post(methodinfo.updatecateringsta, {
+
+            })
+        })
+      }
+    },
+    watch:{
+      logkey(val,oldval){
+        if(val!==oldval){
+
+        }
+      }
     }
   }
 </script>
