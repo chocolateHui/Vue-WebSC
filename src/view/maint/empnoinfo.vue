@@ -7,7 +7,7 @@
             <el-select v-model="descript" clearable filterable placeholder="请选择" :disabled="disabled">
               <el-option
                 v-for="item in gethotellist"
-                :key="item.hotelid"
+                :key = item.hotelid
                 :value="item.descript">
               </el-option>
             </el-select>
@@ -17,8 +17,8 @@
           <b-form-group horizontal label="角色" class="mb-0">
             <el-select v-model="value1" clearable filterable placeholder="请选择">
               <el-option
-                v-for="item in getjoblist"
-                :key="item.code"
+                v-for="item in joblist"
+                :key="item.label"
                 :value="item.descript">
               </el-option>
             </el-select>
@@ -37,8 +37,9 @@
         stripe
         ref = "empnotable"
         :row-key="getRowKeys"
+        :expand-row-keys="expands"
         @expand-change = "expandChange"
-        :data="getempnolist1"
+        :data="getempnolist"
         border
         style="width: 100%" :max-height="tableHeight">
         <el-table-column type="expand">
@@ -50,41 +51,27 @@
                                 horizontal>
                     <b-form-input  type="text"
                                   v-model="props.row.empno"
-                                  required disabled
+                                  required :disabled="able.name&&!props.row.flag"
                                   placeholder="Enter name">
                     </b-form-input>
                   </b-form-group>
                   <b-form-group label="姓名:"
                                 horizontal>
-                    <b-form-input type="text"
-                                  v-model="props.row.empname"
-                                  required
-                                  placeholder="Enter name">
+                    <b-form-input type="text" v-model="props.row.empname" required placeholder="Enter name">
                     </b-form-input>
                   </b-form-group>
-                  <b-form-group label="电话:"
-                                horizontal>
-                    <b-form-input type="text"
-                                  v-model="props.row.phone"
-                                  placeholder="">
-                    </b-form-input>
+                  <b-form-group label="电话:" horizontal>
+                    <FormatInput type="number" v-model="props.row.phone" maxlength="11" placeholder=""></FormatInput>
                   </b-form-group>
-                  <b-form-group horizontal label="酒店" class="mb-0">
+                  <b-form-group horizontal label="酒店:" class="mb-0">
                     <el-select v-model="descript" clearable filterable placeholder="请选择" :disabled="disabled">
                       <el-option
                         v-for="item in gethotellist"
-                        :key="item.hotelid"
+                        :key = item.hotelid
                         :value="item.descript">
                       </el-option>
                     </el-select>
                   </b-form-group>
-                  <!--<b-form-group label="所属酒店:"-->
-                                <!--horizontal>-->
-                    <!--<b-form-input type="text"-->
-                                  <!--v-model="props.row.descript"-->
-                                  <!--placeholder="">-->
-                    <!--</b-form-input>-->
-                  <!--</b-form-group>-->
                 </b-form>
               </b-col>
               <b-col>
@@ -94,17 +81,19 @@
                     <b-form-radio-group class="pt-2" v-model="props.row.sex" :options="[{text: '男', value: '0'},{text: '女', value: '1'}]">
                     </b-form-radio-group>
                   </b-form-group>
-                  <b-form-group label="生日:"
-                                horizontal>
-                    <b-form-input type="text"
-                                  v-model="props.row.birth"
-                                  required
-                                  placeholder="">
-                    </b-form-input>
-                  </b-form-group>
+                  <div class="block">
+                    <span class="demonstration">生日:</span>
+                    <el-date-picker
+                      v-model="datavalue"
+                      type="date"
+                      placeholder="选择日期"
+                      format="yyyy 年 MM 月 dd 日"
+                      value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                  </div>
                   <b-form-group label="QQ:"
                                 horizontal>
-                    <b-form-input type="text"
+                    <b-form-input type="number"
                                   v-model="props.row.qq"
                                   placeholder="">
                     </b-form-input>
@@ -125,7 +114,7 @@
                     <el-select v-model="salename" clearable filterable placeholder="请选择">
                       <el-option
                         v-for="item in salelist"
-                        :key="item.code"
+                        :key = item.code
                         :value="item.code"
                         :label="item.name">
                       </el-option>
@@ -136,7 +125,7 @@
                     <el-select v-model="deptdescript" clearable filterable placeholder="请选择">
                       <el-option
                         v-for="item in getdeptlist"
-                        :key="item.code"
+                        :key = item.code
                         :value="item.code"
                         :label="item.descript">
                       </el-option>
@@ -146,10 +135,9 @@
                                 horizontal>
                     <el-select v-model="htljob" clearable filterable placeholder="请选择">
                       <el-option
-                        v-for="item in getjoblist"
-                        :key="item.code"
-                        :value="item.code"
-                        :label="item.descript">
+                        v-for="item in joblist"
+                        :key="item.label"
+                        :value="item.descript">
                       </el-option>
                     </el-select>
                   </b-form-group>
@@ -161,8 +149,6 @@
             </b-row>
             <b-button type="submit" @click="modifyempnoinfo(props.row)" variant="primary">保存</b-button>
             <b-button type="submit" variant="primary" v-b-modal.passmodal1>修改密码</b-button>
-
-
             <b-button v-b-modal.logmodal type="submit" variant="primary">日志</b-button>
           </template>
         </el-table-column>
@@ -176,7 +162,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <b-button size="mini" type="danger" class="Delete-button" @click="deleteempno(scope.$index, getempnolist1)"></b-button>
+            <b-button size="mini" type="danger" class="Cancel-button" @click="deleteempno(scope)"></b-button>
           </template>
         </el-table-column>
       </el-table>
@@ -189,7 +175,7 @@
       <div>
         <b-form @submit="onSubmit" v-if="show">
           <b-form-group label="用户名" horizontal>
-            <b-form-input :value="empno.empname" disabled>
+            <b-form-input :value="empno.empname" :disabled="able.name">
             </b-form-input>
           </b-form-group>
           <b-form-group label="旧密码" horizontal>
@@ -224,6 +210,7 @@
 </template>
 
 <script>
+  import FormatInput from './../../components/FormatInput'
   import sysLog from  '../../components/syslog.vue'
   import methodinfo from '../../config/MethodConst.js'
   import { mapGetters, mapMutations } from 'vuex'
@@ -236,17 +223,38 @@
     {  prop: 'htldept', label:  '部门',width:'',sortable:true,showTip:true},
     {  prop: 'deptno', label:  '岗位',width:'100',sortable:true },
     {  prop: 'htljob', label:  '角色',width:'100',sortable:true },
-    {  prop: 'descript', label:  '所属酒店',width:'',sortable:true }
+    {  prop: 'hoteldes', label:  '所属酒店',width:'',sortable:true }
   ]
+  const disable = {name:false,hotelinput:false}
+  const able = {name:true,hotelinput:true}
+
   export default {
     data () {
       return {
-        getempnolist: [],//
-        getempnolist1: [],//
+        newp:true,
+        getempnolist: [],
         fildes :fildes,
         saleid: '',
         gethotellist: [],
-        getjoblist: [],
+        joblist: [{
+          label:'00',
+          descript:'酒店EDP'
+        },{
+          label:'01',
+          descript:'预订文员'
+        },{
+          label:'02',
+          descript:'全职销售员'
+        },{
+          label:'03',
+          descript:'兼职销售员'
+        },{
+          label:'04',
+          descript:'销售总监'
+        },{
+          label:'05',
+          descript:'销售协调员'
+        }],
         getdeptlist: [],
         descript:'',
         deptdescript:'',
@@ -254,19 +262,20 @@
         salename:'',
         deptno:'',
         htljob:'',
-        expands:'',
         hotelid:'',
         disabled:'',
+        able:able,
         oldpassword: '',
         newpassword: '',
         confirmpassword: '',
-        modifyempnoinfo1: '',
         show: true,
+        datavalue:'',
         // 获取row的key值
         getRowKeys(row) {
           return row.empno;
         },
         // 要展开的行，数值的元素是row的key值
+        expands: [],
         tableHeight: document.body.clientHeight-202,//减去header的60px
 
       }
@@ -292,9 +301,6 @@
         this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
       },
-//      modifyhotel:function (row) {
-////        console.log(row.toSource());
-//      },
       onSubmit: function () {
         if (this.newpassword !== this.confirmpassword) {
           this.$alert('两次密码输入不一致,请检查!');
@@ -332,28 +338,42 @@
         this.show = false;
         this.$nextTick(() => { this.show = true });
       },
-      deleteempno:function (index,row) {
+      deleteempno:function (cs) {
+        var _this = this
         this.$confirm("是否要删除该员工信息？", "提示", {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.getempnolist1.splice(index,1);
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            // 获取营业点
+            this.$http.post(methodinfo.deleteempnoinfo, {
+              username: cs.row.empno
+            }).then((response) => {
+              if (response.status === 200) {
+                if (response.data.errorCode == "0") {
+                  this.getempnolist.splice(cs.$index,1);
+
+                }
+              }
+
 //          this.$message({
 //            type: 'success',
 //            message: '删除成功!'
-//          });
-        });
+            });
+          });
 
+        })
       },
       doFilter : function(){               //搜索
         let _this = this;
         this.hotelid = _this.$store.state.user.hotel.hotelid;
         if (this.value1 && this.descript ) {
-           _this.getempnolist1 = [];
+           _this.getempnolist = [];
           _this.getempnolist.forEach(function (item) {
             if(item.hotelid == _this.hotelid && item.htljob == _this.value1){
-              _this.getempnolist1.push(item);
+              _this.getempnolist.push(item);
             }
           });
         }else{
@@ -373,7 +393,13 @@
         }
       },
       newProp:function(){
-        this.getempnolist1.push({age: '',empno:'', empname:  '',email:'',sex:'' })
+        if(this.newp){
+          this.newp = false;
+          this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'' ,flag:true});
+          this.expands.push('');
+        }else{
+          this.$message.error('正在新建员工');
+        }
       },
       getHotel:function () {
         var _this = this
@@ -386,25 +412,11 @@
               if (response.data.errorCode == "0") {
                 _this.gethotellist = response.data.hotels;
               }
-              if(this.hotelid.indexOf('H',0)!==-1){
+              if(_this.gethotellist.length <= 1){
                 this.descript = _this.gethotellist[0].descript;
-                this.disabled = true
+                this.disabled = true;
               }else{
-                this.disabled = false
-              }
-            }
-          });
-        })
-      },
-      getJoblist:function(){
-        var _this = this
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.configDefault()
-          // 获取营业点
-          this.$http.post(methodinfo.getjoblist, {}).then((response) => {
-            if (response.status === 200) {
-              if (response.data.errorCode == "0") {
-                _this.getjoblist = response.data.jobs;
+                this.disabled = false;
               }
             }
           });
@@ -432,63 +444,88 @@
           this.$http.post(methodinfo.getempnolist, {}).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode == "0") {
-                let list = response.data.empnos;
-
-                _this.getempnolist = list .map(item => {
-                  _this.gethotellist.forEach(hh =>{
-                    if(hh.hotelid == item.hotelid){
-                      item.descript = hh.descript;
-
-                    }
-                  })
-                  return item;
-                });
-                [ ..._this.getempnolist1] = _this.getempnolist
-                //克隆数组getempnolist给getempnolist1
+                _this.getempnolist = response.data.empnos;
               }
             }
           });
         })
       },
-      modifyempnoinfo:function(val){
-        console.log(1)
+      modifyempnoinfo:function(val) {
         var _this = this
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.configDefault()
-          // 获取营业点
-          this.$http.post(methodinfo.modifyempnoinfo, {hotelid:_this.hotelid,
-            birth:val.birth,
-            empname:val.empname,
-            email:val.email,
-            qq:val.qq,
-            sex:val.sex,
-            phone:val.phone,
-            deptno:_this.deptdescript,
-            htljob:_this.htljob
+        if (_this.deptdescript!=='' && val.empname!=='' && _this.htljob!=='' && val.empno!=='') {
+          if (val.flag) {
+            this.$store.dispatch('encrypttoken').then(() => {
+              this.configDefault()
+              // 获取营业点
+              this.$http.post(methodinfo.addempnoinfo, {
+                hotelid: _this.hotelid,
+                birth: _this.datavalue,
+                empname: val.empname,
+                email: val.email,
+                qq: val.qq,
+                sex: val.sex,
+                phone: val.phone,
+                deptno: _this.deptdescript,
+                htljob: _this.htljob,
+                username: val.empno
 
-          }).then((response) => {
-            if (response.status === 200) {
-              if (response.data.errorCode == "0") {
-                _this.modifyempnoinfo1 = response.data.jobs;
-              }
-            }
-          });
-        })
+              }).then((response) => {
+                if (response.status === 200) {
+                  if (response.data.errorCode == "0") {
+                    _this.$message('保存成功')
+                    _this.newp = true;
+                  } else {
+                    _this.$message.error(response.data.errorMessage)
+                  }
+                }
+              });
+            })
+          } else {
+            this.$store.dispatch('encrypttoken').then(() => {
+              this.configDefault()
+              // 获取营业点
+              this.$http.post(methodinfo.modifyempnoinfo, {
+                hotelid: _this.hotelid,
+                birth: _this.datavalue,
+                empname: val.empname,
+                email: val.email,
+                qq: val.qq,
+                sex: val.sex,
+                phone: val.phone,
+                deptno: _this.deptdescript,
+                htljob: _this.htljob,
+                username: val.empno
+
+              }).then((response) => {
+                if (response.status === 200) {
+                  if (response.data.errorCode == "0") {
+                    console.log(12)
+                    _this.$message('保存成功')
+                  }
+                }
+              });
+            })
+          }
+        }else{
+          _this.$message.error("请将'工号、姓名、部门、角色、岗位'信息填写完整")
+        }
       }
+    },
+    watch:{
+
     },
     mounted: function (){
       this.getHotel();
-      this.getJoblist();
       this.getEmpnolist();
       this.getDeptlist();
-//      this.modifyhotel();
+
     },
     components: {
-      sysLog
+      sysLog,FormatInput
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" type="text/scss">
   #maint{
     .input-group-text{
       background-color: #7EB2DD;
@@ -501,6 +538,23 @@
       }
       .el-date-editor .el-range-separator{
         padding: 0;
+      }
+      .custom-checkbox {
+        .custom-control-label {
+          cursor: pointer;
+          margin-left: 5px;
+          &::before {
+            border: 1px solid #D9DADB;
+            width: 1.5rem;
+            height: 1.5rem;
+            top: 0rem;
+          }
+          &::after {
+             width: 1.5rem;
+             height: 1.5rem;
+             top:0rem;
+          }
+        }
       }
       .btn-primary{
         margin-right: 10px;
@@ -521,7 +575,6 @@
         }
         height: 28px;
         width: 28px;
-
       }
       .container-fluid{
         >.row{
@@ -549,6 +602,11 @@
           .row{
             .form-row{
               height:45px;
+              .col-sm-9{
+                .el-select{
+                  width: 100%;
+                }
+              }
               .col-form-label{
                 text-align: justify;
               &::after{
@@ -558,9 +616,34 @@
                }
               }
             }
-          .form-group{
-            margin-bottom: 0px;
-          }
+            .form-group{
+               margin-bottom: 0px;
+            }
+            .block{
+              height:45px;
+              display:flex;
+              .demonstration{
+                display: inline-block;
+                width: 22.5%;
+                text-align: justify;
+                margin-right:10px;
+                line-height:30px;
+                &::after{
+                   content: " ";
+                   display: inline-block;
+                   width: 100%;
+                }
+              }
+              .el-date-editor.el-input{
+                width: 74.35%;
+                .el-input__prefix, .el-input__suffix{
+                  height: 34px;
+                  .el-input__icon{
+                    line-height: 34px;
+                  }
+                }
+              }
+            }
           }
           .el-table__row td{
             border-right: none;
@@ -568,7 +651,7 @@
           }
         }
         .el-input__inner{
-          height: 36px;
+          height: 33.5px;
         }
         .el-table .caret-wrapper{
           width: 20px;

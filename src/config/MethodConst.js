@@ -45,16 +45,18 @@ const methodinfo = {
   modifyempnoinfo: '/PUB/sysempno/modifyempnoinfo',
   // 删除工号
   deleteempnoinfo: '/PUB/sysempno/deleteempnoinfo',
+  // 新增工号
+  addempnoinfo: '/PUB/sysempno/addempnoinfo',
   // 获取岗位酒店授權信息
-  gethotelbydept:'/PUB/authfunction/gethotelbydept',
-  //岗位新增酒店授权信息
-  adddepthotel:'/PUB/authfunction/adddepthotel',
-  //删除岗位酒店授权信息
-  deletedepthotel:'/PUB/authfunction/deletedepthotel',
-  //删除岗位
-  deletehtldept:'/PUB/authfunction/deletehtldept',
-  //新增岗位
-  addhtldept:'/PUB/authfunction/addhtldept',
+  gethotelbydept: '/PUB/authfunction/gethotelbydept',
+  // 岗位新增酒店授权信息
+  adddepthotel: '/PUB/authfunction/adddepthotel',
+  // 删除岗位酒店授权信息
+  deletedepthotel: '/PUB/authfunction/deletedepthotel',
+  // 删除岗位
+  deletehtldept: '/PUB/authfunction/deletehtldept',
+  // 新增岗位
+  addhtldept: '/PUB/authfunction/addhtldept',
   /*
  SC业务相关接口
  */

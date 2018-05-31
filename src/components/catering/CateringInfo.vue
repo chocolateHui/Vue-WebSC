@@ -117,7 +117,7 @@
             </b-form-group>
             <b-form-group class="numinput" :label-cols="6" label="入住人数"
                           horizontal>
-              <FormatInput type="number" maxlength="5" v-model="localcatering.cover"></FormatInput>
+              <FormatInput type="number" maxlength="5" v-model="localcatering.attends"></FormatInput>
             </b-form-group>
             <b-form-group class="normalput" :label-cols="4" label="协议单位" horizontal>
               <el-input @click.native="profileShow" @clear="profileClear" class="modalinput" clearable readonly v-model="localcatering.cusno_des">
@@ -258,8 +258,6 @@
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
         this.$emit('saveCatering',this.localcatering);
-        this.localcatering = {};
-        this.caterdate = [];
       },
       updateCatering(){
         if(this.catersta==='0'){
@@ -391,6 +389,10 @@
           this.$store.dispatch('getCateringInfo');
           this.$store.dispatch('getEventList');
         })
+      },
+      clearData(){
+        this.localcatering = {};
+        this.caterdate = [];
       }
     },
     components: {
