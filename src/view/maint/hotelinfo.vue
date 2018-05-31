@@ -434,9 +434,9 @@
       }
     },
     created(){
-      this.getcitylist()
-      this.getarealist()
       if(this.sign!=1) {
+        this.getcitylist()
+        this.getarealist()
         this.getpccodelist()
       }
     }

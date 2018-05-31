@@ -30,6 +30,7 @@ const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/ma
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 const BaseCode = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/BaseCode.vue')
 const ScItemInfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/sciteminfo.vue')
+const setjob = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/setjob.vue')
 Vue.use(Router)
 
 let loadingInstance
@@ -173,7 +174,8 @@ const router = new Router({
             },
             {
               path: '/main/maint/hoteldept',
-              name: '岗位设置'
+              name: '岗位设置',
+              component:setjob
             },
             {
               path: '/main/maint/sysoption',
