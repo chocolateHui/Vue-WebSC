@@ -57,7 +57,7 @@
             <Numberinput @change="setGroupid" class="gorupid-input" v-model="groupid" placeholder="请输入集团ID"></Numberinput>
           </li>
           <li v-if="!isFirefox">2.本系统推荐使用火狐浏览器。
-            <br>请前往：<a href="http://www.firefox.com.cn/"  target="_blank">http://www.firefox.com.cn/</a>下载
+            <br>推荐前往：<a href="http://www.firefox.com.cn/"  target="_blank">http://www.firefox.com.cn/</a>下载安装
           </li>
           <li>3.在系统运行中遇到无法解决的问题，请联系西软维护部。<br>
             （☎维护热线：0571-88231188）

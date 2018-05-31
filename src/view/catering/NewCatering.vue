@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CateringInfo isNew @saveCatering="saveCatering"></CateringInfo>
+    <CateringInfo ref="newcatering" isNew @saveCatering="saveCatering"></CateringInfo>
     <NewEvent isNew :toggleshow="toggleshow" :eventshow="eventshow" ref="newevent"></NewEvent>
   </div>
 </template>
@@ -50,6 +50,8 @@
                     })
                     this.$store.commit('setCaterid',caterid);
                     this.$router.push({ name: '宴会预订详情', params: { caterid: caterid }});
+                    this.$refs.newcatering.clearData();
+                    this.$refs.newevent.clearData();
                   });
                 }else{
                   this.$alert(response.data.errorMessage)
