@@ -1,6 +1,17 @@
 <template>
   <div id="syslog">
     <b-container fluid>
+      <b-row>
+        <b-col sm="7"></b-col>
+        <b-col sm="4">
+          <b-input v-model="filterValue" placeholder="搜索"></b-input>
+        </b-col>
+        <b-col sm="1">
+          <b-btn @click="getLogData">
+            <i class="fa fa-refresh"></i>
+          </b-btn>
+        </b-col>
+      </b-row>
       <el-table
         ref = "logtable"
         :data="searchitems"
@@ -10,7 +21,7 @@
           <template slot-scope="props">
             <b-card>
               <ul>
-                <li v-for="item in props.row.logdata" :key="item.item">{{ item.item }}: {{item.newval}} -> {{item.oldval}}</li>
+                <li v-for="item in props.row.logdata" :key="item.field">{{ item.field }}: {{item.oldvalue}} -> {{item.newvalue}}</li>
               </ul>
             </b-card>
           </template>
@@ -24,17 +35,15 @@
           :show-overflow-tooltip="item.showTip" :key="item.prop">
         </el-table-column>
       </el-table>
-      <b-pagination @input="tableCurrentChange" :total-rows="totalrow" :per-page="pageSize" v-model="currentPage" class="my-0" ></b-pagination>
+      <b-pagination @input="tableCurrentChange" :total-rows="totalrows" :per-page="pageSize" v-model="currentPage" class="my-0" ></b-pagination>
     </b-container>
   </div>
 </template>
 <script>
   import methodinfo from '../config/MethodConst.js'
+  import { mapGetters, mapMutations } from 'vuex'
 
-  const items = [
-    {  contexttype : 'FOX',empno :'FOX', create :  '2018-04-08 12:00:00',contextkey :'工号,姓名',context :[{item:'工号',newval:'FOX',oldval:'FOX1',},{item:'姓名',newval:'FOX',oldval:'FOX1'}] },
-    {  contexttype: 'FOX',empno :'TEST1', create : '2018-04-08 13:00:00',contextkey :'工号,姓名',context :[{item:'工号',newval:'TEST1',oldval:'FOX',},{item:'姓名',newval:'FOX',oldval:'FOX1'}] },
-  ]
+  const items = []
   const fildes = [
     {  prop: 'contexttype', label:  '日志类别',width:'100' },
     {  prop: 'empno', label:  '操作员',width:'100',sortable:true,showTip:true},
@@ -47,45 +56,75 @@
       return {
         items: items,
         fildes :fildes,
-        filtervalue:'',
-        pageSize:10,
+        filterValue:'',
+        pageSize:13,
         currentPage:1,
+        totalrows:0
       }
-    },
-    prop:{
-      logtype: {
-        type: String
-      },
-      logkey: {
-        type: String
-      },
     },
     computed: {
       searchitems:function () {
-        if(this.filtervalue){
-          return this.items.filter( item => (~item.contexttype.indexOf(this.filtervalue)));
+        let filterValue = this.filterValue;
+        if(this.filterValue==='' || !this.filterValue){
+          return this.tablePagination(this.items);
         }else{
-          return this.items;
+          return this.tablePagination(this.items.filter(function (item) {
+            if (item.empno.indexOf(filterValue) >= 0) {
+              return true;
+            } else if (item.contextkey.indexOf(filterValue) >= 0) {
+              return true;
+            }else if (item.context.indexOf(filterValue) >= 0) {
+              return true;
+            }
+          }));
         }
-      }
+      },
+      ...mapGetters([
+        'logtype',
+        'logkey'
+      ]),
     },
     methods: {
-      tableCurrentChange(){
-        for(let elem of this.currentselect){
-          if (!this.hash[elem.tableno]) {
-            this.allselect.push(elem);
-            this.hash[elem.tableno] = true;
-          }
+      tablePagination(data=[]){
+        /**
+         * 表格数据分页的方法
+         */
+        let array = [], startNum=0, endNum = 0;
+        this.total = data.length;
+        startNum = (this.currentPage-1)*this.pageSize;
+        if(this.currentPage*this.pageSize<this.total){
+          endNum = this.currentPage*this.pageSize;
+        } else {
+          endNum = this.total;
         }
-        this.pageChange = true;
+        array = data.slice(startNum, endNum);
+        return array;
+      },
+      tableCurrentChange(){
+        this.getLogData();
       },
       getLogData(){
+        this.items =[];
         this.$store.dispatch('encrypttoken').then(() => {
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
             this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-            this.$http.post(methodinfo.updatecateringsta, {
-
+            this.$http.post(methodinfo.getSCEntityLog, {
+              key:this.logkey,
+              type:this.logtype
+            }).then((response)=>{
+              if(response.data.errorCode==='0'){
+                for(let elem of response.data.logs){
+                  let logdata =[];
+                  let logarray = JSON.parse(elem.context);
+                  for(let logcontext of logarray){
+                    logdata.push(JSON.parse(logcontext))
+                  }
+                  elem['logdata'] = logdata;
+                  this.items.push(elem)
+                }
+                this.totalrows = this.items.length
+              }
             })
         })
       }
@@ -93,7 +132,8 @@
     watch:{
       logkey(val,oldval){
         if(val!==oldval){
-
+          this.currentPage = 1;
+          this.getLogData();
         }
       }
     }
@@ -113,9 +153,21 @@
     .el-table__expanded-cell{
       padding: 5px!important;
       box-shadow: 0 !important;
+      .card{
+        margin-bottom: 0;
+      }
+      .card-body{
+        padding: 1rem;
+      }
     }
     .row{
       margin-right: 0;
+      margin-left: 0;
+      margin-bottom: 5px;
+    }
+    .pagination{
+       float: right;
+      margin-top: 5px !important;
     }
   }
 </style>

@@ -11,6 +11,10 @@
         <RoomInfo :caterid="caterid"></RoomInfo>
       </el-tab-pane>
     </el-tabs>
+
+    <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+      <sysLog></sysLog>
+    </b-modal>
   </div>
 </template>
 
@@ -22,6 +26,7 @@
   import NewEvent from '../../components/catering/NewEvent.vue'
   import EventList from '../../components/catering/EventList.vue'
   import RoomInfo from '../../components/catering/RoomInfo.vue'
+  import sysLog from '../../components/syslog.vue'
   import '../../css/font.scss'
 
   export default {
@@ -36,7 +41,8 @@
       CateringInfo,
       NewEvent,
       EventList,
-      RoomInfo
+      RoomInfo,
+      sysLog
     },
     computed: {
       ...mapGetters([

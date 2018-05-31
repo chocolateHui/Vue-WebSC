@@ -206,7 +206,11 @@ const methodinfo = {
   deletescitem: '/SC/reserve/scitemmaint/deletescitem',
   // SC系统初始化
   initscdata: '/SC/reserve/system/initscdata',
-
+  /*
+   日志
+   */
+  // 获取业务日志
+  getSCEntityLog: '/SC/reserve/sclog/getSCEntityLog',
   /*
  接口相关
  */
