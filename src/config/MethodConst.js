@@ -23,6 +23,12 @@ const methodinfo = {
   addhtldept: '/SC/reserve/sysempno/addhtldept',
   // 获取岗位列表
   getdeptlist: '/SC/reserve/sysempno/getdeptlist',
+  // 修改工号信息
+  modifyempnoinfo: '/SC/reserve/sysempno/modifyempnoinfo',
+  // 删除工号
+  deleteempnoinfo: '/SC/reserve/sysempno/deleteempnoinfo',
+  // 新增工号
+  addempnoinfo: '/SC/reserve/sysempno/addempnoinfo',
   /*
    *
    * 公共模块相关接口
@@ -48,12 +54,6 @@ const methodinfo = {
   modifyhotel: '/PUB/hotelid/modifyhotel',
   // 获取角色列表
   getjoblist: '/PUB/authfunction/getjoblist',
-  // 修改工号信息
-  modifyempnoinfo: '/PUB/sysempno/modifyempnoinfo',
-  // 删除工号
-  deleteempnoinfo: '/PUB/sysempno/deleteempnoinfo',
-  // 新增工号
-  addempnoinfo: '/PUB/sysempno/addempnoinfo',
   // 获取岗位酒店授權信息
   gethotelbydept: '/PUB/authfunction/gethotelbydept',
   // 岗位新增酒店授权信息
