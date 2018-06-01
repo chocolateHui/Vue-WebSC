@@ -4,8 +4,13 @@
     <b-row>
       <b-col class="widthleft">
         <p>岗位</p>
-        <b-input v-model="filterValue" placeholder="搜索" class="search"></b-input> <span class="btnRefresh"> <i class="fa fa-refresh"></i></span>
-        <el-table
+        <b-input-group class="search">
+          <b-input-group-text slot="append">
+            <i class="fa fa-search"></i>
+          </b-input-group-text>
+          <b-form-input v-model="filterValue" placeholder="搜索"></b-form-input>
+        </b-input-group>
+         <el-table
           :data="searchitems"
           ref="refjob"
           border
@@ -24,7 +29,7 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="100">
+            width="70">
             <template slot-scope="scope">
               <b-form inline >
                 <b-button
@@ -104,12 +109,15 @@
           </el-table>
         </b-form>
         <b-button @click="choosehotel">选择酒店</b-button>
-        <b-button>日志</b-button>
+        <b-button @click="btnnote">日志</b-button>
       </b-col>
     </b-row>
   </b-container>
   <b-modal id="myModalhotel" ref="myModalhotel" size="lg" title="选择酒店" hide-footer>
-    <choosehotel @reasonConfirm="reasonConfirm"></choosehotel>
+    <choosehotel :hotelData="hotelData" @reasonConfirm="reasonConfirm"></choosehotel>
+  </b-modal>
+  <b-modal id="logmodal" ref="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+    <sysLog></sysLog>
   </b-modal>
 </div>
 </template>
@@ -117,6 +125,7 @@
 <script>
   import methodinfo from '../../config/MethodConst.js'
   import choosehotel from './choosehotel'
+  import sysLog from '../../components/syslog.vue'
   export default {
         name: "setjob",
       data(){
@@ -135,18 +144,20 @@
             hotelData:[],
             filterValue:'',
             jobData:[],
-            jobheight:document.body.clientHeight-470,
-            hotelheight:document.body.clientHeight-225,
+            jobheight:document.body.clientHeight-443,
+            hotelheight:document.body.clientHeight-220,
             dept:'',
             ifdisabled:true,
             addflag:false,
+            logkey:'',
           }
       },
       created(){
 
       },
       components:{
-        choosehotel
+        choosehotel,
+        sysLog
       },
     computed: {
       searchitems:function () {
@@ -215,6 +226,7 @@
                 }else{
                   _this.hotelData=[]
                 }
+                console.log(JSON.stringify(this.hotelData)+'pp')
               }
             })
           })
@@ -373,6 +385,12 @@
               this.jobchange()
             }
           }
+        },
+        btnnote:function () {
+          // this.logkey=this.$store.getters.hotel.hotelid+'|dept|'+this.dept
+          // this.$store.commit('setLogtype','Basecode');
+          // this.$store.commit('setLogKey',this.logkey);
+          // this.$refs.logmodal.show()
         }
       },
       watch:{
@@ -399,22 +417,9 @@
   $colorC0:#77C6C0;
 #setjob{
   .search{
-    display: inline-block;
-    width: 90%;
-    float: left;
-  }
-  .btnRefresh{
-    margin-left: 1%;
-    display: inline-block;
-    background-color: $colorE0;
-    width: 9%;
-    font-size: 1rem;
-    border-radius: 0.25rem;
-    text-align: center;
-    color: #ffffff;
-    height: 33.5px;
-    line-height:33.5px;
-    cursor: pointer;
+    &.input-group {
+      padding-bottom:0;
+    }
   }
   .widthleft{
     flex: 0 0 38%;
@@ -428,7 +433,7 @@
     color:$colorCC;
   }
   .el-table td, .el-table th{
-    padding: 5px 0;
+    padding:0;
   }
   .col{
     .btn{
@@ -442,6 +447,12 @@
         border:$colorE0 ;
       }
     }
+  }
+  .form-control{
+    height: 30px;
+  }
+  .form-group {
+    margin-bottom: 0.7rem;
   }
 }
 </style>
