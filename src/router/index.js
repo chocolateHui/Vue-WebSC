@@ -175,7 +175,7 @@ const router = new Router({
             {
               path: '/main/maint/hoteldept',
               name: '岗位设置',
-              component:setjob
+              component: setjob
             },
             {
               path: '/main/maint/sysoption',

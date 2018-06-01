@@ -42,7 +42,7 @@ function getsaleidlist () {
   return axiosinstance.post(methodinfo.getsaleidlist, { sta: 'I' })
 }
 function getbasecodelist () {
-  return axiosinstance.post(methodinfo.getbasecodelist, { cat: 'guest_diary_item' })
+  return axiosinstance.post(methodinfo.getbasecodelist, { cat: 'guest_diary_item', halt: 'F' })
 }
 // actions
 const actions = {
