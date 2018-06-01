@@ -62,8 +62,10 @@
         currentRow:{},
         pageChange:false,
         itemcount:0,
+        hotellist:''
       }
     },
+    props:['hotelData'],
     computed: {
       searchitems:function () {
         let filterValue = this.filterValue;
@@ -86,7 +88,7 @@
       }
     },
     created(){
-         this.gethotellist()
+
     },
     methods: {
       configDefault:function () {
@@ -104,6 +106,12 @@
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
                 _this.items=response.data.hotels
+                 var test=this.hotellist
+                this.items=this.items.filter(function (item) {
+                  if (test.indexOf(item.hotelid)==-1) {
+                      return true;
+                  }
+                })
               }
             }
           })
@@ -165,7 +173,17 @@
         }else{
           this.itemcount = this.total
         }
-      }
+      },
+      hotelData:function () {
+        this.hotellist=''
+        console.log(JSON.stringify(this.hotelData)+'GG')
+        if(this.hotelData.length>0){
+        for(var t=0;t<this.hotelData.length;t++){
+          this.hotellist+=this.hotelData[t].hotelid+','
+        }
+        }
+        this.gethotellist()
+      },
     }
   }
 </script>
@@ -214,6 +232,9 @@
         flex: 0 0 70%;
         max-width: 70%;
       }
+    }
+    .el-table {
+      overflow: auto;
     }
     .col-sm-1{
       padding-left: 0 !important;
