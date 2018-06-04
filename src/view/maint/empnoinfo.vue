@@ -140,7 +140,7 @@
             </b-row>
             <b-button type="submit" @click="modifyempnoinfo(props.row)" variant="primary">保存</b-button>
             <b-button type="submit" variant="primary" v-b-modal.passmodal1>修改密码</b-button>
-            <b-button v-b-modal.logmodal type="submit" variant="primary">日志</b-button>
+            <b-button @click="showLog(props.row)" variant="primary">日志</b-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -153,7 +153,7 @@
         </el-table-column>
         <el-table-column :width="60" label="操作">
           <template slot-scope="scope">
-            <b-button size="mini" type="danger" class="Cancel-button" @click="deleteempno(scope)"></b-button>
+            <b-button size="mini" type="danger" class="Cancel-button image-btn" @click="deleteempno(scope)"></b-button>
           </template>
         </el-table-column>
       </el-table>
@@ -309,6 +309,12 @@
             }
           })
         })
+      },
+      showLog(row){
+        let logkey = row.empno +'|'+this.groupid;
+        this.$store.commit('setLogtype','SysEmpno');
+        this.$store.commit('setLogKey',logkey);
+        this.$root.$emit('bv::show::modal', 'logmodal');
       },
       modalhidden: function () {
         this.oldpassword = '';
@@ -492,26 +498,6 @@
              top:0rem;
           }
         }
-      }
-      .btn-primary{
-        margin-right: 10px;
-        padding: 5px 25px;
-          background: #7EB2DD;
-          border: none;
-         &:last-of-type{
-          background: #89C5BF;
-          border: none;
-          }
-      }
-      .btn-secondary{
-        margin: 4px;
-        display: block;
-        border: {
-          color: #FFFFFF;
-          radius:0px;
-        }
-        height: 28px;
-        width: 28px;
       }
       .container-fluid{
         >.row{

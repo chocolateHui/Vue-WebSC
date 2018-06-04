@@ -50,11 +50,11 @@ const actions = {
   },
   getsysempno: function (store, token) {
     return new Promise((resolve, reject) => {
-      axiosinstance.defaults.headers.common['username'] = state.username
+      axiosinstance.defaults.headers.common['username'] = store.getters.username
       axiosinstance.defaults.headers.common['signature'] = token
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
       axiosinstance.post(methodinfo.getempnoinfo, {
-        username: state.username
+        username: store.getters.username
       }).then(function (response) {
         if (response.status === 200) {
           if (response.data.errorCode !== '0') {
