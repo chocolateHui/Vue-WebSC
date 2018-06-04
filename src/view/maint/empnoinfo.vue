@@ -217,8 +217,6 @@
       return {
         newp:true,
         getempnolist: [],
-        getempnolist1: [],
-        list: [],
         fildes :fildes,
         saleid: '',
         gethotellist: [],
