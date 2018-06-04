@@ -217,6 +217,8 @@
       return {
         newp:true,
         getempnolist: [],
+        getempnolist1: [],
+        list: [],
         fildes :fildes,
         saleid: '',
         gethotellist: [],
@@ -403,7 +405,7 @@
           this.$http.post(methodinfo.getempnolist,param ).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode == "0") {
-                this.getempnolist = response.data.empnos;
+              this.getempnolist = response.data.empnos;
               }
             }
           });
@@ -416,7 +418,7 @@
             this.$store.dispatch('encrypttoken').then(() => {
               this.configDefault()
               // 获取营业点
-              this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
+                this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
                 if (response.status === 200) {
                   if (response.data.errorCode == "0") {
                     this.$message('保存成功')
@@ -430,7 +432,7 @@
           } else {
             this.$store.dispatch('encrypttoken').then(() => {
               this.configDefault()
-              this.$http.post(methodinfo.modifyempnoinfo, val).then((response) => {
+                this.$http.post(methodinfo.modifyempnoinfo, val).then((response) => {
                 if (response.status === 200) {
                   if (response.data.errorCode == "0") {
                     this.$message('保存成功')
