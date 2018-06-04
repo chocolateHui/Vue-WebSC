@@ -375,6 +375,7 @@
         this.hotelid = this.$store.state.user.hotel.hotelid;
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
+          // 获取营业点
           this.$http.post(methodinfo.gethotellist, {}).then((response) => {
             if (response.data.errorCode === "0") {
               this.gethotellist = response.data.hotels;
