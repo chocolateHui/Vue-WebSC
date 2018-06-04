@@ -22,6 +22,8 @@ const getters = {
 
   signature: state => state.signature,
 
+  secretkey: state => state.secretkey,
+
   loginerror: state => state.loginerror
 }
 
@@ -31,8 +33,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       let username = store.getters.username
       let time = new Date().getTime()
-      let content = username + 0 + time + state.token
-      let key = CryptoJS.enc.Latin1.parse(state.secretkey)
+      let content = username + 0 + time + store.getters.token
+      let key = CryptoJS.enc.Latin1.parse(store.getters.secretkey)
       let encrypted = CryptoJS.AES.encrypt(content, key, {
         iv: key,
         mode: CryptoJS.mode.CBC,

@@ -140,7 +140,7 @@
             </b-row>
             <b-button type="submit" @click="modifyempnoinfo(props.row)" variant="primary">保存</b-button>
             <b-button type="submit" variant="primary" v-b-modal.passmodal1>修改密码</b-button>
-            <b-button v-b-modal.logmodal type="submit" variant="primary">日志</b-button>
+            <b-button @click="showLog(props.row)" variant="primary">日志</b-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -153,7 +153,7 @@
         </el-table-column>
         <el-table-column :width="60" label="操作">
           <template slot-scope="scope">
-            <b-button size="mini" type="danger" class="Cancel-button" @click="deleteempno(scope)"></b-button>
+            <b-button size="mini" type="danger" class="Cancel-button image-btn" @click="deleteempno(scope)"></b-button>
           </template>
         </el-table-column>
       </el-table>
@@ -310,6 +310,12 @@
           })
         })
       },
+      showLog(row){
+        let logkey = row.empno +'|'+this.groupid;
+        this.$store.commit('setLogtype','SysEmpno');
+        this.$store.commit('setLogKey',logkey);
+        this.$root.$emit('bv::show::modal', 'logmodal');
+      },
       modalhidden: function () {
         this.oldpassword = '';
         this.newpassword = '';
@@ -369,6 +375,7 @@
         this.hotelid = this.$store.state.user.hotel.hotelid;
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
+          // 获取营业点
           this.$http.post(methodinfo.gethotellist, {}).then((response) => {
             if (response.data.errorCode === "0") {
               this.gethotellist = response.data.hotels;
@@ -403,7 +410,7 @@
           this.$http.post(methodinfo.getempnolist,param ).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode == "0") {
-                this.getempnolist = response.data.empnos;
+              this.getempnolist = response.data.empnos;
               }
             }
           });
@@ -416,7 +423,7 @@
             this.$store.dispatch('encrypttoken').then(() => {
               this.configDefault()
               // 获取营业点
-              this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
+                this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
                 if (response.status === 200) {
                   if (response.data.errorCode == "0") {
                     this.$message('保存成功')
@@ -430,7 +437,7 @@
           } else {
             this.$store.dispatch('encrypttoken').then(() => {
               this.configDefault()
-              this.$http.post(methodinfo.modifyempnoinfo, val).then((response) => {
+                this.$http.post(methodinfo.modifyempnoinfo, val).then((response) => {
                 if (response.status === 200) {
                   if (response.data.errorCode == "0") {
                     this.$message('保存成功')
@@ -492,26 +499,6 @@
              top:0rem;
           }
         }
-      }
-      .btn-primary{
-        margin-right: 10px;
-        padding: 5px 25px;
-          background: #7EB2DD;
-          border: none;
-         &:last-of-type{
-          background: #89C5BF;
-          border: none;
-          }
-      }
-      .btn-secondary{
-        margin: 4px;
-        display: block;
-        border: {
-          color: #FFFFFF;
-          radius:0px;
-        }
-        height: 28px;
-        width: 28px;
       }
       .container-fluid{
         >.row{

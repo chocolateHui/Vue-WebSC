@@ -21,7 +21,12 @@
           <template slot-scope="props">
             <b-card>
               <ul v-if="props.row.contextkey!=='新建'||props.row.contextkey!=='删除'">
-                <li v-for="item in props.row.logdata" :key="item.field">{{ item.field }}: {{item.oldvalue}} -> {{item.newvalue}}</li>
+                <li v-for="item in props.row.logdata" :key="item.field">
+                  <span>{{ item.field }}:</span>
+                  <span>&#8194;{{item.oldvalue}}&#8194;</span>
+                  <i class="fa fa-arrow-right"></i>
+                  <span>&#8194;{{item.newvalue}}</span>
+                </li>
               </ul>
               <ul v-else>
                 <li>{{ props.row.context }}</li>
