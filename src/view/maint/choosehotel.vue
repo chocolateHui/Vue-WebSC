@@ -43,14 +43,13 @@
   </div>
 </template>
 <script>
-   import methodinfo from '../../config/MethodConst'
+  import methodinfo from '../../config/MethodConst'
   const fildes = [
     {  prop: 'hotelid', label:  '编码',width:'100',sortable:true,"classname":"text-center" },
     {  prop: 'descript', label:  '酒店描述',width:'',sortable:false,showTip:true},
     {  prop: 'descript1', label:  '英文描述',width:'',sortable:false,showTip:true},
     {  prop: 'descript2', label:  '其他描述',width:'',sortable:false,showTip:true}
   ]
-
   export default {
     data () {
       return {
@@ -88,7 +87,6 @@
       }
     },
     created(){
-
     },
     methods: {
       configDefault:function () {
@@ -102,14 +100,14 @@
           this.configDefault()
           // 获取营业点
           this.$http.post(methodinfo.gethotellist, {
-           }).then((response) => {
+          }).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
                 _this.items=response.data.hotels
-                 var test=this.hotellist
+                var test=this.hotellist
                 this.items=this.items.filter(function (item) {
                   if (test.indexOf(item.hotelid)==-1) {
-                      return true;
+                    return true;
                   }
                 })
               }
@@ -149,6 +147,7 @@
       },
       refreshData(){
         this.gethotellist()
+        this.currentPage=1
       },
       clearRow(){
         this.currentRow = {};
@@ -164,7 +163,17 @@
       },
       exitModal(){
         this.$root.$emit('bv::hide::modal','myModalhotel')
-      }
+      },
+      hotelDatashow:function () {
+        this.hotellist=''
+        if(this.hotelData.length>0){
+          for(var t=0;t<this.hotelData.length;t++){
+            this.hotellist+=this.hotelData[t].hotelid+','
+          }
+        }
+        this.gethotellist()
+        this.currentPage=1
+      },
     },
     watch:{
       searchitems(val){
@@ -173,16 +182,6 @@
         }else{
           this.itemcount = this.total
         }
-      },
-      hotelData:function () {
-        this.hotellist=''
-        console.log(JSON.stringify(this.hotelData)+'GG')
-        if(this.hotelData.length>0){
-        for(var t=0;t<this.hotelData.length;t++){
-          this.hotellist+=this.hotelData[t].hotelid+','
-        }
-        }
-        this.gethotellist()
       },
     }
   }
@@ -225,9 +224,9 @@
         width: 100px;
       }
       .col-sm-3{
-         flex: 0 0 15%;
-         max-width: 15%;
-       }
+        flex: 0 0 15%;
+        max-width: 15%;
+      }
       .col-sm-6{
         flex: 0 0 70%;
         max-width: 70%;
