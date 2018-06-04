@@ -20,8 +20,11 @@
         <el-table-column type="expand">
           <template slot-scope="props">
             <b-card>
-              <ul>
+              <ul v-if="props.row.contextkey!=='新建'||props.row.contextkey!=='删除'">
                 <li v-for="item in props.row.logdata" :key="item.field">{{ item.field }}: {{item.oldvalue}} -> {{item.newvalue}}</li>
+              </ul>
+              <ul v-else>
+                <li>{{ props.row.context }}</li>
               </ul>
             </b-card>
           </template>
@@ -115,12 +118,16 @@
             }).then((response)=>{
               if(response.data.errorCode==='0'){
                 for(let elem of response.data.logs){
-                  let logdata =[];
-                  let logarray = JSON.parse(elem.context);
-                  for(let logcontext of logarray){
-                    logdata.push(JSON.parse(logcontext))
+                  if(elem.contextkey==='新建'||elem.contextkey==='删除'){
+
+                  }else{
+                    let logdata =[];
+                    let logarray = JSON.parse(elem.context);
+                    for(let logcontext of logarray){
+                      logdata.push(JSON.parse(logcontext))
+                    }
+                    elem['logdata'] = logdata;
                   }
-                  elem['logdata'] = logdata;
                   this.items.push(elem)
                 }
                 this.totalrows = this.items.length
@@ -164,6 +171,9 @@
       margin-right: 0;
       margin-left: 0;
       margin-bottom: 5px;
+    }
+    ul{
+      margin-bottom:0
     }
     .pagination{
        float: right;
