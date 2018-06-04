@@ -142,7 +142,7 @@
                     </el-select>
                   </b-form-group>
                   <b-form-group>
-                    <b-form-checkbox >停用</b-form-checkbox>
+                    <b-form-checkbox v-model="props.row.locked" value="T" unchecked-value="F">停用</b-form-checkbox>
                   </b-form-group>
                 </b-form>
               </b-col>
@@ -233,6 +233,8 @@
       return {
         newp:true,
         getempnolist: [],
+        getempnolist1: [],
+        list: [],
         fildes :fildes,
         saleid: '',
         gethotellist: [],
@@ -366,14 +368,16 @@
 
         })
       },
-      doFilter : function(){               //搜索
+      doFilter : function(){   //搜索
         let _this = this;
         this.hotelid = _this.$store.state.user.hotel.hotelid;
-        if (this.value1 && this.descript ) {
-           _this.getempnolist = [];
-          _this.getempnolist.forEach(function (item) {
+        if (this.value1!=='' && this.descript!=='' ) {
+           _this.getempnolist=[]
+          _this.getempnolist.forEach(function(item){
             if(item.hotelid == _this.hotelid && item.htljob == _this.value1){
-              _this.getempnolist.push(item);
+//              _this.getempnolist=[];
+              _this.getempnolist1.push(item);
+
             }
           });
         }else{
@@ -445,6 +449,7 @@
             if (response.status === 200) {
               if (response.data.errorCode == "0") {
                 _this.getempnolist = response.data.empnos;
+                [..._this.getempnolist1] = _this.getempnolist
               }
             }
           });
@@ -467,7 +472,8 @@
                 phone: val.phone,
                 deptno: _this.deptdescript,
                 htljob: _this.htljob,
-                username: val.empno
+                username: val.empno,
+                locked: val.locked
 
               }).then((response) => {
                 if (response.status === 200) {
@@ -494,7 +500,8 @@
                 phone: val.phone,
                 deptno: _this.deptdescript,
                 htljob: _this.htljob,
-                username: val.empno
+                username: val.empno,
+                locked: val.locked
 
               }).then((response) => {
                 if (response.status === 200) {
