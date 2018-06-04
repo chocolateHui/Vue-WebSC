@@ -217,8 +217,6 @@
       return {
         newp:true,
         getempnolist: [],
-        getempnolist1: [],
-        list: [],
         fildes :fildes,
         saleid: '',
         gethotellist: [],
@@ -393,7 +391,6 @@
         })
       },
       getEmpnolist:function(){
-//        var _this = this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
           let param = {
@@ -408,7 +405,6 @@
             if (response.status === 200) {
               if (response.data.errorCode == "0") {
               this.getempnolist = response.data.empnos;
-                [ ...this.getempnolist1] = this.getempnolist
               }
             }
           });
