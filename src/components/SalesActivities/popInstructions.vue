@@ -47,7 +47,8 @@
           this.$emit('InstructClose')
         },
         btnOk:function () {
-          if(this.instruText==''){
+          console.log(this.instruText+'pp')
+          if(this.instruText==''||this.instruText==undefined){
             this.$message({
               message: "批示内容不能为空",
               type: "warning"

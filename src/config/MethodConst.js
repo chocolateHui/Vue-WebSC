@@ -1,24 +1,39 @@
 
 const methodinfo = {
   /*
-     *
-     * 公共模块相关接口
-     *
-     */
+   *
+   * 工号相关接口
+   *
+   */
 //  登录
-  login: '/PUB/sysempno/login',
+  login: '/SC/reserve/sysempno/login',
   // 修改密码
-  modifypassword: '/PUB/sysempno/modifypassword',
+  modifypassword: '/SC/reserve/sysempno/modifypassword',
   // 根据工号获取酒店信息
-  getempnohotellist: '/PUB/sysempno/getempnohotellist',
+  getempnohotellist: '/SC/reserve/sysempno/getempnohotellist',
   // 获取工号信息列表
-  getempnolist: '/PUB/sysempno/getempnolist',
+  getempnolist: '/SC/reserve/sysempno/getempnolist',
   // 获取工号详情
-  getempnoinfo: '/PUB/sysempno/getempnoinfo',
+  getempnoinfo: '/SC/reserve/sysempno/getempnoinfo',
   // 更新工号信息
-  savesysempno: '/PUB/sysempno/savesysempno',
-  // 获取站点信息
-  getpcidstatus: '/PUB/station/getpcidstatus',
+  savesysempno: '/SC/reserve/sysempno/savesysempno',
+  // 删除岗位
+  deletehtldept: '/SC/reserve/sysempno/deletehtldept',
+  // 新增岗位
+  addhtldept: '/SC/reserve/sysempno/addhtldept',
+  // 获取岗位列表
+  getdeptlist: '/SC/reserve/sysempno/getdeptlist',
+  // 修改工号信息
+  modifyempnoinfo: '/SC/reserve/sysempno/modifyempnoinfo',
+  // 删除工号
+  deleteempnoinfo: '/SC/reserve/sysempno/deleteempnoinfo',
+  // 新增工号
+  addempnoinfo: '/SC/reserve/sysempno/addempnoinfo',
+  /*
+   *
+   * 公共模块相关接口
+   *
+   */
   // 获取系统代码列表
   getsystemcode: '/PUB/pubcode/getsystemcode',
   // 获取系统参数
@@ -37,16 +52,14 @@ const methodinfo = {
   getcntcode: '/PUB/syscode/getcntcode',
   // 修改酒店
   modifyhotel: '/PUB/hotelid/modifyhotel',
-  // 获取岗位列表
-  getdeptlist: '/PUB/authfunction/getdeptlist',
   // 获取角色列表
   getjoblist: '/PUB/authfunction/getjoblist',
-  // 修改工号信息
-  modifyempnoinfo: '/PUB/sysempno/modifyempnoinfo',
-  // 删除工号
-  deleteempnoinfo: '/PUB/sysempno/deleteempnoinfo',
-  // 新增工号
-  addempnoinfo: '/PUB/sysempno/addempnoinfo',
+  // 获取岗位酒店授權信息
+  gethotelbydept: '/PUB/authfunction/gethotelbydept',
+  // 岗位新增酒店授权信息
+  adddepthotel: '/PUB/authfunction/adddepthotel',
+  // 删除岗位酒店授权信息
+  deletedepthotel: '/PUB/authfunction/deletedepthotel',
 
   /*
  SC业务相关接口
@@ -55,11 +68,11 @@ const methodinfo = {
   基础代码
    */
   // 获取基础代码列表
-  getbasecodelist: '/PUB/pubcode/getbasecodelist',
+  getbasecodelist: '/SC/reserve/basecode/getbasecodelist',
   // 批量更新基础代码
-  updatebasecodes: '/PUB/pubcode/updatebasecodes',
+  updatebasecodes: '/SC/reserve/basecode/updatebasecodes',
   // 删除基础代码
-  deletebasecode: '/PUB/pubcode/deletebasecode',
+  deletebasecode: '/SC/reserve/basecode/deletebasecode',
   /*
  宴会相关
  */
@@ -197,7 +210,11 @@ const methodinfo = {
   deletescitem: '/SC/reserve/scitemmaint/deletescitem',
   // SC系统初始化
   initscdata: '/SC/reserve/system/initscdata',
-
+  /*
+   日志
+   */
+  // 获取业务日志
+  getSCEntityLog: '/SC/reserve/sclog/getSCEntityLog',
   /*
  接口相关
  */

@@ -213,7 +213,7 @@
         </b-col>
       </b-row>
     </b-container>
-    <b-modal id="logmodal" ref="myModalInitalize" size="lg" title="初始化" hide-footer>
+    <b-modal id="logmodal" ref="myModalInitalize" size="lg" :title="modelTitle" hide-footer>
       <initalize-first v-if="ifFirst" :sign="hoteInfo.sign" @btnExit2="btnExit2" @btnExit1="btnExit1" :hotelid="hotelid"></initalize-first>
       <initalize v-else @btnExit="btnExit" :hotelid="hotelid"></initalize>
     </b-modal>
@@ -250,6 +250,7 @@
         hotelid:'',
         ifFirst:false,
         hotelStatusNow:'',
+        modelTitle:'初始化'
       }
     },
     props:['innhotel','sign'],
@@ -314,6 +315,7 @@
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
                 this.hoteInfo=response.data
+                this.modelTitle='初始化'+this.hoteInfo.descript
                 this.hoteInfo.cityarea=''
                 this.hotelStatusNow=this.hoteInfo.sta
                 if(this.hoteInfo.sign==0){

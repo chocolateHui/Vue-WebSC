@@ -196,7 +196,7 @@
         }
       },
       placeConfirm(){
-        if(!this.currentRow){
+        if(!this.currentRow.hasOwnProperty('tableno')){
           this.$alert("请选择一个场地!")
           return
         }

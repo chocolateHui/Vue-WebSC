@@ -8,11 +8,14 @@
         <b-col sm="2" class="my-1">
           <span v-if="!isNew" class="title">订单号:{{catering.caterid}}</span>
         </b-col>
-        <b-col sm="8" class="my-1 titleInfo">
+        <b-col sm="7" class="my-1 titleInfo">
           <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 宴会名称:&#8195;{{catering.name}}</span>
           <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{catering.saleid_des}}</span>
         </b-col>
         <b-col class="my-1 icondiv">
+          <a v-if="!isNew">
+            <i @click="showLog" class="fa fa-sticky-note titleIcon"></i>
+          </a>
           <a v-if="!isNew">
             <i @click="showNote" class="fa fa-sticky-note titleIcon"></i>
           </a>
@@ -117,7 +120,7 @@
             </b-form-group>
             <b-form-group class="numinput" :label-cols="6" label="入住人数"
                           horizontal>
-              <FormatInput type="number" maxlength="5" v-model="localcatering.cover"></FormatInput>
+              <FormatInput type="number" maxlength="5" v-model="localcatering.attends"></FormatInput>
             </b-form-group>
             <b-form-group class="normalput" :label-cols="4" label="协议单位" horizontal>
               <el-input @click.native="profileShow" @clear="profileClear" class="modalinput" clearable readonly v-model="localcatering.cusno_des">
@@ -214,7 +217,8 @@
         //销售员列表
         saleoptions:[],
         cancelWidth:'cancelwidth',
-        dialogVisible:false
+        dialogVisible:false,
+        logkey:''
       }
     },
     props:{
@@ -258,8 +262,6 @@
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
         this.$emit('saveCatering',this.localcatering);
-        this.localcatering = {};
-        this.caterdate = [];
       },
       updateCatering(){
         if(this.catersta==='0'){
@@ -379,6 +381,11 @@
         this.$store.commit('setNoteParam',caterinfo);
         this.$refs.remarkmodal.show();
       },
+      showLog(){
+        this.$store.commit('setLogtype','ScCatering');
+        this.$store.commit('setLogKey',this.logkey);
+        this.$root.$emit('bv::show::modal', 'logmodal');
+      },
       EOShare(){
         this.$router.push({name: '宴会预订EO单', params: { caterid: this.caterid }});
       },
@@ -391,13 +398,17 @@
           this.$store.dispatch('getCateringInfo');
           this.$store.dispatch('getEventList');
         })
+      },
+      clearData(){
+        this.localcatering = {};
+        this.caterdate = [];
       }
     },
     components: {
       FormatInput,
       Reason,
       popArchives,
-      remark
+      remark,
     },
     mounted(){
       this.getStaFont();
@@ -408,6 +419,9 @@
           this.localcatering = Object.assign({},val);
           this.caterdate = [];
           if(val.hasOwnProperty('arr')){
+            let groupid = this.$store.getters.groupid;
+            let hotelid = this.$store.getters.hotel.hotelid;
+            this.logkey = this.localcatering.caterid+'|'+hotelid +'|'+groupid;
             this.caterdate.push(val.arr,val.dep)
           }
         }

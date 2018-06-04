@@ -11,6 +11,7 @@ import SalesActivities from './modules/SalesActivities'
 import scnote from './modules/scnote'
 import routeParam from './modules/routeParam'
 import placeDistribution from './modules/placeDistribution'
+import log from './modules/log'
 
 Vue.use(Vuex)
 
@@ -33,7 +34,8 @@ const store = new Vuex.Store({
     scnote,
     sceventitem,
     routeParam,
-    placeDistribution
+    placeDistribution,
+    log
   },
   plugins: [vuexLocal.plugin],
   mutations: {

@@ -75,8 +75,7 @@
         usebtndes:'查看空闲场地',
         currentplace:'',
         currentselect:[],
-        allselect:[],
-        hash:{},
+        allselect: new Set(),
         placecount:0
       }
     },
@@ -92,6 +91,7 @@
       ]),
       searchitems:function () {
         let filterValue = this.filterValue;
+
         if(this.filterValue==='' || !this.filterValue){
           return this.tablePagination(this.items);
         }else{
@@ -132,7 +132,8 @@
       },
       //页面切换数据处理
       handleSelectionChange(val) {
-        if(this.pageChange&&this.allselect.length>0){
+        if(this.pageChange&&this.allselect.size>0){
+          this.pageChange=false;
           //换页时清空当前选择并重新赋值
           this.currentselect=[];
           for(let elem of this.allselect){
@@ -143,16 +144,13 @@
           if(val.length<this.currentselect.length){
             for(let i =0;i < this.currentselect.length;i++){
               if(val.indexOf(this.currentselect[i])<0){
-                let allindex = this.allselect.indexOf(this.currentselect[i]);
-                if(allindex>0){
-                  this.allselect.splice(allindex,1)
-                }
+                this.allselect.delete(this.currentselect[i])
               }
             }
           }
-          this.pageChange=false;
           this.currentselect = val;
         }
+        this.pageChange=false;
         this.currentplace = '';
         for(let elem of this.currentselect){
           this.currentplace = this.currentplace + elem.descript + ',';
@@ -161,10 +159,7 @@
       },
       tableCurrentChange(){
         for(let elem of this.currentselect){
-          if (!this.hash[elem.tableno]) {
-            this.allselect.push(elem);
-            this.hash[elem.tableno] = true;
-          }
+          this.allselect.add(elem);
         }
         this.pageChange = true;
       },
@@ -172,8 +167,7 @@
         this.$refs.multiplacetable.toggleRowSelection(row);
       },
       clearSelect(){
-        this.hash = {};
-        this.allselect=[];
+        this.allselect=new Set();
         this.$refs.multiplacetable.clearSelection();
       },
       changeTableType(){
@@ -190,8 +184,9 @@
         this.refreshData();
       },
       refreshData(){
+        this.filterValue = '';
         this.items=[];
-        this.allselect=[];
+        this.allselect=new Set();
         if(this.isunuse){
           let eventbdate =this.eventbdate
           let items = this.items;
@@ -218,10 +213,7 @@
       },
       placeConfirm(){
         for(let elem of this.currentselect){
-          if (!this.hash[elem.tableno]) {
-            this.allselect.push(elem);
-            this.hash[elem.tableno] = true;
-          }
+          this.allselect.add(elem);
         }
 
         this.$emit('placeConfirm',this.allselect)
@@ -241,6 +233,20 @@
         }else{
           this.placecount = this.total
         }
+      },
+      filterValue(val){
+        if(this.currentselect.length>0) {
+          let select = [];
+          for (let elem of this.currentselect) {
+            select.push(elem);
+          }
+          this.$nextTick(()=>{
+            for(let elem of select){
+              this.$refs.multiplacetable.toggleRowSelection(elem);
+            }
+          })
+        }
+
       }
     }
   }

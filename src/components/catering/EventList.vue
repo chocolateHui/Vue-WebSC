@@ -236,10 +236,6 @@
       <Reason ref="Reason" @reasonConfirm="reasonConfirm"></Reason>
     </b-modal>
 
-    <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
-      <sysLog></sysLog>
-    </b-modal>
-
     <b-modal id="remarkmodal" size="lg" ref="remarkmodal" title="宴会备注" hide-footer>
       <remark></remark>
     </b-modal>
@@ -259,7 +255,6 @@
   import Reason from '../Reason.vue'
   import remark from '../remark.vue'
   import {TimePicker} from 'iview'
-  import sysLog from  '../../components/syslog.vue'
   import '../../css/imgbtn.scss'
   import '../../css/iviewpicker.css'
   Vue.use(TimePicker)
@@ -552,7 +547,6 @@
       },
     },
     components: {
-      sysLog,
       FormatInput,
       TimePicker,
       SinglePlace,

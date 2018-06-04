@@ -9,7 +9,8 @@ const index = () => import(/* webpackChunkName: "group-main" */ '../view/Index.v
 const caterList = () => import(/* webpackChunkName: "group-main" */ '../view/CaterList.vue')
 const report = () => import(/* webpackChunkName: "group-main" */ '../view/Report.vue')
 // 宴会预订相关
-const NewCatering = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/NewCatering.vue')
+const NewCateringReserve = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/NewCateringReserve.vue')
+const NewCateringQuery = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/NewCateringQuery.vue')
 const CateringInfo = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/CateringInfo.vue')
 const ScEventItem = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/ScEventItem.vue')
 // 报表相关
@@ -30,6 +31,7 @@ const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/ma
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 const BaseCode = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/BaseCode.vue')
 const ScItemInfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/sciteminfo.vue')
+const setjob = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/setjob.vue')
 Vue.use(Router)
 
 let loadingInstance
@@ -67,7 +69,7 @@ const router = new Router({
         {
           path: '/main/newQuery',
           name: '新建宴会问询',
-          component: NewCatering,
+          component: NewCateringQuery,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -75,7 +77,7 @@ const router = new Router({
         {
           path: '/main/newReserve',
           name: '新建宴会预订',
-          component: NewCatering,
+          component: NewCateringReserve,
           meta: {
             keepAlive: true // 需要被缓存
           }
@@ -173,7 +175,8 @@ const router = new Router({
             },
             {
               path: '/main/maint/hoteldept',
-              name: '岗位设置'
+              name: '岗位设置',
+              component: setjob
             },
             {
               path: '/main/maint/sysoption',
