@@ -39,8 +39,8 @@ const actions = {
   gethotels: function (store) {
     axiosinstance.get(methodinfo.getloginhotellist, {
       params: {
-        groupid: state.groupid,
-        username: state.username.toUpperCase()
+        groupid: store.getters.groupid,
+        username: store.getters.username.toUpperCase()
       }
     }).then(function (response) {
       if (response.status === 200) {
