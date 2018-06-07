@@ -100,16 +100,11 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="85">
+            width="100">
             <template slot-scope="scope">
-              <b-form inline class="paddingleft0 paddingbottom0">
-                <b-button
-                  size="sm"
-                  variant="primary" @click="deletel(scope.row)" style="margin-top:0px">删</b-button>
-                <b-button
-                  size="sm"
-                  variant="primary" @click="saveitem(scope.row)" style="margin-top:0px">存</b-button>
-              </b-form>
+                <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
+                <b-button size="mini" class="Delete-button image-btn" type="danger" @click="saveitem(scope.row)"></b-button>
+                <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log2(scope)"></b-button>
             </template>
           </el-table-column>
         </el-table>
@@ -123,6 +118,9 @@
       <b-modal id="remarkmodal" ref="remarkmodal"  size="lg" title="宴会备注" hide-footer>
         <remark></remark>
       </b-modal>
+      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+        <sysLog></sysLog>
+      </b-modal>
     </b-container>
   </div>
 </template>
@@ -134,6 +132,8 @@
   import MultiEvent from  '../../components/sceventitem/MultiEvent.vue'
   import SingleEvent from  '../../components/sceventitem/SingleEvent.vue'
   import remark from  '../../components/remark.vue'
+  import '../../css/imgbtn.scss'
+  import sysLog from  '../../components/syslog.vue'
 
   export default {
 
@@ -228,7 +228,8 @@
       SingleEvent,
       Numberinput,
       MultiEvent,
-      remark
+      remark,
+      sysLog
     },
     methods: {
       updateValue(event) {
@@ -485,6 +486,13 @@
             }
           })
         })
+      },
+      log2(scope){
+        let row  = scope.row;
+        let logkey =row.inumber+'|'+row.eventid  +'|'+ this.$store.getters.hotel.hotelid+'|'+this.$store.getters.groupid;
+        this.$store.commit('setLogtype','ScEventitem');
+        this.$store.commit('setLogKey',logkey);
+        this.$root.$emit('bv::show::modal', 'logmodal');
       },
     }
 
