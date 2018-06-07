@@ -7,15 +7,16 @@
           :data="searchitems"
           border
           highlight-current-row
-          style="width: 100%">
-          <el-table-column
-            v-for="item in fildes"
-            :prop="item.prop"
-            :label="item.label"
-            :width="item.width"
-            :sortable="item.sortable"
-            :show-overflow-tooltip="item.showTip" :key="item.prop">
-          </el-table-column>
+        @current-change="handleChange"
+        style="width: 100%">
+        <el-table-column
+          v-for="item in fildes"
+          :prop="item.prop"
+          :label="item.label"
+          :width="item.width"
+          :sortable="item.sortable"
+          :show-overflow-tooltip="item.showTip" :key="item.prop">
+        </el-table-column>
         </el-table>
       </b-col>
       <b-col sm="9" class="expand-col">
@@ -38,7 +39,7 @@
                 <b-input-group-text slot="append">
                   <span>分钟</span>
                 </b-input-group-text>
-                <b-form-input type="text" v-model="expand.empno"></b-form-input>
+                <b-form-input type="text" v-model="selectedexpand.setup"></b-form-input>
               </b-input-group>
             </b-form-group>
             <b-form-group label="面积:" :label-cols="4" horizontal>
@@ -46,14 +47,25 @@
                 <b-input-group-text slot="append">
                   <span>平米</span>
                 </b-input-group-text>
-                <b-form-input type="text" v-model="expand.empno"></b-form-input>
+                <b-form-input type="text" v-model="selectedexpand.squre"></b-form-input>
               </b-input-group>
             </b-form-group>
             <b-form-group label="位置:" :label-cols="4" horizontal>
-              <b-form-input type="text"
-                            v-model="expand.email"
-                            placeholder="">
-              </b-form-input>
+              <el-select v-model="selectedexpand.location">
+                <el-option
+                  v-for="item in locationdata"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </b-form-group>
+            <b-form-group label="共享:" :label-cols="4" horizontal>
+              <b-form-checkbox id="checkbox1"
+                               v-model="selectedexpand.share"
+                               value="T"
+                               unchecked-value="F">
+              </b-form-checkbox>
             </b-form-group>
           </b-col>
           <b-col sm="6">
@@ -62,20 +74,32 @@
                 <b-input-group-text slot="append">
                   <span>分钟</span>
                 </b-input-group-text>
-                <b-form-input type="text" v-model="expand.empno"></b-form-input>
+              <b-form-input type="text" v-model="selectedexpand.setdown"></b-form-input>
               </b-input-group>
             </b-form-group>
             <b-form-group label="场地类型:" :label-cols="4" horizontal>
-              <b-form-input id="exampleInput2"
-                            type="text"
-                            v-model="expand.empname">
-              </b-form-input>
+              <el-select v-model="selectedexpand.kind">
+                <el-option
+                  v-for="item in kinddata"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+              <!--<b-form-input id="exampleInput2"-->
+              <!--type="text"-->
+              <!--v-model="expand.kind">-->
+              <!--</b-form-input>-->
             </b-form-group>
             <b-form-group label="场地风格:" :label-cols="4" horizontal>
-              <b-form-input type="text"
-                            v-model="expand.email"
-                            placeholder="">
-              </b-form-input>
+              <el-select v-model="selectedexpand.style">
+                <el-option
+                  v-for="item in styledata"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </b-form-group>
           </b-col>
         </b-row>
@@ -86,6 +110,9 @@
             :file-list="fileList2"
             :http-request="fileupload"
             :on-preview="handlePictureCardPreview"
+            :on-exceed="handleExceed"
+            :before-upload="beforeupload"
+            :limit="5"
             :on-remove="handleRemove">
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -96,23 +123,32 @@
       </b-col>
     </b-row>
     <b-row class="btn-row">
-      <b-col sm="4"></b-col>
-      <b-col sm="6">
-        <b-button type="submit" variant="primary">保存</b-button>
+      <b-col sm="3"></b-col>
+      <b-col sm="6" style="text-align: center;">
+        <b-button type="submit" @click="newp" variant="primary">保存</b-button>
         <b-button type="submit" variant="primary">退出</b-button>
+        <b-button type="submit" @click="loglog" variant="primary">日志</b-button>
       </b-col>
     </b-row>
+
+    <el-dialog
+      title="日志"
+      id="loglog"
+      :append-to-body="true"
+      :visible.sync="dialoglogVisible">
+      <span>
+        <sysLog></sysLog>
+      </span>
+      <b-button type="primary" @click="dialoglogVisible = false">确 定</b-button>
+    </el-dialog>
   </div>
 </template>
 <script>
   import axios from 'axios'
   import methodinfo from '../../config/MethodConst.js'
+  import sysLog from  '../../components/syslog.vue'
   const fileserver = "https://files.foxhis.com/FoxhisFileServer/action?groupid=C0000001&access=dsajlkda1";
   const filetoken = "71DFD83564CD06366DA6C6E35496B61D";
-  const items = [
-    {code: '1001', cby: '宴会厅'},
-    {code: '1002', cby: '会议室'},
-  ]
   const fildes = [
     {prop: 'tableno', label: '代码', width: '70'},
     {prop: 'descript', label: '描述', width: '', sortable: false, showTip: true}
@@ -121,101 +157,283 @@
   export default {
     data () {
       return {
+        dialoglogVisible: false,
         selectedexpand:{},
-        items: this.litems,
+        items: [],
         fildes: fildes,
         fileserver:fileserver,
-        expand: {},
         eloptions: [],
         fileList2: [{name: 'xr.png', url: 'https://files.foxhis.com/FoxhisFileServer/image/C0000001/target/xr.png'+'?token='+filetoken},
           {name: 'logo.png', url: 'https://files.foxhis.com/FoxhisFileServer/image/C0000001/target/logo.png?token=71DFD83564CD06366DA6C6E35496B61D'}],
         dialogImageUrl: '',
-        dialogVisible: false
+        dialogVisible: false,
+        kinddata:[],
+        styledata:[],
+        locationdata:[],
+        hotelid:"C0000001",
+        fileurl:"https://files.foxhis.com/FoxhisFileServer/image/C0000001/target/",
+        token:'?token='+filetoken,
+        change :true
       }
     },
     props: {
-      pkid: {
-        type: String
-      },
-      litems:Array
+      pccode:String
     },
     computed: {
       searchitems: function () {
         return this.items;
       }
     },
+    mounted() {
+        this.getbasecodedata("sc_place_kind");
+        this.getbasecodedata("sc_place_style");
+        this.getbasecodedata("sc_place_location");
+
+      },
     watch:{
-      litems(val,oldval){
-        this.items = val;
-        this.selectedexpand = val[0];
-        this.$nextTick(function(){
-          this.$refs.logtable.setCurrentRow( this.items[0]);
-        })
+        pccode(val,oldval){
+          this.refreshdata();
+        },
+        selectedexpand(val,oldval){
+          if(val.tableno!=oldval.tableno){
+            this.refreshpic();
+          }
+        }
       },
-      selectedexpand(){
-        this.refreshdata();
-      }
-    },
     methods: {
-      handleRemove(file, fileList) {
-        console.log(file.name);
-        let url = this.fileserver +'&method=delete&filename=target/'+file.name;
-        let config = {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }
-        // 添加请求头
-        axios.post(url, {},config)
-          .then(response => {
-            console.log(response)
-          }).catch(response => {
-          console.log(response)
-        })
-      },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      },
-      fileupload(action){
-        let param = new FormData() // 创建form对象
-        param.append('topath', 'target') // 添加form表单中其他数据
-        param.append('file', action.file, action.file.name) // 通过append向form对象添加数据
-        let config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-        let url = this.fileserver +'&method=upload';
-        // 添加请求头
-        axios.post(url, param, config)
-          .then(response => {
-            console.log(response.data)
-          }).catch(response => {
-          console.log(response)
-        })
-      },
-      refreshdata(){
-        console.log("xxxxxxxx");
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['username'] = this.$store.getters.username
-          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.getplaceexpandinfo, {
-            pccode: this.selectedexpand.pccode,
-            tableno:this.selectedexpand.tableno
-          }).then((response)=> {
-            if (response.data.errorCode=="0") {
-              this.expand = {};
-              if(typeof(response.data.expands) != "undefined"){
-                console.log(response.data);
-                this.expand = response.data.expands[0];
-              }
+        handleRemove(file, fileList) {
+          let url = this.fileserver + '&method=delete&filename=target/' + file.name;
+          let config = {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
             }
+          }
+          let uuid = file.uuid;
+          console.log(uuid);
+          // 添加请求头
+          axios.post(url, {}, config)
+            .then(response => {
+              console.log(response)
+              if (response.data.result === "yes") {
+                this.deletepic(uuid);
+              }
+            }).catch(response => {
+            console.log(response)
           })
-        })
-      }
-    }
+        },
+        handlePictureCardPreview(file) {
+          this.dialogImageUrl = file.url;
+          this.dialogVisible = true;
+        },
+        beforeupload(files) {
+          if (!this.selectedexpand.tableno) {
+            this.$message.error({
+              message: '请选择一个场地'
+            });
+            return false;
+          }
+          let filename = this.selectedexpand.tableno + files.name;
+          for (let s of this.fileList2) {
+            let name = s.name;
+            if (filename === name) {
+              this.$message.error({
+                message: '图片名重复'
+              });
+              return false;
+            }
+          }
+        },
+
+        fileupload(action) {
+          let param = new FormData() // 创建form对象
+          let filename = this.selectedexpand.tableno + action.file.name;
+          param.append('topath', 'target') // 添加form表单中其他数据
+          param.append('file', action.file, filename) // 通过append向form对象添加数据
+          console.log(action.file.name);
+          let config = {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+          let url = this.fileserver + '&method=upload';
+          // 添加请求头
+          console.log(url);
+          axios.post(url, param, config)
+            .then(response => {
+              if (response.data.result === "success") {
+                this.savepic(filename);
+              }
+            }).catch(response => {
+            console.log(response)
+          })
+        },
+        handleExceed(files, fileList) {
+          this.$message.error({
+            message: '图片最多为5张'
+          });
+        },
+        refreshdata() {
+          console.log(this.pccode);
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+            this.$http.post(methodinfo.getplaceexpandinfo, {
+              pccode: this.pccode,
+            }).then((response) => {
+              if (response.data.errorCode == "0") {
+                this.selectedexpand = {};
+                if (typeof(response.data.expands) != "undefined") {
+                  this.items = response.data.expands;
+                  this.selectedexpand = response.data.expands[0];
+                  this.$nextTick(function () {
+                    this.$refs.logtable.setCurrentRow(this.selectedexpand);
+                  })
+                }
+              }
+            })
+          })
+
+        },
+        refreshpic() {
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+            this.$http.post(methodinfo.getplacepicinfo, {
+              tableno: this.selectedexpand.tableno
+            }).then((response) => {
+              if (response.data.errorCode == "0") {
+                if (typeof(response.data.pics) != "undefined") {
+                  let data = [];
+                  for (let elem of response.data.pics) {
+                    let type = {}
+                    type["name"] = elem.pic;
+                    type["uuid"] = elem.uuid;
+                    type["url"] = this.fileurl + elem.pic + this.token;
+                    data.push(type);
+                  }
+                  this.fileList2 = data;
+                  console.log(data)
+                }
+                else {
+                  this.fileList2 = [];
+                }
+              }
+            })
+          })
+        },
+        getbasecodedata(cat) {
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+            this.$http.post(methodinfo.getbasecodelist, {
+              cat: cat
+            }).then((response) => {
+              if (response.data.errorCode == "0") {
+                let data = [];
+                if (typeof(response.data.basecodes) != "undefined") {
+                  for (let elem of response.data.basecodes) {
+                    let type = {}
+                    type["value"] = elem.code;
+                    type["label"] = elem.descript;
+                    data.push(type);
+                  }
+                  if (cat === "sc_place_kind") {
+                    this.kinddata = data;
+                  }
+                  if (cat === "sc_place_style") {
+                    this.styledata = data;
+                  }
+                  if (cat === "sc_place_location") {
+                    this.locationdata = data;
+                  }
+                }
+              }
+            })
+          })
+        },
+
+        newp() {
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+            this.$http.post(methodinfo.saveplaceexpandinfo, this.selectedexpand).then((response) => {
+              if (response.data.errorCode == "0") {
+                this.$message({
+                  type: 'success',
+                  message: '保存成功!'
+                });
+              }
+            })
+          })
+        },
+        savepic(filename) {
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+            this.$http.post(methodinfo.saveplacepicinfo, {
+              tableno: this.selectedexpand.tableno,
+              pic: filename,
+            }).then((response) => {
+              if (response.data.errorCode == "0") {
+                this.$message({
+                  type: 'success',
+                  message: '保存成功!'
+                });
+                this.refreshpic();
+              }
+              else {
+                this.$message.error({
+                  message: response.data.errorMessage
+                });
+              }
+            })
+          })
+        },
+        deletepic(uuid) {
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+            this.$http.post(methodinfo.deleteplacepicinfo, {
+              tableno: this.selectedexpand.tableno,
+              uuid: uuid,
+            }).then((response) => {
+              if (response.data.errorCode == "0") {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                });
+              }
+              else {
+                this.$message.error({
+                  message: response.data.errorMessage
+                });
+              }
+            })
+          })
+        },
+        handleChange(val) {
+          console.log(val);
+          if (val) {
+            this.selectedexpand = val;
+          }
+        },
+        loglog(){
+          let logkey =this.selectedexpand.tableno +'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
+          this.$store.commit('setLogtype','ScPalceExpand');
+          this.$store.commit('setLogKey',logkey);
+          this.dialoglogVisible = true;
+        }
+      },
+    components: {
+      sysLog
+    },
+
   }
 </script>
 <style lang="scss"  type="text/scss">
@@ -223,6 +441,9 @@
     body, span, input, label {
       font-family: 'Open Sans',sans-serif;
       overflow-y: inherit;
+    }
+    .custom-control {
+      padding-top: 0.5rem;
     }
     .el-table {
       td, th {
@@ -262,5 +483,14 @@
     .btn-row{
       padding-top: 5px;
     }
+
+
+
   }
+  #loglog{
+    #syslog{
+      padding-bottom: 50px;
+    }
+  }
+
 </style>

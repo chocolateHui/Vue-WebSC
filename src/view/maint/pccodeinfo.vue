@@ -102,26 +102,26 @@
             @cell-click="tableDbEdit"
             style="width: 100%;font-size: 12px">
             <el-table-column
-            prop="tableno"
-            label="场地代码"
-            width="80"
-            sortable
-            show-overflow-tooltip>
+              prop="tableno"
+              label="场地代码"
+              width="80"
+              sortable
+              show-overflow-tooltip>
               <template slot-scope="scope" >
-                <div @change="changeplace(scope)" v-if="scope.row.add === 'T'">
-                  <el-input  v-model="scope.row.tableno" placeholder=""></el-input>
+                <div  v-if="scope.row.add === 'T'">
+                  <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.tableno" placeholder=""></el-input>
                 </div>
                 <div v-else>
                   <el-input disabled v-model="scope.row.tableno" placeholder=""></el-input>
                 </div>
               </template>
-          </el-table-column>
+            </el-table-column>
             <el-table-column
               prop="descript"
               label="中文描述"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input @change="changeplace(scope)" v-model="scope.row.descript" placeholder=""></el-input>
+                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -129,7 +129,7 @@
               label="英文描述"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input  @change="changeplace(scope)" v-model="scope.row.descript1" placeholder=""></el-input>
+                <el-input  @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript1" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -137,7 +137,7 @@
               label="第三描述"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input @change="changeplace(scope)" v-model="scope.row.descript2" placeholder=""></el-input>
+                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript2" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -145,8 +145,8 @@
               label="人数"
               width="60"
               show-overflow-tooltip>
-              <template slot-scope="scope">
-                <Numberinput class="el-input__inner" type="number" maxlength="5" @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></Numberinput>
+              <template slot-scope="scope" >
+                <Numberinput  @focus="changesta()" class="el-input__inner" type="number" maxlength="5" @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></Numberinput>
                 <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
               </template>
             </el-table-column>
@@ -173,20 +173,21 @@
             </el-table-column>
             <el-table-column
               label="操作"
-              width="55">
+              width="70">
               <template slot-scope="scope">
-                <b-form inline class="paddingleft0 paddingbottom0">
-                  <b-button
-                    size="sm"
-                    variant="primary" @click="deletel(scope.row)" style="margin-top:0px">删</b-button>
-                </b-form>
+
+                  <b-form inline>
+                    <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
+                    <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
+                  </b-form>
+
               </template>
             </el-table-column>
           </el-table>
         </b-col>
         <b-col class="paddingright0 paddingleft5 maxwidth15">
           <div>
-            <b-button-group vertical>
+            <b-button-group id="btng" vertical>
               <b-button :disabled="btnshow.new" @click="newp" variant="primary">新建营业点</b-button>
               <b-button :disabled="btnshow.modify" @click="modifyp" variant="primary">修改营业点</b-button>
               <b-button :disabled="btnshow.delete" @click="deletep" variant="primary">删除营业点</b-button>
@@ -194,6 +195,7 @@
               <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
               <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
               <b-button  @click="expand" variant="primary">扩展属性</b-button>
+              <b-button  @click="log2" variant="primary">日志</b-button>
             </b-button-group>
           </div>
         </b-col>
@@ -201,33 +203,33 @@
       <b-modal id="placemodal" ref="myModalRef" hide-footer title="修改从属场地">
 
         <div class="d-block text-center">
-            <el-input
+          <el-input
             style="width: 30%;float: right; padding-bottom: 0.5rem;"
             prefix-icon="el-icon-search"
             v-model="seachplace">
           </el-input>
-            <el-table
-              ref="multipleTable"
-              :data="searchitems"
-              tooltip-effect="dark"
-              style="width:100%"
-              height="350"
-              border
-              stripe
-              @selection-change="handleSelectionChange">
-              <el-table-column
-                type="selection"
-                width="55">
-              </el-table-column>
-              <el-table-column
-                v-for="item in topplacefildes"
-                :prop="item.prop"
-                :label="item.label"
-                :width="item.width"
-                :sortable="item.sortable"
-                :show-overflow-tooltip="item.showTip" :key="item.prop">
-              </el-table-column>
-            </el-table>
+          <el-table
+            ref="multipleTable"
+            :data="searchitems"
+            tooltip-effect="dark"
+            style="width:100%"
+            height="350"
+            border
+            stripe
+            @selection-change="handleSelectionChange">
+            <el-table-column
+              type="selection"
+              width="55">
+            </el-table-column>
+            <el-table-column
+              v-for="item in topplacefildes"
+              :prop="item.prop"
+              :label="item.label"
+              :width="item.width"
+              :sortable="item.sortable"
+              :show-overflow-tooltip="item.showTip" :key="item.prop">
+            </el-table-column>
+          </el-table>
 
         </div>
         <b-row style="float: right;">
@@ -236,8 +238,11 @@
         </b-row>
 
       </b-modal>
-      <b-modal id="logmodal" ref="placeexpandmodel" size="lg" title="操作日志" ok-only ok-title="确认">
-        <placeexpand :litems="placedata"></placeexpand>
+      <b-modal id="placeexpandmodal" ref="placeexpandmodel" size="lg" title="操作日志" hide-footer ok-only ok-title="确认">
+        <placeexpand :pccode="pcinfo.pccode"></placeexpand>
+      </b-modal>
+      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+        <sysLog></sysLog>
       </b-modal>
     </b-container>
   </div>
@@ -247,6 +252,7 @@
   import Numberinput from  '../../components/FormatInput.vue'
   import methodinfo from '../../config/MethodConst.js'
   import placeexpand from '../maint/placeexpand.vue'
+  import sysLog from  '../../components/syslog.vue'
 
   const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
   const newshow = {  pccodedisabled: false, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:true,tablesdisabled:true}
@@ -312,12 +318,13 @@
         // 要展开的行，数值的元素是row的key值
         tableH: document.body.clientHeight-205,//减去header的60px
         num:0,
+        change:"",
       }
     },
 
     mounted() {
-       this.getpccodedata();
-       this.getlayoutdata();
+      this.getpccodedata();
+      this.getlayoutdata();
     },
     computed: {
       changeshow:function () {
@@ -339,9 +346,9 @@
           return  s;
         }else{
           return Object.assign([],this.placedata).filter( placedata => {
-              if (placedata.tableno.indexOf(this.seachplace)>=0||placedata.descript.indexOf(this.seachplace)>=0){
-                return placedata;
-              }
+            if (placedata.tableno.indexOf(this.seachplace)>=0||placedata.descript.indexOf(this.seachplace)>=0){
+              return placedata;
+            }
           });
         }
       },
@@ -372,7 +379,6 @@
                   })
                 }
                 else{
-
                   for(let pc of response.data.pccodes){
                     if(pc.pccode == rows.pccode){
                       this.$nextTick(function(){
@@ -428,16 +434,16 @@
               if(typeof(response.data.places) != "undefined"){
                 for(let places of response.data.places){
                   var types = {};
+
                   types = places;
                   if(!places.layout){
                     types["layoutarr"] = [];
                   }
                   else{
-                     types["layoutarr"] = places.layout.split(',');
+                    types["layoutarr"] = places.layout.split(',');
                   }
                   this.placedata .push(types);
                 }
-
               }
             }
           })
@@ -445,6 +451,7 @@
       },
       handleCurrentChange(val) {
         this.currentRow = val;
+        this.change="T";
       },
       setCurrent(row) {
         this.$refs.aaa.setCurrentRow(row);
@@ -455,7 +462,7 @@
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.deletepccode, {
-          pccode:this.pcinfo.pccode
+            pccode:this.pcinfo.pccode
           }).then((response)=> {
             if (response.data.errorCode=="0") {
               this.$message({
@@ -511,20 +518,20 @@
             kind:item.kind,
             tables:item.tables
           }).then((response)=> {
-              if(response.data.errorCode=="0"){
-                this.$message({
-                  type: '保存',
-                  message: '保存成功!'
-                });
-                this.getpccodedata(this.pcinfo);
-                this.btnshow = btnshow;
-              }
-             else{
-                this.$message.error({
-                  type: '保存',
-                  message:response.data.errorMessage
-                });
-              }
+            if(response.data.errorCode=="0"){
+              this.$message({
+                type: '保存',
+                message: '保存成功!'
+              });
+              this.getpccodedata(this.pcinfo);
+              this.btnshow = btnshow;
+            }
+            else{
+              this.$message.error({
+                type: '保存',
+                message:response.data.errorMessage
+              });
+            }
           })
         })
       },
@@ -539,30 +546,42 @@
             places:item
           }).then((response)=> {
 
-              if(response.data.errorCode=="0"){
-                this.$message({
-                  type: '保存',
-                  message: '保存成功!'
-                });
-                this.getplacedata(pccode);
-                this.btnshow = btnshow;
-              }
-              else{
-                this.$message.error({
-                  type: '保存',
-                  message:response.data.errorMessage
-                });
-              }
+            if(response.data.errorCode=="0"){
+              this.$message({
+                type: '保存',
+                message: '保存成功!'
+              });
+              this.getplacedata(pccode);
+              this.changedplaceinfo = {};
+              this.placesavetype = ""
+              this.change="T";
+
+            }
+            else{
+              this.$message.error({
+                type: '保存',
+                message:response.data.errorMessage
+              });
+            }
 
           })
         })
       },
+      changesta(){
+        console.log("changesta")
+        this.change="";
+      },
       changeplace(scope) {
-
         if(scope.row.add!="T"){
-          this.changedplaceinfo[scope.row.tableno] = scope.row;
-          this.placesavetype="update";
-
+          if(this.change==="T"){
+          }
+          else{
+            console.log(scope.row);
+            this.changedplaceinfo[scope.row.tableno] = scope.row;
+            this.placesavetype="update";
+            this.oldcurrentRow = Object.assign({},this.currentRow);
+            console.log( this.changedplaceinfo);
+          }
         }
         else{
 
@@ -626,6 +645,7 @@
         this.btnshow = btnnewshow;
       },
       cancel:function () {
+        this.changedplaceinfo = {};
         this.showchange = Object.assign({},show);
         this.getpccodedata(this.oldcurrentRow);
         this.btnshow = btnshow;
@@ -696,7 +716,7 @@
       handleSelectionChange(val) {
         var a ="";
         for(var i=0;i<val.length;i++){
-           a = a+","+val[i].tableno;
+          a = a+","+val[i].tableno;
         }
         a = a.substring(1);
         this.multipleSelection = a;
@@ -714,10 +734,10 @@
       rowset(){
 
         this.$set( this.placeRow,"toplace",this.multipleSelection)
-            this.$nextTick(function(){
-              this.placesavetype = "update";
-            })
-           this.hideModal();
+        this.$nextTick(function(){
+          this.placesavetype = "update";
+        })
+        this.hideModal();
       },
       tableDbEdit(row, column, cell, event) {
         this.multipleSelection = "";
@@ -752,11 +772,25 @@
       expand:function () {
         this.$refs.placeexpandmodel.show()
       },
-
+      log(scope){
+        let row = scope.row;
+        let logkey =this.$store.getters.hotel.hotelid +'|'+ row.tableno +'|'+this.$store.getters.groupid;
+        this.$store.commit('setLogtype','PosTblsta');
+        this.$store.commit('setLogKey',logkey);
+        this.$root.$emit('bv::show::modal', 'logmodal');
+      },
+      log2(){
+        console.log(this.pcinfo);
+        let logkey =this.$store.getters.hotel.hotelid +'|'+ this.pcinfo.pccode +'|'+this.$store.getters.groupid;
+        this.$store.commit('setLogtype','PosPccode');
+        this.$store.commit('setLogKey',logkey);
+        this.$root.$emit('bv::show::modal', 'logmodal');
+      },
     },
     components: {
       Numberinput,
-      placeexpand
+      placeexpand,
+      sysLog
     },
     watch: {
       currentRow(newVal, oldVal) {
@@ -772,7 +806,7 @@
         if(newVal==="update"){
           this.btnshow = btnnewshow;
         }
-       else{
+        else{
           this.btnshow = btnshow;
         }
       },
@@ -785,11 +819,12 @@
     .el-date-editor .el-range-separator{
       padding: 0;
     }
-
-    .btn{
-      width: 90px;
-      margin-top:5px ;
-      border-radius: 0.25rem;
+    #btng{
+      .btn{
+        width: 90px;
+        margin-top:5px ;
+        border-radius: 0.25rem;
+      }
     }
     .container {
       padding-right: 0px;
@@ -816,35 +851,35 @@
     .paddingtop5{
       padding-top: 5px;
     }
-      table{
+    table{
+      border-color: #dee2e6;
+      th,td{
+        padding: 0;
         border-color: #dee2e6;
-        th,td{
-          padding: 0;
-          border-color: #dee2e6;
-          text-align: center;
-        }
-         .cell {
-          padding-left: 5px;
-          padding-right: 5px;
-        }
-
+        text-align: center;
+      }
+      .cell {
+        padding-left: 5px;
+        padding-right: 5px;
       }
 
-      .el-input__inner{
-        height: 36px;
-      }
-      .el-table .caret-wrapper{
-        width: 20px;
-      }
-      .el-table__expanded-cell{
-        padding: 5px!important;
-        box-shadow: 1px 5px 5px #dee2e6;
-      }
+    }
+
+    .el-input__inner{
+      height: 36px;
+    }
+    .el-table .caret-wrapper{
+      width: 20px;
+    }
+    .el-table__expanded-cell{
+      padding: 5px!important;
+      box-shadow: 1px 5px 5px #dee2e6;
+    }
     .row{
       margin-right: 2px;
     }
     .form-row > .col, .form-row > [class*="col-"] {
-       padding-right: 0px;
+      padding-right: 0px;
     }
     .modal-body {
       padding: 0.5rem;
