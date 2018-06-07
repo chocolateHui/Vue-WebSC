@@ -1,10 +1,10 @@
 
 const methodinfo = {
   /*
-     *
-     * 公共模块相关接口
-     *
-     */
+   *
+   * 工号相关接口
+   *
+   */
 //  登录
   login: '/SC/reserve/sysempno/login',
   // 修改密码
@@ -215,6 +215,28 @@ const methodinfo = {
    */
   // 获取业务日志
   getSCEntityLog: '/SC/reserve/sclog/getSCEntityLog',
+
+
+  /*
+ 报表维护相关
+ */
+  // 订单流失统计（宴会事务取消列表）
+  getbtrevocationlist: '/SC/reserve/report/getbtrevocationlist',
+  // 分类预测汇总报表（按销售员）
+  getincomereportlist: '/SC/reserve/report/getincomereportlist',
+  // 分类预测明细表（汇总表穿透）
+  getsaleincomereportlist: '/SC/reserve/report/getsaleincomereportlist',
+
+
+  /*
+ 报表数据项维护相关
+ */
+  // 获取报表数据项列表
+  getnamedeflist: '/SC/reserve/basecode/getnamedeflist',
+  // 批量更新报表数据项
+  savenamedefs: '/SC/reserve/basecode/savenamedefs',
+  // 删除报表数据项
+  deletenamedef: '/SC/reserve/basecode/deletenamedef',
   /*
  接口相关
  */
