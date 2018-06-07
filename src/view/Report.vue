@@ -19,14 +19,18 @@
         reports: [
           { route: '/main/lostreport', title: '订单流失统计',descript:"订单流失统计"},
           { route: '/main/fuincome', title: '分类预测汇总报表',descript:"分类预测汇总报表"},
-          { route: '/main/newReserve', title: '分类预测明细表',descript:"分类预测明细表"},
+          { route: '/main/fuincomebysaleid', title: '分类预测明细表',descript:"分类预测明细表",sale:"xxxxx",begin:"xxxx"},
           { route: '/main/placeDistribution', title: '场地利用率分析',descript:"场地利用率分析"}
         ]
       };
     },
     methods: {
       openreport: function (report) {
-        this.$router.push({path:report.route})
+        if (report.hasOwnProperty('sale')) {
+          this.$router.push({name: "分类预测明细表", params: {sale: report.sale,begin:report.begin}})
+        } else {
+          this.$router.push({path: report.route})
+        }
       }
     },
   }
