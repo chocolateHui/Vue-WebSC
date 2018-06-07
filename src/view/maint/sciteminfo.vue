@@ -302,6 +302,7 @@
     { value: '2', label: '赠送项目' },
     { value: '3', label: '部门' },
     { value: '4', label: '场租' },
+    { value: '5', label: '餐饮' },
   ]
   const deptarry = [
     { value: 'GM', label: '总经理办公室' },
