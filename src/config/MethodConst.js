@@ -40,6 +40,8 @@ const methodinfo = {
   getsysoption: '/PUB/sysoption/getsysoption',
   // 获取系统参数列表
   getsysoptionlist: '/PUB/sysoption/getsysoptionlist',
+  // 保存更新系统参数
+  savesysoption: '/PUB/sysoption/savesysoption',
   // 获取销售员列表
   getsaleidlist: '/PUB/saleid/getsaleidlist',
   // 获取酒店信息
