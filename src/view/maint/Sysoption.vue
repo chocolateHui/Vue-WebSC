@@ -142,16 +142,8 @@
       this.scDoCheck1 = Object.assign({},this.scDoCheck);
       this.scMessageUrl1 = Object.assign({},this.scMessageUrl);
       this.scEoSigntime1 = Object.assign({},this.scEoSigntime);
-//      this.saveSysoption1 = Object.assign({},this.saveSysoption);
-      console.log(this.isToPos1.val)
     },
     methods: {
-//      savesysoption:function () {
-//        this.$store.dispatch('encrypttoken').then(() => {
-//          //获取工号信息,完成后进行路由
-//          this.$store.dispatch('saveSysoption')
-//        })
-//      },
       commitSysoption1:function () {
         this.$store.dispatch('encrypttoken').then(() => {
           //获取工号信息,完成后进行路由
