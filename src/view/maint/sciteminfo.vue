@@ -61,15 +61,25 @@
           </b-row>
           <b-row  style="font-size: 12px">
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="第三描述" class="mb-0">
-                <b-form-input
-                  type="text"
-                  v-model="pcinfo.descript2"
-                  :disabled="changeshow.descript2disabled"
-                  required
-                  placeholder="">
-                </b-form-input>
-              </b-form-group>
+                <b-form-group horizontal label="报表数据" class="mb-0">
+                  <!--<b-form-input-->
+                  <!--type="text"-->
+                  <!--v-model="pcinfo.tocode"-->
+                  <!--:disabled="changeshow.descript2disabled"-->
+                  <!--required-->
+                  <!--placeholder="">-->
+                  <!--</b-form-input>-->
+                  <el-select clearable v-model="pcinfo.tocode">
+                    <el-option
+                      :disabled="changeshow.descript2disabled"
+                      v-for="item in namedef"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+
+                </b-form-group>
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="项目属性" class="mb-0">
@@ -104,27 +114,27 @@
             :height="tableHeight"
             style="width: 100%;font-size: 12px">
             <el-table-column
-            prop="code"
-            label="代码"
-            width="55"
-            sortable
-            show-overflow-tooltip>
+              prop="code"
+              label="代码"
+              width="55"
+              sortable
+              show-overflow-tooltip>
               <template slot-scope="scope" >
-                <div @change="changeplace(scope)" v-if="scope.row.add === 'T'">
-                  <el-input  v-model="scope.row.code" placeholder=""></el-input>
+                <div  v-if="scope.row.add === 'T'">
+                  <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.code" placeholder=""></el-input>
                 </div>
                 <div v-else>
                   <el-input disabled v-model="scope.row.code" placeholder=""></el-input>
                 </div>
               </template>
-          </el-table-column>
+            </el-table-column>
             <el-table-column
               prop="descript"
               label="中文描述"
               sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input @change="changeplace(scope)" v-model="scope.row.descript" placeholder=""></el-input>
+                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -133,7 +143,7 @@
               sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input  @change="changeplace(scope)" v-model="scope.row.descript1" placeholder=""></el-input>
+                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript1" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -143,7 +153,7 @@
               sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <Numberinput class="el-input__inner" type="float" @change="changeplace(scope)" v-model="scope.row.price" placeholder=""></Numberinput>
+                <Numberinput class="el-input__inner" type="float" @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.price" placeholder=""></Numberinput>
                 <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
               </template>
             </el-table-column>
@@ -153,7 +163,7 @@
               width="45"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input  @change="changeplace(scope)" v-model="scope.row.unit" placeholder=""></el-input>
+                <el-input  @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.unit" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -162,7 +172,7 @@
               width="50"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input  @change="changeplace(scope)" v-model="scope.row.remark" placeholder=""></el-input>
+                <el-input  @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.remark" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -172,14 +182,26 @@
               width="80"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-select v-model="scope.row.deptno"  @change=" handlelaySelectionChange(scope)">
+                <div  v-if="pcinfo.type === '3'">
+                 <el-select v-model="scope.row.deptno"  @change=" handlelaySelectionChange(scope)">
                   <el-option
-                    v-for="item in tableData3"
+                    v-for="item in deptarry"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
                   </el-option>
                 </el-select>
+                </div>
+                <div v-else>
+                  <el-select v-model="scope.row.deptno"  @change=" handlelaySelectionChange(scope)">
+                    <el-option
+                      v-for="item in tableData3"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </div>
               </template>
             </el-table-column>
             <el-table-column
@@ -218,12 +240,11 @@
             </el-table-column>
             <el-table-column
               label="操作"
-              width="55">
+              width="70">
               <template slot-scope="scope">
-                <b-form inline class="paddingleft0 paddingbottom0">
-                  <b-button
-                    size="sm"
-                    variant="primary" @click="deletel(scope.row)" style="margin-top:0px">删</b-button>
+                <b-form inline >
+                  <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
+                  <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
                 </b-form>
               </template>
             </el-table-column>
@@ -231,18 +252,22 @@
         </b-col>
         <b-col class="paddingright0 paddingleft5 maxwidth15">
           <div>
-            <b-button-group vertical>
-              <b-button @click="newp" variant="primary">新建类别</b-button>
-              <b-button @click="modifyp" variant="primary">修改类别</b-button>
-              <b-button @click="deletep" variant="primary">删除类别</b-button>
-              <b-button @click="addplace" variant="primary">新建项目</b-button>
-              <b-button @click="savep" variant="primary">保存</b-button>
-              <b-button @click="cancel" variant="primary">取消</b-button>
+            <b-button-group id="btng" vertical>
+              <b-button :disabled="btnshow.new" @click="newp" variant="primary">新建类别</b-button>
+              <b-button :disabled="btnshow.modify"  @click="modifyp" variant="primary">修改类别</b-button>
+              <b-button :disabled="btnshow.delete" @click="deletep" variant="primary">删除类别</b-button>
+              <b-button :disabled="btnshow.place" @click="addplace" variant="primary">新建项目</b-button>
+              <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
+
+              <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
+              <b-button  @click="log2" variant="primary">日志</b-button>
             </b-button-group>
           </div>
         </b-col>
       </b-row>
-
+      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+        <sysLog></sysLog>
+      </b-modal>
     </b-container>
   </div>
 </template>
@@ -250,6 +275,8 @@
 <script>
   import Numberinput from  '../../components/FormatInput.vue'
   import methodinfo from '../../config/MethodConst.js'
+  import sysLog from  '../../components/syslog.vue'
+
   const show = {  classcodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
   const newshow = {  classcodedisabled: false, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
   const modifyshow = {  classcodedisabled: true, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
@@ -262,6 +289,10 @@
     {  prop: 'descript', label:  '名称',width:'',sortable:true,showTip:true},
   ]
 
+  const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true}
+  const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:false,cancel:false}
+
+
   const confirm = [
     { value: 'T', label: '是' },
     { value: 'F', label: '否' },
@@ -271,37 +302,51 @@
     { value: '2', label: '赠送项目' },
     { value: '3', label: '部门' },
     { value: '4', label: '场租' },
+    { value: '5', label: '餐饮' },
+  ]
+  const deptarry = [
+    { value: 'GM', label: '总经理办公室' },
+    { value: 'HR', label: '人力资源部' },
+    { value: 'AC', label: '财务部' },
+    { value: 'FB', label: '餐饮部' },
+    { value: 'HSKP', label: '客房部' },
+    { value: 'FG', label: '工程部' },
+    { value: 'ENT', label: '康乐部' },
+    { value: 'FO', label: '前厅部' },
+    { value: 'SM', label: '销售部' },
   ]
 
   export default {
     data () {
       return {
+        namedef:[],
         classcodedata:[],
         placedata:[],
         tableData3:[],
+        deptarry:deptarry,
         classcodefildes :classcodefildes,
         confirm:confirm,
         showchange:'',
         placesavetype: '',
+        btnshow :btnshow,
         pcinfo: classcodemoren,
         typearry:typearry,
         changedplaceinfo:{},
         oldcurrentRow:null,
         classcodesavetype:"",
-        // 获取row的key值
-        getRowKeys(row) {
-          return row.empno;
-        },
+
         currentRow: null,
         placeRow: null,
         // 要展开的行，数值的元素是row的key值
         tableHeight: document.body.clientHeight-205,//减去header的60px
         num:0,
+        change:""
       }
     },
     mounted() {
-       this.getclasscodedata();
-       this.getbm();
+      this.getclasscodedata();
+      this.getbm();
+      this.getnamedef();
     },
     computed: {
       changeshow:function () {
@@ -337,7 +382,6 @@
                   })
                 }
                 else{
-                  // console.log(rows);
                   for(let pc of response.data.itemclass){
                     if(pc.classcode == rows.classcode){
                       this.$nextTick(function(){
@@ -378,6 +422,28 @@
           })
         })
       },
+      getnamedef(){
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.getnamedeflist, {
+          }).then((response)=> {
+
+            if (response.data.errorCode==="0") {
+              this.tableData3 = [];
+              if(typeof(response.data.namedefs) != "undefined"){
+                for(let items of response.data.namedefs){
+                  var types = {};
+                  types["value"]=items.code;
+                  types["label"]=items.descript;
+                  this.namedef.push(types);
+                }
+              }
+            }
+          })
+        })
+      },
       getplacedata(classcode){
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
@@ -394,7 +460,6 @@
                   types = items;
                   this.placedata .push(types);
                 }
-
               }
             }
           })
@@ -402,6 +467,7 @@
       },
       handleCurrentChange(val) {
         this.currentRow = val;
+        this.change="T";
       },
       setCurrent(row) {
         this.$refs.aaa.setCurrentRow(row);
@@ -469,19 +535,20 @@
             seq:item.seq
           }).then((response)=> {
 
-              if(response.data.errorCode=="0"){
-                this.$message({
-                  type: '保存',
-                  message: '保存成功!'
-                });
-                this.getclasscodedata(this.pcinfo);
-              }
-             else{
-                this.$message.error({
-                  type: '保存',
-                  message:response.data.errorMessage
-                });
-              }
+            if(response.data.errorCode=="0"){
+              this.$message({
+                type: '保存',
+                message: '保存成功!'
+              });
+              this.getclasscodedata(this.pcinfo);
+              this.btnshow = btnshow;
+            }
+            else{
+              this.$message.error({
+                type: '保存',
+                message:response.data.errorMessage
+              });
+            }
 
           })
         })
@@ -495,31 +562,42 @@
             scitems:item
           }).then((response)=> {
 
-              if(response.data.errorCode=="0"){
-                this.$message({
-                  type: '保存',
-                  message: '保存成功!'
-                });
-                this.getplacedata(classcode);
-              }
-              else{
-                this.$message.error({
-                  type: '保存',
-                  message:response.data.errorMessage
-                });
-              }
+            if(response.data.errorCode=="0"){
+              this.$message({
+                type: '保存',
+                message: '保存成功!'
+              });
+              this.getplacedata(this.currentRow.classcode);
+              this.changedplaceinfo = {};
+              this.change="T";
+              this.placesavetype="";
+            }
+            else{
+              this.$message.error({
+                type: '保存',
+                message:response.data.errorMessage
+              });
+            }
 
           })
         })
       },
+      changesta(){
+        this.change="";
+      },
       changeplace(scope) {
         if(scope.row.add!="T"){
-          this.changedplaceinfo[scope.row.code] = scope.row;
-          this.placesavetype="update";
+          console.log("xxxxxxxxxxx");
+          if(this.change==="T"){
+          }
+          else{
+            this.changedplaceinfo[scope.row.code] = scope.row;
+            this.placesavetype="update";
+            this.oldcurrentRow = Object.assign({},this.currentRow);
+          }
         }
         else{
           if(scope.row.code){
-
             for(var i=0;i<this.placedata.length;i++){
               var types = this.placedata[i];
               if(scope.row.code==types.code&&scope.$index!=i){
@@ -568,18 +646,23 @@
         this.oldcurrentRow = Object.assign({},this.currentRow);
         this.placedata = [];
         this.classcodesavetype ="new";
+        this.btnshow = btnnewshow;
       },
       modifyp:function () {
         this.showchange =  Object.assign({},modifyshow);
         this.oldcurrentRow = Object.assign({},this.currentRow);
         this.classcodesavetype ="update";
+        this.btnshow = btnnewshow;
       },
       cancel:function () {
+        this.changedplaceinfo = {};
         this.showchange = Object.assign({},show);
         this.getclasscodedata(this.oldcurrentRow);
+        this.placesavetype="";
       },
       addplace:function () {
-        var newplace =  Object.assign({},placemoren);
+        let newplace =  Object.assign({},placemoren);
+        newplace["classcode"] = this.currentRow.classcode;
         this.placedata.push(newplace);
         this.placesavetype = "update";
       },
@@ -639,18 +722,38 @@
           this.placesavetype="update";
         }
       },
+      log(scope){
+        let row = scope.row;
+        let logkey = row.id+'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
+        this.$store.commit('setLogtype','ScItem');
+        this.$store.commit('setLogKey',logkey);
+        this.$root.$emit('bv::show::modal', 'logmodal');
+      },
+      log2(){
+        console.log(this.pcinfo);
+        let logkey =this.pcinfo.classcode +'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
+        this.$store.commit('setLogtype','ScItemclass');
+        this.$store.commit('setLogKey',logkey);
+        this.$root.$emit('bv::show::modal', 'logmodal');
+      },
     },
     components: {
-      Numberinput
+      Numberinput,sysLog
     },
     watch: {
       currentRow(newVal, oldVal) {
-
         this.pcinfo =Object.assign({},newVal);
         if(typeof(newVal) != "undefined"&&newVal!=null){
           this.getplacedata(newVal.classcode);
           this.showchange = '';
-
+        }
+      },
+      placesavetype(newVal, oldVal){
+        if(newVal==="update"){
+          this.btnshow = btnnewshow;
+        }
+        else{
+          this.btnshow = btnshow;
         }
       },
       classcodedata(newVal, oldVal){
@@ -665,10 +768,12 @@
     .el-date-editor .el-range-separator{
       padding: 0;
     }
-    .btn{
-      width: 90px;
-      margin-top:5px ;
-      border-radius: 0.25rem;
+    #btng{
+      .btn{
+        width: 90px;
+        margin-top:5px ;
+        border-radius: 0.25rem;
+      }
     }
     .container {
       padding-right: 0px;
@@ -695,33 +800,33 @@
     .paddingtop5{
       padding-top: 5px;
     }
-      table{
+    table{
+      border-color: #dee2e6;
+      th,td{
+        padding: 0;
         border-color: #dee2e6;
-        th,td{
-          padding: 0;
-          border-color: #dee2e6;
-          text-align: center;
-        }
-         .cell {
-          padding-left: 5px;
-          padding-right: 5px;
-        }
+        text-align: center;
       }
-      .el-input__inner{
-        height: 36px;
+      .cell {
+        padding-left: 5px;
+        padding-right: 5px;
       }
-      .el-table .caret-wrapper{
-        width: 20px;
-      }
-      .el-table__expanded-cell{
-        padding: 5px!important;
-        box-shadow: 1px 5px 5px #dee2e6;
-      }
+    }
+    .el-input__inner{
+      height: 36px;
+    }
+    .el-table .caret-wrapper{
+      width: 20px;
+    }
+    .el-table__expanded-cell{
+      padding: 5px!important;
+      box-shadow: 1px 5px 5px #dee2e6;
+    }
     .row{
       margin-right: 2px;
     }
     .form-row > .col, .form-row > [class*="col-"] {
-       padding-right: 0px;
+      padding-right: 0px;
     }
     .modal-body {
       padding: 0.5rem;

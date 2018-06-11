@@ -5,6 +5,7 @@
         <b-col sm="8">
           <b-btn @click="addRow">新增</b-btn>
           <b-btn @click="saveBaseCode">保存</b-btn>
+          <b-btn @click="log2">删除日志</b-btn>
         </b-col>
         <b-col sm="3">
         </b-col>
@@ -48,11 +49,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column prop="seq" label="排序" width="60" align="center">
-          <template slot-scope="scope">
-            <Numberinput @input.native="rowChange(scope)" :readonly="!scope.row.editable" class="el-input__inner" type="number" maxlength="4" v-model="scope.row.seq" placeholder=""></Numberinput>
-          </template>
-        </el-table-column>
+
         <el-table-column prop="halt" label="停用" width="65" align="center">
           <template slot-scope="scope">
             <el-select @change="rowChange(scope)" :disabled="!scope.row.editable" v-model="scope.row.halt" placeholder="">
@@ -63,12 +60,19 @@
         </el-table-column>
         <el-table-column width="60" prop="cby" label="修改人" align="center"></el-table-column>
         <el-table-column width="130" prop="changed" label="修改时间" align="center"></el-table-column>
-        <el-table-column label="操作" width="50" align="center">
+        <el-table-column label="操作" width="75" align="center">
           <template slot-scope="scope">
-            <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
+            <b-form inline>
+              <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
+              <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
+            </b-form>
+
           </template>
         </el-table-column>
       </el-table>
+      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+        <sysLog></sysLog>
+      </b-modal>
     </b-container>
   </div>
 </template>
@@ -77,6 +81,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../../config/MethodConst'
   import Numberinput from  '../../components/FormatInput.vue'
+  import sysLog from  '../../components/syslog.vue'
 
   export default {
     data () {
@@ -90,7 +95,6 @@
         bodyHeight: document.body.clientHeight-168,
       }
     },
-    props:['cat'],
     created(){
       this.refreshData();
     },
@@ -102,11 +106,10 @@
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-            this.$http.post(methodinfo.getbasecodelist, {
-              cat:this.cat
+            this.$http.post(methodinfo.getnamedeflist, {
             }).then((response)=> {
               if (response.data.errorCode === "0") {
-                for(let elem of response.data.basecodes){
+                for(let elem of response.data.namedefs){
                   elem.editable = elem.hotelid.indexOf('G') < 0;
                   this.items.push(elem);
                 }
@@ -146,13 +149,12 @@
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
             this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-            this.$http.post(methodinfo.deletebasecode, {
-              cat:this.cat,
+            this.$http.post(methodinfo.deletenamedef, {
               code:row.code
             }).then((response)=>{
               if(response.data.errorCode==='0'){
                 this.$message({
-                  message: '基础代码删除成功!',
+                  message: '报表数据项删除成功!',
                   type: 'success'
                 })
                 this.items.splice(index,1);
@@ -178,26 +180,20 @@
             this.$message.error("英文描述不能为空!")
             return
           }
-          if(this.cat==='sc_time_unit'){
-            if(elem.exts1>elem.exts2){
-              this.$message.error("开始时间不能晚于结束时间!")
-              return
-            }
-          }
         }
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-          this.$http.post(methodinfo.updatebasecodes, {
-            cat:this.cat,
-            basecodes:this.editRows
+          this.$http.post(methodinfo.savenamedefs, {
+            namedefs:this.editRows
           }).then((response)=>{
             if(response.data.errorCode==='0'){
               this.$message({
                 message: '基础代码保存成功!',
                 type: 'success'
               })
+              this.refreshData();
             }else{
               this.$message.error(response.data.errorMessage)
             }
@@ -213,11 +209,23 @@
         if(this.items.length>this.currentPage*this.pageSize){
           this.currentPage = this.currentPage + 1;
         }
+      },
+      log(scope){
+        let row = scope.row;
+        let logkey =row.code +'|'+ row.hotelid +'|'+this.groupid;
+        this.$store.commit('setLogtype','ScNamedef');
+        this.$store.commit('setLogKey',logkey);
+        this.$root.$emit('bv::show::modal', 'logmodal');
+      },
+      log2(){
+        this.$store.commit('setLogtype','ScNamedef');
+         this.$store.commit('setLogKey',"deletenamedef");
+        this.$root.$emit('bv::show::modal', 'logmodal');
       }
     },
     components: {
       Numberinput,
-      TimePicker
+      sysLog
     },
     watch:{
       cat(val,oldval){

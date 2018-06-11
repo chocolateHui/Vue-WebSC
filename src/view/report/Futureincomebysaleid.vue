@@ -42,14 +42,14 @@
       <el-table
         id="datatable"
         ref="datatable"
-        :span-method="arraySpanMethod"
-        :data="searchitems"
         border
         show-summary
+        :data="searchitems"
+        :summary-method="getSummaries"
         :row-class-name="tableRowClassName"
         style="width: 100%" :max-height="tableHeight">
         <el-table-column
-          v-for="item in fildes"
+          v-for="item in fi"
           :prop="item.prop"
           :label="item.label"
           :width="item.width"
@@ -70,31 +70,31 @@
   var items = []
   const fildes = [
     {  prop: 'caterid', label:  '订单编号',width:'138',sortable:false ,showTip:true},
-    {  prop: 'name', label:  '订单名称',width:'',sortable:false,showTip:true},
+    {  prop: 'caterdes', label:  '订单名称',width:'',sortable:false,showTip:true},
+    {  prop: 'arr', label:  '到店时间',width:'100',sortable:false,showTip:true },
+    {  prop: 'dep', label:  '离店时间',width:'100',sortable:false,showTip:true },
+    {  prop: 'sta', label:  '状态',width:'100',sortable:false ,showTip:true},
     {  prop: 'cusnodes', label:  '协议单位',width:'',sortable:false,showTip:true},
-    {  prop: 'eventid', label:  '事务ID',width:'150',sortable:false,showTip:true },
-    {  prop: 'place', label:  '事务场地',width:'100',sortable:false,showTip:true },
-    {  prop: 'eventtype', label:  '事务类型',width:'100',sortable:false ,showTip:true},
-    {  prop: 'ostades', label:  '原状态',width:'90',sortable:false ,showTip:true},
-    {  prop: 'reason', label:  '取消理由',width:'100',sortable:false ,showTip:true},
+    {  prop: 'saleid', label:  '销售员编号',width:'100',sortable:false ,showTip:true},
     {  prop: 'salename', label:  '销售员',width:'90',sortable:false ,showTip:true},
-    {  prop: 'cby', label:  '操作员',width:'80',showTip:true }
   ]
 
   export default {
     data () {
       return {
         items:[],
-        fildes :fildes,
+        fi :fildes,
         totalRows: items.length,
         sortBy: null,
         sortDesc: false,
         saleid: '',
         eloptions: [],
         reportdate: '',
+        begina:'',
         tableHeight: document.body.clientHeight-190,//减去header的60px
       }
     },
+    props:['begin','sale'],
     computed: {
       ...mapGetters([
         'salelist',
@@ -103,7 +103,7 @@
         if(!this.saleid){
           return this.items;
         }else{
-          return this.items.filter( item => (~item.name.indexOf(this.saleid)));
+          return this.items.filter( item => (~item.saleid.indexOf(this.saleid)));
         }
       }
     },
@@ -139,37 +139,50 @@
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
             this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-            this.$http.post(methodinfo.getbtrevocationlist, {
+            this.$http.post(methodinfo.getsaleincomereportlist, {
               bdate:bdate,
               edate:edate
             }).then((response)=> {
               if (response.data.errorCode=="0") {
-                if(typeof(response.data.btrevocations) != "undefined"){
-                  for(let items of response.data.btrevocations){
-                    var types = {};
+                if(typeof(response.data.fileds) != "undefined"){
+                  this.items = [];
+                  this.fi = Object.assign([],fildes);
+                  for(let items of response.data.fileds){
+                    let types = {};
+
+                    types["prop"]=items.props;
+                    if(items.props===""){
+                      types["prop"] = "zzzz";
+                    }
+                    types["label"]=items.label;
+                    this.fi.push(types);
+                  }
+                  let types = {};
+                  types["prop"]="heji";
+                  types["label"]="合计";
+                  this.fi.push(types);
+                  for(let items of response.data.incomes){
+                    let types = {};
                     types["caterid"]=items.caterid;
-                    if(items.caterid==="xj"){
-                      types["caterid"] = "小计"
-                    }
-                    else if(items.caterid==="hj"){
-                      types["caterid"] = "合计"
-                    }
-                    types["name"]=items.mdesc;
-                    types["cusnodes"]=items.gedesc;
-                    types["eventid"]=items.eventid;
-                    if(typeof(items.typedes) != "undefined"){
-                      types["eventtype"]=items.typedes;
-                    }
-                    else{
-                      types["eventtype"]="";
-                    }
-                    types["salename"]=items.salename;
+                    types["caterdes"]=items.caterdes;
+                    types["sta"]=items.sta;
+                    types["arr"]=items.arr;
+                    types["dep"]=items.dep;
+                    types["cusnodes"]=items.cusnodes;
                     types["saleid"]=items.saleid;
-                    types["osta"]=items.osta;
-                    types["ostades"]=items.ostades;
-                    types["reason"]=items.cancelreason;
-                    types["cby"]=items.cby;
-                    this.items.push(types);
+                    types["salename"]=items.salename;
+                    types["heji"]=items.heji;
+                    let m = JSON.parse(items.incomejson);
+                    for(let s in m){
+                      if(s===""){
+                        types["zzzz"]=m[s];
+                      }
+                      else{
+                        types[s]=m[s];
+                      }
+
+                    }
+                    this.items.push(types)
                   }
                 }
               }
@@ -180,29 +193,40 @@
           })
         }
       },
-      arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-        console.log(columnIndex);
-        if (columnIndex === 0) {
-          if (row.caterid === '小计'||row.caterid === '合计') {
-            return {
-              rowspan: 1,
-              colspan: 6
-            };
+      getSummaries(param) {
+
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (index >= 1&&index <= 5) {
+            sums[index] = "";
+            return;
+          }
+          if (index === 6||index === 7) {
+            sums[index] = data.length;
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+            sums[index] += '';
           } else {
-            return {
-              rowspan: 1,
-              colspan: 1
-            };
+            sums[index] = 'N/A';
           }
-        }
-        if (columnIndex >=1&&columnIndex <=5) {
-          if (row.caterid === '小计'||row.caterid === '合计') {
-            return {
-              rowspan: 0,
-              colspan: 0
-            };
-          }
-        }
+        });
+
+        return sums;
       },
       tableRowClassName({row, rowIndex}) {
         if (row.caterid === '小计') {
@@ -221,10 +245,24 @@
           type["label"] = elm.name;
           this.eloptions.push(type);
         }
-      }
+      },
+      begina(val,oldval){
+        if(val==="xxxx"||val===""){
+        }
+        else{
+          let date = [];
+          date[0] = val;
+          date[1] = val;
+          this.reportdate = date;
+          this.saleid = this.sale;
+          this.getreportdata()
+        }
+
+      },
     },
     created(){
       this.getsaleid();
+      this.begina = this.begin;
     }
   }
 </script>

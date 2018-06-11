@@ -15,16 +15,7 @@
           </el-date-picker>
         </b-col>
         <b-col sm="4" class="my-1">
-          <b-form-group horizontal label="销售员" class="mb-0">
-            <el-select v-model="saleid" clearable filterable placeholder="请选择">
-              <el-option
-                v-for="item in eloptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </b-form-group>
+
         </b-col>
         <b-col sm="4" class="my-1">
           <b-form-group class="mb-0">
@@ -37,17 +28,16 @@
       <label v-else>
         <span>开始日期:{{reportdate[0]}}</span>
         <span> 结束日期:{{reportdate[1]}}</span>
-        <span>销售员:{{saleid}}</span>
       </label>
       <el-table
         id="datatable"
         ref="datatable"
-        :span-method="arraySpanMethod"
         :data="searchitems"
         border
         show-summary
         :row-class-name="tableRowClassName"
         style="width: 100%" :max-height="tableHeight">
+        <!--:span-method="arraySpanMethod"-->
         <el-table-column
           v-for="item in fildes"
           :prop="item.prop"
@@ -69,16 +59,8 @@
 
   var items = []
   const fildes = [
-    {  prop: 'caterid', label:  '订单编号',width:'138',sortable:false ,showTip:true},
-    {  prop: 'name', label:  '订单名称',width:'',sortable:false,showTip:true},
-    {  prop: 'cusnodes', label:  '协议单位',width:'',sortable:false,showTip:true},
-    {  prop: 'eventid', label:  '事务ID',width:'150',sortable:false,showTip:true },
-    {  prop: 'place', label:  '事务场地',width:'100',sortable:false,showTip:true },
-    {  prop: 'eventtype', label:  '事务类型',width:'100',sortable:false ,showTip:true},
-    {  prop: 'ostades', label:  '原状态',width:'90',sortable:false ,showTip:true},
-    {  prop: 'reason', label:  '取消理由',width:'100',sortable:false ,showTip:true},
-    {  prop: 'salename', label:  '销售员',width:'90',sortable:false ,showTip:true},
-    {  prop: 'cby', label:  '操作员',width:'80',showTip:true }
+    {  prop: 'bdate', label:  '日期',width:'138',sortable:false ,showTip:true},
+    {  prop: 'saleid', label:  '销售员',width:'',sortable:false,showTip:true},
   ]
 
   export default {
@@ -89,7 +71,6 @@
         totalRows: items.length,
         sortBy: null,
         sortDesc: false,
-        saleid: '',
         eloptions: [],
         reportdate: '',
         tableHeight: document.body.clientHeight-190,//减去header的60px
@@ -97,14 +78,9 @@
     },
     computed: {
       ...mapGetters([
-        'salelist',
       ]),
       searchitems:function () {
-        if(!this.saleid){
           return this.items;
-        }else{
-          return this.items.filter( item => (~item.name.indexOf(this.saleid)));
-        }
       }
     },
     methods: {
@@ -121,64 +97,42 @@
         /* generate file and force a download*/
         XLSX.writeFile(new_workbook, "sheetjs.xlsx");
       },
-      getsaleid(){
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch("getSale");
-        });
-      },
+
       getreportdata(){
-        if(!this.reportdate){
-          this.$message.error({
-            message:"请选择日期"
-          });
-        }
-        else{
-          let bdate = this.reportdate[0];
-          let edate = this.reportdate[1];
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.$http.defaults.headers.common['username'] = this.$store.getters.username
-            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-            this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-            this.$http.post(methodinfo.getbtrevocationlist, {
-              bdate:bdate,
-              edate:edate
-            }).then((response)=> {
-              if (response.data.errorCode=="0") {
-                if(typeof(response.data.btrevocations) != "undefined"){
-                  for(let items of response.data.btrevocations){
-                    var types = {};
-                    types["caterid"]=items.caterid;
-                    if(items.caterid==="xj"){
-                      types["caterid"] = "小计"
+          if(!this.reportdate){
+            this.$message.error({
+              message:"请选择日期"
+            });
+          }
+          else{
+            let bdate = this.reportdate[0];
+            let edate = this.reportdate[1];
+            this.$store.dispatch('encrypttoken').then(() => {
+              this.$http.defaults.headers.common['username'] = this.$store.getters.username
+              this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+              this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+              this.$http.post(methodinfo.getincomereportlist, {
+                bdate:bdate,
+                edate:edate
+              }).then((response)=> {
+                if (response.data.errorCode=="0") {
+                  if(typeof(response.data.fileds) != "undefined"){
+                    let s = []
+                    for(let items of response.data.fileds){
+                      var types = {};
+                      types["prop"]=items.props;
+                      types["label"]=items.label;
+                      s.push(types);
                     }
-                    else if(items.caterid==="hj"){
-                      types["caterid"] = "合计"
-                    }
-                    types["name"]=items.mdesc;
-                    types["cusnodes"]=items.gedesc;
-                    types["eventid"]=items.eventid;
-                    if(typeof(items.typedes) != "undefined"){
-                      types["eventtype"]=items.typedes;
-                    }
-                    else{
-                      types["eventtype"]="";
-                    }
-                    types["salename"]=items.salename;
-                    types["saleid"]=items.saleid;
-                    types["osta"]=items.osta;
-                    types["ostades"]=items.ostades;
-                    types["reason"]=items.cancelreason;
-                    types["cby"]=items.cby;
-                    this.items.push(types);
+                    this.fildes = Object.assign(fildes,s);
                   }
                 }
-              }
-              else{
-                this.items = [];
-              }
+                else{
+                  this.items = [];
+                }
+              })
             })
-          })
-        }
+          }
       },
       arraySpanMethod({ row, column, rowIndex, columnIndex }) {
         console.log(columnIndex);
@@ -214,17 +168,10 @@
       }
     },
     watch:{
-      salelist(val,oldval){
-        for(let elm of val ){
-          let type = {};
-          type["value"] = elm.code;
-          type["label"] = elm.name;
-          this.eloptions.push(type);
-        }
-      }
+
     },
     created(){
-      this.getsaleid();
+
     }
   }
 </script>
@@ -237,7 +184,7 @@
       caption-side: top;width: 100%;
       span{
         padding-left:5px
-      }
+    }
     }
     .btn{
       width: 100px;

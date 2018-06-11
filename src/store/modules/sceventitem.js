@@ -8,8 +8,8 @@ import axiosinstance from '../../common/axiosinstance'
 const state = {
   sceventitemeventid: '',
   corteventlist: [],
-  sceventitemlist: []
-
+  eventdes:'',
+  isrefresh:'',
 }
 
 // getters
@@ -18,7 +18,10 @@ const getters = {
 
   corteventlist: state => state.corteventlist,
 
-  sceventitemlist: state => state.sceventitemlist
+
+  eventdes: state => state.eventdes,
+
+  isrefresh: state => state.isrefresh
 }
 
 // actions
@@ -57,41 +60,6 @@ const actions = {
       resolve()
     })
   },
-  getsceventitem (store) {
-    return new Promise((resolve, reject) => {
-      axiosinstance.defaults.headers.common['username'] = store.getters.username
-      axiosinstance.defaults.headers.common['signature'] = store.getters.signature
-      axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
-      axiosinstance.post(methodinfo.geteventitemlist, {
-        eventid: state.sceventitemeventid,
-        sta: '0'
-      }).then(function (response) {
-        if (response.data.errorCode === '0') {
-          if (typeof (response.data.eventitems) !== 'undefined') {
-            console.log(response.data)
-            let type = []
-            for (let elm of response.data.eventitems) {
-              let event = {}
-              event = elm
-              if (typeof (elm.descript1) === 'undefined') {
-                event['descript1'] = ''
-              }
-              type.push(event)
-            }
-            store.commit('setSceventitemlist', type)
-            console.log('vuex')
-          } else {
-            store.commit('setSceventitemlist', [])
-          }
-          resolve()
-        } else {
-          console.log(response.data)
-          reject(response.data.errorMessage)
-        }
-      }).catch(function () {
-      })
-    })
-  }
 }
 
 // mutations
@@ -102,8 +70,11 @@ const mutations = {
   setCorteventlist (state, corteventlist) {
     state.corteventlist = corteventlist
   },
-  setSceventitemlist (state, sceventitemlist) {
-    state.sceventitemlist = sceventitemlist
+  setIsrefresh (state, isrefresh) {
+    state.isrefresh = isrefresh
+  },
+  setEventdes (state, eventdes) {
+    state.eventdes = eventdes
   }
 }
 

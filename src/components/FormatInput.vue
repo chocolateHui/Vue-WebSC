@@ -1,5 +1,5 @@
 <template>
-  <input class="form-control ime" :placeholder="text" type="text" v-model="inputvalue" @input.native="updateValue">
+  <input class="form-control ime" @focus="changesta()" :placeholder="text" type="text" v-model="inputvalue" @input.native="updateValue">
 </template>
 <script>
   export default {
@@ -53,6 +53,9 @@
         }else{
           event.preventDefault();
         }
+      },
+      changesta(){
+        this.$emit('focus', "")
       }
     }
   }
