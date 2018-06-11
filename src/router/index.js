@@ -16,6 +16,9 @@ const ScEventItem = () => import(/* webpackChunkName: "group-catering" */ '../vi
 // 报表相关
 const EOShare = () => import(/* webpackChunkName: "group-report" */ '../view/catering/EOShare.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
+const Futureincome = () => import(/* webpackChunkName: "group-report" */ '../view/report/Futureincome.vue')
+const Futureincomebysaleid = () => import(/* webpackChunkName: "group-report" */ '../view/report/Futureincomebysaleid.vue')
+
 
 const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
 
@@ -31,6 +34,7 @@ const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/ma
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 const BaseCode = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/BaseCode.vue')
 const ScItemInfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/sciteminfo.vue')
+const NameDef = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/namedef.vue')
 const setjob = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/setjob.vue')
 Vue.use(Router)
 
@@ -147,6 +151,23 @@ const router = new Router({
           }
         },
         {
+          path: '/main/fuincome',
+          name: '分类预测汇总报表（按销售员）',
+          component: Futureincome,
+          meta: {
+            keepAlive: false // 需要被缓存
+          }
+        },
+        {
+          path: '/main/fuincomebysaleid/:begin/:sale',
+          name: '分类预测明细表',
+          component: Futureincomebysaleid,
+          meta: {
+            keepAlive: false // 需要被缓存
+          },
+          props: true
+        },
+        {
           path: '/main/maint',
           component: Maint,
           meta: {
@@ -192,6 +213,11 @@ const router = new Router({
               path: '/main/maint/item',
               name: '宴会项目',
               component: ScItemInfo
+            },
+            {
+              path: '/main/maint/namedef',
+              name: '报表数据项',
+              component: NameDef
             },
             {
               path: '/main/maint/basecode/:cat',

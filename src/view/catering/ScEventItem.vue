@@ -88,8 +88,11 @@
         // return data.label.indexOf(value) !== -1;
       },
       NodeClick(data){
-        this.$store.commit('setSceventitemeventid',data.eventid);
-        this.$store.commit('setEventdes',data.label);
+        if(data.root!="T"){
+          this.$store.commit('setSceventitemeventid',data.eventid);
+          this.$store.commit('setEventdes',data.label);
+        }
+
       },
       setdata(){
         this.maintTree =[];
@@ -101,6 +104,7 @@
           let type={};
           type["label"] = elm.descript;
           type["eventid"] = elm.eventid;
+          type["root"] = "F";
           if(this.eventid===elm.eventid){
             this.localdes =elm.descript;
           }
@@ -108,7 +112,7 @@
         }
         datac["label"] =copycatering.name;
         datac["children"] = cchildren;
-
+        datac["root"] ="T";
         this.maintTree .push(datac);
 
       },
@@ -144,6 +148,8 @@
   #maint{
     .container{
       overflow-y: auto;
+      padding-left: 0px;
+      padding-right: 0px;
     }
     .col-2{
       padding-right: 0.5rem;
@@ -152,8 +158,7 @@
       padding-bottom: 0.5rem;
     }
     .col-10{
-      border: 1px solid #ced4da;
-      border-radius: 5px;
+
     }
     .el-tree{
       border: 1px solid #ced4da;

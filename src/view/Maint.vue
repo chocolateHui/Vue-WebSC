@@ -62,7 +62,11 @@
             id:'item',
             label: '宴会项目',
             route:'/main/maint/item'
-          },{
+          }, {
+              id:'namedef',
+              label: '报表数据项',
+              route:'/main/maint/namedef'
+          }, {
             id:'basecode/sc_event_type',
             label: '事务类型',
             route:'/main/maint/basecode',
