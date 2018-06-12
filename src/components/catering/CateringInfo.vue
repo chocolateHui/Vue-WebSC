@@ -175,6 +175,10 @@
     <b-modal id="remarkmodal" ref="remarkmodal" size="lg" title="宴会备注" hide-footer>
       <remark></remark>
     </b-modal>
+
+    <b-modal id="EOSharemodal" ref="EOSharemodal" title="宴会EO单" hide-footer>
+      <EOShare></EOShare>
+    </b-modal>
   </b-container>
 </template>
 <script>
@@ -190,6 +194,7 @@
   import Reason from '../Reason.vue'
   import popArchives from '../SalesActivities/popArchives.vue'
   import remark from '../remark.vue'
+  import EOShare from '../catering/EOShare.vue'
 
   export default {
     name: 'CateringInfo',
@@ -387,7 +392,7 @@
         this.$root.$emit('bv::show::modal', 'logmodal');
       },
       EOShare(){
-        this.$router.push({name: '宴会预订EO单', params: { caterid: this.caterid }});
+        this.$refs.EOSharemodal.show();
       },
       refreshData(){
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
@@ -409,6 +414,7 @@
       Reason,
       popArchives,
       remark,
+      EOShare
     },
     mounted(){
       this.getStaFont();

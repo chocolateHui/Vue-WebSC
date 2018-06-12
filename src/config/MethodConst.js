@@ -92,6 +92,8 @@ const methodinfo = {
   updatecatering: '/SC/reserve/sccatering/updatecatering',
   // 新增宴会订单
   newcatering: '/SC/reserve/sccatering/newcatering',
+  // 获取宴会EO单信息
+  downloadScEO: '/SC/reserve/sceo/downloadScEO',
   /*
  事务相关
  */
@@ -218,7 +220,6 @@ const methodinfo = {
   // 获取业务日志
   getSCEntityLog: '/SC/reserve/sclog/getSCEntityLog',
 
-
   /*
  报表维护相关
  */
@@ -228,7 +229,6 @@ const methodinfo = {
   getincomereportlist: '/SC/reserve/report/getincomereportlist',
   // 分类预测明细表（汇总表穿透）
   getsaleincomereportlist: '/SC/reserve/report/getsaleincomereportlist',
-
 
   /*
  报表数据项维护相关
@@ -257,6 +257,6 @@ const methodinfo = {
   auth: '/userauth',
   getloginhotellist: '/getloginhotellist',
 
-  url :'http://172.10.60.61:8083/'
+  url: 'http://172.10.60.61:8083/'
 }
 module.exports = exports = methodinfo

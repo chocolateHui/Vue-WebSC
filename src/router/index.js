@@ -14,11 +14,10 @@ const NewCateringQuery = () => import(/* webpackChunkName: "group-catering" */ '
 const CateringInfo = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/CateringInfo.vue')
 const ScEventItem = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/ScEventItem.vue')
 // 报表相关
-const EOShare = () => import(/* webpackChunkName: "group-report" */ '../view/catering/EOShare.vue')
+const EOView = () => import(/* webpackChunkName: "group-report" */ '../view/catering/EOView.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
 const Futureincome = () => import(/* webpackChunkName: "group-report" */ '../view/report/Futureincome.vue')
 const Futureincomebysaleid = () => import(/* webpackChunkName: "group-report" */ '../view/report/Futureincomebysaleid.vue')
-
 
 const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
 
@@ -100,14 +99,6 @@ const router = new Router({
           component: ScEventItem,
           meta: {
             keepAlive: true // 需要被缓存
-          }
-        },
-        {
-          path: '/main/EOShare',
-          name: '宴会预订EO单',
-          component: EOShare,
-          meta: {
-            keepAlive: false // 需要被缓存
           }
         },
         {
@@ -228,6 +219,15 @@ const router = new Router({
           ]
         }
       ]
+    },
+    {
+      path: '/EOShare/:caterid/:EOType',
+      name: '宴会预订EO单',
+      component: EOView,
+      meta: {
+        keepAlive: false // 需要被缓存
+      },
+      props: true
     },
     {
       path: '/WebSC',
