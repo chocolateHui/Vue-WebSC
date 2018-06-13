@@ -1,12 +1,14 @@
 <template>
   <div class="EOFrame" style="height: 100%;">
     <b-row class="toolbar">
-      <b-col sm="6">
+      <b-col sm="5">
         <div class="numdiv">
           <span>总页数:&#8195;{{totalNum}}</span>
         </div>
       </b-col>
-      <b-col sm="3"></b-col>
+      <b-col sm="4" class="selectdiv">
+        <b-form-select v-model="scale" :options="options" class="mb-3" />
+      </b-col>
       <b-col sm="3" id="toolbarViewerRight">
         <!--<b-button title="打印">-->
         <!--<i class="fa fa-print"></i>-->
@@ -17,7 +19,7 @@
       </b-col>
     </b-row>
     <div id="EOShare" :style="{height: bodyHeight + 'px'}">
-      <div id="EODoc" class="EOdiv"></div>
+      <div id="EODoc" class="EOdiv" :style="{width: EoWeight + 'px'}"></div>
     </div>
   </div>
 </template>
@@ -39,8 +41,15 @@ export default {
       totalNum :1,
       pageRendering: false,
       pageNumPending: null,
-      scale: 1.28,
-      bodyHeight: document.body.clientHeight-35,
+      scale: 1.4,
+      EoWeight:800,
+      bodyHeight: document.body.clientHeight-33,
+      options: [
+        { value: 1, text: '100%' },
+        { value: 1.25, text: '125%' },
+        { value: 1.4, text: '140%' },
+        { value: 2, text: '200%'}
+      ]
     }
   },
   computed: {
@@ -49,6 +58,16 @@ export default {
   mounted(){
     pdfjs.GlobalWorkerOptions.workerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.js';
     this.getEOInfo();
+  },
+  watch:{
+    scale(val,oldval){
+      if(val!==oldval){
+        for (let i = 1; i <= this.totalNum; i++) {
+          let id = `canvas${i}`;
+          this.renderPage(i,id);
+        }
+      }
+    }
   },
   methods:{
     exportword:function () {
@@ -81,7 +100,6 @@ export default {
             for (let i = 0; i < bytes.length; i++) {
               ia[i] = bytes.charCodeAt(i);
           }
-//      let blob = new Blob([ab], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=utf-8'}); //application/vnd.openxmlformats-officedocument.wordprocessingml.document这里表示doc类型
             this.docblob = new Blob([ab], {type: 'application/pdf'});
             this.showPDF(ia);
           }
@@ -106,7 +124,6 @@ export default {
             loading.close();
           }
         }
-        this.renderPage(1)
       })
     },
     renderPage (num,id) {
@@ -116,7 +133,9 @@ export default {
         let canvas = document.getElementById(id)
         canvas.height = viewport.height
         canvas.width = viewport.width
-
+        if(this.EoWeight!==canvas.width){
+          this.EoWeight = canvas.width;
+        }
         // Render PDF page into canvas context
         let renderContext = {
           canvasContext: canvas.getContext('2d'),
@@ -139,56 +158,69 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-  span{
-    margin-top: 5px;
-    color: hsl(0,0%,85%);;
-  }
   .EOFrame{
     background-color: rgb(64, 64, 64);
-  }
-  .row{
-    margin: 0;
-  }
-  .toolbar{
-    position: relative;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    cursor: default;
-    height: 32px;
-    background-color: #474747;
-    box-shadow: inset 0 1px 1px hsla(0,0%,0%,.15), inset 0 -1px 0 hsla(0,0%,100%,.05), 0 1px 0 hsla(0,0%,0%,.15), 0 1px 1px hsla(0,0%,0%,.1);
-  }
-  #toolbarViewerRight{
-    float: right;
-  }
-  .numdiv{
-    margin-top: 5px;
-  }
-  .EOdiv{
-    width: 800px;
-    margin: auto;
-    padding: 1rem;
-  }
-  .canvas-item{
-    margin: 0 auto;
-  }
-  .btn{
-    background-color: transparent;
-    border: none;
-    height: 30px;
-    margin-top: 2px;
-    float: right;
-  }
-  .btn:hover,.btn:focus{
-    background-color: rgb(64, 64, 64);
-    border: 1px solid black;
-  }
-  .fa{
-    font-size: 1.3rem;
-  }
-  #EOShare{
-    width: 100%;
-    overflow-y:auto;
+    span{
+      margin-top: 5px;
+      color: hsl(0,0%,85%);;
+    }
+    .row{
+      margin: 0;
+    }
+    .toolbar{
+      position: relative;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      cursor: default;
+      height: 32px;
+      background-color: #474747;
+      box-shadow: inset 0 1px 1px hsla(0,0%,0%,.15), inset 0 -1px 0 hsla(0,0%,100%,.05), 0 1px 0 hsla(0,0%,0%,.15), 0 1px 1px hsla(0,0%,0%,.1);
+    }
+    #toolbarViewerRight{
+      float: right;
+    }
+    .numdiv{
+      margin-top: 5px;
+    }
+    .selectdiv{
+      padding-top: 2px;
+    }
+    .custom-select{
+      font-size: 0.9rem;
+      height: 29px !important;
+      width: 100px;
+      color: white;
+      padding: 0.2rem 1.75rem 0.375rem 0.75rem;
+      border: 1px solid hsla(0,0%,0%,.35);
+      border-color: hsla(0,0%,0%,.32) hsla(0,0%,0%,.38) hsla(0,0%,0%,.42);
+      box-shadow: 0 1px 0 hsla(0,0%,100%,.05) inset, 0 0 1px hsla(0,0%,100%,.15) inset, 0 1px 0 hsla(0,0%,100%,.05);
+      background-color: #474747;
+    }
+    .EOdiv{
+      margin: auto;
+      padding: 1rem;
+    }
+    .canvas-item{
+      margin: 0 auto;
+    }
+    .btn{
+      background-color: transparent;
+      border: none;
+      height: 30px;
+      margin-top: 2px;
+      float: right;
+    }
+    .btn:hover,.btn:focus{
+      background-color: rgb(64, 64, 64);
+      border: 1px solid black;
+    }
+    .fa{
+      font-size: 1.3rem;
+    }
+    #EOShare{
+      width: 100%;
+      overflow-y:auto;
+    }
   }
 </style>
