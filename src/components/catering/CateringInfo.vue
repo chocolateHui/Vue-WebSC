@@ -8,7 +8,7 @@
         <b-col sm="2" class="my-1">
           <span v-if="!isNew" class="title">订单号:{{catering.caterid}}</span>
         </b-col>
-        <b-col sm="7" class="my-1 titleInfo">
+        <b-col sm="8" class="my-1 titleInfo">
           <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 宴会名称:&#8195;{{catering.name}}</span>
           <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{catering.saleid_des}}</span>
         </b-col>
@@ -16,9 +16,9 @@
           <a v-if="!isNew">
             <i @click="showLog" class="fa fa-sticky-note titleIcon"></i>
           </a>
-          <a v-if="!isNew">
-            <i @click="showNote" class="fa fa-sticky-note titleIcon"></i>
-          </a>
+          <!--<a v-if="!isNew">-->
+            <!--<i @click="showNote" class="fa fa-sticky-note titleIcon"></i>-->
+          <!--</a>-->
           <a v-if="!isNew">
             <i @click="EOShare" class="fa fa-print titleIcon"></i>
           </a>

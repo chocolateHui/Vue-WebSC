@@ -66,14 +66,9 @@
                 <template slot-scope="scope">
                   <b-form inline class="paddingleft0 paddingbottom0">
                     <b-button
-                      size="sm"
-                      variant="primary" @click="openCateringInfo(scope.row)">编</b-button>
+                      size="sm" variant="primary" @click="openCateringInfo(scope.row)">编</b-button>
                     <b-button
-                      size="sm"
-                       variant="warning" @click="deleteempno()">同</b-button>
-                    <b-button
-                      size="sm"
-                     @click="remarkshow(scope.row)">备</b-button>
+                      size="sm" variant="warning" @click="deleteempno()">同</b-button>
                   </b-form>
                 </template>
               </el-table-column>
