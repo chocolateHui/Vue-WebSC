@@ -5,6 +5,7 @@
         <el-table
           ref="logtable"
           :data="searchitems"
+          height="430"
           border
           highlight-current-row
         @current-change="handleChange"
@@ -108,7 +109,7 @@
             :action="fileserver"
             list-type="picture-card"
             :file-list="fileList2"
-            :http-request="fileupload"
+            :http-request="uploadaction"
             :on-preview="handlePictureCardPreview"
             :on-exceed="handleExceed"
             :before-upload="beforeupload"
@@ -144,11 +145,11 @@
   </div>
 </template>
 <script>
-  import axios from 'axios'
+  import fileMixin from '../../common/fileMixin'
   import methodinfo from '../../config/MethodConst.js'
   import sysLog from  '../../components/syslog.vue'
-  const fileserver = "https://files.foxhis.com/FoxhisFileServer/action?groupid=C0000001&access=dsajlkda1";
-  const filetoken = "71DFD83564CD06366DA6C6E35496B61D";
+  import { mapGetters, mapMutations } from 'vuex'
+
   const fildes = [
     {prop: 'tableno', label: '代码', width: '70'},
     {prop: 'descript', label: '描述', width: '', sortable: false, showTip: true}
@@ -161,18 +162,12 @@
         selectedexpand:{},
         items: [],
         fildes: fildes,
-        fileserver:fileserver,
-        eloptions: [],
-        fileList2: [{name: 'xr.png', url: 'https://files.foxhis.com/FoxhisFileServer/image/C0000001/target/xr.png'+'?token='+filetoken},
-          {name: 'logo.png', url: 'https://files.foxhis.com/FoxhisFileServer/image/C0000001/target/logo.png?token=71DFD83564CD06366DA6C6E35496B61D'}],
+        fileList2: [],
         dialogImageUrl: '',
         dialogVisible: false,
         kinddata:[],
         styledata:[],
         locationdata:[],
-        hotelid:"C0000001",
-        fileurl:"https://files.foxhis.com/FoxhisFileServer/image/C0000001/target/",
-        token:'?token='+filetoken,
         change :true
       }
     },
@@ -182,8 +177,13 @@
     computed: {
       searchitems: function () {
         return this.items;
-      }
+      },
+      ...mapGetters([
+        'groupid',
+        'hotel'
+      ])
     },
+    mixins: [fileMixin],
     mounted() {
         this.getbasecodedata("sc_place_kind");
         this.getbasecodedata("sc_place_style");
@@ -202,24 +202,10 @@
       },
     methods: {
         handleRemove(file, fileList) {
-          let url = this.fileserver + '&method=delete&filename=target/' + file.name;
-          let config = {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          }
           let uuid = file.uuid;
-          console.log(uuid);
-          // 添加请求头
-          axios.post(url, {}, config)
-            .then(response => {
-              console.log(response)
-              if (response.data.result === "yes") {
-                this.deletepic(uuid);
-              }
-            }).catch(response => {
-            console.log(response)
-          })
+          this.fileRemove(file).then(()=>{
+            this.deletepic(uuid);
+          });
         },
         handlePictureCardPreview(file) {
           this.dialogImageUrl = file.url;
@@ -243,30 +229,12 @@
             }
           }
         },
-
-        fileupload(action) {
-          let param = new FormData() // 创建form对象
-          let filename = this.selectedexpand.tableno + action.file.name;
-          param.append('topath', 'target') // 添加form表单中其他数据
-          param.append('file', action.file, filename) // 通过append向form对象添加数据
-          console.log(action.file.name);
-          let config = {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-          let url = this.fileserver + '&method=upload';
-          // 添加请求头
-          console.log(url);
-          axios.post(url, param, config)
-            .then(response => {
-              if (response.data.result === "success") {
-                this.savepic(filename);
-              }
-            }).catch(response => {
-            console.log(response)
-          })
-        },
+        uploadaction(action){
+         let filename = this.selectedexpand.tableno + action.file.name;
+          this.fileupload(action.file,filename).then(()=>{
+            this.savepic(filename);
+          });
+       },
         handleExceed(files, fileList) {
           this.$message.error({
             message: '图片最多为5张'
@@ -310,7 +278,7 @@
                     let type = {}
                     type["name"] = elem.pic;
                     type["uuid"] = elem.uuid;
-                    type["url"] = this.fileurl + elem.pic + this.token;
+                    type["url"] = this.imageurl + elem.pic + this.token;
                     data.push(type);
                   }
                   this.fileList2 = data;
@@ -483,9 +451,9 @@
     .btn-row{
       padding-top: 5px;
     }
-
-
-
+    .form-group{
+      margin-bottom: 0.5rem;
+    }
   }
   #loglog{
     #syslog{

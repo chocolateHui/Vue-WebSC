@@ -17,7 +17,8 @@ const state = {
   scDoCheck: {},
   scMessageUrl: {},
   scEoSigntime: {},
-  saveSysoption:{}
+  scEoGroup: {},
+  EOID: {}
 }
 const getAllMsg = function (store) {
   axiosinstance.defaults.headers.common['username'] = store.getters.username
@@ -48,7 +49,9 @@ const getters = {
 
   scEoSigntime: state => state.scEoSigntime,
 
-  saveSysoption: state => state.saveSysoption
+  scEoGroup: state => state.scEoGroup,
+
+  EOID: state => state.EOID
 }
 
 // actions
@@ -61,7 +64,7 @@ const actions = {
         cat: 'sc'
       }).then(function (response) {
         if (response.status === 200) {
-          for(let option of response.data.sysoptions){
+          for (let option of response.data.sysoptions) {
             if (option) {
               switch (option.itemid) {
                 case 'event_dep_date':
@@ -97,6 +100,12 @@ const actions = {
                 case 'sc_eo_signtime':
                   store.commit('setScEoSigntime', option)
                   break
+                case 'sc_eo_group':
+                  store.commit('setScEoGroup', option)
+                  break
+                case 'EOID':
+                  store.commit('setEOID', option)
+                  break
               }
             }
           }
@@ -107,10 +116,8 @@ const actions = {
   saveSysoption: function (store, param) {
     return new Promise((resolve, reject) => {
       getAllMsg(store)
-      axiosinstance.post(methodinfo.savesysoption,param).then(function (response) {
-
+      axiosinstance.post(methodinfo.savesysoption, param).then(function (response) {
         if (response.data.errorCode === '0') {
-          store.commit('saveSysoption', response.data)
           resolve()
         }
       })
@@ -140,7 +147,7 @@ const mutations = {
   setScPmsUrl (state, scPmsUrl) {
     state.scPmsUrl = scPmsUrl
   },
-  setScPosType(state, scPosType) {
+  setScPosType (state, scPosType) {
     state.scPosType = scPosType
   },
   setScPosUrl (state, scPosUrl) {
@@ -155,8 +162,11 @@ const mutations = {
   setScEoSigntime (state, scEoSigntime) {
     state.scEoSigntime = scEoSigntime
   },
-  saveSysoption (state, saveSysoption) {
-    state.saveSysoption = saveSysoption
+  setScEoGroup (state, scEoGroup) {
+    state.scEoGroup = scEoGroup
+  },
+  setEOID (state, EOID) {
+    state.EOID = Object.assign({}, EOID)
   }
 }
 
