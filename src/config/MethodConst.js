@@ -94,6 +94,10 @@ const methodinfo = {
   newcatering: '/SC/reserve/sccatering/newcatering',
   // 获取宴会EO单信息
   downloadScEO: '/SC/reserve/sceo/downloadScEO',
+  // 获取宴会EO单信息
+  getEOPrintRecord: '/SC/reserve/sceo/getEOPrintRecord',
+  // 获取宴会EO单信息
+  updateEOPrintRecord: '/SC/reserve/sceo/updateEOPrintRecord',
   /*
  事务相关
  */

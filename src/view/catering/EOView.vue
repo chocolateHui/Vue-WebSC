@@ -54,7 +54,7 @@ export default {
   },
   computed: {
   },
-  props:['caterid','EOType'],
+  props:['caterid','EOKind'],
   mounted(){
     pdfjs.GlobalWorkerOptions.workerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.js';
     this.getEOInfo();
@@ -89,7 +89,7 @@ export default {
         this.$http.post(methodinfo.downloadScEO, {
           caterid:this.caterid,
           printkind:'bdate',
-          printtype:this.EOType,
+          printtype:this.EOKind,
           doctype:'pdf'
         }).then((response)=> {
           if (response.data.errorCode === "0") {
@@ -102,6 +102,22 @@ export default {
           }
             this.docblob = new Blob([ab], {type: 'application/pdf'});
             this.showPDF(ia);
+          }
+        })
+      })
+    },
+    updateEOPrintRecord(){
+      this.$store.dispatch('encrypttoken').then(() => {
+        this.$http.defaults.headers.common['username'] = this.$store.getters.username
+        this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+        this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+        this.$http.post(methodinfo.updateEOPrintRecord, {
+          caterid:this.caterid,
+          printkind:this.EOKind,
+          printtype:"pdf",
+        }).then((response)=> {
+          if (response.data.errorCode === "0") {
+            this.$message.success("更新成功!")
           }
         })
       })

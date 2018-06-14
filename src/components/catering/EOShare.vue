@@ -35,7 +35,7 @@
       </b-row>
       <b-row class="radio-row">
         <b-form-group>
-          <b-form-radio-group id="radios2" v-model="typeselected" name="typeradios">
+          <b-form-radio-group id="radios2" v-model="doctypeselected" name="typeradios">
             <b-form-radio value="pdf">预览</b-form-radio>
             <b-form-radio value="word">下载</b-form-radio>
           </b-form-radio-group>
@@ -70,7 +70,7 @@
         eoprintdatas:[],
         fildes :fildes,
         kindselected:'all',
-        typeselected:'pdf'
+        doctypeselected:'pdf'
       }
     },
     computed: {
@@ -84,12 +84,12 @@
     },
     methods: {
       EOConfirm(){
-        if(this.typeselected==="pdf"){
+        if(this.doctypeselected==="pdf"){
           let routeData = this.$router.resolve({
             name: "宴会预订EO单",
             params: {
               caterid: this.caterid,
-              EOType:this.kindselected,
+              EOKind:this.kindselected,
             }
           });
           window.open(routeData.href, '_blank');
@@ -101,8 +101,8 @@
             this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
             this.$http.post(methodinfo.downloadScEO, {
               caterid:this.caterid,
-              printkind:'bdate',
-              printtype:this.kindselected,
+              printkind:this.kindselected,
+              printtype:"bdate",
               doctype:'word'
             }).then((response)=> {
               if (response.data.errorCode === "0") {
@@ -128,6 +128,38 @@
           })
         }
         this.$root.$emit('bv::hide::modal','EOSharemodal')
+      },
+      getEOPrintRecord(){
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.getEOPrintRecord, {
+            caterid:this.caterid
+          }).then((response)=> {
+            if (response.data.errorCode === "0") {
+              for(let elem of response.data.printlist){
+                this.eoprintdatas.push(elem);
+              }
+            }
+          })
+        })
+      },
+      updateEOPrintRecord(){
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+          this.$http.post(methodinfo.updateEOPrintRecord, {
+            caterid:this.caterid,
+            printkind:this.kindselected,
+            printtype:this.doctypeselected,
+          }).then((response)=> {
+            if (response.data.errorCode === "0") {
+              this.$message.success("更新成功!")
+            }
+          })
+        })
       },
       exitModal(){
         this.$root.$emit('bv::hide::modal','EOSharemodal')
