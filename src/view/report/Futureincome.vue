@@ -35,11 +35,13 @@
         :data="searchitems"
         border
         show-summary
+        :summary-method="getSummaries"
         :row-class-name="tableRowClassName"
+        @row-dblclick="tableDbEdit"
         style="width: 100%" :max-height="tableHeight">
         <!--:span-method="arraySpanMethod"-->
         <el-table-column
-          v-for="item in fildes"
+          v-for="item in fi"
           :prop="item.prop"
           :label="item.label"
           :width="item.width"
@@ -59,7 +61,7 @@
 
   var items = []
   const fildes = [
-    {  prop: 'bdate', label:  '日期',width:'138',sortable:false ,showTip:true},
+    {  prop: 'date', label:  '日期',width:'138',sortable:false ,showTip:true},
     {  prop: 'saleid', label:  '销售员',width:'',sortable:false,showTip:true},
   ]
 
@@ -67,7 +69,7 @@
     data () {
       return {
         items:[],
-        fildes :fildes,
+        fi :fildes,
         totalRows: items.length,
         sortBy: null,
         sortDesc: false,
@@ -116,16 +118,45 @@
                 edate:edate
               }).then((response)=> {
                 if (response.data.errorCode=="0") {
-                  if(typeof(response.data.fileds) != "undefined"){
-                    let s = []
-                    for(let items of response.data.fileds){
-                      var types = {};
-                      types["prop"]=items.props;
-                      types["label"]=items.label;
-                      s.push(types);
+
+                    if(typeof(response.data.fileds) != "undefined"){
+                      this.items = [];
+                      this.fi = Object.assign([],fildes);
+                      for(let items of response.data.fileds){
+                        let types = {};
+
+                        types["prop"]=items.props;
+                        if(items.props===""){
+                          types["prop"] = "zzzz";
+                        }
+                        types["label"]=items.label;
+                        this.fi.push(types);
+                      }
+                      let types = {};
+                      types["prop"]="heji";
+                      types["label"]="合计";
+                      this.fi.push(types);
+                      for(let items of response.data.incomes){
+                        let types = {};
+                        types["date"]=items.date;
+                        types["salemane"]=items.salemane;
+                        types["saleid"]=items.saleid;
+
+                        types["heji"]=items.heji;
+                        let m = JSON.parse(items.incomejson);
+                        for(let s in m){
+                          if(s===""){
+                            types["zzzz"]=m[s];
+                          }
+                          else{
+                            types[s]=m[s];
+                          }
+
+                        }
+                        this.items.push(types)
+                      }
                     }
-                    this.fildes = Object.assign(fildes,s);
-                  }
+
                 }
                 else{
                   this.items = [];
@@ -134,29 +165,36 @@
             })
           }
       },
-      arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-        console.log(columnIndex);
-        if (columnIndex === 0) {
-          if (row.caterid === '小计'||row.caterid === '合计') {
-            return {
-              rowspan: 1,
-              colspan: 6
-            };
+      getSummaries(param) {
+
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (index === 1) {
+            sums[index] =data.length;;
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+            sums[index] += '';
           } else {
-            return {
-              rowspan: 1,
-              colspan: 1
-            };
+            sums[index] = 'N/A';
           }
-        }
-        if (columnIndex >=1&&columnIndex <=5) {
-          if (row.caterid === '小计'||row.caterid === '合计') {
-            return {
-              rowspan: 0,
-              colspan: 0
-            };
-          }
-        }
+        });
+
+        return sums;
       },
       tableRowClassName({row, rowIndex}) {
         if (row.caterid === '小计') {
@@ -165,7 +203,12 @@
           return 'success-row';
         }
         return '';
-      }
+      },
+      tableDbEdit(row, event) {
+        let sale = row.saleid;
+        let begin = row.date;
+        this.$router.push({name: "分类预测明细表", params: {sale: sale,begin:begin}})
+      },
     },
     watch:{
 
