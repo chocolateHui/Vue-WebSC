@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar id="navbar" style="background-color:#4c58a4;padding: 1px 14px">
+    <b-navbar id="navbar" style="background-color:#3375B8;padding: 0px 14px">
       <b-navbar-brand class="b-class" style="float: left">
         <img src="/static/SCweb-55.png" class="d-inline-block align-middle" style="padding-bottom: 1px" alt="BV">
         宴会与销售系统
@@ -10,10 +10,10 @@
       </b-navbar-nav>
       <b-nav>
         <b-nav-form>
-          <b-nav-item @click="setFullscreen" style="background-color:#555555!important;">
+          <b-nav-item @click="setFullscreen" style="background-color:#F4BD51!important;">
             <i class="fa" :class="ScreenClass"></i>
           </b-nav-item>
-          <b-nav-item v-popover:msgpop style="background-color:#00c486!important;">
+          <b-nav-item v-popover:msgpop style="background-color:#DADE48!important;">
             <i class="fa fa-bell">
               <b-badge variant="danger" v-show="message">14</b-badge>
             </i>
@@ -35,11 +35,11 @@
               <b-list-group-item href="#" variant="dark">This is a dark list group item</b-list-group-item>
             </b-list-group>
           </el-popover>
-          <b-nav-item v-b-modal.aboutmodal style="background-color:#1e9ec6!important;">
+          <b-nav-item v-b-modal.aboutmodal style="background-color:#97C144!important;">
             <i class="fa fa-tasks"></i>
           </b-nav-item>
         </b-nav-form>
-        <b-nav-item-dropdown style="background-color:#6574cf!important;min-width: 50px" extra-toggle-classes="nav-link-custom" right>
+        <b-nav-item-dropdown style="background-color:#4BA6EF!important;min-width: 50px" extra-toggle-classes="nav-link-custom" right>
           <template slot="button-content">
             <img src="/static/user.jpg" class="nav-user-photo d-inline-block align-middle">
             <span class="user-info">欢迎,

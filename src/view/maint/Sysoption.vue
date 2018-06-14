@@ -4,13 +4,15 @@
       <h4>事务相关参数</h4>
       <b-form-group horizontal :label-cols="5"
                     label="事务可以晚于宴会离开日期几天">
-        <b-form-input v-model="eventDepDate1.val" class="numinput" ></b-form-input>
+        <FormatInput v-model="eventDepDate1.val" class="numinput" type="number" maxlength="2"></FormatInput>
       </b-form-group>
       <b-form-group horizontal :label-cols="5"
                     label="宴会同一场地候补事务数量限制,0为不限制">
-        <b-form-input v-model="eventWaitingLimit1.val" class="numinput"></b-form-input>
+        <FormatInput v-model="eventWaitingLimit1.val" class="numinput" type="number" maxlength="2"></FormatInput>
       </b-form-group>
-      <b-button type="submit" variant="primary" @click="commitSysoption1">保存</b-button>
+      <b-form-group :label-cols="5" horizontal>
+        <b-button type="submit" variant="primary" @click="commitSysoption1">保存</b-button>
+      </b-form-group>
     </b-form>
     <b-form>
       <h4>第三方系统相关参数</h4>
@@ -53,7 +55,9 @@
         label="SC第三方POS系统服务地址">
         <b-form-input v-model="scPosUrl1.val" :disabled="isToPos1.val=='F'"></b-form-input>
       </b-form-group>
-      <b-button type="submit" variant="primary" @click="commitSysoption2">保存</b-button>
+      <b-form-group :label-cols="5" horizontal>
+        <b-button type="submit" variant="primary" @click="commitSysoption2">保存</b-button>
+      </b-form-group>
     </b-form>
     <b-form>
       <h4>移动SC相关参数</h4>
@@ -63,12 +67,14 @@
         </b-form-checkbox>
       </b-form-group>
       <b-form-group horizontal :label-cols="5" label="EO单签名确认时间段，单位：H">
-        <b-form-input  v-model="scEoSigntime1.val" class="numinput"></b-form-input>
+        <FormatInput  v-model="scEoSigntime1.val" class="numinput" type="number" maxlength="2"></FormatInput>
       </b-form-group>
       <b-form-group horizontal :label-cols="5" label="移动SC消息推送地址">
-        <b-form-input v-model="scMessageUrl1.val"></b-form-input>
+        <b-form-input v-model="scMessageUrl1.val" ></b-form-input>
       </b-form-group>
-      <b-button type="submit" variant="primary" @click="commitSysoption3">保存</b-button>
+      <b-form-group :label-cols="5" horizontal>
+        <b-button type="submit" variant="primary" @click="commitSysoption3">保存</b-button>
+      </b-form-group>
     </b-form>
   </div>
 </template>
@@ -76,6 +82,7 @@
 <script>
   import { mapGetters, mapActions,mapMutations } from 'vuex'
   import methodinfo from '../../config/MethodConst.js'
+  import FormatInput from './../../components/FormatInput'
 
   export default {
     data () {
@@ -167,11 +174,21 @@
           this.$store.dispatch('saveSysoption',this.scMessageUrl1)
         })
       }
+    },
+    components: {
+      FormatInput
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" type="text/scss">
   #sysoption{
+    form{
+      h4{
+        padding: 5px 15px;
+        color: #71A2CC;
+        font-weight: normal;
+      }
+    }
     .el-input__inner{
       height: 35px;
     }
@@ -190,6 +207,8 @@
     }
     .btn{
       width: 100px;
+      background: #6FB3E0;
+      border-color: #6FB3E0;
       margin-bottom: 0.5rem;
     }
   }

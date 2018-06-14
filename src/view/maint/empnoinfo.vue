@@ -503,6 +503,17 @@
       .container-fluid{
         >.row{
           margin-bottom: 10px;
+          .my-1:last-of-type{
+              .btn-primary{
+                background: #7EB2DD;
+                border: none;
+                padding: 0.375rem 1.5rem;
+                margin-right: 5px;
+              }
+              .btn-primary:last-of-type{
+                background: #89C5BF;
+              }
+          }
         }
       }
       #empnotable{
@@ -570,9 +581,11 @@
         .el-table__expanded-cell{
           padding: 20px!important;
           box-shadow: 1px 5px 5px #dee2e6;
-          .btn-primary:last-of-type{
-             background: #7EB2DD;
-             border: none;
+          .btn-primary{
+            background: #7EB2DD;
+            border: none;
+            padding: 0.375rem 1.5rem;
+            margin-right: 5px;
           }
         }
       }
