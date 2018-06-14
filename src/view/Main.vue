@@ -294,5 +294,17 @@
       padding-top: 0.75rem;
       overflow: auto;
     }
+    .notetip{
+      width: 0;
+      height: 0;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid red;
+      border-left: 8px solid transparent;
+      position: absolute;
+      transform: rotate(45deg);
+      -moz-transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+    }
   }
 </style>

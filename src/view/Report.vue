@@ -17,16 +17,20 @@
     data () {
       return {
         reports: [
-          { route: '/main/lostreport', title: '订单流失统计',descript:"宴会预订列表",color:'c1'},
-          { route: '/main/newQuery', title: '分类预测汇总报表',descript:"新建宴会问询",color:'c2'},
-          { route: '/main/newReserve', title: '分类预测明细表',descript:"新建宴会预订",color:'c3'},
-          { route: '/main/placeDistribution', title: '场地利用率分析',descript:"宴会场地分布",color:'c4'}
+          { route: '/main/lostreport', title: '订单流失统计',descript:"订单流失统计",color:'c1'},
+          { route: '/main/fuincome', title: '分类预测汇总报表',descript:"分类预测汇总报表",color:'c2'},
+          { route: '/main/fuincomebysaleid', title: '分类预测明细表',descript:"分类预测明细表",color:'c3',sale:"xxxxx",begin:"xxxx"},
+          { route: '/main/placeDistribution', title: '场地利用率分析',descript:"场地利用率分析",color:'c4'}
         ]
       };
     },
     methods: {
       openreport: function (report) {
-        this.$router.push({path:report.route})
+        if (report.hasOwnProperty('sale')) {
+          this.$router.push({name: "分类预测明细表", params: {sale: report.sale,begin:report.begin}})
+        } else {
+          this.$router.push({path: report.route})
+        }
       }
     },
   }

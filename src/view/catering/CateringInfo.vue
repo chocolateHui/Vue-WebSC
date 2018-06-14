@@ -122,7 +122,7 @@
       margin-right: 17px;
       margin-top: 1px;
       position: relative;
-      z-index: 1199;
+      z-index: 1002;
       float: right;
     }
   }

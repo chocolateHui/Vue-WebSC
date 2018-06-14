@@ -14,8 +14,10 @@ const NewCateringQuery = () => import(/* webpackChunkName: "group-catering" */ '
 const CateringInfo = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/CateringInfo.vue')
 const ScEventItem = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/ScEventItem.vue')
 // 报表相关
-const EOShare = () => import(/* webpackChunkName: "group-report" */ '../view/catering/EOShare.vue')
+const EOView = () => import(/* webpackChunkName: "group-report" */ '../view/catering/EOView.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
+const Futureincome = () => import(/* webpackChunkName: "group-report" */ '../view/report/Futureincome.vue')
+const Futureincomebysaleid = () => import(/* webpackChunkName: "group-report" */ '../view/report/Futureincomebysaleid.vue')
 
 const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
 
@@ -31,6 +33,7 @@ const Empnoinfo = () => import(/* webpackChunkName: "group-maint" */ '../view/ma
 const Sysoption = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/Sysoption.vue')
 const BaseCode = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/BaseCode.vue')
 const ScItemInfo = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/sciteminfo.vue')
+const NameDef = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/namedef.vue')
 const setjob = () => import(/* webpackChunkName: "group-maint" */ '../view/maint/setjob.vue')
 Vue.use(Router)
 
@@ -99,14 +102,6 @@ const router = new Router({
           }
         },
         {
-          path: '/main/EOShare',
-          name: '宴会预订EO单',
-          component: EOShare,
-          meta: {
-            keepAlive: false // 需要被缓存
-          }
-        },
-        {
           path: '/main/place/placeDistribution',
           name: '宴会场地分布',
           component: placeDistribution,
@@ -145,6 +140,23 @@ const router = new Router({
           meta: {
             keepAlive: false // 需要被缓存
           }
+        },
+        {
+          path: '/main/fuincome',
+          name: '分类预测汇总报表（按销售员）',
+          component: Futureincome,
+          meta: {
+            keepAlive: false // 需要被缓存
+          }
+        },
+        {
+          path: '/main/fuincomebysaleid/:begin/:sale',
+          name: '分类预测明细表',
+          component: Futureincomebysaleid,
+          meta: {
+            keepAlive: false // 需要被缓存
+          },
+          props: true
         },
         {
           path: '/main/maint',
@@ -194,6 +206,11 @@ const router = new Router({
               component: ScItemInfo
             },
             {
+              path: '/main/maint/namedef',
+              name: '报表数据项',
+              component: NameDef
+            },
+            {
               path: '/main/maint/basecode/:cat',
               name: '通用基础代码',
               component: BaseCode,
@@ -202,6 +219,15 @@ const router = new Router({
           ]
         }
       ]
+    },
+    {
+      path: '/EOShare/:caterid/:EOType',
+      name: '宴会预订EO单',
+      component: EOView,
+      meta: {
+        keepAlive: false // 需要被缓存
+      },
+      props: true
     },
     {
       path: '/WebSC',
