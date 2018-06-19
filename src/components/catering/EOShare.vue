@@ -76,7 +76,8 @@
     computed: {
       ...mapGetters([
         'caterid',
-        'catering'
+        'catering',
+        'sc_eo_group'
       ])
     },
     created(){
@@ -95,6 +96,7 @@
           window.open(routeData.href, '_blank');
         }else{
           const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+          let printtype= this.scEoGroup.val;
           this.$store.dispatch('encrypttoken').then(() => {
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -102,7 +104,7 @@
             this.$http.post(methodinfo.downloadScEO, {
               caterid:this.caterid,
               printkind:this.kindselected,
-              printtype:"bdate",
+              printtype:printtype,
               doctype:'word'
             }).then((response)=> {
               if (response.data.errorCode === "0") {
@@ -123,6 +125,8 @@
                 downloadElement.click(); //点击下载
                 document.body.removeChild(downloadElement); //下载完成移除元素
                 window.URL.revokeObjectURL(href); //释放掉blob对象
+
+                this.updateEOPrintRecord();
               }
             })
           })

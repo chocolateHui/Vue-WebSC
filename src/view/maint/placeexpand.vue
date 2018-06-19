@@ -145,7 +145,7 @@
   </div>
 </template>
 <script>
-  import fileMixin from '../../common/fileMixin'
+  import fileMixin from '../../mixin/fileMixin'
   import methodinfo from '../../config/MethodConst.js'
   import sysLog from  '../../components/syslog.vue'
   import { mapGetters, mapMutations } from 'vuex'

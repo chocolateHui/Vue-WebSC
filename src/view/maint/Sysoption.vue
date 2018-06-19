@@ -103,7 +103,7 @@
 </template>
 
 <script>
-  import fileMixin from '../../common/fileMixin'
+  import fileMixin from '../../mixin/fileMixin'
   import { mapGetters, mapActions,mapMutations } from 'vuex'
   import methodinfo from '../../config/MethodConst.js'
   import FormatInput from './../../components/FormatInput'

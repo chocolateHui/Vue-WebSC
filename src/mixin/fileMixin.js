@@ -5,7 +5,7 @@ let loading
 
 let fileserver = 'https://files.foxhis.com/FoxhisFileServer/action?'
 let imageurl = 'https://files.foxhis.com/FoxhisFileServer/image/'
-let access = 'dsajlkda1'
+let access = 'FOXHIS.WOP'
 let topath = 'SC/'
 const filetoken = '71DFD83564CD06366DA6C6E35496B61D'
 
@@ -20,9 +20,10 @@ let uploadMixin = {
   },
   created () {
     let hotelid = this.$store.getters.hotel.hotelid
+    let groupid = this.$store.getters.groupid
     this.topath = topath + hotelid + '/'
-    this.imageurl = imageurl + 'C0000001/' + this.topath
-    this.fileserver = this.fileserver + 'groupid=C0000001&access=' + access
+    this.imageurl = imageurl + groupid + this.topath
+    this.fileserver = this.fileserver + 'groupid=' + groupid + '&access=' + access
   },
   methods: {
     fileupload (file, filename) {

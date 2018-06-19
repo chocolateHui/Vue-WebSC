@@ -221,7 +221,7 @@ const router = new Router({
       ]
     },
     {
-      path: '/EOShare/:caterid/:EOType',
+      path: '/EOShare/:caterid/:EOKind',
       name: '宴会预订EO单',
       component: EOView,
       meta: {

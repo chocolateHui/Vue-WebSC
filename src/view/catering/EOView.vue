@@ -79,16 +79,18 @@ export default {
       downloadElement.click(); //点击下载
       document.body.removeChild(downloadElement); //下载完成移除元素
       window.URL.revokeObjectURL(href); //释放掉blob对象
+      this.updateEOPrintRecord()
     },
     getEOInfo(){
       loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+      let printtype= this.$store.getters.scEoGroup.val;
       this.$store.dispatch('encrypttoken').then(() => {
         this.$http.defaults.headers.common['username'] = this.$store.getters.username
         this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
         this.$http.post(methodinfo.downloadScEO, {
           caterid:this.caterid,
-          printkind:'bdate',
+          printkind:printtype,
           printtype:this.EOKind,
           doctype:'pdf'
         }).then((response)=> {
@@ -102,7 +104,11 @@ export default {
           }
             this.docblob = new Blob([ab], {type: 'application/pdf'});
             this.showPDF(ia);
+          }else{
+            loading.close();
           }
+        }).catch(()=>{
+          loading.close();
         })
       })
     },
