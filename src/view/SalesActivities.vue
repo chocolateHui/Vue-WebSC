@@ -603,12 +603,13 @@
           }).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode === '0') {
-                _this.baseCodeListarc = response.data.basecodes
-                _this.baseCodeListarc.forEach(function (item, index) {
-                  if (typeof item.bgcolor == 'undefined') {
-                    _this.$set(item, "bgcolor", _this.bgcolorFlag[index % 7])
-                  }
-                })
+                if( typeof response.data.basecodes!='undefined'){
+                  _this.baseCodeListarc.forEach(function (item, index) {
+                    if (typeof item.bgcolor == 'undefined') {
+                      _this.$set(item, "bgcolor", _this.bgcolorFlag[index % 7])
+                    }
+                  })
+                }
               }
             }
           })
@@ -670,7 +671,10 @@
       background: rgb(255, 255, 204);
     }
     .tc span{
-      cursor:pointer;
+      color: #6FB3E0;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
     }
     .saleCalendar{
       top: 30px;

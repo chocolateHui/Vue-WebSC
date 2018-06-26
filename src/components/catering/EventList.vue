@@ -200,12 +200,15 @@
         :class-name="item.classname"
         :show-overflow-tooltip="item.showTip" :key="item.prop">
       </el-table-column>
-      <el-table-column label="操作" width="140">
+      <el-table-column label="操作" width="170">
         <template slot-scope="scope">
-          <b-button size="mini" class="Item-button image-btn" @click="openEvenitem(scope.row)" type="danger" ></b-button>
-          <b-button size="mini" class="Synchronization-button image-btn" type="danger" ></b-button>
-          <b-button size="mini" class="Journal-button image-btn" type="danger" @click="showNote(scope.row)"></b-button>
-          <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="cancelEvent(scope.row)"></b-button>
+          <b-button size="mini" class="Item-button image-btn" title="项目" @click="openEvenitem(scope.row)" type="danger" ></b-button>
+          <b-button size="mini" class="Synchronization-button image-btn" title="同步" type="danger" ></b-button>
+          <b-button size="mini" class="Journal-button image-btn" type="danger" title="备注" @click="showNote(scope.row)">
+            <div :class="getNoteClass(scope.row)"></div>
+          </b-button>
+          <b-button size="mini" class="Log-button image-btn" title="日志" @click="showLog(scope.row)"></b-button>
+          <b-button size="mini" class="Cancel-button image-btn" type="danger" title="取消" @click="cancelEvent(scope.row)"></b-button>
         </template>
       </el-table-column>
       <template slot="append">
@@ -496,6 +499,13 @@
         this.$store.commit('setNoteParam',remarkinfo);
         this.$refs.remarkmodal.show();
       },
+      showLog(row){
+        let logkey = "";
+
+        this.$store.commit('setLogtype','ScEvent');
+        this.$store.commit('setLogKey',logkey);
+        this.$root.$emit('bv::show::modal', 'caterlogmodal');
+      },
       //显示场地弹窗
       placeshow(){
         if(!this.isClear){
@@ -545,6 +555,11 @@
         this.$store.commit('setEventid',row.eventid);
         this.$router.push({ name: '宴会事务项目'});
       },
+      getNoteClass(row){
+        if(row.hasOwnProperty("isnotes")){
+          return "notetip";
+        }
+      }
     },
     components: {
       FormatInput,
@@ -762,6 +777,11 @@
       .form-group{
         margin-bottom: 0;
       }
+    }
+    .notetip{
+      top: 2px;
+      right: 67px;
+
     }
     #radios2{
       float: right;

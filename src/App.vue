@@ -38,6 +38,8 @@ export default {
 }
   body,span,input,label{
     font-family: 'Open Sans',sans-serif;
+  }
+  body{
     overflow-y: hidden;
   }
   input,table{

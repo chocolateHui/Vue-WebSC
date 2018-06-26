@@ -2,44 +2,51 @@
 <template>
   <div id="sceventitem">
     <b-container fluid>
-      <div style="width: 100%">
-        <b-input-group prepend="部门" id="sel">
-        <el-select clearable  v-model="selectbm">
-          <el-option
-            v-for="item in localbm"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </b-input-group>
+      <b-row>
+        <div style="width: 100%">
+          <b-input-group prepend="部门" id="sel">
+            <el-select clearable  v-model="selectbm">
+              <el-option
+                v-for="item in localbm"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </b-input-group>
 
+          <div class="input-group res">
+            <div class="input-group-append" style="height: 33px;">
+              <div class="input-group-text" style="border-radius: 0.25rem;background-color: #6FB3E0">
+                <i class="fa fa-refresh" @click="refreshdata" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
 
-        <div>
-          <i class="fa fa-refresh refresh" @click="refreshdata" aria-hidden="true"></i>
+          <b-form inline class="forma" >
+            <b-button
+              size="sm"
+              @click="close()">复制</b-button>
+            <b-button
+              size="sm"
+               @click="unclose()">转移</b-button>
+            <b-button style="float: right"
+                      size="sm"
+                      @click="remarkshow()">部门备注</b-button>
+          </b-form>
+          <b-input-group style="padding-top: 0.5rem;width: 180px;float: right">
+            <b-input-group-text slot="append" style="background-color: #6FB3E0">
+              <i class="fa fa-search"></i>
+            </b-input-group-text>
+            <b-form-input  v-model="filterText" placeholder="请输入关键字搜索"></b-form-input>
+          </b-input-group>
         </div>
-        <b-form inline class="forma" >
-          <b-button
-            size="sm"
-            variant="primary" @click="close()">复制</b-button>
-          <b-button
-            size="sm"
-            variant="warning" @click="unclose()">转移</b-button>
-          <b-button style="float: right"
-                    size="sm"
-                    @click="remarkshow()">部门备注</b-button>
-        </b-form>
-        <b-input-group style="padding-top: 0.5rem;width: 180px;float: right">
-          <b-input-group-text slot="append">
-            <i class="fa fa-search"></i>
-          </b-input-group-text>
-          <b-form-input v-model="filterText" placeholder="请输入关键字搜索"></b-form-input>
-        </b-input-group>
-      </div>
+      </b-row>
 
 
 
-      <b-row id="rowrow" style="font-size: 1rem;width:101%">
+
+      <b-row id="rowrow" style="font-size: 1rem;width:100%;padding-bottom: 0.5rem">
         <el-table
           :data="searchitems"
           border
@@ -93,21 +100,16 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="85">
+            width="100">
             <template slot-scope="scope">
-              <b-form inline class="paddingleft0 paddingbottom0">
-                <b-button
-                  size="sm"
-                  variant="primary" @click="deletel(scope.row)" style="margin-top:0px">删</b-button>
-                <b-button
-                  size="sm"
-                  variant="primary" @click="saveitem(scope.row)" style="margin-top:0px">存</b-button>
-              </b-form>
+                <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
+                <b-button size="mini" class="Delete-button image-btn" type="danger" @click="saveitem(scope.row)"></b-button>
+                <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log2(scope)"></b-button>
             </template>
           </el-table-column>
         </el-table>
       </b-row>
-      <b-modal id="multieventemodal" ref="multieventmodal" title="场地列表" size="lg" hide-footer>
+      <b-modal id="multieventmodal" ref="multieventmodal" title="场地列表" size="lg" hide-footer>
         <MultiEvent ref="MultiPlace" @placeConfirm="placeConfirm" ></MultiEvent>
       </b-modal>
       <b-modal id="singleeventmodal" ref="singleeventmodal" title="场地列表" size="lg" hide-footer>
@@ -115,6 +117,9 @@
       </b-modal>
       <b-modal id="remarkmodal" ref="remarkmodal"  size="lg" title="宴会备注" hide-footer>
         <remark></remark>
+      </b-modal>
+      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+        <sysLog></sysLog>
       </b-modal>
     </b-container>
   </div>
@@ -127,6 +132,8 @@
   import MultiEvent from  '../../components/sceventitem/MultiEvent.vue'
   import SingleEvent from  '../../components/sceventitem/SingleEvent.vue'
   import remark from  '../../components/remark.vue'
+  import '../../css/imgbtn.scss'
+  import sysLog from  '../../components/syslog.vue'
 
   export default {
 
@@ -138,9 +145,10 @@
         selectbm:"",
         filterText:"",
         sceventitemlist:[],
-        th:document.body.clientHeight-420
+        th:document.body.clientHeight-433
       }
     },
+
     created(){
       this.refreshdata();
     },
@@ -148,7 +156,8 @@
       ...mapGetters([
         'sceventitemeventid',
         'catering',
-        'eventdes'
+        'eventdes',
+        'isrefresh'
       ]),
       searchitems:function () {
 
@@ -191,7 +200,6 @@
         this.refreshdata();
       },
       sceventitemlist(val,oldvalue){
-        console.log("watch");
         let bm = [];
         let item = [];
         for(let elm of val){
@@ -207,15 +215,21 @@
         }
         this.localsceventitem =  item.slice(0);
         this.localbm = bm;
-        console.log(this.localbm);
       },
+      isrefresh(val,oldvalue){
+        if(val==="T"){
+          this.selectbm="";
+          this.refreshdata();
+        }
+      }
 
     },
     components:{
       SingleEvent,
       Numberinput,
       MultiEvent,
-      remark
+      remark,
+      sysLog
     },
     methods: {
       updateValue(event) {
@@ -253,6 +267,7 @@
               else{
                 this.sceventitemlist= [];
               }
+              this.$store.commit('setIsrefresh',"F");
             }else{
               console.log(response.data);
             }
@@ -260,7 +275,7 @@
         })
       },
       close:function(){
-        this.$refs.multiplacemodal.show()
+        this.$refs.multieventmodal.show()
       },
       unclose:function(){
         this.$refs.singleeventmodal.show()
@@ -472,14 +487,28 @@
           })
         })
       },
+      log2(scope){
+        let row  = scope.row;
+        let logkey =row.inumber+'|'+row.eventid  +'|'+ this.$store.getters.hotel.hotelid+'|'+this.$store.getters.groupid;
+        this.$store.commit('setLogtype','ScEventitem');
+        this.$store.commit('setLogKey',logkey);
+        this.$root.$emit('bv::show::modal', 'logmodal');
+      },
     }
 
   }
 </script>
 <style lang="scss" type="text/scss">
   #sceventitem{
+    .container-fluid{
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      background-color: #F2F2F2;
+    }
+    .fa{
+      color: white;
+    }
     #sel{
-      margin-left: -15px;
       padding-top: 0.5rem;
       width: 300px;
       float: left;
@@ -496,10 +525,13 @@
       padding-top: 0.5rem;
       padding-right: 0.5rem;
       .btn {
-        height: 34px;
+        height: 33px;
         width: 72px;
         margin-left: 5px;
         border-radius: 0.25rem;
+        background-color:#6FB3E0;
+        color: white;
+        border-color: transparent;
       }
     }
     table{
@@ -528,6 +560,7 @@
     }
     .row{
       margin-right: 0;
+      margin-left: 0;
     }
     .custom-control {
       min-height: 0.6rem;
@@ -535,13 +568,13 @@
     .form-row > .col, .form-row > [class*="col-"] {
       padding-right: 0px;
     }
-    .refresh {
+    .res {
+      width: 33px;
+      position: relative;
       float: right;
-      font-size: 14px;
-      padding-top: 1.2rem;
-      padding-bottom: 0.5rem;
-      margin-right: 0.5rem;
+      padding-top:0.5rem ;
     }
+
     #rowrow{
 
       .el-input__inner {

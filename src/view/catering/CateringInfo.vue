@@ -12,7 +12,7 @@
       </el-tab-pane>
     </el-tabs>
 
-    <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+    <b-modal id="caterlogmodal" size="lg" title="操作日志" ok-only ok-title="确认">
       <sysLog></sysLog>
     </b-modal>
   </div>
@@ -122,18 +122,15 @@
       margin-right: 17px;
       margin-top: 1px;
       position: relative;
-      z-index: 1199;
+      z-index: 1002;
       float: right;
     }
-  }
-  .card {
-    margin-bottom: 15px;
-  }
-  .form-control{
-    height: 33.5px;
-  }
-  .ivu-input{
-    height: 30px;
-    margin-top: 0;
+    .form-control{
+      height: 33.5px;
+    }
+    .ivu-input{
+      height: 30px;
+      margin-top: 0;
+    }
   }
 </style>

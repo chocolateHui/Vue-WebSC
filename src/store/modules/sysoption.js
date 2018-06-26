@@ -17,8 +17,14 @@ const state = {
   scDoCheck: {},
   scMessageUrl: {},
   scEoSigntime: {},
+  scEoGroup: {},
+  EOID: {}
 }
-
+const getAllMsg = function (store) {
+  axiosinstance.defaults.headers.common['username'] = store.getters.username
+  axiosinstance.defaults.headers.common['signature'] = store.getters.signature
+  axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
+}
 // getters
 const getters = {
   eventDepDate: state => state.eventDepDate,
@@ -41,7 +47,11 @@ const getters = {
 
   scMessageUrl: state => state.scMessageUrl,
 
-  scEoSigntime: state => state.scEoSigntime
+  scEoSigntime: state => state.scEoSigntime,
+
+  scEoGroup: state => state.scEoGroup,
+
+  EOID: state => state.EOID
 }
 
 // actions
@@ -54,7 +64,7 @@ const actions = {
         cat: 'sc'
       }).then(function (response) {
         if (response.status === 200) {
-          for(let option of response.data.sysoptions){
+          for (let option of response.data.sysoptions) {
             if (option) {
               switch (option.itemid) {
                 case 'event_dep_date':
@@ -90,6 +100,12 @@ const actions = {
                 case 'sc_eo_signtime':
                   store.commit('setScEoSigntime', option)
                   break
+                case 'sc_eo_group':
+                  store.commit('setScEoGroup', option)
+                  break
+                case 'EOID':
+                  store.commit('setEOID', option)
+                  break
               }
             }
           }
@@ -97,9 +113,17 @@ const actions = {
       })
     })
   },
-  commitSysoption:function () {
-
+  saveSysoption: function (store, param) {
+    return new Promise((resolve, reject) => {
+      getAllMsg(store)
+      axiosinstance.post(methodinfo.savesysoption, param).then(function (response) {
+        if (response.data.errorCode === '0') {
+          resolve()
+        }
+      })
+    })
   }
+
 }
 
 // mutations
@@ -123,7 +147,7 @@ const mutations = {
   setScPmsUrl (state, scPmsUrl) {
     state.scPmsUrl = scPmsUrl
   },
-  setScPosType(state, scPosType) {
+  setScPosType (state, scPosType) {
     state.scPosType = scPosType
   },
   setScPosUrl (state, scPosUrl) {
@@ -137,6 +161,12 @@ const mutations = {
   },
   setScEoSigntime (state, scEoSigntime) {
     state.scEoSigntime = scEoSigntime
+  },
+  setScEoGroup (state, scEoGroup) {
+    state.scEoGroup = scEoGroup
+  },
+  setEOID (state, EOID) {
+    state.EOID = Object.assign({}, EOID)
   }
 }
 

@@ -1,15 +1,59 @@
 .image-btn{
   margin:2px 0;
-  border: none;
-  border-radius: 0;
+  border: none !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
   height: 27px;
   width: 27px;
 }
-.Copy-button{background:url('/static/SCweb-icon01.png') no-repeat}
-.Edit-button{background:url('/static/SCweb-icon02.png') no-repeat}
-.Item-button{background:url('/static/SCweb-icon03.png') no-repeat}
-.Synchronization-button{background:url('/static/SCweb-icon04.png') no-repeat}
-.Journal-button{background:url('/static/SCweb-icon05.png') no-repeat}
-.Cancel-button{background:url('/static/SCweb-icon06.png') no-repeat}
-.Save-button{background:url('/static/SCweb-icon07.png') no-repeat}
-.Delete-button{background:url('/static/SCweb-icon08.png') no-repeat}
+.Copy-button{
+  background:url('/static/SCweb-icon01.png') no-repeat;
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background:url('/static/SCweb-icon01.png') no-repeat !important;
+  }
+}
+.Edit-button{
+  background:url('/static/SCweb-icon02.png') no-repeat;
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background:url('/static/SCweb-icon02.png') no-repeat!important;
+  }
+}
+.Item-button{
+  background:url('/static/SCweb-icon03.png') no-repeat;
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background:url('/static/SCweb-icon03.png') no-repeat!important;
+  }
+}
+.Synchronization-button{background:url('/static/SCweb-icon04.png') no-repeat;
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background:url('/static/SCweb-icon04.png') no-repeat!important;
+  }}
+.Journal-button{background:url('/static/SCweb-icon05.png') no-repeat;
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background:url('/static/SCweb-icon05.png') no-repeat!important;
+  }}
+.Cancel-button{background:url('/static/SCweb-icon06.png') no-repeat;
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background:url('/static/SCweb-icon06.png') no-repeat!important;
+  }}
+.Save-button{background:url('/static/SCweb-icon07.png') no-repeat;
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background:url('/static/SCweb-icon07.png') no-repeat!important;
+  }}
+.Delete-button{background:url('/static/SCweb-icon08.png') no-repeat;
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background:url('/static/SCweb-icon08.png') no-repeat!important;
+  }}
+.Log-button{background:url('/static/SCweb-icon09.png') no-repeat;
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background:url('/static/SCweb-icon09.png') no-repeat!important;
+  }}

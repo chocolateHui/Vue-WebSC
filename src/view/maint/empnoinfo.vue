@@ -158,7 +158,7 @@
         </el-table-column>
       </el-table>
 
-      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+      <b-modal id="emplogmodal" size="lg" title="操作日志" ok-only ok-title="确认">
         <sysLog></sysLog>
       </b-modal>
     </b-container>
@@ -314,7 +314,7 @@
         let logkey = row.empno +'|'+this.groupid;
         this.$store.commit('setLogtype','SysEmpno');
         this.$store.commit('setLogKey',logkey);
-        this.$root.$emit('bv::show::modal', 'logmodal');
+        this.$root.$emit('bv::show::modal', 'emplogmodal');
       },
       modalhidden: function () {
         this.oldpassword = '';
@@ -466,13 +466,12 @@
   }
 </script>
 <style lang="scss" type="text/scss">
-  #maint{
-    .input-group-text{
-      background-color: #7EB2DD;
-      border: 1px solid #76ACD8;
-      color: #FFFFFF;
-    }
-    #empnoinfo{
+   #empnoinfo{
+      .input-group-text{
+        background-color: #7EB2DD;
+        border: 1px solid #76ACD8;
+        color: #FFFFFF;
+      }
       .container-fluid{
         padding-right: 0;
         padding-left: 0;
@@ -489,25 +488,41 @@
           margin-left: 5px;
           &::before {
             border: 1px solid #D9DADB;
-            width: 1.5rem;
-            height: 1.5rem;
-            top: 0rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            top: 0.15rem;
           }
           &::after {
-             width: 1.5rem;
-             height: 1.5rem;
-             top:0rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            top:0rem;
           }
         }
       }
       .container-fluid{
         >.row{
           margin-bottom: 10px;
+          .my-1:last-of-type{
+            .btn-primary{
+              background: #7EB2DD;
+              border: none;
+              padding: 0.375rem 1.5rem;
+              margin-right: 5px;
+            }
+            .btn-primary:last-of-type{
+              background: #89C5BF;
+            }
+          }
         }
       }
       #empnotable{
         table{
           border-color: #dee2e6;
+          thead{
+            th,td{
+              background: linear-gradient(#fff, #F4F5F6);
+            }
+          }
           th,td{
             padding: 0;
             border-color: #dee2e6;
@@ -518,21 +533,25 @@
             .form-row{
               height:45px;
               .col-sm-9{
+                .custom-control-label::after{
+                  top: 0.21rem;
+                  left: -1.55rem;
+                }
                 .el-select{
                   width: 100%;
                 }
               }
               .col-form-label{
                 text-align: justify;
-              &::after{
-                 content: " ";
-                 display: inline-block;
-                 width: 100%;
-               }
+                &::after{
+                  content: " ";
+                  display: inline-block;
+                  width: 100%;
+                }
               }
             }
             .form-group{
-               margin-bottom: 0px;
+              margin-bottom: 0px;
             }
             .block{
               height:45px;
@@ -544,9 +563,9 @@
                 margin-right:10px;
                 line-height:30px;
                 &::after{
-                   content: " ";
-                   display: inline-block;
-                   width: 100%;
+                  content: " ";
+                  display: inline-block;
+                  width: 100%;
                 }
               }
               .el-date-editor.el-input{
@@ -570,9 +589,11 @@
         .el-table__expanded-cell{
           padding: 20px!important;
           box-shadow: 1px 5px 5px #dee2e6;
-          .btn-primary:last-of-type{
-             background: #7EB2DD;
-             border: none;
+          .btn-primary{
+            background: #7EB2DD;
+            border: none;
+            padding: 0.375rem 1.5rem;
+            margin-right: 5px;
           }
         }
       }
@@ -581,7 +602,5 @@
           border-top: 1px solid #ebeef5;
         }
       }
-
     }
-  }
 </style>
