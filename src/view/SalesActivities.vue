@@ -671,7 +671,10 @@
       background: rgb(255, 255, 204);
     }
     .tc span{
-      cursor:pointer;
+      color: #6FB3E0;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
     }
     .saleCalendar{
       top: 30px;

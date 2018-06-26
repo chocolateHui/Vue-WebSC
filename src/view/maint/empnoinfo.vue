@@ -489,13 +489,13 @@
           margin-left: 5px;
           &::before {
             border: 1px solid #D9DADB;
-            width: 1.5rem;
-            height: 1.5rem;
-            top: 0rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            top: 0.15rem;
           }
           &::after {
-             width: 1.5rem;
-             height: 1.5rem;
+             width: 1.25rem;
+             height: 1.25rem;
              top:0rem;
           }
         }
@@ -519,6 +519,11 @@
       #empnotable{
         table{
           border-color: #dee2e6;
+          thead{
+            th,td{
+              background: linear-gradient(#fff, #F4F5F6);
+            }
+          }
           th,td{
             padding: 0;
             border-color: #dee2e6;
@@ -529,6 +534,10 @@
             .form-row{
               height:45px;
               .col-sm-9{
+                .custom-control-label::after{
+                  top: 0.21rem;
+                  left: -1.55rem;
+                }
                 .el-select{
                   width: 100%;
                 }

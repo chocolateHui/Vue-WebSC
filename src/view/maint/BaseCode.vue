@@ -3,8 +3,8 @@
     <b-container fluid>
       <b-row>
         <b-col sm="8">
-          <b-btn @click="addRow">新增</b-btn>
-          <b-btn @click="saveBaseCode">保存</b-btn>
+          <b-btn @click="addRow"><i class="fa fa-plus" aria-hidden="true"></i>新增</b-btn>
+          <b-btn @click="saveBaseCode"><i class="fa fa-floppy-o" aria-hidden="true"></i>保存</b-btn>
         </b-col>
         <b-col sm="3">
         </b-col>
@@ -267,14 +267,22 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" type="text/scss">
   #basecode{
     font-size: 0.9rem;
     .container-fluid{
       padding: 0;
+      .btn{
+        .fa{ margin-right: 3px}
+      }
     }
     -webkit-backface-visibility: hidden;
     .el-table{
+      thead{
+        th,td{
+          background: linear-gradient(#fff, #F4F5F6);
+        }
+      }
       td, th{
         border-color: #dee2e6;
         padding: 0;
@@ -285,6 +293,8 @@
     }
     .cell{
       font-size: 0.9rem;
+      line-height: 24px;
+      padding: 3px;
     }
     .el-table__row{
       .cell{
@@ -298,6 +308,8 @@
       .el-input__inner{
         padding: 0 10px;
         height: 33px;
+        background: none;
+        color: #606266;
       }
       .ivu-input{
         height: 33px;
