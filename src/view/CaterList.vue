@@ -118,7 +118,7 @@
                 <template slot-scope="scope">
                   <!--<b-form inline class="paddingleft0 paddingbottom0">-->
                     <b-button
-                      size="mini" title="编辑" type="danger" class="Edit-button image-btn" @click="deleteempno()"></b-button>
+                      size="mini" title="编辑" type="danger" class="Edit-button image-btn" @click="openHisCateringInfo(scope.row)"></b-button>
                   <!--</b-form>-->
                 </template>
               </el-table-column>
@@ -322,6 +322,12 @@
       },
       openCateringInfo(row){
         this.$store.commit('setCaterid',row.caterid);
+        this.$store.commit('setIsHistory',false);
+        this.$router.push({ name: '宴会预订详情'});
+      },
+      openHisCateringInfo(row){
+        this.$store.commit('setCaterid',row.caterid);
+        this.$store.commit('setIsHistory',true);
         this.$router.push({ name: '宴会预订详情'});
       },
       remarkshow:function (row) {

@@ -117,10 +117,14 @@ const actions = {
   },
   getCateringInfo (store) {
     if (store.getters.caterid) {
+      let method = methodinfo.getcateringinfo
+      if (store.getters.isHistory) {
+        method = methodinfo.gethistorycateringinfo
+      }
       axiosinstance.defaults.headers.common['username'] = store.getters.username
       axiosinstance.defaults.headers.common['signature'] = store.getters.signature
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
-      axiosinstance.post(methodinfo.getcateringinfo, {
+      axiosinstance.post(method, {
         caterid: store.getters.caterid
       }).then(function (response) {
         if (response.data.errorCode === '0') {
@@ -134,10 +138,15 @@ const actions = {
   },
   getEventList (store) {
     store.commit('setEventlist', [])
+    let method = methodinfo.geteventlist
+    if (store.getters.isHistory) {
+      method = methodinfo.getheventlist
+    }
+
     axiosinstance.defaults.headers.common['username'] = store.getters.username
     axiosinstance.defaults.headers.common['signature'] = store.getters.signature
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
-    axiosinstance.post(methodinfo.geteventlist, {
+    axiosinstance.post(method, {
       caterid: store.getters.caterid,
       sta: state.eventstas
     }).then(function (response) {

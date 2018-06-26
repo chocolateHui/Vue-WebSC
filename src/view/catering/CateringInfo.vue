@@ -2,7 +2,7 @@
   <div id="Catering">
     <CateringInfo @updateCatering="updateCatering" :caterid="caterid"></CateringInfo>
     <NewEvent ref="newevent" :eventshow="false" :toggleshow="toggleshow"></NewEvent>
-    <b-button v-b-toggle.newevent class="newEventbtn">新建事务</b-button>
+    <b-button v-if="!isHistory" v-b-toggle.newevent class="newEventbtn">新建事务</b-button>
     <el-tabs type="border-card">
       <el-tab-pane label="事务列表">
         <EventList :caterid="caterid"></EventList>
@@ -47,7 +47,8 @@
     computed: {
       ...mapGetters([
         'caterid',
-        'catering'
+        'catering',
+        'isHistory'
       ])
     },
     methods: {
