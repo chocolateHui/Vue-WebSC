@@ -513,11 +513,12 @@
         color: $colorIcon;
       }
       .Sta{
-        width: 90%;
+        width: 75px;
         height: 65px;
         background: $color11;
         border-radius: 10px;
         padding: 0 20px;
+        margin: auto;
         margin-top: 6px;
         .StaFont{
           padding-top: 3px;

@@ -238,11 +238,8 @@
         </b-row>
 
       </b-modal>
-      <b-modal id="placeexpandmodal" ref="placeexpandmodel" size="lg" title="操作日志" hide-footer ok-only ok-title="确认">
+      <b-modal id="placeexpandmodal" ref="placeexpandmodel" size="lg" title="扩展属性" hide-footer ok-only ok-title="确认">
         <placeexpand :pccode="pcinfo.pccode"></placeexpand>
-      </b-modal>
-      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
-        <sysLog></sysLog>
       </b-modal>
     </b-container>
   </div>
@@ -777,14 +774,14 @@
         let logkey =this.$store.getters.hotel.hotelid +'|'+ row.tableno +'|'+this.$store.getters.groupid;
         this.$store.commit('setLogtype','PosTblsta');
         this.$store.commit('setLogKey',logkey);
-        this.$root.$emit('bv::show::modal', 'logmodal');
+        this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       log2(){
         console.log(this.pcinfo);
         let logkey =this.$store.getters.hotel.hotelid +'|'+ this.pcinfo.pccode +'|'+this.$store.getters.groupid;
         this.$store.commit('setLogtype','PosPccode');
         this.$store.commit('setLogKey',logkey);
-        this.$root.$emit('bv::show::modal', 'logmodal');
+        this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
     },
     components: {
