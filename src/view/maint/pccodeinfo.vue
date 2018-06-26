@@ -866,6 +866,9 @@
       .cell {
         padding-left: 5px;
         padding-right: 5px;
+        .form-inline{
+          .btn:not(:last-child){ margin-right: 3px; }
+        }
       }
 
     }
