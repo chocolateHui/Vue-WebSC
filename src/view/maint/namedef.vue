@@ -3,9 +3,9 @@
     <b-container fluid>
       <b-row>
         <b-col sm="8">
-          <b-btn @click="addRow">新增</b-btn>
-          <b-btn @click="saveBaseCode">保存</b-btn>
-          <b-btn @click="log2">删除日志</b-btn>
+          <b-btn @click="addRow"><i class="fa fa-plus" aria-hidden="true"></i>新增</b-btn>
+          <b-btn @click="saveBaseCode"><i class="fa fa-floppy-o" aria-hidden="true"></i>保存</b-btn>
+          <b-btn @click="log2"><i class="fa fa-trash-o" aria-hidden="true"></i>删除日志</b-btn>
         </b-col>
         <b-col sm="3">
         </b-col>
@@ -236,7 +236,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" type="text/scss">
   #basecode{
     font-size: 0.9rem;
     .container-fluid{

@@ -802,6 +802,11 @@
     }
     table{
       border-color: #dee2e6;
+      thead{
+        th,td{
+          background: linear-gradient(#fff, #F4F5F6);
+        }
+      }
       th,td{
         padding: 0;
         border-color: #dee2e6;

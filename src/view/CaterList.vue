@@ -64,12 +64,10 @@
                 label="操作"
                 width="120">
                 <template slot-scope="scope">
-                  <b-form inline class="paddingleft0 paddingbottom0">
-                    <b-button
-                      size="sm" variant="primary" @click="openCateringInfo(scope.row)">编</b-button>
-                    <b-button
-                      size="sm" variant="warning" @click="deleteempno()">同</b-button>
-                  </b-form>
+                  <b-button
+                    size="mini" type="danger" title="编辑" class="Edit-button image-btn" @click="openCateringInfo(scope.row)"></b-button>
+                  <b-button
+                    size="mini" type="danger" title="同步" class="Synchronization-button image-btn" @click="deleteempno()"></b-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -118,11 +116,10 @@
                 label="操作"
                 width="55">
                 <template slot-scope="scope">
-                  <b-form inline class="paddingleft0 paddingbottom0">
+                  <!--<b-form inline class="paddingleft0 paddingbottom0">-->
                     <b-button
-                      size="sm"
-                      variant="primary" @click="deleteempno()">编</b-button>
-                  </b-form>
+                      size="mini" title="编辑" type="danger" class="Edit-button image-btn" @click="deleteempno()"></b-button>
+                  <!--</b-form>-->
                 </template>
               </el-table-column>
             </el-table>
@@ -143,6 +140,8 @@
   import methodinfo from '../config/MethodConst.js'
   import 'font-awesome/css/font-awesome.css'
   import scnote from  '../components/remark.vue'
+
+  import '../css/imgbtn.scss'
 
   const fildes = [
     {  prop: 'caterid', label:  '账号',width:'160',sortable:true,showTip: true},
@@ -446,12 +445,12 @@
       height: 90%;
     }
 
-    .paddingleft0{
-      padding-left: 0px!important;
-    }
-    .paddingbottom0{
-      padding-bottom:  0px!important;
-    }
+    /*.paddingleft0{*/
+      /*padding-left: 0px!important;*/
+    /*}*/
+    /*.paddingbottom0{*/
+      /*padding-bottom:  0px!important;*/
+    /*}*/
     .marginbottom15{
       margin-bottom: 15px;
     }
@@ -492,6 +491,11 @@
     }
     table{
       border-color: #dee2e6;
+      thead{
+        th,td{
+          background: linear-gradient(#fff, #F4F5F6);
+        }
+      }
       th,td{
         padding: 0;
         border-color: #dee2e6;

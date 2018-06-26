@@ -26,7 +26,7 @@
             <input type="button" class="btn_ok" ref="reftypeok" value="确定" @click="thingTypeOk" />
           </div>
         </li>
-        <li><span @click="btnDataTime" ref="refcalen">{{datatime}}</span>
+        <li><span class="el-icon-date" @click="btnDataTime" ref="refcalen">{{datatime}}</span>
           <div class="calendarShow" ref="refcalen" v-if="calenShow">
                <calendar-lun  :datalunsign="datatime.substring(0,10)" @choseDayLun="choseDayLun"></calendar-lun>
           </div>

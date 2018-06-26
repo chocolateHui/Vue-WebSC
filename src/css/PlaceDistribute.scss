@@ -111,10 +111,11 @@ $colorAll:#b4b4b6;
       >li{
         &:nth-child(1){ float:left;}
         &:nth-child(3){
-          text-align:center;
+          text-align:center; position:relative;
           span{
             color:$color4C;cursor: pointer; display:inline-block; font-size:15px !important; height: 30px; padding-right:20px; position:relative;
-
+            &::before{ content:""}
+            &::after{ content:"\E608"; color:$color752; position:absolute; right:0; top:-1px; display: inline-block; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}
           }
         }
       }
