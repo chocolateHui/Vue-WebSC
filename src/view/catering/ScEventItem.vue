@@ -1,6 +1,6 @@
 <!-- 模板组件，用于模拟不同路由下的组件显示 -->
 <template>
-  <b-container id="maint" fluid>
+  <b-container id="ScEventitem" fluid>
     <b-row no-gutters>
       <b-col cols="2">
         <b-input-group>
@@ -144,8 +144,7 @@
   };
 </script>
 <style lang="scss" type="text/scss">
-
-  #maint{
+  #ScEventitem{
     .container{
       overflow-y: auto;
       padding-left: 0px;

@@ -132,8 +132,5 @@
       height: 30px;
       margin-top: 0;
     }
-    .card{
-      margin-bottom: 1rem;
-    }
   }
 </style>

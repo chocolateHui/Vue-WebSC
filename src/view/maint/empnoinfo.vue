@@ -466,135 +466,132 @@
   }
 </script>
 <style lang="scss" type="text/scss">
-  #maint{
+  #empnoinfo{
     .input-group-text{
       background-color: #7EB2DD;
       border: 1px solid #76ACD8;
       color: #FFFFFF;
     }
-    #empnoinfo{
-      .container-fluid{
-        padding-right: 0;
-        padding-left: 0;
-      }
-      .form-control{
-        height: 33.5px;
-      }
-      .el-date-editor .el-range-separator{
-        padding: 0;
-      }
-      .custom-checkbox {
-        .custom-control-label {
-          cursor: pointer;
-          margin-left: 5px;
-          &::before {
-            border: 1px solid #D9DADB;
-            width: 1.5rem;
-            height: 1.5rem;
-            top: 0rem;
-          }
-          &::after {
-             width: 1.5rem;
-             height: 1.5rem;
-             top:0rem;
-          }
+    .container-fluid{
+      padding-right: 0;
+      padding-left: 0;
+    }
+    .form-control{
+      height: 33.5px;
+    }
+    .el-date-editor .el-range-separator{
+      padding: 0;
+    }
+    .custom-checkbox {
+      .custom-control-label {
+        cursor: pointer;
+        margin-left: 5px;
+        &::before {
+          border: 1px solid #D9DADB;
+          width: 1.5rem;
+          height: 1.5rem;
+          top: 0rem;
+        }
+        &::after {
+          width: 1.5rem;
+          height: 1.5rem;
+          top:0rem;
         }
       }
-      .container-fluid{
-        >.row{
-          margin-bottom: 10px;
-          .my-1:last-of-type{
-              .btn-primary{
-                background: #7EB2DD;
-                border: none;
-                padding: 0.375rem 1.5rem;
-                margin-right: 5px;
-              }
-              .btn-primary:last-of-type{
-                background: #89C5BF;
-              }
-          }
-        }
-      }
-      #empnotable{
-        table{
-          border-color: #dee2e6;
-          th,td{
-            padding: 0;
-            border-color: #dee2e6;
-          }
-        }
-        .el-table__body-wrapper{
-          .row{
-            .form-row{
-              height:45px;
-              .col-sm-9{
-                .el-select{
-                  width: 100%;
-                }
-              }
-              .col-form-label{
-                text-align: justify;
-              &::after{
-                 content: " ";
-                 display: inline-block;
-                 width: 100%;
-               }
-              }
-            }
-            .form-group{
-               margin-bottom: 0px;
-            }
-            .block{
-              height:45px;
-              display:flex;
-              .demonstration{
-                display: inline-block;
-                width: 22.5%;
-                text-align: justify;
-                margin-right:10px;
-                line-height:30px;
-                &::after{
-                   content: " ";
-                   display: inline-block;
-                   width: 100%;
-                }
-              }
-              .el-date-editor.el-input{
-                width: 74.35%;
-                .el-input__prefix, .el-input__suffix{
-                  height: 34px;
-                  .el-input__icon{
-                    line-height: 34px;
-                  }
-                }
-              }
-            }
-          }
-        }
-        .el-input__inner{
-          height: 33.5px;
-        }
-        .el-table .caret-wrapper{
-          width: 20px;
-        }
-        .el-table__expanded-cell{
-          padding: 20px!important;
-          box-shadow: 1px 5px 5px #dee2e6;
+    }
+    .container-fluid{
+      >.row{
+        margin-bottom: 10px;
+        .my-1:last-of-type{
           .btn-primary{
             background: #7EB2DD;
             border: none;
             padding: 0.375rem 1.5rem;
             margin-right: 5px;
           }
+          .btn-primary:last-of-type{
+            background: #89C5BF;
+          }
         }
       }
-      #logmodal{
-        .el-table__header th.is-leaf{
-          border-top: 1px solid #ebeef5;
+    }
+    #empnotable{
+      table{
+        border-color: #dee2e6;
+        th,td{
+          padding: 0;
+          border-color: #dee2e6;
         }
       }
-
+      .el-table__body-wrapper{
+        .row{
+          .form-row{
+            height:45px;
+            .col-sm-9{
+              .el-select{
+                width: 100%;
+              }
+            }
+            .col-form-label{
+              text-align: justify;
+              &::after{
+                content: " ";
+                display: inline-block;
+                width: 100%;
+              }
+            }
+          }
+          .form-group{
+            margin-bottom: 0px;
+          }
+          .block{
+            height:45px;
+            display:flex;
+            .demonstration{
+              display: inline-block;
+              width: 22.5%;
+              text-align: justify;
+              margin-right:10px;
+              line-height:30px;
+              &::after{
+                content: " ";
+                display: inline-block;
+                width: 100%;
+              }
+            }
+            .el-date-editor.el-input{
+              width: 74.35%;
+              .el-input__prefix, .el-input__suffix{
+                height: 34px;
+                .el-input__icon{
+                  line-height: 34px;
+                }
+              }
+            }
+          }
+        }
+      }
+      .el-input__inner{
+        height: 33.5px;
+      }
+      .el-table .caret-wrapper{
+        width: 20px;
+      }
+      .el-table__expanded-cell{
+        padding: 20px!important;
+        box-shadow: 1px 5px 5px #dee2e6;
+        .btn-primary{
+          background: #7EB2DD;
+          border: none;
+          padding: 0.375rem 1.5rem;
+          margin-right: 5px;
+        }
+      }
+    }
+    #logmodal{
+      .el-table__header th.is-leaf{
+        border-top: 1px solid #ebeef5;
+      }
     }
   }
 </style>
