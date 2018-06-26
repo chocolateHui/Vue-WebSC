@@ -504,7 +504,7 @@
 
         this.$store.commit('setLogtype','ScEvent');
         this.$store.commit('setLogKey',logkey);
-        this.$root.$emit('bv::show::modal', 'logmodal');
+        this.$root.$emit('bv::show::modal', 'caterlogmodal');
       },
       //显示场地弹窗
       placeshow(){

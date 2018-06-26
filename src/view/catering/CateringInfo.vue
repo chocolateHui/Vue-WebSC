@@ -12,7 +12,7 @@
       </el-tab-pane>
     </el-tabs>
 
-    <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+    <b-modal id="caterlogmodal" size="lg" title="操作日志" ok-only ok-title="确认">
       <sysLog></sysLog>
     </b-modal>
   </div>

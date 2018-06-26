@@ -389,7 +389,7 @@
       showLog(){
         this.$store.commit('setLogtype','ScCatering');
         this.$store.commit('setLogKey',this.logkey);
-        this.$root.$emit('bv::show::modal', 'logmodal');
+        this.$root.$emit('bv::show::modal', 'caterlogmodal');
       },
       EOShare(){
         this.$refs.EOSharemodal.show();
