@@ -466,13 +466,12 @@
   }
 </script>
 <style lang="scss" type="text/scss">
-  #maint{
-    .input-group-text{
-      background-color: #7EB2DD;
-      border: 1px solid #76ACD8;
-      color: #FFFFFF;
-    }
-    #empnoinfo{
+   #empnoinfo{
+      .input-group-text{
+        background-color: #7EB2DD;
+        border: 1px solid #76ACD8;
+        color: #FFFFFF;
+      }
       .container-fluid{
         padding-right: 0;
         padding-left: 0;
@@ -494,9 +493,9 @@
             top: 0.15rem;
           }
           &::after {
-             width: 1.25rem;
-             height: 1.25rem;
-             top:0rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            top:0rem;
           }
         }
       }
@@ -504,15 +503,15 @@
         >.row{
           margin-bottom: 10px;
           .my-1:last-of-type{
-              .btn-primary{
-                background: #7EB2DD;
-                border: none;
-                padding: 0.375rem 1.5rem;
-                margin-right: 5px;
-              }
-              .btn-primary:last-of-type{
-                background: #89C5BF;
-              }
+            .btn-primary{
+              background: #7EB2DD;
+              border: none;
+              padding: 0.375rem 1.5rem;
+              margin-right: 5px;
+            }
+            .btn-primary:last-of-type{
+              background: #89C5BF;
+            }
           }
         }
       }
@@ -544,15 +543,15 @@
               }
               .col-form-label{
                 text-align: justify;
-              &::after{
-                 content: " ";
-                 display: inline-block;
-                 width: 100%;
-               }
+                &::after{
+                  content: " ";
+                  display: inline-block;
+                  width: 100%;
+                }
               }
             }
             .form-group{
-               margin-bottom: 0px;
+              margin-bottom: 0px;
             }
             .block{
               height:45px;
@@ -564,9 +563,9 @@
                 margin-right:10px;
                 line-height:30px;
                 &::after{
-                   content: " ";
-                   display: inline-block;
-                   width: 100%;
+                  content: " ";
+                  display: inline-block;
+                  width: 100%;
                 }
               }
               .el-date-editor.el-input{
@@ -603,7 +602,5 @@
           border-top: 1px solid #ebeef5;
         }
       }
-
     }
-  }
 </style>

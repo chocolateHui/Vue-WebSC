@@ -125,15 +125,12 @@
       z-index: 1002;
       float: right;
     }
-  }
-  .card {
-    margin-bottom: 15px;
-  }
-  .form-control{
-    height: 33.5px;
-  }
-  .ivu-input{
-    height: 30px;
-    margin-top: 0;
+    .form-control{
+      height: 33.5px;
+    }
+    .ivu-input{
+      height: 30px;
+      margin-top: 0;
+    }
   }
 </style>
