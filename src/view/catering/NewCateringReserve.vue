@@ -26,7 +26,7 @@
     mixins: [cateringMixin]
   }
 </script>
-<style lang="scss">
+<style scoped lang="scss">
   .card {
     margin-bottom: 15px;
     .form-control{

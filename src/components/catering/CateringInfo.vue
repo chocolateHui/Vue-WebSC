@@ -454,6 +454,7 @@
   @import '../../css/color';
   #caterinfo{
     font-size: 0.9rem;
+    margin-bottom: 1rem;
     .row{
       margin: 0;
     }

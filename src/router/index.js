@@ -13,8 +13,10 @@ const NewCateringReserve = () => import(/* webpackChunkName: "group-catering" */
 const NewCateringQuery = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/NewCateringQuery.vue')
 const CateringInfo = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/CateringInfo.vue')
 const ScEventItem = () => import(/* webpackChunkName: "group-catering" */ '../view/catering/ScEventItem.vue')
+
+// EO单预览
+const EOView = () => import(/* webpackChunkName: "group-EO" */ '../view/catering/EOView.vue')
 // 报表相关
-const EOView = () => import(/* webpackChunkName: "group-report" */ '../view/catering/EOView.vue')
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
 const Futureincome = () => import(/* webpackChunkName: "group-report" */ '../view/report/Futureincome.vue')
 const Futureincomebysaleid = () => import(/* webpackChunkName: "group-report" */ '../view/report/Futureincomebysaleid.vue')
