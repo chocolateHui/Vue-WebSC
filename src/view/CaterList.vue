@@ -418,6 +418,7 @@
   #CaterListpanel{
     .el-tabs__content{
       overflow: hidden!important;
+      .row{ margin-right: 0px; margin-left: 0px;}
     }
     .el-tabs {
       padding-top: 0px!important;
