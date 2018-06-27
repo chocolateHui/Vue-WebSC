@@ -270,9 +270,7 @@
 </template>
 
 <script>
-  import Numberinput from  '../../components/FormatInput.vue'
   import methodinfo from '../../config/MethodConst.js'
-  import sysLog from  '../../components/syslog.vue'
 
   const show = {  classcodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
   const newshow = {  classcodedisabled: false, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:false,tablesdisabled:false}
@@ -734,7 +732,6 @@
       },
     },
     components: {
-      Numberinput,sysLog
     },
     watch: {
       currentRow(newVal, oldVal) {

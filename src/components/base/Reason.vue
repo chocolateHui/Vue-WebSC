@@ -44,7 +44,7 @@
 </template>
 <script>
   import { mapGetters, mapMutations } from 'vuex'
-  import methodinfo from '../config/MethodConst'
+  import methodinfo from '../../config/MethodConst'
 
   const fildes = [
     {  prop: 'code', label:  '编码',width:'100',sortable:true,"classname":"text-center" },

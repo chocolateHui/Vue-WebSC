@@ -126,9 +126,6 @@
           </b-row>
         </el-tab-pane>
       </el-tabs>
-      <b-modal id="remarkmodal" ref="remarkmodal"  size="lg" title="宴会备注" hide-footer>
-        <scnote></scnote>
-      </b-modal>
   </div>
 </template>
 
@@ -139,7 +136,6 @@
   import {datevalid}  from '../common/date.js'
   import methodinfo from '../config/MethodConst.js'
   import 'font-awesome/css/font-awesome.css'
-  import scnote from  '../components/remark.vue'
 
   import '../css/imgbtn.scss'
 
@@ -383,7 +379,6 @@
       }
     },
     components: {
-      scnote,
     },
     watch: {
       selected(newVal, oldVal) {
