@@ -107,7 +107,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" type="text/scss">
   #Catering{
     overflow: auto;
     .el-tabs{
@@ -119,11 +119,15 @@
       }
     }
     .newEventbtn{
-      margin-right: 17px;
-      margin-top: 1px;
+      margin-right: 32px;
+      margin-top: 6px;
       position: relative;
       z-index: 1002;
       float: right;
+      background-color: #D15B47 !important;
+      border: none;
+      border-radius: 0px;
+      text-align: center;
     }
   }
   .card {

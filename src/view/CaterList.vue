@@ -468,7 +468,8 @@
     }
     .refresh {
       float: right;
-      padding-top: 4px;
+      font-size: 1.25rem;
+      color: #ffb751;
     }
     .is-disabled {
       float: right;
@@ -517,12 +518,12 @@
       position: relative;
       z-index: 99;
       margin-right: 17px;
-      margin-top: 1px;
+      margin-top: 3px;
       float: right;
-      height: 39px;
+      height: 34px;
 
       .el-input__inner{
-        height: 39px;
+        height: 34px;
       }
     }
   }
