@@ -11,7 +11,7 @@
         </li>
         <li class="it" v-for="(placeslist,index) in placesinfo2">
           <div v-for="infolist in placesinfo2[index].bdates" class="clearfix" v-if="infolist.bdate==timelistthing1&&placeslistp==placeslist.tableno">
-            <span class="n1" :data-id="infolist.caterid">{{infolist.caterdes}}</span>
+            <span class="n1" :data-id="infolist.caterid" @click="btnToEvent(infolist.caterid)">{{infolist.caterdes}}</span>
             <span class="n5">{{infolist.eventdes}}</span>
             <span class="n7" v-for="hlist in headListp" v-if="hlist.dataid==infolist.sta">{{hlist.name}}</span>
             <span class="n2">{{infolist.salename}}</span>
@@ -50,6 +50,11 @@
       },
       props:['datatimeid','timelistthing1','placeslistp','headListp'],
       methods:{
+        btnToEvent:function (cater) {
+          this.$store.commit('setCaterid',cater);
+          this.$store.commit('setIsHistory',false);
+          this.$router.push({ name: '宴会预订详情'});
+        },
         addThings:function () {
           this.$emit('addThings',this.timelistthing1,this.placeslistp)
         },

@@ -93,9 +93,6 @@
             paramevent:{},
             syncparam:{},
             remarklist:{},
-            eventidC:'',
-            cateridC:'',
-            caternameC:'',
             ifnotechecked:false,
             ifreson:false,
             cancelid:'',
@@ -340,10 +337,10 @@
           this.$refs.remarkmodal.show()
         },
         btnItem:function (list) {
-          this.eventidC=list.eventid
-          this.cateridC=list.caterid
-          this.caternameC=list.catername
-          this.$router.push({name:'宴会场地分布'})
+          // this.caternameC=list.catername
+          this.$store.commit('setCaterid',list.caterid);
+          this.$store.commit('setEventid',list.eventid);
+          this.$router.push({ name: '宴会事务项目'});
         },
         btnsave1:function (param,severmethods,ifcheck) {
           this.syncpost1(param,severmethods,false,ifcheck);

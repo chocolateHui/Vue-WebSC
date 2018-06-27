@@ -328,6 +328,7 @@
       padding: 0 5px;
       height: 23px !important;
     }
+
     .col-form-label{
       padding-top: 0;
     }
@@ -336,6 +337,11 @@
     }
     .el-select{
       width: 100%;
+      .el-input__suffix-inner{
+        position: absolute;
+        right: 0px;
+        bottom: -9px;
+      }
     }
     ol, ul, dl{
       margin-bottom: 0;
