@@ -13,7 +13,7 @@
     </el-tabs>
 
     <b-modal id="caterlogmodal" size="lg" title="操作日志" ok-only ok-title="确认">
-      <sysLog></sysLog>
+      <Syslog></Syslog>
     </b-modal>
   </div>
 </template>
@@ -26,7 +26,6 @@
   import NewEvent from '../../components/catering/NewEvent.vue'
   import EventList from '../../components/catering/EventList.vue'
   import RoomInfo from '../../components/catering/RoomInfo.vue'
-  import sysLog from '../../components/syslog.vue'
   import '../../css/font.scss'
 
   export default {
@@ -41,8 +40,7 @@
       CateringInfo,
       NewEvent,
       EventList,
-      RoomInfo,
-      sysLog
+      RoomInfo
     },
     computed: {
       ...mapGetters([
@@ -110,7 +108,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" type="text/scss">
   #Catering{
     overflow: auto;
     .el-tabs{
@@ -122,11 +120,15 @@
       }
     }
     .newEventbtn{
-      margin-right: 17px;
-      margin-top: 1px;
+      margin-right: 32px;
+      margin-top: 6px;
       position: relative;
       z-index: 1002;
       float: right;
+      background-color: #D15B47 !important;
+      border: none;
+      border-radius: 0px;
+      text-align: center;
     }
     .form-control{
       height: 33.5px;

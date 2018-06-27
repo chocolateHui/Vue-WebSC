@@ -221,7 +221,6 @@
 </template>
 
 <script>
-  import FormatInput from './../../components/FormatInput'
   import initalize from './initalize'
   import initalizeFirst from './initializeFirst'
   import methodinfo from '../../config/MethodConst.js'
@@ -264,7 +263,7 @@
       }
     },
     components:{
-      initalizeFirst,initalize,FormatInput
+      initalizeFirst,initalize
     },
     computed: {
 

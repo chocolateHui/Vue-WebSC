@@ -29,7 +29,7 @@
       </b-col>
     </b-row>
     <b-modal id="maintLogModal" size="lg" title="操作日志" ok-only ok-title="确认">
-      <sysLog></sysLog>
+      <Syslog></Syslog>
     </b-modal>
   </b-container>
 </template>
@@ -37,7 +37,6 @@
 <script>
   import { mapGetters} from 'vuex'
   import '../css/imgbtn.scss'
-  import sysLog from  '../components/syslog.vue'
 
   export default {
     data() {
@@ -164,7 +163,6 @@
       this.$refs.maintTree.setCurrentKey(Nodeid);
     },
     components: {
-      sysLog
     }
   };
 </script>

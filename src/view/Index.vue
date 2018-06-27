@@ -38,7 +38,7 @@
 
         <b-row >
           <b-col cols="4" class="paddingright0">
-            <b-card border-variant="info" header="本日宴会事务列表" header-tag="header" align="left" class="height100">
+            <b-card border-variant="info" header="本日宴会事务列表" header-tag="header" align="left" class="height100 c1">
               <div slot="header">
                 <span>本日宴会事务列表</span>
                 <i class="fa fa-refresh refresh" @click="refreshtable1" aria-hidden="true"></i>
@@ -83,7 +83,7 @@
             </b-card>
           </b-col>
           <b-col cols="4" class="paddingright0">
-            <b-card border-variant="info" header="未来一周即将到来的宴会团" header-tag="header" align="left" class="height100">
+            <b-card border-variant="info" header="未来一周即将到来的宴会团" header-tag="header" align="left" class="height100 c2">
               <div slot="header">
                 <span>未来一周即将到来的宴会团</span>
                 <i class="fa fa-refresh refresh" @click="refreshtable2" aria-hidden="true"></i>
@@ -122,7 +122,7 @@
             </b-card>
           </b-col>
           <b-col cols="4" class="paddingright0">
-            <b-card border-variant="info" header="未来一周客户需要确认的订单" header-tag="header" align="left" class="height100">
+            <b-card border-variant="info" header="未来一周客户需要确认的订单" header-tag="header" align="left" class="height100 c3">
               <div slot="header">
                 <span>未来一周即将到来的宴会团</span>
                 <i class="fa fa-refresh refresh" @click="refreshtable3" aria-hidden="true"></i>
@@ -605,6 +605,8 @@
     }
     .card {
       margin-bottom: 0px;
+      border-color: #ccc!important;
+      border-radius: 0px;
     }
     .card-text{
       height: 70px;
@@ -619,14 +621,48 @@
       font-size:12px;
       height: 20px;
     }
-    .el-table td, .el-table th {
-      padding: 6px 0
+    .el-table{
+      thead {
+        th,td{
+          background: linear-gradient(#fff, #F4F5F6);
+        }
+      }
+      th,td {
+        padding: 6px 0
+      }
     }
     .paddingright0{
       padding-right: 0px;
+      .c1,.c2,.c3{
+        .card-header{ color: #ffffff}
+      }
+      .c1{
+        .card-header{
+          background-color: #ffb751;
+          border-color: #ffb751;
+          border-radius: 0px;
+        }
+      }
+      .c2{
+        .card-header{
+          background-color: #b39ddb;
+          border-color: #b39ddb;
+          border-radius: 0px;
+        }
+      }
+      .c3{
+        .card-header{
+          background-color: #53bb80;
+          border-color: #53bb80;
+          border-radius: 0px;
+        }
+      }
     }
     .paddingbottom15{
       padding-bottom: 15px;
+      .card-header {
+        .refresh { color: #ffb751;}
+      }
     }
     .marginbottom15{
       margin-bottom: 15px;

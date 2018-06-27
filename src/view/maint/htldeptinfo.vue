@@ -170,14 +170,7 @@
 </template>
 
 <script>
-  const items = [
-    {  age: 40,empno:'FOX', empname:  '销售员1',email:'',sex:'1' },
-    {  age: 21,empno:'TEST1', empname: '销售员1',email:'' ,sex:'1'},
-    {  age: 9,empno:'TEST2', empname: 'Mini',email:'',sex:'2'},
-    {  age: 89,empno:'TEST3', empname: 'Geneva',email:'',sex:'2' },
-    {  age: 38,empno:'TEST4', empname: 'Jami',email:'',sex:'2' },
-    {  age: 27,empno:'TEST5', empname: 'Essie',email:'',sex:'2' }
-  ]
+  const items = []
   const fildes = [
     {  prop: 'empno', label:  '工号',width:'160',sortable:true },
     {  prop: 'empname', label:  '姓名',width:'',sortable:true,showTip:true},

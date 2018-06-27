@@ -16,7 +16,7 @@
                         <b-input-group-text slot="append">
                           <i class="appendicon fa fa-user"></i>
                         </b-input-group-text>
-                        <Numberinput id="userinput" v-model="username" @click.native="userclick" text="请输入用户名"></Numberinput>
+                        <FormatInput id="userinput" v-model="username" @click.native="userclick" text="请输入用户名"></FormatInput>
                       </b-input-group>
                       <label class="errorlabel" v-show="userErrorShow">用户名不能为空!</label>
                     </label>
@@ -54,7 +54,7 @@
           <li>
             <label v-if="!hasGroupid">1.系统首次登录时</label>
             <label v-else>1.当前登录集团为</label>
-            <Numberinput @change="setGroupid" class="gorupid-input" v-model="groupid" placeholder="请输入集团ID"></Numberinput>
+            <FormatInput @change="setGroupid" class="gorupid-input" v-model="groupid" placeholder="请输入集团ID"></FormatInput>
           </li>
           <li v-if="!isFirefox">2.本系统推荐使用火狐浏览器。
             <br>推荐前往：<a href="http://www.firefox.com.cn/"  target="_blank">http://www.firefox.com.cn/</a>下载安装
@@ -73,7 +73,6 @@
     import 'font-awesome/css/font-awesome.css'
     //组件和参数
     import hotelDiv from  '../components/login/hoteldiv.vue'
-    import Numberinput from '../components/FormatInput.vue'
 
     var logindata = {
         password :'',
@@ -195,8 +194,7 @@
             }
         },
         components: {
-            hotelDiv,
-            Numberinput
+            hotelDiv
         }
     }
 </script>

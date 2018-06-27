@@ -146,7 +146,7 @@
               width="60"
               show-overflow-tooltip>
               <template slot-scope="scope" >
-                <Numberinput  @focus="changesta()" class="el-input__inner" type="number" maxlength="5" @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></Numberinput>
+                <FormatInput  @focus="changesta()" class="el-input__inner" type="number" maxlength="5" @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></FormatInput>
                 <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
               </template>
             </el-table-column>
@@ -246,10 +246,8 @@
 </template>
 
 <script>
-  import Numberinput from  '../../components/FormatInput.vue'
   import methodinfo from '../../config/MethodConst.js'
   import placeexpand from '../maint/placeexpand.vue'
-  import sysLog from  '../../components/syslog.vue'
 
   const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
   const newshow = {  pccodedisabled: false, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:true,tablesdisabled:true}
@@ -785,9 +783,7 @@
       },
     },
     components: {
-      Numberinput,
       placeexpand,
-      sysLog
     },
     watch: {
       currentRow(newVal, oldVal) {

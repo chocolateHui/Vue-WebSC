@@ -55,8 +55,8 @@
 <script>
   import Vue from 'vue'
   import { mapGetters, mapMutations } from 'vuex'
-  import methodinfo from '../config/MethodConst.js'
-  import {formatDate} from '../common/date'
+  import methodinfo from '../../config/MethodConst.js'
+  import {formatDate} from '../../common/date'
 
   // 组件和参数
   import FormatInput from './FormatInput.vue'

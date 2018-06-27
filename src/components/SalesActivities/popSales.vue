@@ -96,7 +96,6 @@
 </template>
 <script>
   import methodinfo from '../../config/MethodConst.js'
-  import FormatInput from './../FormatInput'
   import popArchives from './popArchives'
   import popInstructions from './popInstructions'
   import calendar from '../../components/vue-calendar-component/calendar'
@@ -165,7 +164,6 @@
         calendar,
         popArchives,
         popInstructions,
-        FormatInput
       },
       watch:{
         salesFlag:function (val,oldval) {

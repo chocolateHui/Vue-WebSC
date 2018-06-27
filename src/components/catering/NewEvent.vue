@@ -205,7 +205,6 @@
   import methodinfo from '../../config/MethodConst.js'
   import {dateValid} from '../../common/date'
   //其他组件
-  import FormatInput from '../FormatInput.vue'
   import MultiPlace from './MultiPlace.vue'
   import {TimePicker} from 'iview'
   import '../../css/iviewpicker.css'
@@ -460,7 +459,6 @@
       }
     },
     components: {
-      FormatInput,
       TimePicker,
       MultiPlace
     },

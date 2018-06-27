@@ -126,9 +126,6 @@
           </b-row>
         </el-tab-pane>
       </el-tabs>
-      <b-modal id="remarkmodal" ref="remarkmodal"  size="lg" title="宴会备注" hide-footer>
-        <scnote></scnote>
-      </b-modal>
   </div>
 </template>
 
@@ -139,7 +136,6 @@
   import {datevalid}  from '../common/date.js'
   import methodinfo from '../config/MethodConst.js'
   import 'font-awesome/css/font-awesome.css'
-  import scnote from  '../components/remark.vue'
 
   import '../css/imgbtn.scss'
 
@@ -383,7 +379,6 @@
       }
     },
     components: {
-      scnote,
     },
     watch: {
       selected(newVal, oldVal) {
@@ -424,6 +419,7 @@
   #CaterListpanel{
     .el-tabs__content{
       overflow: hidden!important;
+      .row{ margin-right: 0px; margin-left: 0px;}
     }
     .el-tabs {
       padding-top: 0px!important;
@@ -473,7 +469,8 @@
     }
     .refresh {
       float: right;
-      padding-top: 4px;
+      font-size: 1.25rem;
+      color: #ffb751;
     }
     .is-disabled {
       float: right;
@@ -522,12 +519,12 @@
       position: relative;
       z-index: 99;
       margin-right: 17px;
-      margin-top: 1px;
+      margin-top: 3px;
       float: right;
-      height: 39px;
+      height: 34px;
 
       .el-input__inner{
-        height: 39px;
+        height: 34px;
       }
     }
   }

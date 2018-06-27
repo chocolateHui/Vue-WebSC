@@ -23,7 +23,7 @@
         style="width: 100%">
         <el-table-column prop="code" label="编码" width="50" align="center">
           <template slot-scope="scope" >
-            <Numberinput @change="rowChange(scope)" v-if="cat==='sc_event_type' | cat==='sc_event_degree'" :disabled="scope.row.add !== 'T'"  class="el-input__inner" type="number" maxlength="1" v-model="scope.row.code" placeholder=""></Numberinput>
+            <FormatInput @change="rowChange(scope)" v-if="cat==='sc_event_type' | cat==='sc_event_degree'" :disabled="scope.row.add !== 'T'"  class="el-input__inner" type="number" maxlength="1" v-model="scope.row.code" placeholder=""></FormatInput>
             <el-input @change="rowChange(scope)" v-else :disabled="scope.row.add !== 'T'" :maxlength="codelength" v-model="scope.row.code" placeholder=""></el-input>
           </template>
         </el-table-column>
@@ -86,7 +86,7 @@
         </el-table-column>
         <el-table-column prop="seq" label="排序" width="60" align="center">
           <template slot-scope="scope">
-            <Numberinput @input.native="rowChange(scope)" :readonly="!scope.row.editable" class="el-input__inner" type="number" maxlength="4" v-model="scope.row.seq" placeholder=""></Numberinput>
+            <FormatInput @input.native="rowChange(scope)" :readonly="!scope.row.editable" class="el-input__inner" type="number" maxlength="4" v-model="scope.row.seq" placeholder=""></FormatInput>
           </template>
         </el-table-column>
         <el-table-column prop="halt" label="停用" width="65" align="center">
@@ -113,7 +113,7 @@
   import Vue from 'vue'
   import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../../config/MethodConst'
-  import Numberinput from  '../../components/FormatInput.vue'
+
   import {TimePicker} from 'iview'
   import '../../css/iviewpicker.css'
   Vue.use(TimePicker)
@@ -269,7 +269,6 @@
       }
     },
     components: {
-      Numberinput,
       TimePicker
     },
     watch:{

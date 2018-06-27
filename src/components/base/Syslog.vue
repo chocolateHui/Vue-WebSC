@@ -1,5 +1,5 @@
 <template>
-  <div id="syslog">
+  <div id="Syslog">
     <b-container fluid>
       <b-row>
         <b-col sm="7"></b-col>
@@ -48,7 +48,7 @@
   </div>
 </template>
 <script>
-  import methodinfo from '../config/MethodConst.js'
+  import methodinfo from '../../config/MethodConst.js'
   import { mapGetters, mapMutations } from 'vuex'
 
   const items = []
@@ -152,7 +152,7 @@
   }
 </script>
 <style lang="scss">
-  #syslog{
+  #Syslog{
     .el-table{
       td, th{
         border-color: #dee2e6;
