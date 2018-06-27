@@ -111,7 +111,7 @@ $colorAll:#b4b4b6;
       >li{
         &:nth-child(1){ float:left;}
         &:nth-child(3){
-          text-align:center; position:relative;
+          text-align:center;
           span{
             color:$color4C;cursor: pointer; display:inline-block; font-size:15px !important; height: 30px; padding-right:20px; position:relative;
             &::before{ content:""}
@@ -191,7 +191,7 @@ $colorAll:#b4b4b6;
     }
     .item{
       height: calc(100% + 0px);
-      overflow-x: hidden; overflow-y: auto;
+      overflow-x: hidden; overflow-y: scroll;
       ul{
         border-bottom:1px solid $colorGray;border-left:1px solid $colorGray;border-right:1px solid $colorGray;
         >li{

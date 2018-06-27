@@ -222,7 +222,6 @@
               }else{
                 _this.hotelData=[]
               }
-              console.log(JSON.stringify(this.hotelData)+'pp')
             }
           })
         })
