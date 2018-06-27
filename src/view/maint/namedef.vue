@@ -66,13 +66,9 @@
               <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
               <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
             </b-form>
-
           </template>
         </el-table-column>
       </el-table>
-      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
-        <sysLog></sysLog>
-      </b-modal>
     </b-container>
   </div>
 </template>
@@ -81,7 +77,6 @@
   import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../../config/MethodConst'
   import Numberinput from  '../../components/FormatInput.vue'
-  import sysLog from  '../../components/syslog.vue'
 
   export default {
     data () {
@@ -215,17 +210,16 @@
         let logkey =row.code +'|'+ row.hotelid +'|'+this.groupid;
         this.$store.commit('setLogtype','ScNamedef');
         this.$store.commit('setLogKey',logkey);
-        this.$root.$emit('bv::show::modal', 'logmodal');
+        this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       log2(){
         this.$store.commit('setLogtype','ScNamedef');
-         this.$store.commit('setLogKey',"deletenamedef");
-        this.$root.$emit('bv::show::modal', 'logmodal');
+        this.$store.commit('setLogKey',"deletenamedef");
+        this.$root.$emit('bv::show::modal', 'maintLogModal');
       }
     },
     components: {
-      Numberinput,
-      sysLog
+      Numberinput
     },
     watch:{
       cat(val,oldval){

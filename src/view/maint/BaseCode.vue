@@ -5,6 +5,7 @@
         <b-col sm="8">
           <b-btn @click="addRow"><i class="fa fa-plus" aria-hidden="true"></i>新增</b-btn>
           <b-btn @click="saveBaseCode"><i class="fa fa-floppy-o" aria-hidden="true"></i>保存</b-btn>
+          <b-btn @click="showlog"><i aria-hidden="true"></i>日志</b-btn>
         </b-col>
         <b-col sm="3">
         </b-col>
@@ -98,9 +99,10 @@
         </el-table-column>
         <el-table-column width="60" prop="cby" label="修改人" align="center"></el-table-column>
         <el-table-column width="130" prop="changed" label="修改时间" align="center"></el-table-column>
-        <el-table-column label="操作" width="50" align="center">
+        <el-table-column label="操作" width="80" align="center">
           <template slot-scope="scope">
             <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
+            <b-button size="mini" class="Journal-button image-btn" type="danger" @click="showCodeLog(scope)"></b-button>
           </template>
         </el-table-column>
       </el-table>
@@ -252,6 +254,18 @@
         if(this.items.length>this.currentPage*this.pageSize){
           this.currentPage = this.currentPage + 1;
         }
+      },
+      showlog(){
+        this.$store.commit('setLogtype','Basecode');
+        this.$store.commit('setLogKey',"deletebasecode");
+        this.$root.$emit('bv::show::modal', 'maintLogModal');
+      },
+      showCodeLog(scope){
+        let row = scope.row;
+        let logkey =row.hotelid +'|'+ row.cat +'|'+ row.code +'|'+this.$store.getters.groupid;
+        this.$store.commit('setLogtype','Basecode');
+        this.$store.commit('setLogKey',logkey);
+        this.$root.$emit('bv::show::modal', 'maintLogModal');
       }
     },
     components: {

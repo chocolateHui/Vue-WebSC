@@ -16,7 +16,8 @@ const state = {
   },
   hotels: [],
   empno: {},
-  empsale: ''
+  empsale: '',
+  isHistory: false
 }
 
 // getters
@@ -31,7 +32,9 @@ const getters = {
 
   empno: state => state.empno,
 
-  empsale: state => state.empsale
+  empsale: state => state.empsale,
+
+  isHistory: state => state.isHistory
 }
 
 // actions
@@ -91,6 +94,9 @@ const mutations = {
   },
   setEmpSale (state, empsale) {
     state.empsale = empsale
+  },
+  setIsHistory (state, isHistory) {
+    state.isHistory = isHistory
   }
 }
 

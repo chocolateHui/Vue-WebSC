@@ -109,15 +109,12 @@
             </el-table>
           </b-form>
           <b-button @click="choosehotel">选择酒店</b-button>
-          <b-button @click="btnnote">日志</b-button>
+          <b-button @click="showlog">日志</b-button>
         </b-col>
       </b-row>
     </b-container>
     <b-modal id="myModalhotel" @show="chooseShow" ref="myModalhotel" size="lg" title="选择酒店" hide-footer>
       <choosehotel :hotelData="hotelData" ref="refchoose" @reasonConfirm="reasonConfirm"></choosehotel>
-    </b-modal>
-    <b-modal id="logmodal" ref="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
-      <sysLog></sysLog>
     </b-modal>
   </div>
 </template>
@@ -385,11 +382,11 @@
           }
         }
       },
-      btnnote:function () {
-        // this.logkey=this.$store.getters.hotel.hotelid+'|dept|'+this.dept
-        // this.$store.commit('setLogtype','Basecode');
-        // this.$store.commit('setLogKey',this.logkey);
-        // this.$refs.logmodal.show()
+      showlog:function () {
+        this.logkey=this.$store.getters.hotel.hotelid+'|dept|'+this.dept+'|'+this.$store.getters.groupid
+        this.$store.commit('setLogtype','Basecode');
+        this.$store.commit('setLogKey',this.logkey);
+        this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       chooseShow:function () {
         this.$refs.refchoose.hotelDatashow();

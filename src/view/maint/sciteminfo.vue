@@ -265,9 +265,6 @@
           </div>
         </b-col>
       </b-row>
-      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
-        <sysLog></sysLog>
-      </b-modal>
     </b-container>
   </div>
 </template>
@@ -291,7 +288,6 @@
 
   const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true}
   const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:false,cancel:false}
-
 
   const confirm = [
     { value: 'T', label: '是' },
@@ -727,14 +723,14 @@
         let logkey = row.id+'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
         this.$store.commit('setLogtype','ScItem');
         this.$store.commit('setLogKey',logkey);
-        this.$root.$emit('bv::show::modal', 'logmodal');
+        this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       log2(){
         console.log(this.pcinfo);
         let logkey =this.pcinfo.classcode +'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
         this.$store.commit('setLogtype','ScItemclass');
         this.$store.commit('setLogKey',logkey);
-        this.$root.$emit('bv::show::modal', 'logmodal');
+        this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
     },
     components: {

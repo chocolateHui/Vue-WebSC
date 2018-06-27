@@ -32,6 +32,7 @@ let cateringMixin = {
                     type: 'success'
                   })
                   this.$store.commit('setCaterid', caterid)
+                  this.$store.commit('setIsHistory', false)
                   let route = { name: '宴会预订详情', params: { caterid: caterid }}
                   this.$router.push(route)
                   this.$refs.newcatering.clearData()

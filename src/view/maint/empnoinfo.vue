@@ -158,9 +158,6 @@
         </el-table-column>
       </el-table>
 
-      <b-modal id="emplogmodal" size="lg" title="操作日志" ok-only ok-title="确认">
-        <sysLog></sysLog>
-      </b-modal>
     </b-container>
     <b-modal id="passmodal1" ref="passmodal1" @hidden="modalhidden" size="sm" title="修改密码" hide-footer>
       <div>
@@ -314,7 +311,7 @@
         let logkey = row.empno +'|'+this.groupid;
         this.$store.commit('setLogtype','SysEmpno');
         this.$store.commit('setLogKey',logkey);
-        this.$root.$emit('bv::show::modal', 'emplogmodal');
+        this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       modalhidden: function () {
         this.oldpassword = '';

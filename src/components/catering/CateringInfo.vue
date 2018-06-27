@@ -94,7 +94,7 @@
               </b-form-group>
             </b-form>
           </b-col>
-          <b-col sm="2" class="my-1">
+          <b-col sm="2" class="my-1" v-if="!isHistory">
             <div class="btndiv" v-if="!isNew">
               <div>
                 <transition @before-enter="btnenter" @after-leave="btnleave" mode="out-in">
@@ -239,7 +239,8 @@
         'saleid',
         'catering',
         'salelist',
-        'newCateringParam'
+        'newCateringParam',
+        'isHistory'
       ]),
       minDate() {
         if(!this.isNew){
@@ -513,11 +514,12 @@
         color: $colorIcon;
       }
       .Sta{
-        width: 90%;
+        width: 75px;
         height: 65px;
         background: $color11;
         border-radius: 10px;
         padding: 0 20px;
+        margin: auto;
         margin-top: 6px;
         .StaFont{
           padding-top: 3px;
