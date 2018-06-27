@@ -100,7 +100,7 @@ const router = new Router({
           name: '宴会事务项目',
           component: ScEventItem,
           meta: {
-            keepAlive: true // 需要被缓存
+            keepAlive: false // 需要被缓存
           }
         },
         {

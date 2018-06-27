@@ -72,7 +72,7 @@
             width="100"
             show-overflow-tooltip>
             <template slot-scope="scope">
-            <Numberinput class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></Numberinput>
+            <FormatInput class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></FormatInput>
              </template>
           </el-table-column>
           <el-table-column
@@ -119,7 +119,7 @@
         <remark></remark>
       </b-modal>
       <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
-        <sysLog></sysLog>
+        <Syslog></Syslog>
       </b-modal>
     </b-container>
   </div>
@@ -128,12 +128,9 @@
   import Vue from 'vue'
   import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../../config/MethodConst.js'
-  import Numberinput from  '../../components/FormatInput.vue'
   import MultiEvent from  '../../components/sceventitem/MultiEvent.vue'
   import SingleEvent from  '../../components/sceventitem/SingleEvent.vue'
-  import remark from  '../../components/remark.vue'
   import '../../css/imgbtn.scss'
-  import sysLog from  '../../components/syslog.vue'
 
   export default {
 
@@ -226,10 +223,7 @@
     },
     components:{
       SingleEvent,
-      Numberinput,
       MultiEvent,
-      remark,
-      sysLog
     },
     methods: {
       updateValue(event) {

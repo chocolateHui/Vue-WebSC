@@ -115,7 +115,6 @@
   import Vue from 'vue'
   import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../../config/MethodConst.js'
-  import Numberinput from  '../../components/FormatInput.vue'
    const fildes = [
     {  prop: 'code', label:  '项目编号',width:'110',sortable:true,showTip: true},
     {  prop: 'descript', label:  '宴会名称',width:'',sortable:true,showTip: true},
@@ -236,7 +235,6 @@
      console.log("aaaaaaaa");
     },
     components:{
-      Numberinput
     },
     methods: {
       updateValue(event) {

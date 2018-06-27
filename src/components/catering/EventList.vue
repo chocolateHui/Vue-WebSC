@@ -253,10 +253,7 @@
   import methodinfo from '../../config/MethodConst.js'
   import {dateValid,formatDate} from '../../common/date'
   //其他组件
-  import FormatInput from '../FormatInput.vue'
   import SinglePlace from './SinglePlace.vue'
-  import Reason from '../Reason.vue'
-  import remark from '../remark.vue'
   import {TimePicker} from 'iview'
   import '../../css/imgbtn.scss'
   import '../../css/iviewpicker.css'
@@ -562,11 +559,8 @@
       }
     },
     components: {
-      FormatInput,
       TimePicker,
       SinglePlace,
-      Reason,
-      remark
     },
     watch:{
       staselected(val){

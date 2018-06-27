@@ -138,7 +138,7 @@
       :append-to-body="true"
       :visible.sync="dialoglogVisible">
       <span>
-        <sysLog></sysLog>
+        <Syslog></Syslog>
       </span>
       <b-button type="primary" @click="dialoglogVisible = false">确 定</b-button>
     </el-dialog>
@@ -147,7 +147,6 @@
 <script>
   import fileMixin from '../../mixin/fileMixin'
   import methodinfo from '../../config/MethodConst.js'
-  import sysLog from  '../../components/syslog.vue'
   import { mapGetters, mapMutations } from 'vuex'
 
   const fildes = [
@@ -399,7 +398,6 @@
         }
       },
     components: {
-      sysLog
     },
 
   }
@@ -456,7 +454,7 @@
     }
   }
   #loglog{
-    #syslog{
+    #Syslog{
       padding-bottom: 50px;
     }
   }

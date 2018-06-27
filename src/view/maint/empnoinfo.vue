@@ -192,8 +192,6 @@
 </template>
 
 <script>
-  import FormatInput from './../../components/FormatInput'
-  import sysLog from  '../../components/syslog.vue'
   import methodinfo from '../../config/MethodConst.js'
   import { mapGetters, mapMutations } from 'vuex'
 
@@ -456,9 +454,6 @@
       this.getEmpnolist();
       this.getDeptlist();
 
-    },
-    components: {
-      sysLog,FormatInput
     }
   }
 </script>

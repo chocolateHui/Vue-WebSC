@@ -23,7 +23,7 @@
         style="width: 100%">
         <el-table-column prop="code" label="编码" width="50" align="center">
           <template slot-scope="scope" >
-            <Numberinput @change="rowChange(scope)" :disabled="scope.row.add !== 'T'"  class="el-input__inner" type="number" maxlength="3" v-model="scope.row.code" placeholder=""></Numberinput>
+            <FormatInput @change="rowChange(scope)" :disabled="scope.row.add !== 'T'"  class="el-input__inner" type="number" maxlength="3" v-model="scope.row.code" placeholder=""></FormatInput>
           </template>
         </el-table-column>
         <el-table-column prop="descript" label="中文描述" align="center">
@@ -76,7 +76,6 @@
   import Vue from 'vue'
   import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../../config/MethodConst'
-  import Numberinput from  '../../components/FormatInput.vue'
 
   export default {
     data () {
@@ -219,7 +218,6 @@
       }
     },
     components: {
-      Numberinput
     },
     watch:{
       cat(val,oldval){

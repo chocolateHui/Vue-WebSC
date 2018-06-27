@@ -106,7 +106,6 @@
   import fileMixin from '../../mixin/fileMixin'
   import { mapGetters, mapActions,mapMutations } from 'vuex'
   import methodinfo from '../../config/MethodConst.js'
-  import FormatInput from './../../components/FormatInput'
 
   let fileserver = "https://files.foxhis.com/FoxhisFileServer/action?";
 
@@ -238,7 +237,6 @@
       }
     },
     components: {
-      FormatInput
     }
   }
 </script>

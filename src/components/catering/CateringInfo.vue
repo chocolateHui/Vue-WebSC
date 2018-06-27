@@ -190,10 +190,7 @@
   import {dateValid,formatDate} from '../../common/date'
 
   // 组件和参数
-  import FormatInput from '../FormatInput.vue'
-  import Reason from '../Reason.vue'
   import popArchives from '../SalesActivities/popArchives.vue'
-  import remark from '../remark.vue'
   import EOShare from '../catering/EOShare.vue'
 
   export default {
@@ -411,10 +408,7 @@
       }
     },
     components: {
-      FormatInput,
-      Reason,
       popArchives,
-      remark,
       EOShare
     },
     mounted(){

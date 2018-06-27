@@ -61,14 +61,12 @@
       <Reason ref="Reason" @reasonConfirm="reasonConfirm"></Reason>
     </b-modal>
     <b-modal id="remarkmodal" ref="remarkmodal" size="lg" title="宴会备注" hide-footer>
-      <notesmodal></notesmodal>
+      <remark></remark>
     </b-modal>
   </div>
 </template>
 <script>
-  import Reason from '../Reason.vue'
-   import methodinfo from '../../config/MethodConst.js'
-  import notesmodal from './../remark'
+  import methodinfo from '../../config/MethodConst.js'
   import '../../css/PlaceDistribute.scss';
     export default {
         name: "place-distribution-single",
@@ -100,8 +98,6 @@
           }
       },
       components:{
-        notesmodal,
-        Reason
       },
       created(){
           this.getListHead()

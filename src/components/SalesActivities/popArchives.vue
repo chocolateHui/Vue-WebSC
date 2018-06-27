@@ -82,7 +82,6 @@
 <script>
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
   import methodinfo from '../../config/MethodConst.js'
-  import FormatInput from './../FormatInput'
     export default {
         name: "pop-archives",
       data(){
@@ -118,7 +117,6 @@
         },
       },
       components:{
-        FormatInput
       },
       created:function () {
         this.poparchdata()

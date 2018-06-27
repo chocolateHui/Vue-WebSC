@@ -122,7 +122,6 @@
 <script>
   import methodinfo from '../../config/MethodConst.js'
   import choosehotel from './choosehotel'
-  import sysLog from '../../components/syslog.vue'
   export default {
     name: "setjob",
     data(){
@@ -153,7 +152,6 @@
     },
     components:{
       choosehotel,
-      sysLog
     },
     computed: {
       searchitems:function () {
