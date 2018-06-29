@@ -22,8 +22,12 @@
               :show-overflow-tooltip="item.showTip" :key="item.prop">
             </el-table-column>
           </el-table>
+          <div class="btng green">
+            <b-button :disabled="btnshow.new" @click="newp" variant="primary">新建营业点</b-button>
+            <b-button :disabled="btnshow.delete" @click="deletep" variant="primary">删除营业点</b-button>
+          </div>
         </b-col >
-        <b-col   class="maxwidth70 paddingright0 paddingleft5">
+        <b-col   class="maxwidth70 paddingright0 paddingleft15">
           <b-row  style="font-size: 12px">
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="编码" class="mb-0">
@@ -94,6 +98,11 @@
               </b-form-group>
             </b-col>
           </b-row>
+          <div class="btng green">
+            <b-button :disabled="btnshow.modify" @click="modifyp" variant="primary">修改营业点</b-button>
+            <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
+            <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
+          </div>
           <el-table
             :data="placedata"
             border
@@ -140,6 +149,7 @@
                 <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript2" placeholder=""></el-input>
               </template>
             </el-table-column>
+
             <el-table-column
               prop="cover"
               label="人数"
@@ -184,21 +194,17 @@
               </template>
             </el-table-column>
           </el-table>
-        </b-col>
-        <b-col class="paddingright0 paddingleft5 maxwidth15">
-          <div>
-            <b-button-group id="btng" vertical>
-              <b-button :disabled="btnshow.new" @click="newp" variant="primary">新建营业点</b-button>
-              <b-button :disabled="btnshow.modify" @click="modifyp" variant="primary">修改营业点</b-button>
-              <b-button :disabled="btnshow.delete" @click="deletep" variant="primary">删除营业点</b-button>
-              <b-button :disabled="btnshow.place" @click="addplace" variant="primary">新建场地</b-button>
-              <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
-              <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
-              <b-button  @click="expand" variant="primary">扩展属性</b-button>
-              <b-button  @click="log2" variant="primary">日志</b-button>
-            </b-button-group>
+          <div class="btng green btng-l">
+            <b-button :disabled="btnshow.place" @click="addplace" variant="primary">新建场地</b-button>
+            <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
+            <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
+          </div>
+          <div class="btng btng-r">
+            <b-button  @click="expand" variant="primary">扩展属性</b-button>
+            <b-button  @click="log2" variant="primary">日志</b-button>
           </div>
         </b-col>
+
       </b-row>
       <b-modal id="placemodal" ref="myModalRef" hide-footer title="修改从属场地">
 
@@ -311,12 +317,11 @@
         currentRow: null,
         placeRow: null,
         // 要展开的行，数值的元素是row的key值
-        tableH: document.body.clientHeight-205,//减去header的60px
+        tableH: document.body.clientHeight-320,//减去header的60px
         num:0,
         change:"",
       }
     },
-
     mounted() {
       this.getpccodedata();
       this.getlayoutdata();
@@ -812,13 +817,6 @@
     .el-date-editor .el-range-separator{
       padding: 0;
     }
-    #btng{
-      .btn{
-        width: 90px;
-        margin-top:5px ;
-        border-radius: 0.25rem;
-      }
-    }
     .container {
       padding-right: 0px;
       padding-left: 0px;
@@ -827,19 +825,19 @@
       padding-right: 0px;
     }
     .maxwidth20{
-      flex: 0 0 18%;
-      max-width: 18%;
+      flex: 0 0 20.5%;
+      max-width: 20.5%;
     }
     .maxwidth70{
-      flex: 0 0 72%;
-      max-width: 72%;
+      flex: 0 0 79.5%;
+      max-width: 79.5%;
     }
     .maxwidth15{
       flex: 0 0 10%;
       max-width: 10%;
     }
-    .paddingleft5{
-      padding-left: 5px;
+    .paddingleft15{
+      padding-left: 15px;
     }
     .paddingtop5{
       padding-top: 5px;
@@ -878,6 +876,18 @@
     }
     .row{
       margin-right: 2px;
+      .btng{
+        margin: 10px 0;
+        .btn:not(:last-child){margin-right: 5px;}
+      }
+      .green{
+        .btn:not(:first-child) {
+          background-color: #89C5BF;
+          border-color: #89C5BF;
+        }
+      }
+      .btng-r{float: right;}
+      .btng-l{float: left;}
     }
     .form-row > .col, .form-row > [class*="col-"] {
       padding-right: 0px;
@@ -906,12 +916,21 @@
       }
     }
     #placemodal{
+      .modal-dialog{
+        .modal-body{
+          .row{
+            width: 150px;
+            .btn{
+              width: 45% ;
+              &:first-child{ margin-right: 15px}
+            }
+          }
+        }
+      }
       .el-table {
         overflow: auto;
       }
-      .btn{
-        margin-left:15px ;
-      }
+
     }
 
     #layputmodal {
