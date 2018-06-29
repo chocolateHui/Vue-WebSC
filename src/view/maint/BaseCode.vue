@@ -181,6 +181,14 @@
       deleteBasecode(scope){
         let row = scope.row;
         let index = scope.$index;
+
+        let hotelid = scope.row.hotelid;
+        if(hotelid !== this.$store.getters.hotel.hotelid){
+          this.$message.error("集团代码不允许删除!")
+          return;
+        }
+        console.log(hotelid)
+
         this.$confirm("是否要删除该基础代码？","提示").then(()=>{
           this.$store.dispatch('encrypttoken').then(() => {
             this.$http.defaults.headers.common['username'] = this.$store.getters.username

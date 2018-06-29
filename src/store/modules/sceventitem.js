@@ -8,8 +8,8 @@ import axiosinstance from '../../common/axiosinstance'
 const state = {
   sceventitemeventid: '',
   corteventlist: [],
-  eventdes:'',
-  isrefresh:'',
+  eventdes: '',
+  isrefresh: ''
 }
 
 // getters
@@ -17,7 +17,6 @@ const getters = {
   sceventitemeventid: state => state.sceventitemeventid,
 
   corteventlist: state => state.corteventlist,
-
 
   eventdes: state => state.eventdes,
 
@@ -46,20 +45,18 @@ const actions = {
               type.push(event)
             }
             store.commit('setCorteventlist', type)
-            console.log('vuex')
           } else {
             store.commit('setCorteventlist', [])
           }
           resolve()
         } else {
-          console.log(response.data)
           reject(response.data.errorMessage)
         }
       }).catch(function () {
       })
       resolve()
     })
-  },
+  }
 }
 
 // mutations

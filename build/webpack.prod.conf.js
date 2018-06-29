@@ -12,6 +12,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const HappyPack = require('happypack');
+const happyThreadPool = HappyPack.ThreadPool({ size: 4 });
 
 const env = require('../config/prod.env')
 
@@ -43,7 +45,9 @@ const webpackConfig = merge(baseWebpackConfig, {
         parallel: true,
         sourceMap: config.build.productionSourceMap, // set to true if you want JS source maps,
         uglifyOptions: {
-          warnings: false
+          warnings: false,
+          drop_debugger: true,
+          drop_console: true
         }
       }),
       new OptimizeCSSPlugin({
@@ -55,7 +59,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     splitChunks:{
       chunks: 'async',
       minSize: 30000,
-      minChunks: 1,
+      minChunks: 2,
       maxAsyncRequests: 5,
       maxInitialRequests: 3,
       name: false,
@@ -117,7 +121,14 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+
+    new HappyPack({
+      id: 'happybabel',
+      loaders: ['babel-loader'],
+      threadPool: happyThreadPool,
+      verbose: true
+    })
   ]
 })
 

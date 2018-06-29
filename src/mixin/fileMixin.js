@@ -66,7 +66,6 @@ let uploadMixin = {
         axios.post(url, {}, config)
           .then(response => {
             loading.close()
-            console.log(response)
             if (response.data.result === 'yes') {
               resolve()
             } else {
