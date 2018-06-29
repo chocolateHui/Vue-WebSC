@@ -22,6 +22,10 @@
               :show-overflow-tooltip="item.showTip" :key="item.prop">
             </el-table-column>
           </el-table>
+          <div class="btng green">
+            <b-button :disabled="btnshow.new" @click="newp" variant="primary">新建类别</b-button>
+            <b-button :disabled="btnshow.delete" @click="deletep" variant="primary">删除类别</b-button>
+          </div>
         </b-col >
         <b-col   class="maxwidth70 paddingright0 paddingleft5">
           <b-row  style="font-size: 12px">
@@ -106,6 +110,11 @@
               </b-form-group>
             </b-col>
           </b-row>
+          <div class="btng green">
+            <b-button :disabled="btnshow.modify"  @click="modifyp" variant="primary">修改类别</b-button>
+            <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
+            <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
+          </div>
           <el-table
             id="itemtable"
             :data="placedata"
@@ -249,19 +258,13 @@
               </template>
             </el-table-column>
           </el-table>
-        </b-col>
-        <b-col class="paddingright0 paddingleft5 maxwidth15">
-          <div>
-            <b-button-group id="btng" vertical>
-              <b-button :disabled="btnshow.new" @click="newp" variant="primary">新建类别</b-button>
-              <b-button :disabled="btnshow.modify"  @click="modifyp" variant="primary">修改类别</b-button>
-              <b-button :disabled="btnshow.delete" @click="deletep" variant="primary">删除类别</b-button>
-              <b-button :disabled="btnshow.place" @click="addplace" variant="primary">新建项目</b-button>
-              <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
-
-              <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
-              <b-button  @click="log2" variant="primary">日志</b-button>
-            </b-button-group>
+          <div class="btng green btng-l">
+            <b-button :disabled="btnshow.place" @click="addplace" variant="primary">新建项目</b-button>
+            <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
+            <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
+          </div>
+          <div class="btng btng-r">
+            <b-button  @click="log2" variant="primary">日志</b-button>
           </div>
         </b-col>
       </b-row>
@@ -332,7 +335,7 @@
         currentRow: null,
         placeRow: null,
         // 要展开的行，数值的元素是row的key值
-        tableHeight: document.body.clientHeight-205,//减去header的60px
+        tableHeight: document.body.clientHeight-320,//减去header的60px
         num:0,
         change:""
       }
@@ -780,8 +783,8 @@
       max-width: 18%;
     }
     .maxwidth70{
-      flex: 0 0 72%;
-      max-width: 72%;
+      flex: 0 0 82%;
+      max-width: 82%;
     }
     .maxwidth15{
       flex: 0 0 10%;
@@ -825,6 +828,18 @@
     }
     .row{
       margin-right: 2px;
+      .btng{
+        margin: 10px 0;
+        .btn:not(:last-child){margin-right: 5px;}
+      }
+      .green{
+        .btn:not(:first-child) {
+          background-color: #89C5BF;
+          border-color: #89C5BF;
+        }
+      }
+      .btng-r{float: right;}
+      .btng-l{float: left;}
     }
     .form-row > .col, .form-row > [class*="col-"] {
       padding-right: 0px;
