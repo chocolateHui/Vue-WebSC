@@ -153,7 +153,7 @@
               sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <Numberinput class="el-input__inner" type="float" @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.price" placeholder=""></Numberinput>
+                <FormatInput class="el-input__inner" type="float" @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.price" placeholder=""></FormatInput>
                 <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
               </template>
             </el-table-column>
