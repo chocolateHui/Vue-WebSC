@@ -335,7 +335,7 @@
         currentRow: null,
         placeRow: null,
         // 要展开的行，数值的元素是row的key值
-        tableHeight: document.body.clientHeight-320,//减去header的60px
+        tableHeight: document.body.clientHeight-278,//减去header的60px
         num:0,
         change:""
       }
@@ -655,6 +655,7 @@
         this.changedplaceinfo = {};
         this.showchange = Object.assign({},show);
         this.getclasscodedata(this.oldcurrentRow);
+        this.btnshow = btnshow;
         this.placesavetype="";
       },
       addplace:function () {
@@ -792,6 +793,31 @@
     }
     .paddingleft5{
       padding-left: 5px;
+      .row{
+        .form-control{ height: 30.5px;}
+      }
+      .el-table{
+        .el-table__body-wrapper{
+          td{
+            height: 30px;
+            .cell{
+              .el-input{
+                .el-input__inner{
+                  height: 30px;
+                }
+              }
+              .el-select{
+                height: 25px;
+                .el-input{
+
+                  input{ height: 25px!important;}
+                }
+              }
+            }
+            /*display: inline-block;*/
+          }
+        }
+      }
     }
     .paddingtop5{
       padding-top: 5px;
@@ -817,7 +843,7 @@
       }
     }
     .el-input__inner{
-      height: 36px;
+      height: 31px;
     }
     .el-table .caret-wrapper{
       width: 20px;
@@ -829,7 +855,7 @@
     .row{
       margin-right: 2px;
       .btng{
-        margin: 10px 0;
+        margin: 3px 0 5px;
         .btn:not(:last-child){margin-right: 5px;}
       }
       .green{
