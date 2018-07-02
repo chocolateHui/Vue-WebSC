@@ -200,9 +200,9 @@
   const fildes = [
     {  prop: 'empno', label:  '工号',width:'100',sortable:true },
     {  prop: 'empname', label:  '姓名',width:'',sortable:true,showTip:true},
-    {  prop: 'htldept', label:  '部门',width:'100',sortable:true,showTip:true},
-    {  prop: 'deptno', label:  '岗位',width:'100',sortable:true },
-    {  prop: 'htljob', label:  '角色',width:'100',sortable:true },
+    {  prop: 'htldeptdes', label:  '部门',width:'100',sortable:true,showTip:true},
+    {  prop: 'deptnodes', label:  '岗位',width:'100',sortable:true },
+    {  prop: 'htljobdes', label:  '角色',width:'100',sortable:true },
     {  prop: 'hoteldes', label:  '所属酒店',width:'',sortable:true }
   ]
   const able = {name:true,hotelinput:true}

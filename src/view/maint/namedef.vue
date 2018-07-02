@@ -1,5 +1,5 @@
 <template>
-  <div id="basecode">
+  <div id="namedef">
     <b-container fluid>
       <b-row>
         <b-col sm="8">
@@ -60,12 +60,10 @@
         </el-table-column>
         <el-table-column width="60" prop="cby" label="修改人" align="center"></el-table-column>
         <el-table-column width="130" prop="changed" label="修改时间" align="center"></el-table-column>
-        <el-table-column label="操作" width="75" align="center">
+        <el-table-column label="操作" width="72" align="center">
           <template slot-scope="scope">
-            <b-form inline>
-              <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
-              <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
-            </b-form>
+            <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
+            <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
           </template>
         </el-table-column>
       </el-table>
@@ -229,7 +227,7 @@
   }
 </script>
 <style lang="scss" type="text/scss">
-  #basecode{
+  #namedef{
     font-size: 0.9rem;
     .container-fluid{
       padding: 0;
@@ -289,9 +287,6 @@
     }
     .ivu-input{
       margin: 0;
-    }
-    .image-btn{
-      margin: 2px 5px;
     }
   }
 </style>

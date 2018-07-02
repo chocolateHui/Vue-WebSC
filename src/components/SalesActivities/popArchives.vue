@@ -338,7 +338,7 @@
       .el-input__suffix-inner{
         position: absolute;
         right: 0px;
-        bottom: -9px;
+        bottom: 0;
       }
     }
     ol, ul, dl{
