@@ -122,7 +122,6 @@ const webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ]),
-
     new HappyPack({
       id: 'happybabel',
       loaders: ['babel-loader'],
