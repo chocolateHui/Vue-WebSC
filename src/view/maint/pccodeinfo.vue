@@ -23,8 +23,8 @@
             </el-table-column>
           </el-table>
           <div class="btng green">
-            <b-button :disabled="btnshow.new" @click="newp" variant="primary">新建营业点</b-button>
-            <b-button :disabled="btnshow.delete" @click="deletep" variant="primary">删除营业点</b-button>
+            <b-button class="side-btn" :disabled="btnshow.new" @click="newp" variant="primary">新建营业点</b-button>
+            <b-button class="side-btn" :disabled="btnshow.delete" @click="deletep" variant="primary">删除营业点</b-button>
           </div>
         </b-col >
         <b-col   class="maxwidth70 paddingright0 paddingleft15">
@@ -909,6 +909,9 @@
       }
       .btng-r{float: right;}
       .btng-l{float: left;}
+    }
+    .side-btn{
+      width: 85px;
     }
     .form-row > .col, .form-row > [class*="col-"] {
       padding-right: 0px;
