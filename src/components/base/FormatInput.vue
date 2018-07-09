@@ -22,6 +22,15 @@
           this.inputvalue = oldval;
           return;
         }
+
+        if(this.type==='nospecial'){
+          let pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]") ;
+          if(pattern.exec(val)){
+            this.inputvalue = oldval;
+            return;
+          }
+        }
+
         if(this.type==='number'){
           let r = /^[0-9]*[0-9][0-9]*$/ ;
           if (!r.test(val)){
