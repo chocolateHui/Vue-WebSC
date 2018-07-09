@@ -16,7 +16,7 @@
                         <b-input-group-text slot="append">
                           <i class="appendicon fa fa-user"></i>
                         </b-input-group-text>
-                        <FormatInput id="userinput" v-model="username" @click.native="userclick" text="请输入用户名"></FormatInput>
+                        <FormatInput id="userinput" type="nospecial" v-model="username" @click.native="userclick" text="请输入用户名"></FormatInput>
                       </b-input-group>
                       <label class="errorlabel" v-show="userErrorShow">用户名不能为空!</label>
                     </label>
@@ -101,7 +101,6 @@
               return this.$store.getters.username
             },
             set (value) {
-              console.log(value)
               this.$store.commit('setUsername', value)
             }
           },
