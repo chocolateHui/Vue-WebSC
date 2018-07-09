@@ -247,14 +247,14 @@ const methodinfo = {
  接口相关
  */
   // 主单同步
-  syncSCCatering: '/SC/interface/sctopms/syncSCCatering',
+  syncSCCatering: '/SC/sctopms/master/syncSCCatering',
   // 获取主单预留信息
-  getMasterRsvsrc: '/SC/interface/sctopms/getMasterRsvsrc',
+  getMasterRsvsrc: '/SC/sctopms/master/getMasterRsvsrc',
   /*
  档案
  */
   // 档案查询
-  getProfiles: '/SC/interface/sctoguest/getProfiles',
+  getProfiles: '/SC/sctopms/sctoguest/getProfiles',
   /*
  系统相关接口
  */

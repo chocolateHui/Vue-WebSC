@@ -127,6 +127,10 @@
                 this.password = value;
             },
             hotelclick:function () {
+              if(!this.groupid||this.groupid===''){
+                this.$root.$emit('bv::show::popover', 'helpbtn');
+                return;
+              }
                 if(!this.hotelShow) {
                     this.$store.dispatch('gethotels');
                 }
