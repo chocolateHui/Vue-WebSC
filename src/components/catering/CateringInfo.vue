@@ -39,9 +39,8 @@
           </b-col>
           <b-col sm="3" class="my-1">
             <b-form>
-              <b-form-group class="required" label="宴会名称:"
-                            horizontal>
-                <b-form-input v-model="localcatering.name" type="text"></b-form-input>
+              <b-form-group class="required" label="宴会名称:" horizontal>
+                <b-form-input v-model="localcatering.name" type="text" maxlength="50"></b-form-input>
               </b-form-group>
               <b-form-group class="required" label="抵离日期:" horizontal>
                 <el-date-picker
@@ -60,7 +59,7 @@
           <b-col sm="3" class="my-1">
             <b-form>
               <b-form-group label="联系人:" horizontal>
-                <b-form-input  type="text" v-model="localcatering.contactor"></b-form-input>
+                <b-form-input  type="text" v-model="localcatering.contactor" maxlength="10"></b-form-input>
               </b-form-group>
               <b-form-group label="销售员:"
                             horizontal>
@@ -147,17 +146,17 @@
               </el-date-picker>
             </b-form-group>
             <b-form-group class="normalput" label="现场联系人" :label-cols="5" horizontal>
-              <b-form-input type="text" v-model="localcatering.contacter"></b-form-input>
+              <b-form-input type="text" v-model="localcatering.contacter" maxlength="10"></b-form-input>
             </b-form-group>
           </b-row>
           <b-row style="width: 100%">
             <b-form-group class="longinput" :label-cols="1" label="迎&#8194;宾&#8194;词" horizontal>
-              <b-form-input  type="text" v-model="localcatering.subject"></b-form-input>
+              <b-form-input  type="text" v-model="localcatering.subject" maxlength="100"></b-form-input>
             </b-form-group>
           </b-row>
           <b-row style="width: 100%">
             <b-form-group class="longinput" :label-cols="1" label="备&#8195;&#8195;注" horizontal>
-              <b-form-input  type="text" v-model="localcatering.remark"></b-form-input>
+              <b-form-input  type="text" v-model="localcatering.remark" maxlength="200"></b-form-input>
             </b-form-group>
           </b-row>
         </b-row>

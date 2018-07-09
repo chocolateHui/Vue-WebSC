@@ -137,7 +137,7 @@
                     <b-col sm="6">
                       <b-form-group label="门牌信息&#8194;|" :label-cols="2"
                                     horizontal>
-                        <b-form-input  type="text" v-model="expandevent.infor"></b-form-input>
+                        <b-form-input  type="text" v-model="expandevent.infor" maxlength="100"></b-form-input>
                       </b-form-group>
                     </b-col>
                   </b-row>

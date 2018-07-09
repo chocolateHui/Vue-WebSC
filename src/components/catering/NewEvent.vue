@@ -21,7 +21,7 @@
                 <b-col sm="4">
                   <b-form>
                     <b-form-group label="事务名称&#8194;|" horizontal>
-                      <el-input class="eventname" v-model="newEvent.descript"></el-input>
+                      <el-input class="eventname" v-model="newEvent.descript" maxlength="50"></el-input>
                     </b-form-group>
                     <b-form-group label="时&#8195;&#8195;段&#8194;|" horizontal>
                       <TimePicker :steps="[1, 10, 15]" v-model="eventtime" format="HH:mm" type="timerange" placeholder=""></TimePicker>
@@ -139,7 +139,7 @@
                   <b-col sm="6">
                     <b-form-group label="门牌信息&#8194;|" :label-cols="2"
                                   horizontal>
-                      <b-form-input  type="text" v-model="newEvent.infor"></b-form-input>
+                      <b-form-input  type="text" v-model="newEvent.infor" maxlength="100"></b-form-input>
                     </b-form-group>
                   </b-col>
                 </b-row>
