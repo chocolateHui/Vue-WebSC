@@ -558,6 +558,13 @@
         this.$router.push({ name: '宴会事务项目'});
       },
       eventSync(row){
+        let now = new Date(new Date() - 24 * 60 * 60 * 1000);
+        let eventdate = new Date(row.bdate.replace(/-/g,"/"));
+        if(now >eventdate){
+          this.$alert('本日之前的事务无法进行同步操作!')
+          return;
+        }
+
         if(!row.hasOwnProperty("istopos"||row.istopos==='F')){
           this.$message.error("此类型事务无法创建餐饮订单!")
           return;
