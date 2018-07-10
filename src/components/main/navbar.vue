@@ -178,7 +178,6 @@
         })
       },
       modalhidden: function () {
-        console.log(this.oldpassword);
         this.oldpassword = '';
         this.newpassword = '';
         this.confirmpassword = '';

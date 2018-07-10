@@ -30,7 +30,7 @@
         </b-col>
         <b-col sm="3" class="my-1 paddingright0">
           <b-form-group horizontal :label-cols="6" label="显示在EO单" class="mb-0">
-            <b-form-checkbox id="checkbox1" v-model="localscnotes.flag" value="T" unchecked-value="F">
+            <b-form-checkbox id="checkbox1" v-model="localscnotes.flag" value="T" unchecked-value="F" plain>
             </b-form-checkbox>
           </b-form-group>
         </b-col>
@@ -69,7 +69,9 @@
     data () {
       return {
         show: show,
-        localscnotes:{},
+        localscnotes:{
+          flag:"F"
+        },
         ty:"",
         Titleinfo:{},
       }
@@ -120,6 +122,7 @@
                 } else {
                   let type = this.noteparam
                   type['isnew'] = 'T'
+                  type['flag'] = 'F'
                   this.localscnotes = Object.assign({},type);
                 }
               } else {
@@ -205,6 +208,9 @@
   #remark{
     .paddingright0 {
       padding-right: 0px;
+    }
+    .form-check-inline{
+      padding-top: 10px;
     }
    .btn {
       width: 92px;

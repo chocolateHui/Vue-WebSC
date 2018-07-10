@@ -14,9 +14,8 @@
           <div class="eventdiv">
             <b-row id="eventmain">
               <b-col class="main-col4">
-                <b-form-group label="事务名称|" :label-cols="4"
-                              horizontal>
-                  <el-input clearable v-model="expandevent.descript">
+                <b-form-group label="事务名称|" :label-cols="4" horizontal>
+                  <el-input clearable v-model="expandevent.descript" maxlength="50">
                   </el-input>
                 </b-form-group>
               </b-col>
@@ -625,7 +624,7 @@
 <style lang="scss">
   #eventlist{
     font-size: 0.9rem;
-    input{
+      input{
       font-size: 0.9rem;
     }
     .el-date-editor .el-range-separator{
