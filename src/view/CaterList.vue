@@ -62,12 +62,12 @@
               </el-table-column>
               <el-table-column
                 label="操作"
-                width="120">
+                width="80">
                 <template slot-scope="scope">
                   <b-button
                     size="mini" type="danger" title="编辑" class="Edit-button image-btn" @click="openCateringInfo(scope.row)"></b-button>
                   <b-button
-                    size="mini" type="danger" title="同步" class="Synchronization-button image-btn" @click="deleteempno()"></b-button>
+                    size="mini" type="danger" title="同步" class="Synchronization-button image-btn" @click="syncCatering(scope.row)"></b-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -114,7 +114,7 @@
               </el-table-column>
               <el-table-column
                 label="操作"
-                width="55">
+                width="50">
                 <template slot-scope="scope">
                   <!--<b-form inline class="paddingleft0 paddingbottom0">-->
                     <b-button
@@ -142,14 +142,14 @@
   const fildes = [
     {  prop: 'caterid', label:  '账号',width:'160',sortable:true,showTip: true},
     {  prop: 'name', label:  '宴会名称',width:'',sortable:true,showTip: true},
-    {  prop: 'stades', label:  '状态',width:'80',sortable:true,showTip: true},
-    {  prop: 'eventnum', label:  '事务数',width:'90',sortable:true ,showTip: true},
-    {  prop: 'arr', label:  '到达时间',width:'',sortable:true,showTip: true },
-    {  prop: 'dep', label:  '离开时间',width:'',sortable:true,showTip: true},
-    {  prop: 'blockid', label:  '团队账号',width:'120',sortable:true,showTip: true },
-    {  prop: 'contactor', label:  '联系人',width:'',sortable:true,showTip: true },
+    {  prop: 'stades', label:  '状态',width:'75',sortable:true,showTip: true},
+    {  prop: 'eventnum', label:  '事务数',width:'85',sortable:true ,showTip: true},
+    {  prop: 'arr', label:  '到达时间',width:'100',sortable:true,showTip: true },
+    {  prop: 'dep', label:  '离开时间',width:'100',sortable:true,showTip: true},
+    {  prop: 'blockid', label:  '团队账号',width:'110',sortable:true,showTip: true },
+    {  prop: 'contactor', label:  '联系人',width:'90',sortable:true,showTip: true },
     {  prop: 'cusno_des', label:  '协议单位',width:'',sortable:true,showTip: true},
-    {  prop: 'remark', label:  '备注',width:'',sortable:true }
+    {  prop: 'remark', label:  '备注',width:'',sortable:true,showTip: true }
   ]
   const re = {  caterid: '',caterdes:'',
     eventid:"",
@@ -211,7 +211,6 @@
         else{
           this.selected =  [];
         }
-        console.log(this.selected);
       },
       HtoggleAll (checked) {
         if(checked){
@@ -225,7 +224,6 @@
         }
       },
       tabClick(targetName) {
-        console.log(targetName.paneName);
         if(targetName.paneName==="0"){
           if(this.ishistory==="H"){
             this.timechose = "";
@@ -264,17 +262,7 @@
               this.HtableData = [];
               if(typeof(response.data.caterings) !== "undefined"){
                 for(let caterings of response.data.caterings){
-                  let types = {};
-                  types["caterid"]=caterings.caterid;
-                  types["name"]=caterings.name;
-                  types["stades"]=caterings.stades;
-                  types["eventnum"]=caterings.eventnum;
-                  types["arr"]=caterings.arr.substring(0,10);
-                  types["dep"]=caterings.dep.substring(0,10);
-                  types["blockid"]=caterings.blockid;
-                  types["contactor"]=caterings.contactor;
-                  types["cusno_des"]=caterings.cusno_des;
-                  types["remark"]=caterings.remark;
+                  let types = Object.assign({},caterings);
                   this.HtableData.push(types);
                 }
                 // this.tableData3 = response.data.caterings;
@@ -296,17 +284,7 @@
               this.tableData = [];
               if(typeof(response.data.caterings) !== "undefined"){
                 for(let caterings of response.data.caterings){
-                  let types = {};
-                  types["caterid"]=caterings.caterid;
-                  types["name"]=caterings.name;
-                  types["stades"]=caterings.stades;
-                  types["eventnum"]=caterings.eventnum;
-                  types["arr"]=caterings.arr.substring(0,10);
-                  types["dep"]=caterings.dep.substring(0,10);
-                  types["blockid"]=caterings.blockid;
-                  types["contactor"]=caterings.contactor;
-                  types["cusno_des"]=caterings.cusno_des;
-                  types["remark"]=caterings.remark;
+                  let types = Object.assign({},caterings);
                   this.tableData.push(types);
                 }
                 // this.tableData3 = response.data.caterings;
@@ -335,6 +313,41 @@
         this.$store.commit('setNoteParam',caterinfo);
         this.$refs.remarkmodal.show()
       },
+      syncCatering(row){
+        this.$confirm("是否要要将宴会订单同步到前台系统？","提示").then(()=>{
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+
+            let param = {
+              caterid:row.caterid,
+              name:row.name,
+              contactor :row.contactor,
+              mobile :row.contact_mobile,
+              arr :row.arr,
+              dep :row.dep,
+              ref :row.ref,
+              saleid :row.saleid,
+              saleidname :row.saleid_name,
+              protype :"C",
+              prono :row.cusno,
+              proname :row.cusno_des,
+              status :row.sta,
+              rmnum :row.rmnum,
+              gstno :row.attends,
+            };
+            console.log(param)
+            this.$http.post(methodinfo.syncSCCatering,param ).then((response)=> {
+              if (response.data.errorCode === '0') {
+                this.$message('宴会同步成功')
+              }else{
+                this.$message.error(response.data.errorMessage)
+              }
+            })
+          })
+        })
+      }
     },
     computed: {
       searchitems:function () {
