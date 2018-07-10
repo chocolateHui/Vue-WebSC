@@ -118,9 +118,11 @@
       };
     },
     computed: {
+
       ...mapGetters([
         'isLoading'
       ]),
+
     },
     watch: {
       filterText(val) {
