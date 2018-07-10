@@ -144,6 +144,11 @@
         this.$router.push({name: "login"})
       },
       onSubmit: function () {
+        if(this.newpassword.length<6){
+          this.$alert('密码长度不能小于6位,请检查!');
+          return;
+        }
+
         if (this.newpassword !== this.confirmpassword) {
           this.$alert('两次密码输入不一致,请检查!');
           return;

@@ -219,7 +219,8 @@
         saleoptions:[],
         cancelWidth:'cancelwidth',
         dialogVisible:false,
-        logkey:''
+        logkey:'',
+        isClear:false
       }
     },
     props:{
