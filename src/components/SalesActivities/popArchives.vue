@@ -147,13 +147,13 @@
           this.salesId=''
           this.$store.commit("setProfilesNull")
           this.cateringlist=[]
+          console.log(this.cateringlist +'hhh')
         },
         archClose: function () {
-          this.clearAll()
           this.$emit('btnArchClose')
+          this.clearAll()
         },
         archOk: function () {
-          this.clearAll()
           this.$emit('btnArchOk',this.ifproCurrent,this.proName,this.proNo,this.archTypeId)
         },
         /*档案搜索*/
@@ -209,7 +209,7 @@
         },
       },
       mounted:function () {
-        // this.$store.commit("setProfilesNull")
+
       }
     }
 </script>

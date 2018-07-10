@@ -168,8 +168,8 @@
       <Reason ref="caterReason" @reasonConfirm="reasonConfirm"></Reason>
     </b-modal>
 
-    <el-dialog title="宾客档案查询" id="profilemodal" ref="profilemodal" :visible.sync="dialogVisible">
-      <pop-archives @btnArchClose="btnArchClose" @btnArchOk="ArchivesConfirm" :ifunit="profileType"></pop-archives>
+    <el-dialog title="宾客档案查询" id="profilemodal" ref="profilemodal" :visible.sync="poparch">
+      <pop-archives ref="refarch" @btnArchClose="btnArchClose"  @btnArchOk="btnArchOk" @btnChooseName="btnChooseName" :ifunit="profileType"></pop-archives>
     </el-dialog>
 
     <b-modal id="remarkmodal" ref="remarkmodal" size="lg" title="宴会备注" hide-footer>
@@ -188,7 +188,7 @@
   import 'font-awesome/css/font-awesome.css'
   import methodinfo from '../../config/MethodConst.js'
   import {dateValid,formatDate} from '../../common/date'
-
+  import archivesMixins from './../SalesActivities/archivesMixins'
   // 组件和参数
   import popArchives from '../SalesActivities/popArchives.vue'
   import EOShare from '../catering/EOShare.vue'
@@ -219,7 +219,6 @@
         //销售员列表
         saleoptions:[],
         cancelWidth:'cancelwidth',
-        dialogVisible:false,
         logkey:''
       }
     },
@@ -229,6 +228,7 @@
         default:false
       },
     },
+    mixins: [archivesMixins],
     computed: {
       ...mapGetters([
         'caterid',
@@ -324,23 +324,17 @@
       },
       profileShow(){
         if(!this.isClear){
-          this.dialogVisible = true;
+          this.poparch = true;
+          this.$refs.refarch.clearAll()
         }else{
           this.isClear =false;
         }
       },
-      btnArchClose(){
-        this.dialogVisible = false;
-      },
+
       profileClear(){
         this.localcatering.cusno = '';
         this.localcatering.cusno_des = '';
         this.isClear =true;
-      },
-      ArchivesConfirm(profile,name,no){
-        this.localcatering.cusno = no
-        this.localcatering.cusno_des = name
-        this.dialogVisible = false;
       },
       getDisableDate(time){
         return time<this.minDate;

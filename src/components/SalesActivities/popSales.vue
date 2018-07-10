@@ -82,7 +82,7 @@
       width="100%"
       :modal-append-to-body.sync="ifInstruct"
     >
-      <pop-archives @btnArchClose="btnArchClose" :archFlag="archFlag" @btnArchOk="btnArchOk" :ifunit="ifUnit?unit:guests" @btnChooseName="btnChooseName"></pop-archives>
+      <pop-archives ref="refarch" @btnArchClose="btnArchClose" :archFlag="archFlag" @btnArchOk="btnArchOk" :ifunit="ifUnit?unit:guests" @btnChooseName="btnChooseName"></pop-archives>
     </el-dialog>
     <el-dialog
       title="批示内容"
@@ -100,6 +100,7 @@
   import popInstructions from './popInstructions'
   import calendar from '../../components/vue-calendar-component/calendar'
   import '../../css/SalesActivite.scss'
+  import archivesMixins from './archivesMixins'
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
     export default {
         name: "pop-sale",
@@ -123,7 +124,7 @@
             {status:'取消',id:'4'},
           ],
           salesId:'',
-          poparch: false,
+          // poparch: false,
           unit:[
             {name:'公司',id:'C'},
             {name:'旅行社',id:'A'}
@@ -159,6 +160,7 @@
           },
         };
       },
+      mixins: [archivesMixins],
       props:['clickdata','saletypea','datadiary','saletypeid','saletime','salesnameid','sellerneme','timedetail','timedetailid','salesFlag'],
       components:{
         calendar,
@@ -299,36 +301,36 @@
            this.$emit('saveorupdateguestdiary',json)
           }
         },
-        btnArchOk:function (param,popType,popno,archTypeId) {
-          if(param==''){
-            this.$message({
-              message: "请选择档案",
-              type: "warning"
-            });
-          }else{
-            this.poparch=false;
-            if(archTypeId=='A'||archTypeId=='C'){
-              this.popunit=popType
-              this.popunitno=popno
-            }else{
-              this.popguest=popType
-              this.popguestno=popno
-            }
-          }
-        },
-        btnChooseName:function (popType,popno,archTypeId) {
-          this.poparch=false;
-          if(archTypeId=='A'||archTypeId=='C'){
-            this.popunit=popType
-            this.popunitno=popno
-          }else{
-            this.popguest=popType
-            this.popguestno=popno
-          }
-        },
-        btnArchClose:function () {
-          this.poparch=false;
-        },
+        // btnArchOk:function (param,popType,popno,archTypeId) {
+        //   if(param==''){
+        //     this.$message({
+        //       message: "请选择档案",
+        //       type: "warning"
+        //     });
+        //   }else{
+        //     this.poparch=false;
+        //     if(archTypeId=='A'||archTypeId=='C'){
+        //       this.popunit=popType
+        //       this.popunitno=popno
+        //     }else{
+        //       this.popguest=popType
+        //       this.popguestno=popno
+        //     }
+        //   }
+        // },
+        // btnChooseName:function (popType,popno,archTypeId) {
+        //   this.poparch=false;
+        //   if(archTypeId=='A'||archTypeId=='C'){
+        //     this.popunit=popType
+        //     this.popunitno=popno
+        //   }else{
+        //     this.popguest=popType
+        //     this.popguestno=popno
+        //   }
+        // },
+        // btnArchClose:function () {
+        //   this.poparch=false;
+        // },
         InstructClose:function () {
           this.ifInstructions=false
         },
