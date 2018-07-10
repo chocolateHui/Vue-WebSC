@@ -54,6 +54,7 @@
       };
     },
     computed: {
+
       ...mapGetters([
         'caterid',
         'eventid',
@@ -134,7 +135,7 @@
       this.$store.commit('setSceventitemeventid',this.eventid);
     },
     mounted ()  {
-
+      console.log(document.body.clientHeight);
     },
 
     components: {
