@@ -365,7 +365,7 @@
               this.$http.post(methodinfo.checkevent, newEvent).then((response)=> {
                 if (response.data.errorCode === '0') {
                   resolve(true)
-                }else if(response.data.errorCode === '2000'){
+                }else if(response.data.errorCode === 'SC101000'){
                   this.$confirm(response.data.errorMessage).then(() =>{
                     resolve(true)
                   }).catch(() =>{

@@ -75,7 +75,7 @@
             sortable
             show-overflow-tooltip>
             <template slot-scope="scope">
-              <Numberinput class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></Numberinput>
+              <FormatInput class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></FormatInput>
               <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
             </template>
           </el-table-column>

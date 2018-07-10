@@ -365,7 +365,7 @@
               if (response.data.errorCode === '0') {
                 this.updateEvent();
                 this.$message('事务保存成功')
-              }else if(response.data.errorCode === '2000'){
+              }else if(response.data.errorCode === 'SC101000'){
                 this.$confirm(response.data.errorMessage).then(() =>{
                   this.updateEvent();
                 })
