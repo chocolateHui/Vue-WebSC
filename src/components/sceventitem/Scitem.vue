@@ -52,7 +52,7 @@
           :data="searchitems"
           border
           stripe
-          height="160"
+          :height="th"
           @selection-change="handleSelectionChange"
           style="width: 100%">
           <el-table-column
@@ -142,6 +142,7 @@
         currentselect:{},
         change:false,
         first:true,
+        th:(document.body.clientHeight-272)/2
       }
     },
     props:{

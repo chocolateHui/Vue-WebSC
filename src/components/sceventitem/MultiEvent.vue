@@ -77,7 +77,7 @@
         currentplace:'',
         currentselect:[],
         allselect:[],
-        hash:{}
+        hash:{},
       }
     },
     props:{

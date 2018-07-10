@@ -142,7 +142,7 @@
         selectbm:"",
         filterText:"",
         sceventitemlist:[],
-        th:document.body.clientHeight-433
+        th:(document.body.clientHeight-272)/2
       }
     },
 
