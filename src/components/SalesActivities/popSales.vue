@@ -44,7 +44,7 @@
       </li>
       <li><label class="title2">金额</label>
         <!--<input type="text" id="amount" v-model.trim="amount" maxlength="20">-->
-        <FormatInput type="float" maxlength="20" v-model="amount" id="amount"></FormatInput>
+        <FormatInput type="float" maxlength="10" v-model="amount" id="amount"></FormatInput>
       </li>
       <li><label class="title1 nofb">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label><textarea id="remarks" v-model="remarks" maxlength="200"></textarea></li>
       <li><label class="title1 nofb">结&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;果</label><textarea id="result" v-model="result" maxlength="200"></textarea></li>
@@ -447,6 +447,7 @@
     }
     .el-select .el-input__inner{
       padding: 0 5px;
+      height: 24px!important;
     }
     .col-sm-3 {
       flex: 0 0 23%;

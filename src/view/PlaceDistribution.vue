@@ -65,9 +65,9 @@
                 <p>
                   <span v-for="items in timeAll[indexdetail].content" >
                     <span v-for="(infolist1,infoindex1) in placesinfo1" v-if="infolist1.tableno==placeitem.tableno">
-                        <span v-for="infolist in (placesinfo1[infoindex1].bdates)" v-if="timelist==infolist.bdate">
+                        <span v-for="infolist in (placesinfo1[infoindex1].bdates)" v-if="timelist==infolist.bdate&&((items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))">
                             <span v-for="typeitem in typeList" v-if="iftypelist||(typeitem==infolist.eventtype)">
-                               <span v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta&&( (items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))"  :data-id="items.dataid" :data-it="items.datait"></span>
+                               <span v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta"  :data-id="items.dataid" :data-it="items.datait"></span>
                             </span>
                           </span>
                       </span>
@@ -625,6 +625,7 @@
           this.$router.push({path:'/main/place/placeList/0'})
         },
         btnCheck:function (idx) {
+          loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           var check = this.headList[idx].checked;
           this.headList[idx].checked = check === true ? false : true;
           var ifcheckedall=true
@@ -645,6 +646,7 @@
           }
         },
         btnAllCheck:function () {
+          loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           this.ifAllCheck=!this.ifAllCheck
           var _this=this
           for(var i=0;i<this.headList.length;i++){
