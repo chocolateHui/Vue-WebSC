@@ -288,6 +288,7 @@
             sta: sta
           }).then((response)=>{
             if (response.data.errorCode === '0') {
+              this.$message('宴会保存成功')
               this.localcatering.sta = sta;
               this.$store.commit('setCatering', this.localcatering)
               this.$store.commit('setCatersta', sta)
