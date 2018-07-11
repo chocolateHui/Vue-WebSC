@@ -75,6 +75,7 @@
         sortDesc: false,
         eloptions: [],
         reportdate: '',
+        sums: [],
         tableHeight: document.body.clientHeight-190,//减去header的60px
       }
     },
@@ -90,7 +91,18 @@
         //跳过json的key,手工添加输出标题
         let sheetopt = {skipHeader:true};
         let exportitems = this.items.slice(0);
-        exportitems.unshift({caterid: '订单编号', name:  '订单名称'});
+        let fia = {};
+        for(let items of this.fi ){
+          fia[items.prop] = items.label;
+        }
+        let sums = {};
+        let i=0;
+        for(let key in fia ){
+          sums[key] = this.sums[i];
+          i++;
+        }
+        exportitems.push(sums);
+        exportitems.unshift(fia);
         //json转换为表格
         let worksheet = XLSX.utils.json_to_sheet(exportitems,sheetopt);
         worksheet['!cols'] = [{width:10},{width:30}]
@@ -130,6 +142,9 @@
                           types["prop"] = "zzzz";
                         }
                         types["label"]=items.label;
+                        if(items.label===""){
+                          types["label"] = items.props;
+                        }
                         this.fi.push(types);
                       }
                       let types = {};
@@ -193,7 +208,7 @@
             sums[index] = 'N/A';
           }
         });
-
+        this.sums = sums;
         return sums;
       },
       tableRowClassName({row, rowIndex}) {

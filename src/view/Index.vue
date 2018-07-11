@@ -436,7 +436,6 @@
                 var rankinfo = response.data.rankinfo;
                 if(rankinfo.length<=2){
                   for(var i=rankinfo.length-1;i>=0;i--){
-                    console.log(rankinfo[i]);
                     this.zhuxdata.push(rankinfo[i].descript);
                     var types={};
                     types["value"]=rankinfo[i].rentnum;
