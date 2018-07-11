@@ -18,7 +18,7 @@
           <div class="input-group res">
             <div class="input-group-append" style="height: 33px;">
               <div class="input-group-text" style="border-radius: 0.25rem;background-color: #6FB3E0">
-                <i class="fa fa-refresh" @click="refreshdata" aria-hidden="true"></i>
+                <i class="fa fa-refresh" @click="refresh1" aria-hidden="true"></i>
               </div>
             </div>
           </div>
@@ -142,7 +142,7 @@
         selectbm:"",
         filterText:"",
         sceventitemlist:[],
-        th:document.body.clientHeight-433
+        th:(document.body.clientHeight-272)/2
       }
     },
 
@@ -233,7 +233,15 @@
           event.preventDefault();
         }
       },
+      refresh1(){
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
+        this.refreshdata();
+      },
       refreshdata(){
+
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature

@@ -54,6 +54,7 @@
       };
     },
     computed: {
+
       ...mapGetters([
         'caterid',
         'eventid',
@@ -102,7 +103,7 @@
         let copycatering = this.catering;
         for(let elm of copyeventlist){
           let type={};
-          type["label"] = elm.descript;
+          type["label"] = elm.bdate.substring(5)+elm.descript;
           type["eventid"] = elm.eventid;
           type["root"] = "F";
           if(this.eventid===elm.eventid){
@@ -134,7 +135,7 @@
       this.$store.commit('setSceventitemeventid',this.eventid);
     },
     mounted ()  {
-
+      console.log(document.body.clientHeight);
     },
 
     components: {
