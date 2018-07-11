@@ -112,8 +112,11 @@
         //跳过json的key,手工添加输出标题
         let sheetopt = {skipHeader:true};
         let exportitems = this.items.slice(0);
-        exportitems.unshift({caterid: '订单编号', name:  '订单名称'});
-        //json转换为表格
+        let fia = {};
+        for(let items of this.fildes ){
+          fia[items.prop] = items.label;
+        }
+        exportitems.unshift(fia);
         let worksheet = XLSX.utils.json_to_sheet(exportitems,sheetopt);
         worksheet['!cols'] = [{width:10},{width:30}]
         let new_workbook = XLSX.utils.book_new();
