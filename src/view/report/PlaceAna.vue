@@ -4,13 +4,16 @@
       <!-- User Interface controls -->
       <b-row>
         <b-col sm="4" class="my-1">
-          <el-date-picker
-            v-model="reportdate"
-            type="month"
-            placeholder="选择月">
+          <el-date-picker v-show="!isYear" v-model="reportdate" type="month" placeholder="选择月">
+          </el-date-picker>
+          <el-date-picker v-show="isYear" v-model="reportdate" type="year" placeholder="选择年">
           </el-date-picker>
         </b-col>
         <b-col sm="4" class="my-1">
+          <el-switch v-model="isYear" @change="typeChange"
+            active-text="年报"
+            inactive-text="月报">
+          </el-switch>
         </b-col>
         <b-col sm="4" class="my-1">
           <b-form-group class="mb-0">
@@ -75,6 +78,7 @@
         totalRows: reportDatas.length,
         sortBy: null,
         sortDesc: false,
+        isYear:false,
         saleid: '',
         eloptions: [],
         reportdate: '',
@@ -147,7 +151,13 @@
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
             this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-            this.$http.post(methodinfo.getplaceanadata, {
+
+            let method = methodinfo.getplaceanadata;
+            if(this.isYear){
+              method = methodinfo.getplaceanadatabyyear;
+            }
+
+            this.$http.post(method, {
               year:year,
               month:month
             }).then((response)=> {
@@ -202,6 +212,7 @@
 
         let userate = (people/num)/cover;
         let lastuserate = (lastpeople/lastnum)/cover;
+
         sums[7] = (Math.round(userate * 10000) / 100).toFixed(0) + '%';
         sums[12] = (Math.round(lastuserate * 10000) / 100).toFixed(0) + '%';
 
@@ -213,6 +224,9 @@
           return 'success-row';
         }
         return '';
+      },
+      typeChange(){
+        this.reportDatas = [];
       }
     },
     watch:{
@@ -266,7 +280,9 @@
     .el-table .warning-row {
       background: #e5e5e5;
     }
-
+    .el-switch{
+      padding-top: 8px;
+    }
     .el-table .success-row {
       background: #CCC;
     }
