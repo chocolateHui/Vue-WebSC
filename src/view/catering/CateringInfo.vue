@@ -3,11 +3,11 @@
     <CateringInfo @updateCatering="updateCatering" :caterid="caterid"></CateringInfo>
     <NewEvent ref="newevent" :eventshow="false" :toggleshow="toggleshow"></NewEvent>
     <b-button v-if="!isHistory" v-b-toggle.newevent class="newEventbtn">新建事务</b-button>
-    <el-tabs type="border-card">
-      <el-tab-pane label="事务列表">
+    <el-tabs type="border-card" :before-leave="tabChange" value="EventList">
+      <el-tab-pane label="事务列表" name="EventList">
         <EventList :caterid="caterid"></EventList>
       </el-tab-pane>
-      <el-tab-pane label="客房预留">
+      <el-tab-pane label="客房预留" name="RoomInfo">
         <RoomInfo :caterid="caterid"></RoomInfo>
       </el-tab-pane>
     </el-tabs>
@@ -49,6 +49,9 @@
         'isHistory'
       ])
     },
+    mounted(){
+
+    },
     methods: {
       getCateringData(){
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
@@ -67,7 +70,7 @@
         });
         setTimeout(() => {
           loading.close();
-        }, 500);
+        }, 200);
       },
       updateCatering(localcatering){
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
@@ -99,6 +102,51 @@
           }
         });
       },
+      tabChange(activeName, oldActiveName){
+        if(!this.catering.hasOwnProperty("blockid")) {
+          return new Promise((resolve, reject) => {
+            this.$confirm("当前宴会订单未同步到前台系统,是否要进行同步?", "提示").then(() => {
+              this.$store.dispatch('encrypttoken').then(() => {
+                this.$http.defaults.headers.common['username'] = this.$store.getters.username
+                this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+                this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+
+                let param = {
+                  caterid: this.catering.caterid,
+                  name: this.catering.name,
+                  contactor: this.catering.contactor,
+                  mobile: this.catering.contact_mobile,
+                  arr: this.catering.arr,
+                  dep: this.catering.dep,
+                  ref: this.catering.ref,
+                  saleid: this.catering.saleid,
+                  saleidname: this.catering.saleid_name,
+                  protype: "C",
+                  prono: this.catering.cusno,
+                  proname: this.catering.cusno_des,
+                  status: this.catering.sta,
+                  rmnum: this.catering.rmnum,
+                  gstno: this.catering.attends,
+                };
+                this.$http.post(methodinfo.syncSCCatering, param).then((response) => {
+                  if (response.data.errorCode === '0') {
+                    this.$message('宴会同步成功')
+                    this.$store.dispatch("getCateringInfo")
+                    resolve();
+                  } else {
+                    this.$message.error(response.data.errorMessage)
+                    reject();
+                  }
+                }).catch(()=>{
+                  reject();
+                })
+              })
+            }).catch(() => {
+              reject()
+            })
+          })
+        }
+      }
     },
     watch:{
 

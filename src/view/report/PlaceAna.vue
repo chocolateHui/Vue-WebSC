@@ -4,9 +4,9 @@
       <!-- User Interface controls -->
       <b-row>
         <b-col sm="4" class="my-1">
-          <el-date-picker v-show="!isYear" v-model="reportdate" type="month" placeholder="选择月">
+          <el-date-picker v-show="!isYear" v-model="reportdate" type="month" placeholder="选择月" :picker-options="datepickerOptions">
           </el-date-picker>
-          <el-date-picker v-show="isYear" v-model="reportdate" type="year" placeholder="选择年">
+          <el-date-picker v-show="isYear" v-model="reportdate" type="year" placeholder="选择年" :picker-options="datepickerOptions">
           </el-date-picker>
         </b-col>
         <b-col sm="4" class="my-1">
@@ -88,7 +88,12 @@
     },
     computed: {
       ...mapGetters([
-      ])
+      ]),
+      datepickerOptions() {
+        return {
+          disabledDate:this.getDisableDate
+        }
+      },
     },
     methods: {
       exportexcel:function () {
@@ -140,8 +145,12 @@
       },
       getreportdata(){
         if(!this.reportdate){
+          let message="请选择报表查询月份"
+          if(this.isYear){
+            message="请选择报表查询年"
+          }
           this.$message.error({
-            message:"请选择报表查询月份"
+            message:message
           });
         }
         else{
@@ -174,6 +183,9 @@
             })
           })
         }
+      },
+      getDisableDate(time){
+        return time > new Date();
       },
       getSummaries(param){
         const { columns, data } = param;
@@ -226,6 +238,9 @@
         return '';
       },
       typeChange(){
+        if(isYear){
+
+        }
         this.reportDatas = [];
       }
     },

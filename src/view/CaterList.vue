@@ -351,7 +351,6 @@
               rmnum :row.rmnum,
               gstno :row.attends,
             };
-            console.log(param)
             this.$http.post(methodinfo.syncSCCatering,param ).then((response)=> {
               if (response.data.errorCode === '0') {
                 this.$message('宴会同步成功')

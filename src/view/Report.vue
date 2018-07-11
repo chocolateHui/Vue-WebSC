@@ -3,7 +3,7 @@
   <div id="reportmain">
     <b-card-group deck class="mb-3">
       <b-card border-variant="info" :class="report.color" class="fa" :header="report.title" footer-tag="footer" align="center" v-for="report in reports" :key="report.name">
-        <p class="card-text">这里是报表简介</p>
+        <p class="card-text">{{report.descript}}</p>
         <div slot="footer">
           <b-button @click="openreport(report)" style="float: right" variant="primary">查看报表<i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></b-button>
         </div>
@@ -17,7 +17,7 @@
     data () {
       return {
         reports: [
-          { route: '/main/lostreport', title: '订单流失统计报表',descript:"订单流失统计报表",color:'c1'},
+          { route: '/main/lostreport', title: '订单流失统计报表',descript:"显示取消的宴会订单情况,按销售员小计流失情况。",color:'c1'},
           { route: '/main/fuincome', title: '分类预测汇总报表',descript:"分类预测汇总报表",color:'c2'},
           { route: '/main/fuincomebysaleid', title: '分类预测明细报表',descript:"分类预测明细报表",color:'c3',sale:"xxxxx",begin:"xxxx"},
           { route: '/main/placeana', title: '场地利用情况分析报表',descript:"场地利用情况分析报表",color:'c4'}
@@ -40,6 +40,7 @@
   .card-text{
     height: 80px;
     float: left;
+    text-align: left;
   }
   .card-deck{
     margin-right: 0;
