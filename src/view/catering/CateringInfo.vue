@@ -3,7 +3,7 @@
     <CateringInfo @updateCatering="updateCatering" :caterid="caterid"></CateringInfo>
     <NewEvent ref="newevent" :eventshow="false" :toggleshow="toggleshow"></NewEvent>
     <b-button v-if="!isHistory" v-b-toggle.newevent class="newEventbtn">新建事务</b-button>
-    <el-tabs type="border-card" :before-leave="tabChange" value="EventList">
+    <el-tabs type="border-card" :before-leave="tabChange" v-model="currentTab">
       <el-tab-pane label="事务列表" name="EventList">
         <EventList :caterid="caterid"></EventList>
       </el-tab-pane>
@@ -33,7 +33,8 @@
       return {
         eventshow:false,
         toggleshow:true,
-        isNew:true
+        isNew:true,
+        currentTab:"EventList"
       };
     },
     components: {
@@ -54,6 +55,7 @@
     },
     methods: {
       getCateringData(){
+        this.currentTab = "EventList";
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         this.$store.dispatch('encrypttoken').then(() => {
           if(this.isNew){
