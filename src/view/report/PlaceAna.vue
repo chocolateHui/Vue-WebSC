@@ -100,40 +100,18 @@
         //跳过json的key,手工添加输出标题和合计行
         let sheetopt = {skipHeader:true};
         let exportitems = this.reportDatas.slice(0);
-        exportitems.push({
-          code: this.sums[0],
-          descript: this.sums[1],
-          year: this.sums[2],
-          month:  this.sums[3],
-          covers: this.sums[4],
-          number:  this.sums[5],
-          people: this.sums[6],
-          userate:  this.sums[7],
-          amount: this.sums[8],
-          avgamount:  this.sums[9],
-          lastnumber: this.sums[10],
-          lastpeople:  this.sums[11],
-          lastuserate: this.sums[12],
-          lastamount: this.sums[13],
-          lastavgamount: this.sums[14],
-        })
-        exportitems.unshift({
-          code: '场地代码',
-          descript:  '场地名称',
-          year: '年',
-          month:  '月',
-          covers: '容纳数',
-          number:  '场次',
-          people: '人数',
-          userate:  '利用率',
-          amount: '营收',
-          avgamount:  '场均营收',
-          lastnumber: '同期场次',
-          lastpeople:  '同期人数',
-          lastuserate: '同期利用率',
-          lastamount:  '同期营收',
-          lastavgamount: '同期场均营收'
-        });
+        let fia = {};
+        for(let items of this.fi ){
+          fia[items.prop] = items.label;
+        }
+        let sums = {};
+        let i=0;
+        for(let key in fia ){
+          sums[key] = this.sums[i];
+          i++;
+        }
+        exportitems.push(sums);
+        exportitems.unshift(fia);
 
         //json转换为表格
         let worksheet = XLSX.utils.json_to_sheet(exportitems,sheetopt);
