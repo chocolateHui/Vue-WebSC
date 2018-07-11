@@ -184,7 +184,6 @@
         }
       },
       arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-        console.log(columnIndex);
         if (columnIndex === 0) {
           if (row.caterid === '小计'||row.caterid === '合计') {
             return {
