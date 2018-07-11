@@ -43,7 +43,7 @@
               </b-form>
             </b-col>
             <b-col>
-              <i class="fa fa-refresh refresh" aria-hidden="true"></i>
+              <i class="fa fa-refresh refresh"  @click="refresh1" aria-hidden="true"></i>
             </b-col>
           </b-row>
           <b-row>
@@ -95,7 +95,7 @@
               </b-form>
             </b-col>
             <b-col>
-              <i class="fa fa-refresh refresh" aria-hidden="true"></i>
+              <i class="fa fa-refresh refresh"  @click="refresh2" aria-hidden="true"></i>
             </b-col>
           </b-row>
           <b-row>
@@ -222,6 +222,20 @@
         else{
           this.Hselected =  [];
         }
+      },
+      refresh1(){
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
+        this.gettable1data();
+      },
+      refresh2(){
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
+        this.getHtable1data();
       },
       tabClick(targetName) {
         if(targetName.paneName==="0"){

@@ -95,6 +95,7 @@
       noteparam:function (val,oldval) {
         this.Titleinfo = Object.assign({},val);
         this.getremark();
+
       },
     },
     computed: {

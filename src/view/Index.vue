@@ -173,7 +173,8 @@
   // 引入提示框和title组件
   require('echarts/lib/component/tooltip')
   require('echarts/lib/component/title')
-
+  require('echarts/lib/component/legend')
+  require('echarts/lib/component/legendScroll')
   export default {
 
     data () {
@@ -393,6 +394,7 @@
             // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
+              this.piedata = [];
               if(typeof(response.data.typeinfo) == "undefined"){
                 var types = {};
                 types["value"]=0;
@@ -547,27 +549,45 @@
         })
       },
       refreshline: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.getlinedata();
       },
       refreshpie: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.getpiedata();
       },
       refreshzhu: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.getzhudata();
       },
       refreshtable1: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.gettable1data();
       },
       refreshtable2: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.gettable2data();
       },
       refreshtable3: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.gettable3data();
       }
     }
