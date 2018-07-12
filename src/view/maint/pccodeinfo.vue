@@ -244,7 +244,7 @@
         </b-row>
 
       </b-modal>
-      <b-modal id="placeexpandmodal" ref="placeexpandmodel" size="lg" title="扩展属性" hide-footer ok-only ok-title="确认">
+      <b-modal id="placeexpandmodal" ref="placeexpandmodel" size="lg" title="扩展属性" hide-footer>
         <placeexpand :pccode="pcinfo.pccode"></placeexpand>
       </b-modal>
     </b-container>

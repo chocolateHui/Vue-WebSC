@@ -47,7 +47,7 @@
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px;float: right">
         <b-btn class="mt-3" variant="outline-danger" block @click="savescnotes">确认</b-btn>
-        <b-btn class="mt-3" variant="outline-danger" block @click="close">取消</b-btn>
+        <b-btn class="mt-3" variant="outline-danger" block @click="close">退出</b-btn>
       </b-row>
     </b-container>
   </div>

@@ -131,16 +131,13 @@
         <b-button type="submit" @click="loglog" variant="primary">日志</b-button>
       </b-col>
     </b-row>
-
-    <el-dialog
-      title="日志"
-      id="loglog"
+    <el-dialog title="日志" id="loglog"
       :append-to-body="true"
       :visible.sync="dialoglogVisible">
       <span>
         <Syslog></Syslog>
       </span>
-      <b-button type="primary" @click="dialoglogVisible = false">确 定</b-button>
+      <b-button type="primary" @click="dialoglogVisible = false">退出</b-button>
     </el-dialog>
   </div>
 </template>

@@ -28,7 +28,7 @@
         </b-container>
       </b-col>
     </b-row>
-    <b-modal id="maintLogModal" size="lg" title="操作日志" ok-only ok-title="确认">
+    <b-modal id="maintLogModal" size="lg" title="操作日志" ok-only ok-title="退出">
       <Syslog></Syslog>
     </b-modal>
   </b-container>
