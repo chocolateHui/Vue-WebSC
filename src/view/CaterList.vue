@@ -443,6 +443,7 @@
 </script>
 <style lang="scss"  type="text/scss">
   #CaterListpanel{
+    padding: 0 1rem;
     .el-tabs__content{
       overflow: hidden!important;
       .row{ margin-right: 0px; margin-left: 0px;}
@@ -540,7 +541,9 @@
         box-shadow: 1px 5px 5px #dee2e6;
       }
     }
-
+    .el-tabs{
+      box-shadow: unset;
+    }
     .datea{
       position: relative;
       z-index: 99;

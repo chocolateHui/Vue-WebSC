@@ -45,4 +45,7 @@ export default {
   input,table{
     font-size: 0.9rem;
   }
+  .fa-refresh{
+    cursor: pointer;
+  }
 </style>

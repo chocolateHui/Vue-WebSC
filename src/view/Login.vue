@@ -38,6 +38,11 @@
                       </b-input-group>
                       <label class="errorlabel" v-show="hotelErrorShow">请先选择酒店!</label>
                     </label>
+                    <!--<label class="block">-->
+                      <!--<b-form-checkbox id="checkbox1" v-model="empnoType" value="PMS" unchecked-value="SC">-->
+                        <!--使用PMS帐号登录-->
+                      <!--</b-form-checkbox>-->
+                    <!--</label>-->
                     <label class="block">
                       <b-button class="login-button" @click="login">登录</b-button>
                     </label>
@@ -74,7 +79,7 @@
     //组件和参数
     import hotelDiv from  '../components/login/hoteldiv.vue'
 
-    var logindata = {
+    let logindata = {
         password :'',
         hotelShow:false,
         userErrorShow:false,
@@ -82,6 +87,7 @@
         hotelErrorShow:false,
         hasGroupid:false,
         isFirefox:true,
+        empnoType:'SC'
     };
     export default {
         name: 'Login',

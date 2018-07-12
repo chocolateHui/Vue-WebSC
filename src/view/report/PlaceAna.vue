@@ -216,7 +216,7 @@
         return '';
       },
       typeChange(){
-        if(isYear){
+        if(this.isYear){
 
         }
         this.reportDatas = [];
