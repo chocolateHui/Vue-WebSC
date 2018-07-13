@@ -146,7 +146,7 @@
           :sortable="item.sortable"
           :show-overflow-tooltip="item.showTip" :key="item.prop">
         </el-table-column>
-        <el-table-column :width="60" label="操作">
+        <el-table-column :width="50" label="操作">
           <template slot-scope="scope">
             <b-button size="mini" type="danger" class="Cancel-button image-btn" @click="deleteempno(scope)"></b-button>
           </template>
@@ -195,7 +195,7 @@
   const fildes = [
     {  prop: 'empno', label:  '工号',width:'100',sortable:true },
     {  prop: 'empname', label:  '姓名',width:'',sortable:true,showTip:true},
-    {  prop: 'htldeptdes', label:  '部门',width:'100',sortable:true,showTip:true},
+    {  prop: 'saleid', label:  '销售员ID',width:'100',sortable:true,showTip:true},
     {  prop: 'deptnodes', label:  '岗位',width:'100',sortable:true },
     {  prop: 'htljobdes', label:  '角色',width:'100',sortable:true },
     {  prop: 'hoteldes', label:  '所属酒店',width:'',sortable:true }
