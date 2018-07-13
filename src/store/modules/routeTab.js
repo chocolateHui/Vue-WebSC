@@ -25,7 +25,6 @@ const getters = {
 
 // actions
 const actions = {
-
 }
 
 // mutations

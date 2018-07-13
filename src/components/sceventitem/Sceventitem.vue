@@ -118,7 +118,7 @@
       <b-modal id="remarkmodal" ref="remarkmodal"  size="lg" title="宴会备注" hide-footer>
         <remark></remark>
       </b-modal>
-      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="确认">
+      <b-modal id="logmodal" size="lg" title="操作日志" ok-only ok-title="退出">
         <Syslog></Syslog>
       </b-modal>
     </b-container>

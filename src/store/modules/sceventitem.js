@@ -24,7 +24,6 @@ const getters = {
 const actions = {
   getcortEventlist (store) {
     return new Promise((resolve, reject) => {
-      axiosinstance.defaults.headers.common['username'] = store.getters.username
       axiosinstance.defaults.headers.common['signature'] = store.getters.signature
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
       axiosinstance.post(methodinfo.geteventlist, {

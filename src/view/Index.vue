@@ -53,30 +53,30 @@
                   property="descript"
                   :show-overflow-tooltip=true
                   label="事务名称"
-                  width="90">
+                  width="">
                 </el-table-column>
                 <el-table-column
                   property="codedes"
                   :show-overflow-tooltip=true
                   label="场地描述"
-                  width="">
+                  width="80">
                 </el-table-column>
                 <el-table-column
                   property="typedes"
                   :show-overflow-tooltip=true
                   label="类型"
-                  width="60">
+                  width="50">
                 </el-table-column>
                 <el-table-column
                   property="bdate"
                   :show-overflow-tooltip=true
                   label="事务日期"
-                  width="70">
+                  width="84">
                 </el-table-column>
                 <el-table-column
                   property="begintime"
                   :show-overflow-tooltip=true
-                  label="开始日期"
+                  label="开始时间"
                   width="70">
                 </el-table-column>
               </el-table>
@@ -124,7 +124,7 @@
           <b-col cols="4" class="paddingright0">
             <b-card border-variant="info" header="未来一周客户需要确认的订单" header-tag="header" align="left" class="height100 c3">
               <div slot="header">
-                <span>未来一周即将到来的宴会团</span>
+                <span>未来一周客户需要确认的订单</span>
                 <i class="fa fa-refresh refresh" @click="refreshtable3" aria-hidden="true"></i>
               </div>
               <el-table

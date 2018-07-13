@@ -226,9 +226,7 @@
         ...mapGetters(['isLoading']),
       },
       created(){
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch('getTimeUnit')
-        })
+
         loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           for(var num=8;num<=22;num++) {
             if (num <= 12) {
@@ -723,8 +721,12 @@
         }
       },
       mounted: function () {
+
         this.getbasecodelist()
         this.datatimeid=this.today()
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch('getTimeUnit')
+        })
         this.getpccodelist()
         this.datatime=this.today()+" 至 "+this.adddateday(this.today(),6)
         this.dataNow=this.today()

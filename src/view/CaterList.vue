@@ -286,8 +286,9 @@
         })
       },
       getNowcateringlist(sta){
+        let role = this.$store.getters.role;
+        let empsale = this.$store.getters.empsale;
         this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.getcateringlist, {
@@ -297,8 +298,14 @@
               this.tableData = [];
               if(typeof(response.data.caterings) !== "undefined"){
                 for(let caterings of response.data.caterings){
-                  let types = Object.assign({},caterings);
-                  this.tableData.push(types);
+                  let catering = Object.assign({},caterings);
+                  if(['02','03'].indexOf(role)>=0){
+                    if(catering.saleid===empsale||catering.saleid===''){
+                      this.tableData.push(catering);
+                    }
+                  }else{
+                    this.tableData.push(catering);
+                  }
                 }
               }
 
@@ -441,6 +448,7 @@
 </script>
 <style lang="scss"  type="text/scss">
   #CaterListpanel{
+    padding: 0 1rem;
     .el-tabs__content{
       overflow: hidden!important;
       .row{ margin-right: 0px; margin-left: 0px;}
@@ -532,7 +540,9 @@
         box-shadow: 1px 5px 5px #dee2e6;
       }
     }
-
+    .el-tabs{
+      box-shadow: unset;
+    }
     .datea{
       position: relative;
       z-index: 99;
