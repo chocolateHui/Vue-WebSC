@@ -92,7 +92,7 @@
         saleid: '',
         eloptions: [],
         reportdate: '',
-        tableHeight: document.body.clientHeight-190,//减去header的60px
+        tableHeight: document.body.clientHeight-190,//减去header的190px
       }
     },
     computed: {

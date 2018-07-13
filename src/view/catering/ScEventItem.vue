@@ -76,7 +76,7 @@
       eventlist(val,oldval){
         this.setdata();
         this.$nextTick(function() {
-          console.log(this.eventid);
+
           this.$refs.tree2.setCurrentKey(this.eventid);
           this.$store.commit('setEventdes',this.localdes);
         })
@@ -85,8 +85,7 @@
 
     methods: {
       filterNode(value, data) {
-        // if (!value) return true;
-        // return data.label.indexOf(value) !== -1;
+
       },
       NodeClick(data){
         if(data.root!="T"){
@@ -119,7 +118,7 @@
       },
       getCateringData(){
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
-        console.log("caterid"+this.caterid);
+
         this.$store.commit('setCaterid',this.caterid);
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch("getCateringInfo")
@@ -135,7 +134,7 @@
       this.$store.commit('setSceventitemeventid',this.eventid);
     },
     mounted ()  {
-      console.log(document.body.clientHeight);
+
     },
 
     components: {

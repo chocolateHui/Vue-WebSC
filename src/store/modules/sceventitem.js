@@ -1,6 +1,3 @@
-/**
- * Created by lsj on 2018/3/9.
- */
 import methodinfo from '../../config/MethodConst.js'
 import axiosinstance from '../../common/axiosinstance'
 

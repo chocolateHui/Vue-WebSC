@@ -316,18 +316,17 @@
           xAxis: {
             type : 'value',
 
-            // position: 'top',
+
             axisLine: {show: false},
             axisLabel: {show: false},
             axisTick: {show: false},
             splitLine:{show: false},
-            // data : [ '咫尺天涯', '海清河晏','中庭大堂']
+
           },
           yAxis: {
             type : 'category',
 
             axisLine: {show: false},
-            // axisLabel: {show: false},
             axisTick: {show: false},
             splitLine: {show: false},
             data :this.zhuxdata
@@ -335,20 +334,17 @@
           series : [
             {
               name:'场数',
-              // color: ["#ff8440", "#ed524a", "#7dc42c", "#1bc1c1", "#30a2ce", "#995097", "#c6618a", "#ffba31"],
               type:'bar',
               stack: '总量',
               label: {
                 normal: {
                   show: true,
-                  // formatter: '{b}',
                   position: 'left'
                 }
               },
               itemStyle: {
                 normal: {
                   // 随机显示
-                  //color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
                   label : {show: true, position: 'inside'},
                   // 定制显示（按顺序）
                   color: function(params) {
@@ -369,7 +365,6 @@
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.getplacerentinfo, {
             bdate:formatDate(new Date(),"yyyy-MM-dd")
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
               this.maxnum =  response.data.placenum;
@@ -391,7 +386,6 @@
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.geteventtypecompose, {
             bdate:formatDate(new Date(),"yyyy-MM-dd")
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
               this.piedata = [];
@@ -422,7 +416,6 @@
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.getplacerankinfo, {
             bdate:formatDate(new Date(),"yyyy-MM-dd")
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
               this.zhuxdata = [];
@@ -470,7 +463,6 @@
             sdate:formatDate(new Date(),"yyyy-MM-dd"),
             edate:formatDate(edate,"yyyy-MM-dd"),
             sta:'1'
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
               this.tableData3 = [];
@@ -498,7 +490,6 @@
             sdate:formatDate(new Date(),"yyyy-MM-dd"),
             edate:formatDate(edate,"yyyy-MM-dd"),
             sta:'1,2'
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
               if(typeof(response.data.caterings) != "undefined"){
@@ -527,7 +518,6 @@
           this.$http.post(methodinfo.geteventlist, {
             begindate:formatDate(new Date(),"yyyy-MM-dd"),
             enddate:formatDate(new Date(),"yyyy-MM-dd")
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
               this.tableData1 = [];
