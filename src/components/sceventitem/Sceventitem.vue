@@ -159,7 +159,6 @@
       searchitems:function () {
 
         if(!this.selectbm&&!this.filterText){
-          console.log(this.localsceventitem)
           return this.localsceventitem;
         }else{
           return this.localsceventitem.filter( tableData => {
@@ -254,7 +253,6 @@
 
               if(typeof(response.data.eventitems) != "undefined")
               {
-                console.log(response.data);
                 let type =[];
                 for(let elm of response.data.eventitems){
                   let event = {};
@@ -271,7 +269,7 @@
               }
               this.$store.commit('setIsrefresh',"F");
             }else{
-              console.log(response.data);
+
             }
           })
         })
@@ -583,7 +581,6 @@
         background-color: transparent;
         border: none;
         padding: 0px;
-        /*box-shadow:transparent !important;*/
       }
       .el-input__inner:focus{
         background-color: transparent;

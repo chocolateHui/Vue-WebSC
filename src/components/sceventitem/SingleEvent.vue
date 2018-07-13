@@ -172,8 +172,6 @@
           this.$alert("请选择一个宴会!")
           return
         }
-        console.log("this.currentRow");
-        console.log(this.currentRow);
         this.$emit('singleeventConfirm',this.currentRow)
         this.$root.$emit('bv::hide::modal','singleeventmodal')
       },

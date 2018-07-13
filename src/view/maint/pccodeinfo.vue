@@ -316,8 +316,7 @@
         },
         currentRow: null,
         placeRow: null,
-        // 要展开的行，数值的元素是row的key值
-        tableH: document.body.clientHeight-278,//减去header的60px
+        tableH: document.body.clientHeight-278,//减去header的278px
         num:0,
         change:"",
       }
@@ -568,7 +567,6 @@
         })
       },
       changesta(){
-        console.log("changesta")
         this.change="";
       },
       changeplace(scope) {
@@ -576,11 +574,11 @@
           if(this.change==="T"){
           }
           else{
-            console.log(scope.row);
+
             this.changedplaceinfo[scope.row.tableno] = scope.row;
             this.placesavetype="update";
             this.oldcurrentRow = Object.assign({},this.currentRow);
-            console.log( this.changedplaceinfo);
+
           }
         }
         else{
@@ -755,7 +753,6 @@
               }
             }
             for(let pc of Object.assign([],s)){
-              // if(pc)
               for(let tp of Object.assign([],top)) {
                 if(tp===pc.tableno){
                   this.$nextTick(function(){
@@ -780,7 +777,7 @@
         this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       log2(){
-        console.log(this.pcinfo);
+
         let logkey =this.$store.getters.hotel.hotelid +'|'+ this.pcinfo.pccode +'|'+this.$store.getters.groupid;
         this.$store.commit('setLogtype','PosPccode');
         this.$store.commit('setLogKey',logkey);
@@ -859,7 +856,6 @@
                 }
               }
             }
-            /*display: inline-block;*/
           }
         }
       }

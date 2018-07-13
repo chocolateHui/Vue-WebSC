@@ -189,8 +189,6 @@
               }
             }
             if(s){
-              // console.log(this.isselected);
-              // console.log(this.selected);
               if(!this.isselected){
                 s = true;
               }
@@ -233,7 +231,6 @@
       }
     },
     update(){
-     console.log("aaaaaaaa");
     },
     components:{
     },
@@ -324,7 +321,6 @@
         this.change = true;
 
         this.selected=Object.assign({},this.currentselect);
-        console.log(this.currentselect);
         this.isselected="T";
 
       },
@@ -344,7 +340,6 @@
         this.first = true;
       },
       clear2:function (val) {
-        console.log(val);
         this.isselected="";
         this.selected = {};
         this.first = true;
@@ -372,7 +367,6 @@
           }
         }
         else{
-          console.log(val);
           this.currentselect = {};
           for(let i=0;i<val.length;i++){
             this.currentselect[val[i].id]=true;
@@ -533,7 +527,6 @@
         background-color: transparent;
         border: none;
         padding: 0px;
-        /*box-shadow:transparent !important;*/
       }
       .el-input__inner:focus{
         background-color: transparent;

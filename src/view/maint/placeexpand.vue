@@ -240,7 +240,7 @@
           });
         },
         refreshdata() {
-          console.log(this.pccode);
+
           this.$store.dispatch('encrypttoken').then(() => {
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -281,7 +281,7 @@
                     data.push(type);
                   }
                   this.fileList2 = data;
-                  console.log(data)
+
                 }
                 else {
                   this.fileList2 = [];
@@ -385,7 +385,7 @@
           })
         },
         handleChange(val) {
-          console.log(val);
+
           if (val) {
             this.selectedexpand = val;
           }

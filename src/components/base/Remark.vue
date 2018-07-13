@@ -80,8 +80,7 @@
 
     },
     created(){
-      // console.log("a");
-      // this.getremark()
+
     },
 
     watch: {

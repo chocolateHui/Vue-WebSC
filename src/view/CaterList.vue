@@ -279,7 +279,6 @@
                   let types = Object.assign({},caterings);
                   this.HtableData.push(types);
                 }
-                // this.tableData3 = response.data.caterings;
               }
 
             }
@@ -301,7 +300,6 @@
                   let types = Object.assign({},caterings);
                   this.tableData.push(types);
                 }
-                // this.tableData3 = response.data.caterings;
               }
 
             }
@@ -473,12 +471,6 @@
       height: 90%;
     }
 
-    /*.paddingleft0{*/
-      /*padding-left: 0px!important;*/
-    /*}*/
-    /*.paddingbottom0{*/
-      /*padding-bottom:  0px!important;*/
-    /*}*/
     .marginbottom15{
       margin-bottom: 15px;
     }

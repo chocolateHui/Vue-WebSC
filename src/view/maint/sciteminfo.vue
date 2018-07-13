@@ -334,8 +334,8 @@
 
         currentRow: null,
         placeRow: null,
-        // 要展开的行，数值的元素是row的key值
-        tableHeight: document.body.clientHeight-278,//减去header的60px
+
+        tableHeight: document.body.clientHeight-278,//减去header的278px
         num:0,
         change:""
       }
@@ -494,7 +494,7 @@
         })
       },
       deleteplace(row){
-        console.log(row.id);
+
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -584,7 +584,7 @@
       },
       changeplace(scope) {
         if(scope.row.add!="T"){
-          console.log("xxxxxxxxxxx");
+
           if(this.change==="T"){
           }
           else{
@@ -665,7 +665,7 @@
         this.placesavetype = "update";
       },
       savep:function () {
-        console.log(this.placesavetype);
+
         if(this.classcodesavetype){
           var url = "";
           if(!this.pcinfo.classcode){
@@ -696,10 +696,10 @@
               copydata.push(data);
             }
           }
-          console.log(copydata);
+
           var finnaldata = [];
           for(var cd in copydata){
-            console.log(cd);
+
             if(!copydata[cd].code){
               this.$message.error('项目不能为空');
               return
@@ -714,7 +714,7 @@
         }
       },
       handlelaySelectionChange(val) {
-        console.log(val);
+
         if(val.row.add!="T"){
           this.changedplaceinfo[val.row.code] = val.row;
           this.placesavetype="update";
@@ -728,7 +728,7 @@
         this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       log2(){
-        console.log(this.pcinfo);
+
         let logkey =this.pcinfo.classcode +'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
         this.$store.commit('setLogtype','ScItemclass');
         this.$store.commit('setLogKey',logkey);

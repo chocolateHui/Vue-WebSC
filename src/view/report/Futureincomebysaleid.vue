@@ -92,7 +92,7 @@
         reportdate: '',
         begina:'',
         sums: [],
-        tableHeight: document.body.clientHeight-190,//减去header的60px
+        tableHeight: document.body.clientHeight-190,//减去header的190px
       }
     },
     props:['begin','sale'],

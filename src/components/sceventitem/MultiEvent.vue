@@ -112,15 +112,6 @@
           }));
         }
       },
-      // placecount:function () {
-      //   console.log(this.total);
-      //   if(!this.fieldValue){
-      //     return this.items.length;
-      //   }
-      //   else{
-      //     return this.total;
-      //   }
-      // }
     },
     created(){
       this.refreshData();
