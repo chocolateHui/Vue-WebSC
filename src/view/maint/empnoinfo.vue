@@ -4,7 +4,7 @@
       <b-row>
         <b-col sm="4" class="my-1">
           <b-form-group horizontal label="酒店" class="mb-0">
-            <el-select v-model="hotelid" clearable filterable placeholder="请选择" :disabled="disabled">
+            <el-select v-model="hotelid" clearable filterable placeholder="请选择" :disabled="isGroup">
               <el-option
                 v-for="item in gethotellist"
                 :key = item.hotelid
@@ -50,18 +50,18 @@
               <b-col>
                 <b-form>
                   <b-form-group label="工号:" horizontal>
-                    <FormatInput type="text" maxlength="10" v-model="props.row.empno" :disabled="able.name&&!props.row.flag"></FormatInput>
+                    <FormatInput type="text" maxlength="10" v-model="expandempno.empno" :disabled="able.name&&!expandempno.flag"></FormatInput>
                   </b-form-group>
                   <b-form-group label="姓名:"
                                 horizontal>
-                    <b-form-input type="text" maxlength="20" v-model="props.row.empname">
+                    <b-form-input type="text" maxlength="20" v-model="expandempno.empname">
                     </b-form-input>
                   </b-form-group>
                   <b-form-group label="电话:" horizontal>
-                    <FormatInput type="number" v-model="props.row.phone" maxlength="11" placeholder=""></FormatInput>
+                    <FormatInput type="number" v-model="expandempno.phone" maxlength="11" placeholder=""></FormatInput>
                   </b-form-group>
                   <b-form-group horizontal label="酒店:" class="mb-0">
-                    <el-select v-model="props.row.hotelid" clearable filterable placeholder="请选择" :disabled="disabled">
+                    <el-select v-model="expandempno.hotelid" clearable filterable placeholder="请选择" :disabled="isGroup">
                       <el-option
                         v-for="item in gethotellist"
                         :key = item.hotelid
@@ -75,26 +75,25 @@
               <b-col>
                 <b-form>
                   <b-form-group label="性别:" horizontal>
-                    <b-form-radio-group class="pt-2" v-model="props.row.sex" :options="[{text: '男', value: '0'},{text: '女', value: '1'}]">
+                    <b-form-radio-group class="pt-2" v-model="expandempno.sex"
+                                        :options="[{text: '男', value: '0'},{text: '女', value: '1'}]">
                     </b-form-radio-group>
                   </b-form-group>
                   <div class="block">
                     <span class="demonstration">生日:</span>
                     <el-date-picker
-                      v-model="props.row.birth"
+                      v-model="expandempno.birth"
                       type="date"
                       placeholder="选择日期"
                       format="yyyy 年 MM 月 dd 日"
                       value-format="yyyy-MM-dd">
                     </el-date-picker>
                   </div>
-                  <b-form-group label="QQ:"
-                                horizontal>
-                    <FormatInput type="number" maxlength="10" v-model="props.row.qq"></FormatInput>
+                  <b-form-group label="QQ:" horizontal>
+                    <FormatInput type="number" maxlength="10" v-model="expandempno.qq"></FormatInput>
                   </b-form-group>
-                  <b-form-group label="Email:"
-                                horizontal>
-                    <b-form-input type="email" maxlength="64" v-model="props.row.email" placeholder="">
+                  <b-form-group label="Email:" horizontal>
+                    <b-form-input type="email" maxlength="64" v-model="expandempno.email" placeholder="">
                     </b-form-input>
                   </b-form-group>
                 </b-form>
@@ -102,9 +101,8 @@
               <b-col>
                 <b-form>
                   <b-form-group label="销售员:" horizontal>
-                    <el-select v-model="props.row.saleid" clearable filterable placeholder="请选择">
-                      <el-option
-                        v-for="item in salelist"
+                    <el-select v-model="expandempno.saleid" clearable filterable placeholder="请选择">
+                      <el-option v-for="item in empnoSaleList"
                         :key = item.code
                         :value="item.code"
                         :label="item.name">
@@ -112,20 +110,17 @@
                     </el-select>
                   </b-form-group>
                   <b-form-group label="岗位:" horizontal>
-                    <el-select v-model="props.row.deptno" clearable filterable placeholder="请选择">
-                      <el-option
-                        v-for="item in getdeptlist"
+                    <el-select v-model="expandempno.deptno" clearable filterable placeholder="请选择">
+                      <el-option v-for="item in getdeptlist"
                         :key = item.code
                         :value="item.code"
                         :label="item.descript">
                       </el-option>
                     </el-select>
                   </b-form-group>
-                  <b-form-group label="角色:"
-                                horizontal>
-                    <el-select v-model="props.row.htljob" clearable filterable placeholder="请选择">
-                      <el-option
-                        v-for="item in joblist"
+                  <b-form-group label="角色:" horizontal>
+                    <el-select v-model="expandempno.htljob" clearable filterable placeholder="请选择">
+                      <el-option v-for="item in joblist"
                         :key="item.code"
                         :value="item.code"
                         :label="item.descript">
@@ -133,12 +128,12 @@
                     </el-select>
                   </b-form-group>
                   <b-form-group>
-                    <b-form-checkbox v-model="props.row.locked" value="T" unchecked-value="F">停用</b-form-checkbox>
+                    <b-form-checkbox v-model="expandempno.locked" value="T" unchecked-value="F">停用</b-form-checkbox>
                   </b-form-group>
                 </b-form>
               </b-col>
             </b-row>
-            <b-button type="submit" @click="modifyempnoinfo(props.row)" variant="primary">保存</b-button>
+            <b-button type="submit" @click="modifyempnoinfo(expandempno)" variant="primary">保存</b-button>
             <b-button type="submit" variant="primary" v-b-modal.passmodal1>修改密码</b-button>
             <b-button @click="showLog(props.row)" variant="primary">日志</b-button>
           </template>
@@ -161,7 +156,7 @@
     </b-container>
     <b-modal id="passmodal1" ref="passmodal1" @hidden="modalhidden" size="sm" title="修改密码" hide-footer>
       <div>
-        <b-form @submit="onSubmit" v-if="show">
+        <b-form @submit="modifyPwd" v-if="show">
           <b-form-group label="用户名" horizontal>
             <b-form-input :value="expandempno.empname" disabled>
             </b-form-input>
@@ -238,7 +233,7 @@
         deptno:'',
         htljob:'',
         hotelid:'',
-        disabled:'',
+        isGourp:false,
         locked:'F',
         able:able,
         oldpassword: '',
@@ -252,15 +247,15 @@
         // 要展开的行，数值的元素是row的key值
         expands: [],
         expandempno:{},
+        lastHasSale:false,
+        empnoSaleList:[],
         tableHeight: document.body.clientHeight-182,//减去header的60px
       }
     },
     beforeMount:function(){
         this.$store.dispatch('encrypttoken').then(() => {
-          //获取工号信息,完成后进行路由
           this.$store.dispatch('getSale')
         })
-
     },
     computed: {
       ...mapGetters([
@@ -270,13 +265,22 @@
         'salelist'
       ])
     },
+    mounted: function (){
+      //判断是否是集团,不是集团酒店下拉都不能修改
+      if(this.$store.getters.hotel.sign===2){
+        this.isGroup = true;
+      }
+      this.getHotel();
+      this.getEmpnolist();
+      this.getDeptlist();
+    },
     methods: {
       configDefault:function () {
         this.$http.defaults.headers.common['username'] = this.$store.getters.username
         this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
       },
-      onSubmit: function () {
+      modifyPwd: function () {
         if (this.newpassword !== this.confirmpassword) {
           this.$alert('两次密码输入不一致,请检查!');
           return;
@@ -305,6 +309,7 @@
           })
         })
       },
+      //触发父面板日志弹窗
       showLog(row){
         let logkey = row.empno +'|'+this.groupid;
         this.$store.commit('setLogtype','SysEmpno');
@@ -324,25 +329,23 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.configDefault()
-            // 获取营业点
-            this.$http.post(methodinfo.deleteempnoinfo, {
-              username: cs.row.empno
-            }).then((response) => {
-              if (response.status === 200) {
-                if (response.data.errorCode == "0") {
+          //若是新增的就直接删除不用走服务端
+          if(cs.row.hasOwnProperty("isnew")){
+            this.getempnolist.splice(cs.$index,1);
+          }else{
+            this.$store.dispatch('encrypttoken').then(() => {
+              this.configDefault()
+              this.$http.post(methodinfo.deleteempnoinfo, {
+                username: cs.row.empno
+              }).then((response) => {
+                if (response.data.errorCode === "0") {
                   this.getempnolist.splice(cs.$index,1);
-
+                }else{
+                  this.$message.error(response.data.errorMessage)
                 }
-              }
-
-//          this.$message({
-//            type: 'success',
-//            message: '删除成功!'
+              });
             });
-          });
-
+          }
         })
       },
       expandChange:function (row, expandedRows) {
@@ -355,12 +358,25 @@
             index++;
           }
         }
-        this.expandempno = row;
+        if(this.lastHasSale){
+          this.empnoSaleList.splice(0, 1);
+          this.lastHasSale = false;
+        }
+
+        if(row.hasOwnProperty("saleid")&&row.saleid!==''){
+          this.lastHasSale = true;
+          this.empnoSaleList.unshift(this.salelist.find((value) =>{
+              return value.code===row.saleid
+            })
+          )
+        }
+
+        this.expandempno = Object.assign({},row);
       },
       newProp:function(){
         if(this.newp){
           this.newp = false;
-          this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true});
+          this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:'T'});
           this.expands.push('');
         }else{
           this.$message.error('请先保存新建员工信息!');
@@ -370,12 +386,10 @@
         this.hotelid = this.$store.state.user.hotel.hotelid;
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.gethotellist, {}).then((response) => {
             if (response.data.errorCode === "0") {
               this.gethotellist = response.data.hotels;
             }
-            this.disabled = this.gethotellist.length <= 1;
           });
         })
       },
@@ -383,10 +397,8 @@
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
           this.$http.post(methodinfo.getdeptlist, {}).then((response) => {
-            if (response.status === 200) {
-              if (response.data.errorCode == "0") {
-                this.getdeptlist = response.data.depts;
-              }
+            if (response.data.errorCode === "0") {
+              this.getdeptlist = response.data.depts;
             }
           });
         })
@@ -401,58 +413,78 @@
           if(this.htljob!==''){
             param.htljob = this.htljob
           }
-
           this.$http.post(methodinfo.getempnolist,param ).then((response) => {
-            if (response.status === 200) {
-              if (response.data.errorCode == "0") {
+            if (response.data.errorCode === "0") {
               this.getempnolist = response.data.empnos;
+              if(this.empnoSaleList.length===0){
+                let saleids = [];
+                this.getempnolist.forEach((empnoinfo,index)=>{
+                  if(empnoinfo.hasOwnProperty("saleid")){
+                    saleids.push(empnoinfo.saleid)
+                  }
+                })
+
+                this.salelist.forEach((sale, index) => {
+                  if(saleids.indexOf(sale.code)<0){
+                    this.empnoSaleList.push(sale)
+                  }
+                })
               }
             }
           });
         })
       },
-      modifyempnoinfo:function(val) {
-        if (val.deptno && val.empname!=='' && val.htljob && val.empno!=='') {
+      modifyempnoinfo: function (val) {
+        if (val.deptno && val.empname !== '' && val.htljob && val.empno !== '') {
           val.username = val.empno
-          if (val.flag) {
-            this.$store.dispatch('encrypttoken').then(() => {
-              this.configDefault()
-              // 获取营业点
-                this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
-                if (response.status === 200) {
-                  if (response.data.errorCode == "0") {
-                    this.$message('保存成功')
-                    this.newp = true;
-                  } else {
-                    this.$message.error(response.data.errorMessage)
+
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            if (val.flag) {
+              this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
+                if (response.data.errorCode === "0") {
+                  this.$message('保存成功')
+                  this.newp = true;
+                  //如果工号选择了销售员则把元素移到第一位
+                  if(val.hasOwnProperty("saleid")&&val.saleid!==''){
+                    this.resetSaleList(val.saleid);
                   }
+                  this.getEmpnolist();
+                } else {
+                  this.$message.error(response.data.errorMessage)
                 }
               });
-            })
-          } else {
-            this.$store.dispatch('encrypttoken').then(() => {
-              this.configDefault()
-                this.$http.post(methodinfo.modifyempnoinfo, val).then((response) => {
-                if (response.status === 200) {
-                  if (response.data.errorCode == "0") {
-                    this.$message('保存成功')
+            } else {
+              this.$http.post(methodinfo.modifyempnoinfo, val).then((response) => {
+                if (response.data.errorCode === "0") {
+                  this.$message('保存成功')
+                  //如果工号选择了销售员则把元素移到第一位
+                  if(val.hasOwnProperty("saleid")&&val.saleid!==''){
+                    this.resetSaleList(val.saleid)
                   }
+                  this.getEmpnolist();
+                }else {
+                  this.$message.error(response.data.errorMessage)
                 }
               });
-            })
-          }
-        }else{
+            }
+          })
+        } else {
           this.$message.error("请将'工号、姓名、角色、岗位'信息填写完整")
         }
+      },
+      //调整销售员下拉框
+      resetSaleList(saleid){
+        this.lastHasSale = true;
+        let index = this.empnoSaleList.findIndex((value)=>{
+          return value.code===saleid
+        })
+
+        this.empnoSaleList.unshift(this.empnoSaleList[index]);
+        this.empnoSaleList.splice(index+1,1);
       }
     },
     watch:{
-
-    },
-    mounted: function (){
-      this.getHotel();
-      this.getEmpnolist();
-      this.getDeptlist();
 
     }
   }
