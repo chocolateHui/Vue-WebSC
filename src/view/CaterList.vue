@@ -289,7 +289,6 @@
         let role = this.$store.getters.role;
         let empsale = this.$store.getters.empsale;
         this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.getcateringlist, {

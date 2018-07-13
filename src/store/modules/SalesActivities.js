@@ -24,7 +24,6 @@ const getters = {
   guestDiary: state => state.guestDiary
 }
 const getAllMsg = function (store) {
-  axiosinstance.defaults.headers.common['username'] = store.getters.username
   axiosinstance.defaults.headers.common['signature'] = store.getters.signature
   axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
 }

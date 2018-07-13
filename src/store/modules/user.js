@@ -56,6 +56,8 @@ const actions = {
   },
   getsysempno: function (store, token) {
     return new Promise((resolve, reject) => {
+      axiosinstance.defaults.headers.common['hotelid'] = store.getters.hotel.hotelid
+      axiosinstance.defaults.headers.common['groupid'] = store.getters.groupid
       axiosinstance.defaults.headers.common['username'] = store.getters.username
       axiosinstance.defaults.headers.common['signature'] = token
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()

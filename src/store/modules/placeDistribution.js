@@ -1,19 +1,9 @@
 /**
  * Created by lsj on 2018/3/9.
  */
-import axios from 'axios'
 import methodinfo from '../../config/MethodConst.js'
+import axiosinstance from '../../common/axiosinstance'
 
-const axiosinstance = axios.create({
-  baseURL: methodinfo.url,
-  timeout: 10000,
-  headers: {
-    type: 'APP',
-    nonce: 0,
-    loc: 'zh_CN',
-    'Content-type': 'application/json;charset=utf-8'
-  }
-})
 // initial state
 const state = {
   timechoose: [],
@@ -27,7 +17,6 @@ const getters = {
   cateringlist2: state => state.cateringlist2
 }
 const getAllMsg = function (store) {
-  axiosinstance.defaults.headers.common['username'] = store.getters.username
   axiosinstance.defaults.headers.common['signature'] = store.getters.signature
   axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
 }

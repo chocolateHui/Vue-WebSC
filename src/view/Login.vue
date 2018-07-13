@@ -190,6 +190,8 @@
                             this.$store.commit('setHotelChange',false);
                           }
                           this.$http.defaults.headers.common['username'] = this.username
+                          this.$http.defaults.headers.common['hotelid'] = this.hotel.hotelid
+                          this.$http.defaults.headers.common['groupid'] = this.groupid
                           this.$store.dispatch('getAllSysoption')
                           this.password = ''
                           this.$router.push({path:"/main/index"})
