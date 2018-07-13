@@ -162,7 +162,6 @@
           var _this=this
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
-            // 获取营业点
             this.$http.post(methodinfo.geteventlist, {
               sta:param.sta
             }).then((response) => {
@@ -337,7 +336,6 @@
           this.$refs.remarkmodal.hide()
         },
         btnItem:function (list) {
-          // this.caternameC=list.catername
           this.$store.commit('setCaterid',list.caterid);
           this.$store.commit('setEventid',list.eventid);
           this.$router.push({ name: '宴会事务项目'});

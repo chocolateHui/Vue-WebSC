@@ -246,7 +246,6 @@
         var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.adddepthotel, {
             authhtl :row.hotelid,
             deptcode:_this.dept,
@@ -271,7 +270,6 @@
         }).then(() => {
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
-            // 获取营业点
             this.$http.post(methodinfo.deletedepthotel, {
               authhtl :item.hotelid,
               deptcode:_this.dept,
@@ -303,7 +301,6 @@
         }).then(() => {
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
-            // 获取营业点
             this.$http.post(methodinfo.deletehtldept, {
               code:item.code,
             }).then((response) => {
@@ -326,7 +323,6 @@
         var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.addhtldept, {
             code: _this.jobInfo.code,
             descript:_this.jobInfo.descript,

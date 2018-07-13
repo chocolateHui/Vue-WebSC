@@ -124,7 +124,6 @@
             {status:'取消',id:'4'},
           ],
           salesId:'',
-          // poparch: false,
           unit:[
             {name:'公司',id:'C'},
             {name:'旅行社',id:'A'}
@@ -301,36 +300,6 @@
            this.$emit('saveorupdateguestdiary',json)
           }
         },
-        // btnArchOk:function (param,popType,popno,archTypeId) {
-        //   if(param==''){
-        //     this.$message({
-        //       message: "请选择档案",
-        //       type: "warning"
-        //     });
-        //   }else{
-        //     this.poparch=false;
-        //     if(archTypeId=='A'||archTypeId=='C'){
-        //       this.popunit=popType
-        //       this.popunitno=popno
-        //     }else{
-        //       this.popguest=popType
-        //       this.popguestno=popno
-        //     }
-        //   }
-        // },
-        // btnChooseName:function (popType,popno,archTypeId) {
-        //   this.poparch=false;
-        //   if(archTypeId=='A'||archTypeId=='C'){
-        //     this.popunit=popType
-        //     this.popunitno=popno
-        //   }else{
-        //     this.popguest=popType
-        //     this.popguestno=popno
-        //   }
-        // },
-        // btnArchClose:function () {
-        //   this.poparch=false;
-        // },
         InstructClose:function () {
           this.ifInstructions=false
         },
@@ -363,7 +332,6 @@
           var _this=this
           if(this.datadiary!='0'){
             this.$store.dispatch('encrypttoken').then(() => {
-              //获取工号信息,完成后进行路由
               this.$store.dispatch('getguestdiary',this.datadiary).then(() => {
                 this.$nextTick(function(){
                   _this.popunit=this.guestDiary.cusnodes

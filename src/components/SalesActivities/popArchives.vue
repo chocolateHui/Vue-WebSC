@@ -201,9 +201,7 @@
         },
         getProfilesList:function () {
           this.$store.dispatch('encrypttoken').then(() => {
-            //获取工号信息,完成后进行路由
             this.$store.dispatch('getProfiles',this.proParam).then(() => {
-              // this.profileslist1=this.profileslist
             })
           })
         },
