@@ -1,19 +1,9 @@
 /**
  * Created by lsj on 2018/3/9.
  */
-import axios from 'axios'
 import methodinfo from '../../config/MethodConst.js'
+import axiosinstance from '../../common/axiosinstance'
 
-const axiosinstance = axios.create({
-  baseURL: methodinfo.url,
-  timeout: 10000,
-  headers: {
-    type: 'APP',
-    nonce: 0,
-    loc: 'zh_CN',
-    'Content-type': 'application/json;charset=utf-8'
-  }
-})
 // initial state
 const state = {
   // 销售员列表
@@ -38,23 +28,29 @@ const getAllMsg = function (store) {
   axiosinstance.defaults.headers.common['signature'] = store.getters.signature
   axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
 }
-function getsaleidlist () {
-  return axiosinstance.post(methodinfo.getsaleidlist, { sta: 'I' })
-}
-function getbasecodelist () {
-  return axiosinstance.post(methodinfo.getbasecodelist, { cat: 'guest_diary_item', halt: 'F' })
-}
+
 // actions
 const actions = {
   getSale: function (store) {
-    getAllMsg(store)
-    axios.all([getsaleidlist(), getbasecodelist()]).then(axios.spread((res1, res2) => {
-      store.commit('setSalelist', res1.data.saleids)
-      store.commit('setDiaryItemList', res2.data.basecodes)
-    }))
-      .catch((error) => {
+    return new Promise((resolve, reject) => {
+      getAllMsg(store)
+      axiosinstance.post(methodinfo.getsaleidlist, { sta: 'I' }).then((response) => {
+        if (store.getters.empsale !== '' && ['02', '03'].indexOf(store.getters.role) >= 0) {
+          let saleid = store.getters.empsale
+          let sale = response.data.saleids.filter((item) => {
+            return item.code === saleid
+          })
+          store.commit('setSalelist', sale)
+          resolve()
+        } else {
+          store.commit('setSalelist', response.data.saleids)
+          resolve()
+        }
+      }).catch((error) => {
         console.log(error)
+        reject(error)
       })
+    })
   },
   getguestdiarylist: function (store, diaryParam) {
     getAllMsg(store)

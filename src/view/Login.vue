@@ -79,20 +79,19 @@
     //组件和参数
     import hotelDiv from  '../components/login/hoteldiv.vue'
 
-    let logindata = {
-        password :'',
-        hotelShow:false,
-        userErrorShow:false,
-        passwordErrorShow:false,
-        hotelErrorShow:false,
-        hasGroupid:false,
-        isFirefox:true,
-        empnoType:'SC'
-    };
     export default {
         name: 'Login',
         data () {
-            return logindata;
+            return {
+              password :'',
+              hotelShow:false,
+              userErrorShow:false,
+              passwordErrorShow:false,
+              hotelErrorShow:false,
+              hasGroupid:false,
+              isFirefox:true,
+              empnoType:'SC'
+            };
         },
         computed:{
             ...mapGetters([
@@ -169,6 +168,10 @@
                 }else{
                     this.hotelErrorShow = false;
                 }
+                let empnoChange = false;
+                if(this.username!== this.empno.empno){
+                  empnoChange = true;
+                }
 
                 let tokenparam = {
                     groupid:this.groupid,
@@ -182,7 +185,7 @@
                     this.$store.dispatch('encrypttoken').then(() => {
                         //获取工号信息,完成后进行路由
                         this.$store.dispatch('getsysempno',this.$store.getters.signature).then(() => {
-                          if(this.isHotelChange){
+                          if(this.isHotelChange||empnoChange){
                             this.$store.commit('initTabs');
                             this.$store.commit('setHotelChange',false);
                           }
@@ -198,9 +201,9 @@
             }
         },
         watch:{
-            loginerror:function (val, oldVal) {
+          loginerror(val, oldVal) {
                 this.passwordErrorShow = !!val;
-            }
+          }
         },
         components: {
             hotelDiv

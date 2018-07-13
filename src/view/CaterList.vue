@@ -279,7 +279,6 @@
                   let types = Object.assign({},caterings);
                   this.HtableData.push(types);
                 }
-                // this.tableData3 = response.data.caterings;
               }
 
             }
@@ -287,6 +286,8 @@
         })
       },
       getNowcateringlist(sta){
+        let role = this.$store.getters.role;
+        let empsale = this.$store.getters.empsale;
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -298,10 +299,15 @@
               this.tableData = [];
               if(typeof(response.data.caterings) !== "undefined"){
                 for(let caterings of response.data.caterings){
-                  let types = Object.assign({},caterings);
-                  this.tableData.push(types);
+                  let catering = Object.assign({},caterings);
+                  if(['02','03'].indexOf(role)>=0){
+                    if(catering.saleid===empsale||catering.saleid===''){
+                      this.tableData.push(catering);
+                    }
+                  }else{
+                    this.tableData.push(catering);
+                  }
                 }
-                // this.tableData3 = response.data.caterings;
               }
 
             }

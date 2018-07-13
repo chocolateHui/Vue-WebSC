@@ -16,6 +16,7 @@ const state = {
   },
   hotels: [],
   empno: {},
+  role: '',
   empsale: '',
   isHistory: false
 }
@@ -31,6 +32,8 @@ const getters = {
   hotels: state => state.hotels,
 
   empno: state => state.empno,
+
+  role: state => state.role,
 
   empsale: state => state.empsale,
 
@@ -64,6 +67,10 @@ const actions = {
             reject(response.data.errorMessage)
           } else {
             store.commit('setEmpno', response.data)
+            if (response.data.saleid) {
+              store.commit('setEmpSale', response.data.saleid)
+            }
+            store.commit('setRole', response.data.htljob)
           }
         }
         resolve()
@@ -91,6 +98,9 @@ const mutations = {
     delete empno.password
     delete empno.md5
     state.empno = empno
+  },
+  setRole (state, role) {
+    state.role = role
   },
   setEmpSale (state, empsale) {
     state.empsale = empsale
