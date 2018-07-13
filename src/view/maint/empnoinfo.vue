@@ -162,15 +162,15 @@
             </b-form-input>
           </b-form-group>
           <b-form-group label="旧密码" horizontal>
-            <b-form-input type="password" v-model="oldpassword" required>
+            <b-form-input type="password" maxlength="16" v-model="oldpassword" required>
             </b-form-input>
           </b-form-group>
           <b-form-group label="新密码:" horizontal>
-            <b-form-input type="password" v-model="newpassword" required>
+            <b-form-input type="password" maxlength="16" v-model="newpassword" required>
             </b-form-input>
           </b-form-group>
           <b-form-group label="确认密码:" horizontal>
-            <b-form-input type="password" v-model="confirmpassword" required>
+            <b-form-input type="password" maxlength="16" v-model="confirmpassword" required>
             </b-form-input>
           </b-form-group>
           <b-row>
