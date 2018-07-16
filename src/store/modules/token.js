@@ -54,20 +54,23 @@ const actions = {
           hotelid: tokenparam.hotelid,
           username: tokenparam.username,
           password: secret,
-          module: 'SC'
+          pathprefix: 'SC'
         }
       }).then(function (response) {
-        if (response.status === 200) {
-          if (response.data.errorCode === '0') {
-            store.commit('setLoginerror', '')
-            store.commit('setToken', response.data.token)
-            store.commit('setSecretkey', secret.substr(0, 16))
-            resolve()
-          } else {
-            store.commit('setLoginerror', response.data.errorMessage)
-            reject(response.data.errorMessage)
-          }
+        if (response.data.errorCode === '0') {
+          store.commit('setLoginerror', '')
+          store.commit('setToken', response.data.token)
+          store.commit('setSecretkey', secret.substr(0, 16))
+          axiosinstance.defaults.headers.common['hotelid'] = store.getters.hotel.hotelid
+          axiosinstance.defaults.headers.common['groupid'] = store.getters.groupid
+          axiosinstance.defaults.headers.common['username'] = store.getters.username
+          resolve()
         }
+      }).catch((Error) => {
+        console.log(Error.response)
+        let response = Error.response
+        store.commit('setLoginerror', response.data.errorMessage)
+        reject(response.data.errorMessage)
       })
     })
   }

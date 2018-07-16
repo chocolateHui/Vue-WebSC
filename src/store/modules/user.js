@@ -43,7 +43,9 @@ const getters = {
 // actions
 const actions = {
   gethotels: function (store) {
-    axiosinstance.get(methodinfo.getloginhotellist, {
+    axiosinstance.defaults.headers.common['signature'] = store.getters.signature
+    axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
+    axiosinstance.post(methodinfo.getloginhotellist, {
       params: {
         groupid: store.getters.groupid,
         username: store.getters.username.toUpperCase()
@@ -56,10 +58,7 @@ const actions = {
   },
   getsysempno: function (store, token) {
     return new Promise((resolve, reject) => {
-      axiosinstance.defaults.headers.common['hotelid'] = store.getters.hotel.hotelid
-      axiosinstance.defaults.headers.common['groupid'] = store.getters.groupid
-      axiosinstance.defaults.headers.common['username'] = store.getters.username
-      axiosinstance.defaults.headers.common['signature'] = token
+      axiosinstance.defaults.headers.common['signature'] = store.getters.signature
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
       axiosinstance.post(methodinfo.getempnoinfo, {
         username: store.getters.username
