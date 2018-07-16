@@ -170,8 +170,8 @@
           this.editRows.push(row)
         }else{
           for(let i=0;i<this.editRows.length;i++){
-            if(this.editRows[i].code = row.code){
-              this.editRows[i] = row;
+            if(this.editRows[i].code === row.code){
+              this.editRows.splice(i,1,row)
               return
             }
           }

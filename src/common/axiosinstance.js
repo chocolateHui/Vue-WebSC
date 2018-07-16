@@ -8,6 +8,7 @@ const axiosinstance = axios.create({
     type: 'APP',
     nonce: 0,
     loc: 'zh_CN',
+    pathprefix: 'SC',
     'Content-type': 'application/json;charset=utf-8'
   }
 })

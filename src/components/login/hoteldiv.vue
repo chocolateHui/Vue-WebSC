@@ -37,8 +37,10 @@
                         } else if (item.descript.indexOf(search) >= 0) {
                             return true;
                         }else {
-                          let pydes = pinyin(item.descript,{style:pinyin.STYLE_FIRST_LETTER}).toString().replace(new RegExp(/(,)/g),'').toUpperCase();
-                          return pydes.indexOf(search) >= 0;
+                          let pydes = pinyin(item.descript,{style:pinyin.STYLE_NORMAL}).toString().replace(new RegExp(/(,)/g),'').toUpperCase();
+                          let flpydes = pinyin(item.descript,{style:pinyin.STYLE_FIRST_LETTER}).toString().replace(new RegExp(/(,)/g),'').toUpperCase();
+
+                          return pydes.indexOf(search) >= 0 ||flpydes.indexOf(search) >= 0;
                         }
                     });
                 }

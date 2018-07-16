@@ -59,7 +59,6 @@ const getters = {
 // actions
 const actions = {
   getAllBaseCodes (store) {
-    axiosinstance.defaults.headers.common['username'] = store.getters.username
     axiosinstance.defaults.headers.common['signature'] = store.getters.signature
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
     axiosinstance.post(methodinfo.getbasecodelist, {
@@ -121,7 +120,6 @@ const actions = {
       if (store.getters.isHistory) {
         method = methodinfo.gethistorycateringinfo
       }
-      axiosinstance.defaults.headers.common['username'] = store.getters.username
       axiosinstance.defaults.headers.common['signature'] = store.getters.signature
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
       axiosinstance.post(method, {
@@ -143,7 +141,6 @@ const actions = {
       method = methodinfo.getheventlist
     }
 
-    axiosinstance.defaults.headers.common['username'] = store.getters.username
     axiosinstance.defaults.headers.common['signature'] = store.getters.signature
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
     axiosinstance.post(method, {
@@ -161,7 +158,6 @@ const actions = {
   },
   getRoomList (store) {
     if (state.catering.blockid) {
-      axiosinstance.defaults.headers.common['username'] = store.getters.username
       axiosinstance.defaults.headers.common['signature'] = store.getters.signature
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
       axiosinstance.post(methodinfo.getMasterRsvsrc, {
@@ -174,7 +170,6 @@ const actions = {
     }
   },
   getPlacelist (store) {
-    axiosinstance.defaults.headers.common['username'] = store.getters.username
     axiosinstance.defaults.headers.common['signature'] = store.getters.signature
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
     axiosinstance.post(methodinfo.getplacelist, {
@@ -185,7 +180,6 @@ const actions = {
     })
   },
   getReasonList (store) {
-    axiosinstance.defaults.headers.common['username'] = store.getters.username
     axiosinstance.defaults.headers.common['signature'] = store.getters.signature
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
     axiosinstance.post(methodinfo.getbasecodelist, {

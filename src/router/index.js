@@ -20,6 +20,7 @@ const EOView = () => import(/* webpackChunkName: "group-EO" */ '../view/catering
 const Lossstatistics = () => import(/* webpackChunkName: "group-report" */ '../view/report/Lossstatistics.vue')
 const Futureincome = () => import(/* webpackChunkName: "group-report" */ '../view/report/Futureincome.vue')
 const Futureincomebysaleid = () => import(/* webpackChunkName: "group-report" */ '../view/report/Futureincomebysaleid.vue')
+const PlaceAna = () => import(/* webpackChunkName: "group-report" */ '../view/report/PlaceAna.vue')
 
 const salesActivities = () => import(/* webpackChunkName: "group-sale" */ '../view/SalesActivities.vue')
 
@@ -137,28 +138,36 @@ const router = new Router({
         },
         {
           path: '/main/lostreport',
-          name: '订单流失统计',
+          name: '订单流失统计报表',
           component: Lossstatistics,
           meta: {
-            keepAlive: false // 需要被缓存
+            keepAlive: true // 需要被缓存
           }
         },
         {
           path: '/main/fuincome',
-          name: '分类预测汇总报表（按销售员）',
+          name: '分类预测汇总报表',
           component: Futureincome,
           meta: {
-            keepAlive: false // 需要被缓存
+            keepAlive: true // 需要被缓存
           }
         },
         {
           path: '/main/fuincomebysaleid/:begin/:sale',
-          name: '分类预测明细表',
+          name: '分类预测明细报表',
           component: Futureincomebysaleid,
           meta: {
-            keepAlive: false // 需要被缓存
+            keepAlive: true // 需要被缓存
           },
           props: true
+        },
+        {
+          path: '/main/placeana',
+          name: '场地利用情况分析报表',
+          component: PlaceAna,
+          meta: {
+            keepAlive: true // 需要被缓存
+          }
         },
         {
           path: '/main/maint',

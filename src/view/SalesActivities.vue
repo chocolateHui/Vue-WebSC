@@ -3,11 +3,15 @@
     <div class="sales_activities">
       <div class="content_right">
         <div class="select">
-          <p ref="refsales" @click="salesShow" :data-id="salesId">{{salesName}}</p>
-          <ul v-if="ifSales">
-            <li @click="btnSalesSelectALL" data-id="">全部</li>
-            <li @click="btnSalesSelect(item)" v-for="item in salelist"  :data-id="item.code">{{item.name}}</li>
-          </ul>
+          <b-form-select v-model="salesId" @input="SalesSelect" class="mb-3" size="sm" >
+            <option v-if="role!=='02'&&role!=='03'" value="">全部</option>
+            <option v-for="item in salelist" :value="item.code" :key="item.code">{{item.name}}</option>
+          </b-form-select>
+          <!--<p ref="refsales" @click="salesShow" :data-id="salesId">{{salesName}}</p>-->
+          <!--<ul v-if="ifSales">-->
+            <!--<li v-if="role!=='02'" @click="btnSalesSelectALL" data-id="">全部</li>-->
+            <!--<li @click="btnSalesSelect(item)" v-for="item in salelist"  :data-id="item.code">{{item.name}}</li>-->
+          <!--</ul>-->
         </div>
         <div class="task_type"  ref="basetype">
           <p>任务类别</p>
@@ -108,7 +112,6 @@
         list: [],
         calendarShow:false,
         thisDay:false,
-        salesName:'全部',
         salesId:'',
         ifSales:false,
         diaryParam:{},
@@ -125,17 +128,18 @@
         timeDetailId:'',
         datetimenow:'',
         bgcolorFlag:['#A0A0A0','#82AF6F','#D15B47','#9585BF','#FEE188','#D6487E','#3A87AD'],
+        diaryItemList:[],
         baseCodeListarc:[],
+        salelist:[],
         salesFlag:1,
         infoName:'11'
       }
     },
     computed: {
-      ...mapGetters(['diaryItemList']),
-      ...mapGetters(['salelist']),
       ...mapGetters(['guestdiarylist']),
       ...mapGetters(['guestDiary']),
       ...mapGetters(['isLoading']),
+      ...mapGetters(['role']),
     },
     created() {
       this.$store.commit("set_loading",true);
@@ -185,7 +189,6 @@
         this.popSalesType=this.dom.getAttribute("type-name")
         this.popSalesTypeId=this.dom.getAttribute("type-id")
         this.popSalesTime=this.dataTime+'-'+e
-        this.popSaller=this.salesName
         this.clickData=''
         this.$set(this,"salesFlag",this.salesFlag+1);
         this.$refs.myModalsale.show()
@@ -196,7 +199,6 @@
         this.popSalesTypeId=this.dom.getAttribute("type-id")
         this.popSalesTime=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10)
         this.popSaller=name
-        this.salesId=saleid
         this.clickData=''
         this.timeDetail=timedetail
         this.timeDetailId=time
@@ -229,24 +231,11 @@
       },
       // 销售活动查询
       getDiary:function () {
-        var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch('getguestdiarylist',this.diaryParam).then(() => {
 
           })
         })
-      },
-      btnSalesSelectALL:function(){
-        this.salesId=''
-        this.salesName='全部'
-        this.ifSales = false
-        this.SalesSelect()
-      },
-      btnSalesSelect:function(item){
-        this.salesName=item.name
-        this.salesId=item.code
-        this.ifSales = false
-        this.SalesSelect()
       },
       ifCalendarShow:function () {
         this.calendarShow=true
@@ -458,7 +447,6 @@
       dayPopSaleShow:function (name,saleid,time,timedetail) {
         this.popSalesTime=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10)
         this.popSaller=name
-        this.salesId=saleid
         this.clickData=''
         this.timeDetail=timedetail
         this.timeDetailId=time
@@ -473,7 +461,6 @@
           this.clickData=this.dataTime+'-'+data
         this.$set(this,"salesFlag",this.salesFlag+1);
           this.$refs.myModalsale.show()
-          this.popSaller=this.salesName
       },
       btnExit:function(){
         this.diaryId='0'
@@ -485,8 +472,6 @@
       monthNow:function (date, isChosedDay = true) {
         this.ifMonth=true
         this.timeType="本月"
-        this.salesId=''
-        this.salesName='全部'
         this.datetime=this.$options.methods.toMonth().substring(0,4)+"年"+this.$options.methods.toMonth().substring(5,7)+"月"
         this.dataTime=this.$options.methods.toMonth()
         this.datetimenow=this.$options.methods.toDay().substring(0,4)+"-"+this.$options.methods.toDay().substring(5,7)+"-"+this.$options.methods.toDay().substring(8,10)
@@ -507,10 +492,8 @@
         this.timeType="本日"
         this.datetime=this.$options.methods.toDay().substring(0,4)+"年"+this.$options.methods.toDay().substring(5,7)+"月"+this.$options.methods.toDay().substring(8,10)+"日"
         this.dataTime=this.$options.methods.toDay()
-        this.salesId=''
-        this.salesName='全部'
         this.dataType="2"
-         this.SalesSelect()
+        this.SalesSelect()
         this.datetimenow=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10)
       },
 
@@ -583,41 +566,39 @@
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
       },
       getbasecodelist:function () {
-        var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
           this.$http.post(methodinfo.getbasecodelist, {
             cat:'guest_diary_item'
           }).then((response) => {
-            if (response.status === 200) {
               if (response.data.errorCode === '0') {
-                if( typeof response.data.basecodes!='undefined'){
-                  _this.baseCodeListarc = response.data.basecodes
-                  _this.baseCodeListarc.forEach(function (item, index) {
-                    if (typeof item.bgcolor == 'undefined') {
-                      _this.$set(item, "bgcolor", _this.bgcolorFlag[index % 7])
+                if(response.data.hasOwnProperty('basecodes')){
+                  this.diaryItemList = response.data.basecodes
+                  this.baseCodeListarc = response.data.basecodes
+                  this.baseCodeListarc.forEach((item, index)=> {
+                    if (typeof item.bgcolor === 'undefined') {
+                      this.$set(item, "bgcolor", this.bgcolorFlag[index % 7])
                     }
                   })
                 }
               }
-            }
           })
         })
       },
-    },
-    beforeRouteEnter(to,from,next){
-      next(vm=>{
-        vm.$store.dispatch('encrypttoken').then(() => {
-          vm.$store.dispatch('getSale')
-        })
-      })
     },
     mounted: function () {
       this.$store.commit("set_loading",false);
       this.getList(this.myData);
       this.getbasecodelist()
+      this.$store.dispatch("getSale").then(()=>{
+        if(['02', '03'].indexOf(this.$store.getters.role) < 0){
+          this.SalesSelect()
+        }else{
+          this.salesId = this.$store.getters.empsale;
+        }
+        this.salelist = this.$store.getters.salelist;
+      });
       this.dataTime=this.toMonth()
-      this.SalesSelect()
        document.addEventListener('click',(e)=>{
          if(this.$refs.refsales){
            if (!this.$refs.refsales.contains(e.target)) {

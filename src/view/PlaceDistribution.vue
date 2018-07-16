@@ -229,37 +229,37 @@
       this.$store.dispatch('encrypttoken').then(() => {
         this.$store.dispatch('getTimeUnit')
       })
-      loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
-      for(var num=8;num<=22;num++) {
-        if (num <= 12) {
-          var dataId = num
-          if (dataId < 10) {
-            dataId = "0" + dataId
-          }
-          for (var m = 1; m <= 2; m++) {
-            var content1 = {
-              dataid: dataId,
-              datait: m,
-            }
-            this.timeToday.push(content1)
-            this.timeAll[0].content.push(content1)
-          }
-          this.todayHour.push(dataId+':00')
-        } else if (num <= 17 && num > 12) {
-          for (var m = 1; m <= 2; m++) {
-            var content1 = {
-              dataid: num,
-              datait: m,
-            }
-            this.timeToday.push(content1)
-            this.timeAll[1].content.push(content1)
-          }
-          this.todayHour.push(num+':00')
-        } else if (num <= 22 && num > 17) {
-          for (var m = 1; m <= 2; m++) {
-            var content1 = {
-              dataid: num,
-              datait: m,
+          loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+          for(var num=8;num<=22;num++) {
+            if (num <= 12) {
+              var dataId = num
+              if (dataId < 10) {
+                dataId = "0" + dataId
+              }
+              for (var m = 1; m <= 2; m++) {
+                var content1 = {
+                  dataid: dataId,
+                  datait: m,
+                }
+                this.timeToday.push(content1)
+                this.timeAll[0].content.push(content1)
+              }
+              this.todayHour.push(dataId+':00')
+            } else if (num <= 17 && num > 12) {
+              for (var m = 1; m <= 2; m++) {
+                var content1 = {
+                  dataid: num,
+                  datait: m,
+                }
+                this.timeToday.push(content1)
+                this.timeAll[1].content.push(content1)
+              }
+              this.todayHour.push(num+':00')
+            } else if (num <= 22 && num > 17) {
+              for (var m = 1; m <= 2; m++) {
+                var content1 = {
+                  dataid: num,
+                  datait: m,
             }
             this.timeToday.push(content1)
             this.timeAll[2].content.push(content1)
@@ -726,8 +726,12 @@
       }
     },
     mounted: function () {
+    
       this.getbasecodelist()
       this.datatimeid=this.today()
+      this.$store.dispatch('encrypttoken').then(() => {
+         this.$store.dispatch('getTimeUnit')
+        })
       this.getpccodelist()
       this.datatime=this.today()+" 至 "+this.adddateday(this.today(),6)
       this.dataNow=this.today()

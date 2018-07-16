@@ -58,6 +58,15 @@
             </el-select>
           </template>
         </el-table-column>
+        <el-table-column prop="tail" label="报表列" width="65" align="center">
+          <template slot-scope="scope">
+            <el-select @change="rowChange(scope)" :disabled="!scope.row.editable" v-model="scope.row.tail" placeholder="">
+              <el-option label="餐饮" value="FB"></el-option>
+              <el-option label="宴会" value="SC"></el-option>
+              <el-option label="其他" value="OT"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
         <el-table-column width="60" prop="cby" label="修改人" align="center"></el-table-column>
         <el-table-column width="130" prop="changed" label="修改时间" align="center"></el-table-column>
         <el-table-column label="操作" width="72" align="center">
@@ -136,7 +145,7 @@
       deleteBasecode(scope){
         let row = scope.row;
         let index = scope.$index;
-        this.$confirm("是否要删除该基础代码？","提示").then(()=>{
+        this.$confirm("是否要删除该报表数据项？","提示").then(()=>{
           this.$store.dispatch('encrypttoken').then(() => {
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -182,7 +191,7 @@
           }).then((response)=>{
             if(response.data.errorCode==='0'){
               this.$message({
-                message: '基础代码保存成功!',
+                message: '报表数据项保存成功!',
                 type: 'success'
               })
               this.refreshData();

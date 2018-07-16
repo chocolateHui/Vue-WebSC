@@ -54,6 +54,7 @@
       };
     },
     computed: {
+
       ...mapGetters([
         'caterid',
         'eventid',
@@ -75,7 +76,7 @@
       eventlist(val,oldval){
         this.setdata();
         this.$nextTick(function() {
-          console.log(this.eventid);
+
           this.$refs.tree2.setCurrentKey(this.eventid);
           this.$store.commit('setEventdes',this.localdes);
         })
@@ -84,8 +85,7 @@
 
     methods: {
       filterNode(value, data) {
-        // if (!value) return true;
-        // return data.label.indexOf(value) !== -1;
+
       },
       NodeClick(data){
         if(data.root!="T"){
@@ -102,7 +102,7 @@
         let copycatering = this.catering;
         for(let elm of copyeventlist){
           let type={};
-          type["label"] = elm.descript;
+          type["label"] = elm.bdate.substring(5)+elm.descript;
           type["eventid"] = elm.eventid;
           type["root"] = "F";
           if(this.eventid===elm.eventid){
@@ -118,7 +118,7 @@
       },
       getCateringData(){
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
-        console.log("caterid"+this.caterid);
+
         this.$store.commit('setCaterid',this.caterid);
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch("getCateringInfo")

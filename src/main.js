@@ -3,7 +3,7 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
-import { Input, Badge, DatePicker, Select, Loading, Option, Tree, Table, TableColumn, Tabs, TabPane, Message, MessageBox, Upload, Dialog, Popover } from 'element-ui'
+import { Input, Badge, DatePicker, Select, Loading, Option, Switch, Tree, Table, TableColumn, Tabs, TabPane, Message, MessageBox, Upload, Dialog, Popover } from 'element-ui'
 import axiosinstance from '../src/common/axiosinstance'
 
 import upperFirst from 'lodash/upperFirst'
@@ -21,6 +21,7 @@ Vue.use(Badge)
 Vue.use(DatePicker)
 Vue.use(Input)
 Vue.use(Select)
+Vue.use(Switch)
 Vue.use(Option)
 Vue.use(Tree)
 Vue.use(Table)

@@ -30,7 +30,7 @@
           <div class="input-group res">
             <div class="input-group-append" style="height: 33px;">
               <div class="input-group-text" style="border-radius: 0.25rem;background-color: #6FB3E0">
-                <i class="fa fa-refresh" @click="refreshdata" aria-hidden="true"></i>
+                <i class="fa fa-refresh" @click="refresh1" aria-hidden="true"></i>
               </div>
             </div>
           </div>
@@ -52,7 +52,7 @@
           :data="searchitems"
           border
           stripe
-          height="160"
+          :height="th"
           @selection-change="handleSelectionChange"
           style="width: 100%">
           <el-table-column
@@ -75,7 +75,7 @@
             sortable
             show-overflow-tooltip>
             <template slot-scope="scope">
-              <Numberinput class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></Numberinput>
+              <FormatInput class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></FormatInput>
               <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
             </template>
           </el-table-column>
@@ -142,6 +142,7 @@
         currentselect:{},
         change:false,
         first:true,
+        th:(document.body.clientHeight-272)/2
       }
     },
     props:{
@@ -188,8 +189,6 @@
               }
             }
             if(s){
-              // console.log(this.isselected);
-              // console.log(this.selected);
               if(!this.isselected){
                 s = true;
               }
@@ -232,7 +231,6 @@
       }
     },
     update(){
-     console.log("aaaaaaaa");
     },
     components:{
     },
@@ -243,6 +241,13 @@
         }else{
           event.preventDefault();
         }
+      },
+      refresh1(){
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
+        this. refreshdata();
       },
       refreshdata(){
         this.isselected="";
@@ -316,7 +321,6 @@
         this.change = true;
 
         this.selected=Object.assign({},this.currentselect);
-        console.log(this.currentselect);
         this.isselected="T";
 
       },
@@ -336,7 +340,6 @@
         this.first = true;
       },
       clear2:function (val) {
-        console.log(val);
         this.isselected="";
         this.selected = {};
         this.first = true;
@@ -364,7 +367,6 @@
           }
         }
         else{
-          console.log(val);
           this.currentselect = {};
           for(let i=0;i<val.length;i++){
             this.currentselect[val[i].id]=true;
@@ -525,7 +527,6 @@
         background-color: transparent;
         border: none;
         padding: 0px;
-        /*box-shadow:transparent !important;*/
       }
       .el-input__inner:focus{
         background-color: transparent;

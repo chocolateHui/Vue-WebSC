@@ -358,7 +358,6 @@
                   _this.instructPerson=this.guestDiary.memby,
                     _this.instructTime=this.guestDiary.memdate,
                     _this.instructText=this.guestDiary.memorandum
-                  console.log(_this.instructText+'popsale')
                 })
               })
             })

@@ -14,9 +14,8 @@
           <div class="eventdiv">
             <b-row id="eventmain">
               <b-col class="main-col4">
-                <b-form-group label="事务名称|" :label-cols="4"
-                              horizontal>
-                  <el-input clearable v-model="expandevent.descript">
+                <b-form-group label="事务名称|" :label-cols="4" horizontal>
+                  <el-input clearable v-model="expandevent.descript" maxlength="50">
                   </el-input>
                 </b-form-group>
               </b-col>
@@ -137,7 +136,7 @@
                     <b-col sm="6">
                       <b-form-group label="门牌信息&#8194;|" :label-cols="2"
                                     horizontal>
-                        <b-form-input  type="text" v-model="expandevent.infor"></b-form-input>
+                        <b-form-input  type="text" v-model="expandevent.infor" maxlength="100"></b-form-input>
                       </b-form-group>
                     </b-col>
                   </b-row>
@@ -203,7 +202,7 @@
       <el-table-column label="操作" width="170">
         <template slot-scope="scope">
           <b-button size="mini" class="Item-button image-btn" title="项目" @click="openEvenitem(scope.row)" type="danger" ></b-button>
-          <b-button size="mini" class="Synchronization-button image-btn" title="同步" type="danger" ></b-button>
+          <b-button size="mini" class="Synchronization-button image-btn" @click="eventSync(scope.row)" title="同步" type="danger" ></b-button>
           <b-button size="mini" class="Journal-button image-btn" type="danger" title="备注" @click="showNote(scope.row)">
             <div :class="getNoteClass(scope.row)"></div>
           </b-button>
@@ -365,7 +364,8 @@
             this.$http.post(methodinfo.checkevent, event).then((response)=> {
               if (response.data.errorCode === '0') {
                 this.updateEvent();
-              }else if(response.data.errorCode === '2000'){
+                this.$message('事务保存成功')
+              }else if(response.data.errorCode === 'SC101000'){
                 this.$confirm(response.data.errorMessage).then(() =>{
                   this.updateEvent();
                 })
@@ -389,6 +389,8 @@
             this.$nextTick(()=>{
               this.expandRows.push(this.expandevent.eventid)
             })
+          }else{
+            this.$message.error(response.data.errorMessage)
           }
         })
       },
@@ -538,6 +540,8 @@
             if (response.data.errorCode === '0') {
               this.$message('事务取消成功')
               this.$store.dispatch("getEventList")
+            }else{
+              this.$message.error(response.data.errorMessage)
             }
           })
         })
@@ -551,6 +555,45 @@
         this.$store.commit('setCaterid',this.caterid);
         this.$store.commit('setEventid',row.eventid);
         this.$router.push({ name: '宴会事务项目'});
+      },
+      eventSync(row){
+        let now = new Date(new Date() - 24 * 60 * 60 * 1000);
+        let eventdate = new Date(row.bdate.replace(/-/g,"/"));
+        if(now >eventdate){
+          this.$alert('本日之前的事务无法进行同步操作!')
+          return;
+        }
+
+        if(!row.hasOwnProperty("istopos"||row.istopos==='F')){
+          this.$message.error("此类型事务无法创建餐饮订单!")
+          return;
+        }
+
+        this.$confirm("是否要要将宴会事务同步到餐饮系统？","提示").then(()=>{
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$http.defaults.headers.common['username'] = this.$store.getters.username
+            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+            this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+            this.$http.post(methodinfo.syncSCEvent, {
+              caterid:this.caterid,
+              eventid:this.cancelRow.eventid,
+              name:row.descript,
+              code :row.code,
+              bdate :row.bdate,
+              begintime :row.begintime,
+              endtime :row.endtime,
+              sta :row.sta,
+              type :row.type,
+            }).then((response)=> {
+              if (response.data.errorCode === '0') {
+                this.$message('事务同步成功')
+              }else{
+                this.$message.error(response.data.errorMessage)
+              }
+            })
+          })
+        })
+
       },
       getNoteClass(row){
         if(row.hasOwnProperty("isnotes")){
@@ -581,7 +624,7 @@
 <style lang="scss">
   #eventlist{
     font-size: 0.9rem;
-    input{
+      input{
       font-size: 0.9rem;
     }
     .el-date-editor .el-range-separator{
