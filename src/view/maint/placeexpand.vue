@@ -131,16 +131,13 @@
         <b-button type="submit" @click="loglog" variant="primary">日志</b-button>
       </b-col>
     </b-row>
-
-    <el-dialog
-      title="日志"
-      id="loglog"
+    <el-dialog title="日志" id="loglog"
       :append-to-body="true"
       :visible.sync="dialoglogVisible">
       <span>
         <Syslog></Syslog>
       </span>
-      <b-button type="primary" @click="dialoglogVisible = false">确 定</b-button>
+      <b-button type="primary" @click="dialoglogVisible = false">退出</b-button>
     </el-dialog>
   </div>
 </template>
@@ -240,7 +237,7 @@
           });
         },
         refreshdata() {
-          console.log(this.pccode);
+
           this.$store.dispatch('encrypttoken').then(() => {
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -281,7 +278,7 @@
                     data.push(type);
                   }
                   this.fileList2 = data;
-                  console.log(data)
+
                 }
                 else {
                   this.fileList2 = [];
@@ -385,7 +382,7 @@
           })
         },
         handleChange(val) {
-          console.log(val);
+
           if (val) {
             this.selectedexpand = val;
           }

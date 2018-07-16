@@ -53,30 +53,30 @@
                   property="descript"
                   :show-overflow-tooltip=true
                   label="事务名称"
-                  width="90">
+                  width="">
                 </el-table-column>
                 <el-table-column
                   property="codedes"
                   :show-overflow-tooltip=true
                   label="场地描述"
-                  width="">
+                  width="80">
                 </el-table-column>
                 <el-table-column
                   property="typedes"
                   :show-overflow-tooltip=true
                   label="类型"
-                  width="60">
+                  width="50">
                 </el-table-column>
                 <el-table-column
                   property="bdate"
                   :show-overflow-tooltip=true
                   label="事务日期"
-                  width="70">
+                  width="84">
                 </el-table-column>
                 <el-table-column
                   property="begintime"
                   :show-overflow-tooltip=true
-                  label="开始日期"
+                  label="开始时间"
                   width="70">
                 </el-table-column>
               </el-table>
@@ -124,7 +124,7 @@
           <b-col cols="4" class="paddingright0">
             <b-card border-variant="info" header="未来一周客户需要确认的订单" header-tag="header" align="left" class="height100 c3">
               <div slot="header">
-                <span>未来一周即将到来的宴会团</span>
+                <span>未来一周客户需要确认的订单</span>
                 <i class="fa fa-refresh refresh" @click="refreshtable3" aria-hidden="true"></i>
               </div>
               <el-table
@@ -173,7 +173,8 @@
   // 引入提示框和title组件
   require('echarts/lib/component/tooltip')
   require('echarts/lib/component/title')
-
+  require('echarts/lib/component/legend')
+  require('echarts/lib/component/legendScroll')
   export default {
 
     data () {
@@ -315,18 +316,17 @@
           xAxis: {
             type : 'value',
 
-            // position: 'top',
+
             axisLine: {show: false},
             axisLabel: {show: false},
             axisTick: {show: false},
             splitLine:{show: false},
-            // data : [ '咫尺天涯', '海清河晏','中庭大堂']
+
           },
           yAxis: {
             type : 'category',
 
             axisLine: {show: false},
-            // axisLabel: {show: false},
             axisTick: {show: false},
             splitLine: {show: false},
             data :this.zhuxdata
@@ -334,20 +334,17 @@
           series : [
             {
               name:'场数',
-              // color: ["#ff8440", "#ed524a", "#7dc42c", "#1bc1c1", "#30a2ce", "#995097", "#c6618a", "#ffba31"],
               type:'bar',
               stack: '总量',
               label: {
                 normal: {
                   show: true,
-                  // formatter: '{b}',
                   position: 'left'
                 }
               },
               itemStyle: {
                 normal: {
                   // 随机显示
-                  //color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
                   label : {show: true, position: 'inside'},
                   // 定制显示（按顺序）
                   color: function(params) {
@@ -368,7 +365,6 @@
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.getplacerentinfo, {
             bdate:formatDate(new Date(),"yyyy-MM-dd")
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
               this.maxnum =  response.data.placenum;
@@ -390,9 +386,9 @@
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.geteventtypecompose, {
             bdate:formatDate(new Date(),"yyyy-MM-dd")
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
+              this.piedata = [];
               if(typeof(response.data.typeinfo) == "undefined"){
                 var types = {};
                 types["value"]=0;
@@ -420,7 +416,6 @@
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.getplacerankinfo, {
             bdate:formatDate(new Date(),"yyyy-MM-dd")
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
               this.zhuxdata = [];
@@ -434,7 +429,6 @@
                 var rankinfo = response.data.rankinfo;
                 if(rankinfo.length<=2){
                   for(var i=rankinfo.length-1;i>=0;i--){
-                    console.log(rankinfo[i]);
                     this.zhuxdata.push(rankinfo[i].descript);
                     var types={};
                     types["value"]=rankinfo[i].rentnum;
@@ -469,7 +463,6 @@
             sdate:formatDate(new Date(),"yyyy-MM-dd"),
             edate:formatDate(edate,"yyyy-MM-dd"),
             sta:'1'
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
               this.tableData3 = [];
@@ -497,7 +490,6 @@
             sdate:formatDate(new Date(),"yyyy-MM-dd"),
             edate:formatDate(edate,"yyyy-MM-dd"),
             sta:'1,2'
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
               if(typeof(response.data.caterings) != "undefined"){
@@ -526,7 +518,6 @@
           this.$http.post(methodinfo.geteventlist, {
             begindate:formatDate(new Date(),"yyyy-MM-dd"),
             enddate:formatDate(new Date(),"yyyy-MM-dd")
-            // bdate:"2018-04-09"
           }).then((response)=> {
             if (response.status === 200) {
               this.tableData1 = [];
@@ -547,27 +538,45 @@
         })
       },
       refreshline: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.getlinedata();
       },
       refreshpie: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.getpiedata();
       },
       refreshzhu: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.getzhudata();
       },
       refreshtable1: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.gettable1data();
       },
       refreshtable2: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.gettable2data();
       },
       refreshtable3: function () {
-        console.log("refresh");
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
         this.gettable3data();
       }
     }

@@ -24,13 +24,13 @@
       <b-row  style="font-size: 1rem">
         <b-col sm="5" class="my-1 paddingright0">
           <b-input-group prepend="标题">
-            <b-form-input type="text" v-model="localscnotes.title" placeholder="">
+            <b-form-input type="text" v-model="localscnotes.title" placeholder="" maxlength="25">
             </b-form-input>
           </b-input-group>
         </b-col>
         <b-col sm="3" class="my-1 paddingright0">
           <b-form-group horizontal :label-cols="6" label="显示在EO单" class="mb-0">
-            <b-form-checkbox id="checkbox1" v-model="localscnotes.flag" value="T" unchecked-value="F">
+            <b-form-checkbox id="checkbox1" v-model="localscnotes.flag" value="T" unchecked-value="F" plain>
             </b-form-checkbox>
           </b-form-group>
         </b-col>
@@ -42,12 +42,12 @@
         </b-col>
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px">
-        <b-form-textarea id="textarea1" v-model="localscnotes.content" :rows="12" :max-rows="12">
+        <b-form-textarea id="textarea1" v-model="localscnotes.content" :rows="12" :max-rows="12" maxlength="200">
         </b-form-textarea>
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px;float: right">
         <b-btn class="mt-3" variant="outline-danger" block @click="savescnotes">确认</b-btn>
-        <b-btn class="mt-3" variant="outline-danger" block @click="close">取消</b-btn>
+        <b-btn class="mt-3" variant="outline-danger" block @click="close">退出</b-btn>
       </b-row>
     </b-container>
   </div>
@@ -69,7 +69,9 @@
     data () {
       return {
         show: show,
-        localscnotes:{},
+        localscnotes:{
+          flag:"F"
+        },
         ty:"",
         Titleinfo:{},
       }
@@ -78,8 +80,7 @@
 
     },
     created(){
-      // console.log("a");
-      // this.getremark()
+
     },
 
     watch: {
@@ -93,6 +94,7 @@
       noteparam:function (val,oldval) {
         this.Titleinfo = Object.assign({},val);
         this.getremark();
+
       },
     },
     computed: {
@@ -120,6 +122,7 @@
                 } else {
                   let type = this.noteparam
                   type['isnew'] = 'T'
+                  type['flag'] = 'F'
                   this.localscnotes = Object.assign({},type);
                 }
               } else {
@@ -205,6 +208,9 @@
   #remark{
     .paddingright0 {
       padding-right: 0px;
+    }
+    .form-check-inline{
+      padding-top: 10px;
     }
    .btn {
       width: 92px;

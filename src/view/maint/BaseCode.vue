@@ -84,7 +84,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column prop="seq" label="排序" width="60" align="center">
+        <el-table-column prop="seq" label="排序" width="55" align="center">
           <template slot-scope="scope">
             <FormatInput @input.native="rowChange(scope)" :readonly="!scope.row.editable" class="el-input__inner" type="number" maxlength="4" v-model="scope.row.seq" placeholder=""></FormatInput>
           </template>
@@ -99,7 +99,7 @@
         </el-table-column>
         <el-table-column width="60" prop="cby" label="修改人" align="center"></el-table-column>
         <el-table-column width="130" prop="changed" label="修改时间" align="center"></el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column label="操作" width="72" align="center">
           <template slot-scope="scope">
             <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
             <b-button size="mini" class="Journal-button image-btn" type="danger" @click="showCodeLog(scope)"></b-button>
@@ -170,8 +170,8 @@
           this.editRows.push(row)
         }else{
           for(let i=0;i<this.editRows.length;i++){
-            if(this.editRows[i].code = row.code){
-              this.editRows[i] = row;
+            if(this.editRows[i].code === row.code){
+              this.editRows.splice(i,1,row)
               return
             }
           }
@@ -181,6 +181,14 @@
       deleteBasecode(scope){
         let row = scope.row;
         let index = scope.$index;
+
+        let hotelid = scope.row.hotelid;
+        if(hotelid !== this.$store.getters.hotel.hotelid){
+          this.$message.error("集团代码不允许删除!")
+          return;
+        }
+        console.log(hotelid)
+
         this.$confirm("是否要删除该基础代码？","提示").then(()=>{
           this.$store.dispatch('encrypttoken').then(() => {
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
@@ -289,6 +297,9 @@
         .fa{ margin-right: 3px}
       }
     }
+    .el-input__inner:disabled{
+      background-color: rgb(233, 236, 239) !important;
+    }
     -webkit-backface-visibility: hidden;
     .el-table{
       thead{
@@ -353,9 +364,6 @@
     }
     .ivu-input{
       margin: 0;
-    }
-    .image-btn{
-      margin: 2px 5px;
     }
   }
 </style>

@@ -233,7 +233,10 @@ const methodinfo = {
   getincomereportlist: '/SC/reserve/report/getincomereportlist',
   // 分类预测明细表（汇总表穿透）
   getsaleincomereportlist: '/SC/reserve/report/getsaleincomereportlist',
-
+  // 获取场地利用情况数据
+  getplaceanadata: '/SC/reserve/report/getplaceanadata',
+  // 获取场地利用情况数据(年报)
+  getplaceanadatabyyear: '/SC/reserve/report/getplaceanadatabyyear',
   /*
  报表数据项维护相关
  */
@@ -247,14 +250,14 @@ const methodinfo = {
  接口相关
  */
   // 主单同步
-  syncSCCatering: '/SC/interface/sctopms/syncSCCatering',
+  syncSCCatering: '/SC/sctopms/master/syncSCCatering',
   // 获取主单预留信息
-  getMasterRsvsrc: '/SC/interface/sctopms/getMasterRsvsrc',
+  getMasterRsvsrc: '/SC/sctopms/master/getMasterRsvsrc',
   /*
  档案
  */
   // 档案查询
-  getProfiles: '/SC/interface/sctoguest/getProfiles',
+  getProfiles: '/SC/sctopms/sctoguest/getProfiles',
   /*
  系统相关接口
  */

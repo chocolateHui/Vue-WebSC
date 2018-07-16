@@ -44,7 +44,7 @@
       </li>
       <li><label class="title2">金额</label>
         <!--<input type="text" id="amount" v-model.trim="amount" maxlength="20">-->
-        <FormatInput type="float" maxlength="20" v-model="amount" id="amount"></FormatInput>
+        <FormatInput type="float" maxlength="10" v-model="amount" id="amount"></FormatInput>
       </li>
       <li><label class="title1 nofb">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label><textarea id="remarks" v-model="remarks" maxlength="200"></textarea></li>
       <li><label class="title1 nofb">结&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;果</label><textarea id="result" v-model="result" maxlength="200"></textarea></li>
@@ -82,7 +82,7 @@
       width="100%"
       :modal-append-to-body.sync="ifInstruct"
     >
-      <pop-archives @btnArchClose="btnArchClose" :archFlag="archFlag" @btnArchOk="btnArchOk" :ifunit="ifUnit?unit:guests" @btnChooseName="btnChooseName"></pop-archives>
+      <pop-archives ref="refarch" @btnArchClose="btnArchClose" :archFlag="archFlag" @btnArchOk="btnArchOk" :ifunit="ifUnit?unit:guests" @btnChooseName="btnChooseName"></pop-archives>
     </el-dialog>
     <el-dialog
       title="批示内容"
@@ -100,6 +100,7 @@
   import popInstructions from './popInstructions'
   import calendar from '../../components/vue-calendar-component/calendar'
   import '../../css/SalesActivite.scss'
+  import archivesMixins from './archivesMixins'
   import {mapState,mapMutations,mapActions,mapGetters} from 'vuex';
     export default {
         name: "pop-sale",
@@ -123,7 +124,6 @@
             {status:'取消',id:'4'},
           ],
           salesId:'',
-          poparch: false,
           unit:[
             {name:'公司',id:'C'},
             {name:'旅行社',id:'A'}
@@ -159,6 +159,7 @@
           },
         };
       },
+      mixins: [archivesMixins],
       props:['clickdata','saletypea','datadiary','saletypeid','saletime','salesnameid','sellerneme','timedetail','timedetailid','salesFlag'],
       components:{
         calendar,
@@ -299,36 +300,6 @@
            this.$emit('saveorupdateguestdiary',json)
           }
         },
-        btnArchOk:function (param,popType,popno,archTypeId) {
-          if(param==''){
-            this.$message({
-              message: "请选择档案",
-              type: "warning"
-            });
-          }else{
-            this.poparch=false;
-            if(archTypeId=='A'||archTypeId=='C'){
-              this.popunit=popType
-              this.popunitno=popno
-            }else{
-              this.popguest=popType
-              this.popguestno=popno
-            }
-          }
-        },
-        btnChooseName:function (popType,popno,archTypeId) {
-          this.poparch=false;
-          if(archTypeId=='A'||archTypeId=='C'){
-            this.popunit=popType
-            this.popunitno=popno
-          }else{
-            this.popguest=popType
-            this.popguestno=popno
-          }
-        },
-        btnArchClose:function () {
-          this.poparch=false;
-        },
         InstructClose:function () {
           this.ifInstructions=false
         },
@@ -361,7 +332,6 @@
           var _this=this
           if(this.datadiary!='0'){
             this.$store.dispatch('encrypttoken').then(() => {
-              //获取工号信息,完成后进行路由
               this.$store.dispatch('getguestdiary',this.datadiary).then(() => {
                 this.$nextTick(function(){
                   _this.popunit=this.guestDiary.cusnodes
@@ -388,7 +358,6 @@
                   _this.instructPerson=this.guestDiary.memby,
                     _this.instructTime=this.guestDiary.memdate,
                     _this.instructText=this.guestDiary.memorandum
-                  console.log(_this.instructText+'popsale')
                 })
               })
             })
@@ -447,6 +416,7 @@
     }
     .el-select .el-input__inner{
       padding: 0 5px;
+      height: 24px!important;
     }
     .col-sm-3 {
       flex: 0 0 23%;

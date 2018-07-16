@@ -66,21 +66,15 @@
           </b-form-input>
         </b-form-group>
         <b-form-group label="旧密码" horizontal>
-          <b-form-input type="password"
-                        v-model="oldpassword"
-                        required>
+          <b-form-input type="password" v-model="oldpassword" maxlength="16" required>
           </b-form-input>
         </b-form-group>
         <b-form-group label="新密码:" horizontal>
-          <b-form-input type="password"
-                        v-model="newpassword"
-                        required>
+          <b-form-input type="password" v-model="newpassword" maxlength="16" required>
           </b-form-input>
         </b-form-group>
         <b-form-group label="确认密码:" horizontal>
-          <b-form-input type="password"
-                        v-model="confirmpassword"
-                        required>
+          <b-form-input type="password" v-model="confirmpassword" maxlength="16" required>
           </b-form-input>
         </b-form-group>
         <b-row>
@@ -144,6 +138,11 @@
         this.$router.push({name: "login"})
       },
       onSubmit: function () {
+        if(this.newpassword.length<6){
+          this.$alert('密码长度不能小于6位,请检查!');
+          return;
+        }
+
         if (this.newpassword !== this.confirmpassword) {
           this.$alert('两次密码输入不一致,请检查!');
           return;
@@ -173,7 +172,6 @@
         })
       },
       modalhidden: function () {
-        console.log(this.oldpassword);
         this.oldpassword = '';
         this.newpassword = '';
         this.confirmpassword = '';

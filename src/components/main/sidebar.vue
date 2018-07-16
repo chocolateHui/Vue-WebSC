@@ -46,8 +46,7 @@
           lunar:true
         },
         menus: [
-          { route: '/main/report', name: '报表专家',iconClass:"fa-list-alt"},
-          { route: '/main/maint', name: '基础代码维护',iconClass:"fa-cog"}
+
         ],
         isClose:true,
         toggleClass:"fa-angle-double-left",
@@ -59,7 +58,8 @@
       ...mapGetters([
         'mainRoutes',
         'activeIndex',
-        'hotel'
+        'hotel',
+        'role'
       ])
     },
     methods: {
@@ -92,13 +92,24 @@
       }
     },
     mounted () {
+      let role = this.role;
       if(this.hotel.sign===2){
-        this.menus.unshift({ route: '/main/saleDiary', name: '销售活动日历',iconClass:"fa-calendar"});
-        this.menus.unshift({ route: '/main/place/placeDistribution', name: '宴会场地分布',iconClass:"fa-th"});
-        this.menus.unshift({ route: '/main/newReserve', name: '新建宴会预订',iconClass:"fa-registered"});
-        this.menus.unshift({ route: '/main/newQuery', name: '新建宴会问询',iconClass:"fa-clock-o fa-rotate-90"});
-        this.menus.unshift({ route: '/main/caterList', name: '宴会预订列表',iconClass:"fa-list"});
+        this.menus.push({ route: '/main/caterList', name: '宴会预订列表',iconClass:"fa-list"});
+        this.menus.push({ route: '/main/newQuery', name: '新建宴会问询',iconClass:"fa-clock-o fa-rotate-90"});
+        this.menus.push({ route: '/main/newReserve', name: '新建宴会预订',iconClass:"fa-registered"});
+        this.menus.push({ route: '/main/place/placeDistribution', name: '宴会场地分布',iconClass:"fa-th"});
+        if(role!=='01'){
+          this.menus.push({ route: '/main/saleDiary', name: '销售活动日历',iconClass:"fa-calendar"});
+        }
       }
+
+      if(role==='ADM'||['00','01','02','04','05'].indexOf(role)>=0){
+        this.menus.push({ route: '/main/report', name: '报表专家',iconClass:"fa-list-alt"});
+      }
+      if(role==='ADM'||role==='00'){
+        this.menus.push({ route: '/main/maint', name: '基础代码维护',iconClass:"fa-cog"});
+      }
+
       this.date= formatDate(new Date(),"yyyy年MM月dd日");
       let lunarinfo= calendarjs.solar2lunar(new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate());
       this.lunardate = lunarinfo.IMonthCn+lunarinfo.IDayCn

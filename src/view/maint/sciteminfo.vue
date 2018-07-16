@@ -23,8 +23,8 @@
             </el-table-column>
           </el-table>
           <div class="btng green">
-            <b-button :disabled="btnshow.new" @click="newp" variant="primary">新建类别</b-button>
-            <b-button :disabled="btnshow.delete" @click="deletep" variant="primary">删除类别</b-button>
+            <b-button class="side-btn" :disabled="btnshow.new" @click="newp" variant="primary">新建类别</b-button>
+            <b-button class="side-btn" :disabled="btnshow.delete" @click="deletep" variant="primary">删除类别</b-button>
           </div>
         </b-col >
         <b-col   class="maxwidth70 paddingright0 paddingleft5">
@@ -162,7 +162,7 @@
               sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <Numberinput class="el-input__inner" type="float" @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.price" placeholder=""></Numberinput>
+                <FormatInput class="el-input__inner" type="float" @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.price" placeholder=""></FormatInput>
                 <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
               </template>
             </el-table-column>
@@ -334,8 +334,8 @@
 
         currentRow: null,
         placeRow: null,
-        // 要展开的行，数值的元素是row的key值
-        tableHeight: document.body.clientHeight-278,//减去header的60px
+
+        tableHeight: document.body.clientHeight-278,//减去header的278px
         num:0,
         change:""
       }
@@ -494,7 +494,7 @@
         })
       },
       deleteplace(row){
-        console.log(row.id);
+
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -584,7 +584,7 @@
       },
       changeplace(scope) {
         if(scope.row.add!="T"){
-          console.log("xxxxxxxxxxx");
+
           if(this.change==="T"){
           }
           else{
@@ -665,7 +665,7 @@
         this.placesavetype = "update";
       },
       savep:function () {
-        console.log(this.placesavetype);
+
         if(this.classcodesavetype){
           var url = "";
           if(!this.pcinfo.classcode){
@@ -696,10 +696,10 @@
               copydata.push(data);
             }
           }
-          console.log(copydata);
+
           var finnaldata = [];
           for(var cd in copydata){
-            console.log(cd);
+
             if(!copydata[cd].code){
               this.$message.error('项目不能为空');
               return
@@ -714,7 +714,7 @@
         }
       },
       handlelaySelectionChange(val) {
-        console.log(val);
+
         if(val.row.add!="T"){
           this.changedplaceinfo[val.row.code] = val.row;
           this.placesavetype="update";
@@ -728,7 +728,7 @@
         this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       log2(){
-        console.log(this.pcinfo);
+
         let logkey =this.pcinfo.classcode +'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
         this.$store.commit('setLogtype','ScItemclass');
         this.$store.commit('setLogKey',logkey);
@@ -866,6 +866,9 @@
       }
       .btng-r{float: right;}
       .btng-l{float: left;}
+    }
+    .side-btn{
+      width: 85px;
     }
     .form-row > .col, .form-row > [class*="col-"] {
       padding-right: 0px;

@@ -16,7 +16,7 @@
                         <b-input-group-text slot="append">
                           <i class="appendicon fa fa-user"></i>
                         </b-input-group-text>
-                        <FormatInput id="userinput" v-model="username" @click.native="userclick" text="请输入用户名"></FormatInput>
+                        <FormatInput id="userinput" type="nospecial" v-model="username" @click.native="userclick" text="请输入用户名"></FormatInput>
                       </b-input-group>
                       <label class="errorlabel" v-show="userErrorShow">用户名不能为空!</label>
                     </label>
@@ -38,6 +38,11 @@
                       </b-input-group>
                       <label class="errorlabel" v-show="hotelErrorShow">请先选择酒店!</label>
                     </label>
+                    <!--<label class="block">-->
+                      <!--<b-form-checkbox id="checkbox1" v-model="empnoType" value="PMS" unchecked-value="SC">-->
+                        <!--使用PMS帐号登录-->
+                      <!--</b-form-checkbox>-->
+                    <!--</label>-->
                     <label class="block">
                       <b-button class="login-button" @click="login">登录</b-button>
                     </label>
@@ -74,19 +79,19 @@
     //组件和参数
     import hotelDiv from  '../components/login/hoteldiv.vue'
 
-    var logindata = {
-        password :'',
-        hotelShow:false,
-        userErrorShow:false,
-        passwordErrorShow:false,
-        hotelErrorShow:false,
-        hasGroupid:false,
-        isFirefox:true,
-    };
     export default {
         name: 'Login',
         data () {
-            return logindata;
+            return {
+              password :'',
+              hotelShow:false,
+              userErrorShow:false,
+              passwordErrorShow:false,
+              hotelErrorShow:false,
+              hasGroupid:false,
+              isFirefox:true,
+              empnoType:'SC'
+            };
         },
         computed:{
             ...mapGetters([
@@ -101,7 +106,6 @@
               return this.$store.getters.username
             },
             set (value) {
-              console.log(value)
               this.$store.commit('setUsername', value)
             }
           },
@@ -128,6 +132,10 @@
                 this.password = value;
             },
             hotelclick:function () {
+              if(!this.groupid||this.groupid===''){
+                this.$root.$emit('bv::show::popover', 'helpbtn');
+                return;
+              }
                 if(!this.hotelShow) {
                     this.$store.dispatch('gethotels');
                 }
@@ -160,6 +168,10 @@
                 }else{
                     this.hotelErrorShow = false;
                 }
+                let empnoChange = false;
+                if(this.username!== this.empno.empno){
+                  empnoChange = true;
+                }
 
                 let tokenparam = {
                     groupid:this.groupid,
@@ -173,11 +185,13 @@
                     this.$store.dispatch('encrypttoken').then(() => {
                         //获取工号信息,完成后进行路由
                         this.$store.dispatch('getsysempno',this.$store.getters.signature).then(() => {
-                          if(this.isHotelChange){
+                          if(this.isHotelChange||empnoChange){
                             this.$store.commit('initTabs');
                             this.$store.commit('setHotelChange',false);
                           }
                           this.$http.defaults.headers.common['username'] = this.username
+                          this.$http.defaults.headers.common['hotelid'] = this.hotel.hotelid
+                          this.$http.defaults.headers.common['groupid'] = this.groupid
                           this.$store.dispatch('getAllSysoption')
                           this.password = ''
                           this.$router.push({path:"/main/index"})
@@ -189,9 +203,9 @@
             }
         },
         watch:{
-            loginerror:function (val, oldVal) {
+          loginerror(val, oldVal) {
                 this.passwordErrorShow = !!val;
-            }
+          }
         },
         components: {
             hotelDiv

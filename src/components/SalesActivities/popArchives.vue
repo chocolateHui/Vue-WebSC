@@ -147,13 +147,13 @@
           this.salesId=''
           this.$store.commit("setProfilesNull")
           this.cateringlist=[]
+          console.log(this.cateringlist +'hhh')
         },
         archClose: function () {
-          this.clearAll()
           this.$emit('btnArchClose')
+          this.clearAll()
         },
         archOk: function () {
-          this.clearAll()
           this.$emit('btnArchOk',this.ifproCurrent,this.proName,this.proNo,this.archTypeId)
         },
         /*档案搜索*/
@@ -201,15 +201,13 @@
         },
         getProfilesList:function () {
           this.$store.dispatch('encrypttoken').then(() => {
-            //获取工号信息,完成后进行路由
             this.$store.dispatch('getProfiles',this.proParam).then(() => {
-              // this.profileslist1=this.profileslist
             })
           })
         },
       },
       mounted:function () {
-        // this.$store.commit("setProfilesNull")
+
       }
     }
 </script>
@@ -225,7 +223,7 @@
         >li{float: left;margin-right: 12px; margin-bottom: 10px;list-style: none;}
         li{
           label{ color: #595757;display: inline-block; font-size: 13px;height:22px;line-height:22px;width: 50px;float: left}
-          .text_input{background: $colorWhite;border:1px solid $colorGray; color: #9E9E9F;font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif ;height: 22px;line-height: 22px;padding: 0 3px;}
+          .text_input{background: $colorWhite;border:1px solid $colorGray; color: #9E9E9F;font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif ;height: 22px;line-height: 22px;padding: 0 3px;border-radius: 0}
           .select{border: 1px solid $colorGray; display:inline-block;height: 22px;position: relative;
             p{cursor:pointer;padding: 0 10px;position: relative;
               &::after{color: #888; content: '\f107'; font: normal normal normal 14px/1 FontAwesome;display: inline-block;position: absolute;right: 5px;top: 2px;}
@@ -326,7 +324,9 @@
       padding: 0 5px;
       height: 23px !important;
     }
-
+    .el-input__icon{
+      line-height: normal;
+    }
     .col-form-label{
       padding-top: 0;
     }
@@ -338,7 +338,7 @@
       .el-input__suffix-inner{
         position: absolute;
         right: 0px;
-        bottom: -9px;
+        bottom: 0.2rem;
       }
     }
     ol, ul, dl{

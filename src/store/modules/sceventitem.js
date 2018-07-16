@@ -1,6 +1,3 @@
-/**
- * Created by lsj on 2018/3/9.
- */
 import methodinfo from '../../config/MethodConst.js'
 import axiosinstance from '../../common/axiosinstance'
 
@@ -8,8 +5,8 @@ import axiosinstance from '../../common/axiosinstance'
 const state = {
   sceventitemeventid: '',
   corteventlist: [],
-  eventdes:'',
-  isrefresh:'',
+  eventdes: '',
+  isrefresh: ''
 }
 
 // getters
@@ -17,7 +14,6 @@ const getters = {
   sceventitemeventid: state => state.sceventitemeventid,
 
   corteventlist: state => state.corteventlist,
-
 
   eventdes: state => state.eventdes,
 
@@ -28,7 +24,6 @@ const getters = {
 const actions = {
   getcortEventlist (store) {
     return new Promise((resolve, reject) => {
-      axiosinstance.defaults.headers.common['username'] = store.getters.username
       axiosinstance.defaults.headers.common['signature'] = store.getters.signature
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
       axiosinstance.post(methodinfo.geteventlist, {
@@ -46,20 +41,18 @@ const actions = {
               type.push(event)
             }
             store.commit('setCorteventlist', type)
-            console.log('vuex')
           } else {
             store.commit('setCorteventlist', [])
           }
           resolve()
         } else {
-          console.log(response.data)
           reject(response.data.errorMessage)
         }
       }).catch(function () {
       })
       resolve()
     })
-  },
+  }
 }
 
 // mutations

@@ -1,5 +1,5 @@
 <template>
-  <div id="basecode">
+  <div id="namedef">
     <b-container fluid>
       <b-row>
         <b-col sm="8">
@@ -58,14 +58,21 @@
             </el-select>
           </template>
         </el-table-column>
+        <el-table-column prop="tail" label="报表列" width="65" align="center">
+          <template slot-scope="scope">
+            <el-select @change="rowChange(scope)" :disabled="!scope.row.editable" v-model="scope.row.tail" placeholder="">
+              <el-option label="餐饮" value="FB"></el-option>
+              <el-option label="宴会" value="SC"></el-option>
+              <el-option label="其他" value="OT"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
         <el-table-column width="60" prop="cby" label="修改人" align="center"></el-table-column>
         <el-table-column width="130" prop="changed" label="修改时间" align="center"></el-table-column>
-        <el-table-column label="操作" width="75" align="center">
+        <el-table-column label="操作" width="72" align="center">
           <template slot-scope="scope">
-            <b-form inline>
-              <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
-              <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
-            </b-form>
+            <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
+            <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
           </template>
         </el-table-column>
       </el-table>
@@ -138,7 +145,7 @@
       deleteBasecode(scope){
         let row = scope.row;
         let index = scope.$index;
-        this.$confirm("是否要删除该基础代码？","提示").then(()=>{
+        this.$confirm("是否要删除该报表数据项？","提示").then(()=>{
           this.$store.dispatch('encrypttoken').then(() => {
             this.$http.defaults.headers.common['username'] = this.$store.getters.username
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -184,7 +191,7 @@
           }).then((response)=>{
             if(response.data.errorCode==='0'){
               this.$message({
-                message: '基础代码保存成功!',
+                message: '报表数据项保存成功!',
                 type: 'success'
               })
               this.refreshData();
@@ -229,7 +236,7 @@
   }
 </script>
 <style lang="scss" type="text/scss">
-  #basecode{
+  #namedef{
     font-size: 0.9rem;
     .container-fluid{
       padding: 0;
@@ -289,9 +296,6 @@
     }
     .ivu-input{
       margin: 0;
-    }
-    .image-btn{
-      margin: 2px 5px;
     }
   }
 </style>
