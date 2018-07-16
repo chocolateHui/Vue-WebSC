@@ -261,8 +261,8 @@ const methodinfo = {
   /*
  系统相关接口
  */
-  auth: '/userauth',
-  getloginhotellist: '/getloginhotellist',
+  auth: '/userlogin',
+  getloginhotellist: '/SC/reserve/sysempno/getempnohotellist',
 
   url: 'http://172.10.60.61:8083/'
 }
