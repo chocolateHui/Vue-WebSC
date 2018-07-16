@@ -24,7 +24,7 @@
       <b-row  style="font-size: 1rem">
         <b-col sm="5" class="my-1 paddingright0">
           <b-input-group prepend="标题">
-            <b-form-input type="text" v-model="localscnotes.title" placeholder="">
+            <b-form-input type="text" v-model="localscnotes.title" placeholder="" maxlength="25">
             </b-form-input>
           </b-input-group>
         </b-col>
@@ -42,7 +42,7 @@
         </b-col>
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px">
-        <b-form-textarea id="textarea1" v-model="localscnotes.content" :rows="12" :max-rows="12">
+        <b-form-textarea id="textarea1" v-model="localscnotes.content" :rows="12" :max-rows="12" maxlength="200">
         </b-form-textarea>
       </b-row>
       <b-row  style="font-size: 12px ;padding-left: 12px;float: right">

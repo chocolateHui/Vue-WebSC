@@ -286,7 +286,6 @@
         var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.getisnewhotel, {
             hotel:this.hotelid
           }).then((response) => {
@@ -307,7 +306,6 @@
         var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.gethotel, {
             hotel:this.hotelid
           }).then((response) => {
@@ -330,7 +328,6 @@
         var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.getbasecodelist, {
             cat: 'area',
             halt:'F'
@@ -348,7 +345,6 @@
         var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.getcntcode, {
             city: 'T'
           }).then((response) => {
@@ -365,7 +361,6 @@
         var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.getcntcode, {
             citycode:_this.citycode
           }).then((response) => {
@@ -399,7 +394,6 @@
         this.$set(this.hoteInfo,"hotel",this.hoteInfo.hotelid);
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.modifyhotel,
             this.hoteInfo
           ).then((response) => {

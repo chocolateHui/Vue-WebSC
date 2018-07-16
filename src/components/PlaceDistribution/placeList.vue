@@ -61,7 +61,7 @@
       <Reason ref="Reason" @reasonConfirm="reasonConfirm"></Reason>
     </b-modal>
     <b-modal id="remarkmodal" ref="remarkmodal" size="lg" title="宴会备注" hide-footer>
-      <remark></remark>
+      <remark @onhide="onhide"></remark>
     </b-modal>
   </div>
 </template>
@@ -162,7 +162,6 @@
           var _this=this
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
-            // 获取营业点
             this.$http.post(methodinfo.geteventlist, {
               sta:param.sta
             }).then((response) => {
@@ -288,6 +287,7 @@
                         type: "success"
                       });
                     }else{
+                      console.log(responseMsg.errorMessage+'pxkjsjj')
                       responseMsg = response.data;
                       this.$message({
                         message:responseMsg.errorMessage,
@@ -332,8 +332,10 @@
           this.$store.commit('setNoteParam',remarkinfo);
           this.$refs.remarkmodal.show()
         },
+        onhide(){
+          this.$refs.remarkmodal.hide()
+        },
         btnItem:function (list) {
-          // this.caternameC=list.catername
           this.$store.commit('setCaterid',list.caterid);
           this.$store.commit('setEventid',list.eventid);
           this.$router.push({ name: '宴会事务项目'});

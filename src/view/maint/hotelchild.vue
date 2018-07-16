@@ -59,7 +59,6 @@
       getbrandlist:function(){
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.gethotellist, {
             sign:1
           }).then((response) => {
@@ -78,7 +77,6 @@
         var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.gethotellist, {
             brandid:_this.brandid,
           }).then((response) => {

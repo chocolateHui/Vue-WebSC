@@ -103,7 +103,6 @@
         status: 'accepted',
         datetime: "",
         today: '',
-        // popsale: false,
         ifMonth: true,
         timeType: "本月",
         dataType: '1',
@@ -159,14 +158,12 @@
     methods:{
       btnDetail:function (id) {
          this.diaryId=id.id
-         // this.popsale=true
         this.$set(this,"salesFlag",this.salesFlag+1);
         this.$refs.myModalsale.show()
       },
       saveorupdateguestdiary:function (param) {
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          // 获取营业点
           this.$http.post(methodinfo.saveorupdateguestdiary,param).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
@@ -193,7 +190,6 @@
         this.popSalesTypeId=this.dom.getAttribute("type-id")
         this.popSalesTime=this.dataTime+'-'+e
         this.clickData=''
-        // this.popsale=true
         this.$set(this,"salesFlag",this.salesFlag+1);
         this.$refs.myModalsale.show()
       },
@@ -206,7 +202,6 @@
         this.clickData=''
         this.timeDetail=timedetail
         this.timeDetailId=time
-        // this.popsale=true
         this.$set(this,"salesFlag",this.salesFlag+1);
         this.$refs.myModalsale.show()
       },
@@ -455,7 +450,6 @@
         this.clickData=''
         this.timeDetail=timedetail
         this.timeDetailId=time
-        // this.popsale=true
         this.$set(this,"salesFlag",this.salesFlag+1);
         this.$refs.myModalsale.show()
       },
@@ -465,12 +459,10 @@
           data="0"+data
         }
           this.clickData=this.dataTime+'-'+data
-          // this.popsale=true;
         this.$set(this,"salesFlag",this.salesFlag+1);
           this.$refs.myModalsale.show()
       },
       btnExit:function(){
-        // this.popsale=false;
         this.diaryId='0'
         this.$refs.myModalsale.hide()
       },
@@ -483,9 +475,7 @@
         this.datetime=this.$options.methods.toMonth().substring(0,4)+"年"+this.$options.methods.toMonth().substring(5,7)+"月"
         this.dataTime=this.$options.methods.toMonth()
         this.datetimenow=this.$options.methods.toDay().substring(0,4)+"-"+this.$options.methods.toDay().substring(5,7)+"-"+this.$options.methods.toDay().substring(8,10)
-        // var timeData=document.getElementById("timeData")
-        // timeData.setAttribute("data-type","1");
-        this.dataType="1"
+         this.dataType="1"
         this.SalesSelect()
       },
       adddateday: function(time,n) {
