@@ -48,7 +48,7 @@
           </ul>
         </div>
         <div class="item">
-          <ul v-for="(placeitem,index1) in placeslist" class="clearfix">
+          <ul v-for="(placeitem,index1) in placeSta" class="clearfix">
             <li class="nav1" style="position: relative">
               <span :dataid="placeitem.tableno">{{placeitem.descript}}</span>
               <div v-for="(tolist,indexto) in gettolist">
@@ -60,18 +60,14 @@
               </div>
             </li>
             <li v-for="(timelist,index2) in timeList" @mouseenter="thingsShow(index1,index2,timelist,$event)" @mouseleave="thingsHide">
-              <h1 v-for="(item,indexdetail) in timeAll">
+              <h1 v-for="item in timeAll">
                 <label>{{item.time}}</label>
                 <p>
-                  <span v-for="items in timeAll[indexdetail].content" >
-                    <span v-for="(infolist1,infoindex1) in placesinfo1" v-if="infolist1.tableno==placeitem.tableno">
-                        <span v-for="infolist in (placesinfo1[infoindex1].bdates)" v-if="timelist==infolist.bdate&&((items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))">
-                            <span v-for="typeitem in typeList" v-if="iftypelist||(typeitem==infolist.eventtype)">
-                               <span v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta"  :data-id="items.dataid" :data-it="items.datait"></span>
-                            </span>
-                          </span>
-                      </span>
-                   </span>
+                   <span v-for="items in item.content">
+                     <span v-for="infolist in placeitem.bdates" v-if="timelist==infolist.bdate&&(iftypelist||typeList.indexOf(infolist.eventtype)!=-1)&&((items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))">
+                       <span v-if="colorlist.dataid==infolist.sta" v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]"></span>
+                     </span>
+                  </span>
                 </p>
               </h1>
               <div class="todayThings" lastChild="refthings" v-show="activeIndex===index1+'-'+index2" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom}">
@@ -96,7 +92,7 @@
           </ul>
         </div>
         <div class="item">
-          <ul class="clearfix" v-for="(placeitem,index1) in placeslist">
+          <ul class="clearfix" v-for="(placeitem,index1) in placeSta">
             <li class="nav1" style="position: relative">
               <span :dataid="placeitem.tableno">{{placeitem.descript}}</span>
               <div v-for="(tolist,indexto) in gettolist">
@@ -108,15 +104,11 @@
               </div>
             </li>
             <li class="nav2"  @mouseenter="thingsShow(index1,'0',datatime.substring(0,10),$event)" @mouseleave="thingsHide">
-             <span v-for="items in timeToday">
-                <span v-for="(infolist1,infoindex1) in placesinfo1" v-if="infolist1.tableno==placeitem.tableno">
-                  <span v-for="(infolist,infoindex) in placesinfo1[infoindex1].bdates">
-                    <span v-for="typeitem in typeList"  v-if="iftypelist||(typeitem==infolist.eventtype)">
-                       <span v-for="colorlist in headList" class="bgtime2" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta&&( (items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))"  :data-id="items.dataid" :data-it="items.datait"></span>
-                    </span>
-                  </span>
-                </span>
-             </span>
+              <span v-for="items in timeToday">
+                 <span v-for="infolist in placeitem.bdates" v-if="(iftypelist||typeList.indexOf(infolist.eventtype)!=-1)&&((items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))">
+                   <span v-if="colorlist.dataid==infolist.sta" v-for="colorlist in headList" class="bgtime2" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]"></span>
+                 </span>
+              </span>
               <div class="todayThings" lastChild="refthings" v-show="activeIndex1==index1" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom}">
                 <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="datatime.substring(0,10)" :datatimeid="datatimeid" @addThings="addThings"></today-things>
               </div>
@@ -199,7 +191,7 @@
         gettolist:[],
         placeinfoparam:{},
         basecodeslist:[],
-        typeList:['1'],
+        typeList:[],
         iftypelist:true,
         gettocurrent:'',
         ifAllCheck:false,
@@ -208,7 +200,8 @@
         newChooseAddr:'',
         newChooseAddrNo:'',
         sta:'',
-        placesinfo1:[]
+        placesinfo1:[],
+        placeSta:[]
       }
     },
     filters:{
@@ -226,9 +219,6 @@
       ...mapGetters(['isLoading']),
     },
     created(){
-      this.$store.dispatch('encrypttoken').then(() => {
-        this.$store.dispatch('getTimeUnit')
-      })
           loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           for(var num=8;num<=22;num++) {
             if (num <= 12) {
@@ -386,11 +376,30 @@
         }
         this.placeusedinfodata()
       },
+      deepClone(obj){
+        let _obj = JSON.stringify(obj),
+          objClone = JSON.parse(_obj);
+        return objClone
+      },
       placeusedinfodata:function () {
+        this.placeSta=[]
         this.$store.dispatch('encrypttoken').then(() => {
           //获取工号信息,完成后进行路由
           this.$store.dispatch('getplaceusedinfo',this.placeinfoparam).then(() => {
             this.placesinfo1 = Object.assign({},this.placesinfo);
+            this.placeslist.forEach(function (item) {
+              item.bdates=[]
+            })
+            var placelist=this.placeslist
+            var placesinfos=this.placesinfo1
+            placelist.forEach(function (item) {
+              for(var i in placesinfos) {
+                if(placesinfos[i].tableno==item.tableno){
+                  item.bdates=placesinfos[i].bdates
+                }
+              }
+            })
+            this.placeSta=placelist
             loading.close();
           })
         })
@@ -726,35 +735,39 @@
       }
     },
     mounted: function () {
-    
-      this.getbasecodelist()
-      this.datatimeid=this.today()
-      this.$store.dispatch('encrypttoken').then(() => {
-         this.$store.dispatch('getTimeUnit')
+      this.$nextTick(function () {
+        // this.$store.dispatch('encrypttoken').then(() => {
+        //   this.$store.dispatch('getTimeUnit')
+        // })
+        this.getbasecodelist()
+        this.datatimeid=this.today()
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch('getTimeUnit')
         })
-      this.getpccodelist()
-      this.datatime=this.today()+" 至 "+this.adddateday(this.today(),6)
-      this.dataNow=this.today()
-      this.formData(this.dataNow)
-      for(var t=0;t<7;t++){
-        this.timeList.push(this.formdata[t].dataAll)
-      }
-      document.addEventListener('click',(e)=> {
-        if (this.$refs.refpccode) {
-          if (!this.$refs.refpccode.contains(e.target)) {
-            this.ifpccode = false
-          }
+        this.getpccodelist()
+        this.datatime=this.today()+" 至 "+this.adddateday(this.today(),6)
+        this.dataNow=this.today()
+        this.formData(this.dataNow)
+        for(var t=0;t<7;t++){
+          this.timeList.push(this.formdata[t].dataAll)
         }
-        if (this.$refs.refcalen) {
-          if (!this.$refs.refcalen.contains(e.target)) {
-            this.calenShow = false
+        document.addEventListener('click',(e)=> {
+          if (this.$refs.refpccode) {
+            if (!this.$refs.refpccode.contains(e.target)) {
+              this.ifpccode = false
+            }
           }
-        }
-        if (this.$refs.refchooseThing) {
-          if (!this.$refs.refchooseThing.contains(e.target)) {
-            this.ifThingType = false
+          if (this.$refs.refcalen) {
+            if (!this.$refs.refcalen.contains(e.target)) {
+              this.calenShow = false
+            }
           }
-        }
+          if (this.$refs.refchooseThing) {
+            if (!this.$refs.refchooseThing.contains(e.target)) {
+              this.ifThingType = false
+            }
+          }
+        })
       })
     },
   }
