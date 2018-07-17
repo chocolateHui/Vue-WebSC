@@ -19,7 +19,7 @@
           default-expand-all
           highlight-current
           :filter-node-method="filterNode"
-          ref="tree2">
+          ref="maintTree">
         </el-tree>
       </b-col>
       <b-col cols="10">
@@ -65,7 +65,7 @@
     },
     watch: {
       filterText(val) {
-        this.$refs.tree2.filter(val);
+        this.$refs.maintTree.filter(val);
       },
       caterid(val,oldval){
        this.getCateringData();
@@ -76,8 +76,7 @@
       eventlist(val,oldval){
         this.setdata();
         this.$nextTick(function() {
-
-          this.$refs.tree2.setCurrentKey(this.eventid);
+          this.$refs.maintTree.setCurrentKey(this.eventid);
           this.$store.commit('setEventdes',this.localdes);
         })
       },
@@ -85,7 +84,8 @@
 
     methods: {
       filterNode(value, data) {
-
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
       },
       NodeClick(data){
         if(data.root!="T"){
@@ -113,7 +113,7 @@
         datac["label"] =copycatering.name;
         datac["children"] = cchildren;
         datac["root"] ="T";
-        this.maintTree .push(datac);
+        this.maintTree.push(datac);
 
       },
       getCateringData(){
