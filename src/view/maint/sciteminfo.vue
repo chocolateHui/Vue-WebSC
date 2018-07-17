@@ -73,9 +73,9 @@
                   <!--required-->
                   <!--placeholder="">-->
                   <!--</b-form-input>-->
-                  <el-select clearable v-model="pcinfo.tocode">
+                  <el-select clearable v-model="pcinfo.tocode" :disabled="changeshow.descript2disabled">
                     <el-option
-                      :disabled="changeshow.descript2disabled"
+
                       v-for="item in namedef"
                       :key="item.value"
                       :label="item.label"
@@ -87,9 +87,8 @@
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="项目属性" class="mb-0">
-                <el-select v-model="pcinfo.type">
+                <el-select v-model="pcinfo.type" :disabled="changeshow.kinddesdisabled">
                   <el-option
-                    :disabled="changeshow.kinddesdisabled"
                     v-for="item in typearry"
                     :key="item.value"
                     :label="item.label"
@@ -335,7 +334,7 @@
         currentRow: null,
         placeRow: null,
 
-        tableHeight: document.body.clientHeight-278,//减去header的278px
+        tableHeight: document.body.clientHeight-295,//减去header的278px
         num:0,
         change:""
       }
@@ -780,12 +779,12 @@
       padding-right: 0px;
     }
     .maxwidth20{
-      flex: 0 0 18%;
-      max-width: 18%;
+      flex: 0 0 19%;
+      max-width: 19%;
     }
     .maxwidth70{
-      flex: 0 0 82%;
-      max-width: 82%;
+      flex: 0 0 80.5%;
+      max-width: 80.5%;
     }
     .maxwidth15{
       flex: 0 0 10%;
@@ -837,6 +836,7 @@
       .cell {
         padding-left: 5px;
         padding-right: 5px;
+        cursor: pointer;
         .form-inline{
           .btn:not(:last-child){ margin-right: 3px; }
         }
@@ -866,6 +866,10 @@
       }
       .btng-r{float: right;}
       .btng-l{float: left;}
+    }
+    .btn.disabled, .btn:disabled{
+      background-color: #c8c9ca!important;
+      border-color: #c8c9ca!important;
     }
     .side-btn{
       width: 85px;
