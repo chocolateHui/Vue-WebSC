@@ -55,6 +55,13 @@
     },
     methods: {
       getCateringData(){
+        if(this.isHistory){
+          this.$message({
+            message: '当前订单为历史订单,请注意!',
+            type: 'warning'
+          })
+        }
+
         this.currentTab = "EventList";
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         this.$store.dispatch('encrypttoken').then(() => {
