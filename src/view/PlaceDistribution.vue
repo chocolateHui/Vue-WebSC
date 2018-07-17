@@ -47,7 +47,7 @@
             </li>
           </ul>
         </div>
-        <div class="item">
+        <div class="item" ref="refitem">
           <ul v-for="(placeitem,index1) in placeSta" class="clearfix">
             <li class="nav1" style="position: relative">
               <span :dataid="placeitem.tableno">{{placeitem.descript}}</span>
@@ -70,7 +70,7 @@
                   </span>
                 </p>
               </h1>
-              <div class="todayThings" lastChild="refthings" v-show="activeIndex===index1+'-'+index2" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom}">
+              <div class="todayThings" lastChild="refthings":class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex===index1+'-'+index2}">
                 <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="timelist" :datatimeid="datatimeid" @addThings="addThings"></today-things>
               </div>
             </li>
@@ -109,7 +109,7 @@
                    <span v-if="colorlist.dataid==infolist.sta" v-for="colorlist in headList" class="bgtime2" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]"></span>
                  </span>
               </span>
-              <div class="todayThings" lastChild="refthings" v-show="activeIndex1==index1" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom}">
+              <div class="todayThings" lastChild="refthings" v-show="activeIndex1==index1" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex1==index1}">
                 <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="datatime.substring(0,10)" :datatimeid="datatimeid" @addThings="addThings"></today-things>
               </div>
             </li>
@@ -486,7 +486,8 @@
         this.ifThingType=true
       },
       thingTypeOk:function () {
-        this.iftypelist=false
+         this.iftypelist=false
+        this.ifThingType=false
         this.typeList=[]
         for (var i=0;i<this.basecodeslist.length;i++){
           if(typeof this.basecodeslist[i].ifTypeCheck !="undefined") {
@@ -497,7 +498,6 @@
             this.typeList.push(this.basecodeslist[i].code)
           }
         }
-        this.ifThingType=false
       },
       thingsShow:function (index1,index2,timedata,event) {
         var _this=this;
@@ -507,9 +507,10 @@
         }else{
           var palceLeft=event.currentTarget.offsetLeft+30
         }
-        var palceTop=event.currentTarget.offsetTop
+        var palceTop=event.clientY
         var bodyH=this.$refs.contain.offsetHeight;
-        var thingsH=100;
+        // var thingsH=100;
+        var thingsH=event.currentTarget.lastChild.offsetHeight
         var current=event.currentTarget
         _this.showtime=setTimeout(function(){
           var todaytime=new Date(_this.today());
@@ -523,7 +524,7 @@
           }else{
             _this.isleft=true
           }
-          if(bodyH-palceTop<thingsH-90){
+          if(bodyH-palceTop<thingsH-80){
             _this.isBottom=true
           }else{
             _this.isBottom=false
@@ -814,9 +815,12 @@
       min-height: 100px;
       padding-bottom: 10px;
       width: 470px;
-      z-index: 9;
+      z-index: -1;
       border-radius:3px;
       box-shadow:0 0 15px #C1C1C1;
+    }
+    .ifTodayThings{
+      z-index: 999999;
     }
     .borderleft{border-left: 2px solid #fff;}
     .gettochild{

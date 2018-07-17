@@ -1,5 +1,5 @@
 <template>
-      <ol ref="thing">
+      <ol>
         <li>今日事务</li>
         <li class="head">
           <span class="n1">宴会名称</span>
@@ -42,8 +42,7 @@
       },
       created(){
         this.timenow=this.today()
-          this.placesinfo2 = Object.assign({},this.placesinfo);
-          console.log(this.placesinfo2+'oouy')
+        this.placesinfo2 = Object.assign({},this.placesinfo);
       },
       props:['datatimeid','timelistthing1','placeslistp','headListp'],
       methods:{
@@ -66,9 +65,6 @@
           var times = date1.getFullYear() + "-" + month + "-" + day;
           return times;
         },
-      },
-      mounted: function () {
-
       },
     }
 </script>

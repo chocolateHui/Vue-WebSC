@@ -40,8 +40,9 @@
                 v-model="hoteInfo.opened " >
               </b-form-input>
             </b-form-group>
-            <b-form-group label="城&#8194;&#8194;&#8194;&#8194;市:" horizontal>
-              <el-select @change="citychange" v-model="hoteInfo.city" placeholder="请选择">
+            <b-form-group label="城&#8194;&#8194;&#8194;&#8194;市:"
+                          horizontal>
+              <el-select v-model="hoteInfo.city" @change="citychange"  clearable filterable placeholder="请输入或选择城市">
                 <el-option
                   v-for="item in cityList"
                   :key="item.code"
@@ -88,8 +89,9 @@
               >
               </b-form-input>
             </b-form-group>
-            <b-form-group label="城&#8194;&#8194;&#8194;&#8194;区:" horizontal>
-              <el-select v-model="hoteInfo.cityarea" placeholder="请选择">
+            <b-form-group label="城&#8194;&#8194;&#8194;&#8194;区:"
+                          horizontal>
+              <el-select v-model="hoteInfo.cityarea"  clearable filterable placeholder="请输入或选择城区">
                 <el-option
                   v-for="item in cityareaList"
                   :key="item.code"
@@ -362,12 +364,12 @@
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
           this.$http.post(methodinfo.getcntcode, {
-            citycode:_this.citycode
+            citycode:_this.citycode,
           }).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
                 this.cityareaList=response.data.citycodes
-                this.hoteInfo.cityarea=this.cityareaList[0]
+                this.hoteInfo.cityarea=this.cityareaList[0].code
               }
             }
           })
@@ -381,7 +383,11 @@
             }
           }
         }
-        this.getcityarealist()
+        if(this.hoteInfo.city!=''){
+          this.getcityarealist()
+        }else{
+          this.hoteInfo.cityarea=''
+        }
       },
       btnSave:function () {
         var emailreg= /(\S)+[@]{1}(\S)+[.]{1}(\w)+/;

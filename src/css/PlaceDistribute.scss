@@ -190,6 +190,7 @@ $colorAll:#b4b4b6;
       }
     }
     .item{
+      background-color: #fff;
       height: calc(100% + 0px);
       overflow-x: hidden; overflow-y: scroll;
       ul{
@@ -271,6 +272,7 @@ $colorAll:#b4b4b6;
       }
     }
     .item{
+      background-color: #fff;
       height: calc(100% - 42px); overflow-x: hidden; overflow-y: scroll;
       ul{
         border-bottom:1px solid $colorGray;border-left:1px solid $colorGray;border-right:1px solid $colorGray;
