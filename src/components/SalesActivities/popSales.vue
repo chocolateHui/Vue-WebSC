@@ -8,7 +8,7 @@
       <li><label class="title1 nofb">单位联系人</label>
         <input type="text" v-model="contact" class="contact" maxlength="25"></li>
       <li><label class="title2 nofb">单位联系方式</label>
-        <FormatInput type="number" maxlength="15" v-model="contactinfor" class="contactinfor"></FormatInput>
+        <FormatInput type="number" maxlength="11" v-model="contactinfor" class="contactinfor"></FormatInput>
        </li>
       <li><label class="title1">日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期</label>
         <el-date-picker
@@ -384,7 +384,7 @@
             }else{
               this.dayNowId=this.todayList[0].id
             }
-            if(this.diaryItemList){
+            if(this.diaryItemList.length>0){
               if(this.saletypea!=''){
                 this.popsaletypeid=this.saletypeid
               } else{
