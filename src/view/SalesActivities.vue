@@ -205,14 +205,6 @@
         this.$set(this,"salesFlag",this.salesFlag+1);
         this.$refs.myModalsale.show()
       },
-      //销售员选择
-      salesShow:function () {
-        if(this.dataType==1) {
-          this.ifSales = !this.ifSales
-        }else{
-          this.ifSales = false
-        }
-      },
       SalesSelect:function () {
         if(this.dataType==1){
            this.diaryParam = {
@@ -590,21 +582,19 @@
       this.$store.commit("set_loading",false);
       this.getList(this.myData);
       this.getbasecodelist()
-      this.$store.dispatch("getSale").then(()=>{
-        if(['02', '03'].indexOf(this.$store.getters.role) < 0){
-          this.SalesSelect()
-        }else{
-          this.salesId = this.$store.getters.empsale;
-        }
-        this.salelist = this.$store.getters.salelist;
+      this.$store.dispatch('encrypttoken').then(() => {
+        this.configDefault()
+        this.$store.dispatch("getSale").then(()=>{
+          if(['02', '03'].indexOf(this.$store.getters.role) < 0){
+            this.SalesSelect()
+          }else{
+            this.salesId = this.$store.getters.empsale;
+          }
+          this.salelist = this.$store.getters.salelist;
+        });
       });
       this.dataTime=this.toMonth()
        document.addEventListener('click',(e)=>{
-         if(this.$refs.refsales){
-           if (!this.$refs.refsales.contains(e.target)) {
-             this.ifSales = false
-           }
-         }
          if(this.$refs.refcalendar){
            if (!this.$refs.refcalendar.contains(e.target)) {
              this.calendarShow = false

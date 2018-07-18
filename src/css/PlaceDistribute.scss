@@ -227,8 +227,9 @@ $colorAll:#b4b4b6;
                span{ float:left;height: 24px;line-height: 24px; text-align: center; text-overflow: ellipsis; overflow: hidden;white-space: nowrap;}
               .n1{width: 105px; text-align: left;}
               &.it{
+                max-height: 150px;overflow-y: auto;
                 border-bottom: none; padding:0;border-top:none;
-                div{ padding:0 15px;border-bottom: 1px solid $colorGray;height: 24px;
+                div{ padding:0 15px;border-bottom: 1px solid $colorGray;height: 24px;overflow: hidden;
                   &:nth-child(2n){background: #f8f8f8;}
                 }
               }
@@ -299,8 +300,9 @@ $colorAll:#b4b4b6;
               span{ float:left;height: 24px;line-height: 24px; text-align: center; text-overflow: ellipsis; overflow: hidden;white-space: nowrap;}
               .n1{width: 105px; text-align: left;}
               &.it{
+                max-height: 150px;overflow-y: auto;
                 border-bottom: none; padding:0;border-top:none;
-                div{ padding:0 15px;border-bottom: 1px solid $colorGray;
+                div{ padding:0 15px;border-bottom: 1px solid $colorGray;overflow: hidden;
                   &:nth-child(2n){background: #f8f8f8;}
                 }
               }
