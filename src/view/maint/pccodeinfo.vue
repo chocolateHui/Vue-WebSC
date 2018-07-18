@@ -104,6 +104,7 @@
             <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
           </div>
           <el-table
+            ref="bbbb"
             :data="placedata"
             border
             stripe
@@ -653,6 +654,9 @@
         var newplace =  Object.assign({},placemoren);
         this.placedata.push(newplace);
         this.placesavetype = "update";
+        this.$nextTick(function(){
+          this.$refs.bbbb.bodyWrapper.scrollTop = this.$refs.bbbb.bodyWrapper.scrollHeight;
+        })
       },
       savep:function () {
 
