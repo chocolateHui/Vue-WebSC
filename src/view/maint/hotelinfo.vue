@@ -365,6 +365,7 @@
           this.configDefault()
           this.$http.post(methodinfo.getcntcode, {
             citycode:_this.citycode,
+            city: 'F'
           }).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
@@ -470,7 +471,7 @@
           float: right;
           margin-right: 15px;
           &:last-child{background:$colorE0;border-color:$colorE0}
-          /*<!--&:first-child{background: $colorCC;border-color:$colorCC}-->*/
+          &:first-child{background:#B2D9D5;border-color:#B2D9D5}
         }
       }
     }

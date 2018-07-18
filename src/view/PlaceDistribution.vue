@@ -2,8 +2,8 @@
   <div class="place_contain" id="place_contain" ref="contain">
     <div class="place_head clearfix">
       <ul>
-        <li class="all" @click="btnAllCheck"><i class="fa" :class="{'fa-check':ifAllCheck}"></i>所有</li>
-        <li @click="btnCheck(index)" v-for="(list, index)  in headList" :class="list.liStyle" ><i class="fa" :class="[list.iStyle, { 'fa-check': list.checked}]"></i>{{list.name}}</li>
+        <li class="all" @click="btnAllCheck"><i class="fa" :class="{'fa-check':ifAllCheck}"></i><span>所有</span></li>
+        <li @click="btnCheck(index)" v-for="(list, index)  in headList" :class="list.liStyle" ><i class="fa" :class="[list.iStyle, { 'fa-check': list.checked}]"></i><span>{{list.name}}</span></li>
       </ul>
       <ol>
         <li @click="listChange"><i class="fa fa-list"></i>列表</li>
@@ -71,7 +71,7 @@
                 </p>
               </h1>
               <div class="todayThings" lastChild="refthings":class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex===index1+'-'+index2}">
-                <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="timelist" :datatimeid="datatimeid" @addThings="addThings"></today-things>
+                <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="timelist" @addThings="addThings"></today-things>
               </div>
             </li>
           </ul>
@@ -110,7 +110,7 @@
                  </span>
               </span>
               <div class="todayThings" lastChild="refthings" v-show="activeIndex1==index1" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex1==index1}">
-                <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="datatime.substring(0,10)" :datatimeid="datatimeid" @addThings="addThings"></today-things>
+                <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="datatime.substring(0,10)" @addThings="addThings"></today-things>
               </div>
             </li>
           </ul>
@@ -201,7 +201,7 @@
         newChooseAddrNo:'',
         sta:'',
         placesinfo1:[],
-        placeSta:[]
+        placeSta:[],
       }
     },
     filters:{
@@ -509,7 +509,6 @@
         }
         var palceTop=event.clientY
         var bodyH=this.$refs.contain.offsetHeight;
-        // var thingsH=100;
         var thingsH=event.currentTarget.lastChild.offsetHeight
         var current=event.currentTarget
         _this.showtime=setTimeout(function(){
