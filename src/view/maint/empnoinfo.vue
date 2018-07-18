@@ -50,7 +50,7 @@
               <b-col>
                 <b-form>
                   <b-form-group label="工号:" horizontal>
-                    <FormatInput type="text" maxlength="10" v-model="expandempno.empno" :disabled="able.name&&!expandempno.flag"></FormatInput>
+                    <FormatInput type="text" maxlength="10" v-model="expandempno.empno" :disabled="able.name && !expandempno.flag"></FormatInput>
                   </b-form-group>
                   <b-form-group label="姓名:"
                                 horizontal>
@@ -201,11 +201,14 @@
     {  prop: 'hoteldes', label:  '所属酒店',width:'',sortable:true }
   ]
   const able = {name:true,hotelinput:true}
+  const disable = {name:false,hotelinput:false}
 
   export default {
     data () {
       return {
         newp:true,
+        isnew:true,
+        flag:true,
         getempnolist: [],
         fildes :fildes,
         saleid: '',
@@ -233,7 +236,7 @@
         deptno:'',
         htljob:'',
         hotelid:'',
-        isGourp:false,
+        isGroup:false,
         locked:'F',
         able:able,
         oldpassword: '',
@@ -273,6 +276,7 @@
       this.getHotel();
       this.getEmpnolist();
       this.getDeptlist();
+      this.name = false;
     },
     methods: {
       configDefault:function () {
@@ -332,6 +336,7 @@
           //若是新增的就直接删除不用走服务端
           if(cs.row.hasOwnProperty("isnew")){
             this.getempnolist.splice(cs.$index,1);
+            this.newp = true
           }else{
             this.$store.dispatch('encrypttoken').then(() => {
               this.configDefault()
@@ -376,7 +381,7 @@
       newProp:function(){
         if(this.newp){
           this.newp = false;
-          this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:'T'});
+          this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:true });
           this.expands.push('');
         }else{
           this.$message.error('请先保存新建员工信息!');
@@ -440,6 +445,7 @@
 
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
+            console.info(val.flag)
             if (val.flag) {
               this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
                 if (response.data.errorCode === "0") {
