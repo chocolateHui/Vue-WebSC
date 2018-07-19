@@ -23,7 +23,7 @@
               <ol>
                 <li data-id="1" v-for="(item,index) in basecodeslist"><i class="fa" :class="{'fa-check':typeof item.ifTypeCheck=='undefined'?true:item.ifTypeCheck}" @click="typeCheck(item)"></i>{{item.descript}}</li>
               </ol>
-              <input type="button" class="btn_ok" ref="reftypeok" value="确定" @click="thingTypeOk" />
+              <input type="button" class="btn_ok" ref="reftypeok" value="确定"@click="thingTypeOk" />
             </div>
           </li>
           <li><span class="el-icon-date" @click="btnDataTime" ref="refcalen">{{datatime}}</span>
@@ -255,6 +255,14 @@
             this.timeAll[2].content.push(content1)
           }
           this.todayHour.push(num+':00')
+        }
+      }
+      var self=this;
+      document.onkeydown=function(e) {
+        var key = window.event.keyCode;
+        if(key==27){
+          self.calenShow = false
+          self.ifThingType = false
         }
       }
     },
@@ -732,7 +740,7 @@
         if(month<10){month="0"+month;}
         var times = date1.getFullYear() + "-" + month + "-" + day;
         return times;
-      }
+      },
     },
     mounted: function () {
       this.$nextTick(function () {
