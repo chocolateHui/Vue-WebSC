@@ -104,6 +104,7 @@
             <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
           </div>
           <el-table
+            ref="bbbb"
             :data="placedata"
             border
             stripe
@@ -316,7 +317,7 @@
         },
         currentRow: null,
         placeRow: null,
-        tableH: document.body.clientHeight-278,//减去header的278px
+        tableH: document.body.clientHeight-293,//减去header的278px
         num:0,
         change:"",
       }
@@ -653,6 +654,9 @@
         var newplace =  Object.assign({},placemoren);
         this.placedata.push(newplace);
         this.placesavetype = "update";
+        this.$nextTick(function(){
+          this.$refs.bbbb.bodyWrapper.scrollTop = this.$refs.bbbb.bodyWrapper.scrollHeight;
+        })
       },
       savep:function () {
 
@@ -822,12 +826,12 @@
       padding-right: 0px;
     }
     .maxwidth20{
-      flex: 0 0 20.5%;
-      max-width: 20.5%;
+      flex: 0 0 21%;
+      max-width: 21%;
     }
     .maxwidth70{
-      flex: 0 0 79.5%;
-      max-width: 79.5%;
+      flex: 0 0 78.5%;
+      max-width: 78.5%;
     }
     .maxwidth15{
       flex: 0 0 10%;
@@ -878,6 +882,7 @@
       .cell {
         padding-left: 5px;
         padding-right: 5px;
+        cursor: pointer;
         .form-inline{
           .btn:not(:last-child){ margin-right: 3px; }
         }
@@ -905,9 +910,10 @@
       }
       .btng-r{float: right;}
       .btng-l{float: left;}
-    }
-    .side-btn{
-      width: 85px;
+      .btn.disabled, .btn:disabled{
+        background-color: #c8c9ca!important;
+        border-color: #c8c9ca!important;
+      }
     }
     .form-row > .col, .form-row > [class*="col-"] {
       padding-right: 0px;

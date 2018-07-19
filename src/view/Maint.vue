@@ -126,7 +126,7 @@
     },
     watch: {
       filterText(val) {
-        this.$refs.tree2.filter(val);
+        this.$refs.maintTree.filter(val);
       }
     },
     methods: {
