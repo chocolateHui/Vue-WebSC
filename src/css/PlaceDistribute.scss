@@ -294,7 +294,7 @@ $colorAll:#b4b4b6;
             >span{ background:#EEEEEF; float:left; height:24px; width:3.33%;overflow: hidden}
           }
           ol{
-            background:$colorWhite; border-radius:3px; box-shadow:0 0 15px $color4C; position:absolute; min-height:100px; padding-bottom:10px; width:470px; z-index:9;
+            background:$colorWhite; border-radius:3px; min-height:100px; width:470px; z-index:9;
             >li{
               &.head{ background:#f0f0f0;overflow:hidden; padding:0 15px;border-top: 1px solid $colorGray;border-bottom: 1px solid $colorGray;}
               span{ float:left;height: 24px;line-height: 24px; text-align: center; text-overflow: ellipsis; overflow: hidden;white-space: nowrap;}

@@ -70,7 +70,7 @@
                   </span>
                 </p>
               </h1>
-              <div class="todayThings" lastChild="refthings":class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex===index1+'-'+index2}">
+              <div class="todayThings" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex===index1+'-'+index2}">
                 <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="timelist" @addThings="addThings"></today-things>
               </div>
             </li>
@@ -109,9 +109,9 @@
                    <span v-if="colorlist.dataid==infolist.sta" v-for="colorlist in headList" class="bgtime2" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]"></span>
                  </span>
               </span>
-              <div class="todayThings" lastChild="refthings" v-show="activeIndex1==index1" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex1==index1}">
+              <div class="todayThings clearfix" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex1==index1}">
                 <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="datatime.substring(0,10)" @addThings="addThings"></today-things>
-              </div>
+               </div>
             </li>
           </ul>
         </div>
@@ -523,7 +523,7 @@
           }else{
             _this.isleft=true
           }
-          if(bodyH-palceTop<thingsH-80){
+          if(bodyH-palceTop<thingsH-70){
             _this.isBottom=true
           }else{
             _this.isBottom=false
@@ -811,7 +811,6 @@
     .todayThings{
       background: #fff;
       position: absolute;
-      min-height: 100px;
       padding-bottom: 10px;
       width: 470px;
       z-index: -1;

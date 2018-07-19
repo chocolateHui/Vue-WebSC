@@ -17,7 +17,7 @@
           placeholder="选择日期">
         </el-date-picker>
       </li>
-      <li><i class="fa" :class="{'fa-check':ifcheck}" id="instructions"></i>是否已批示</li>
+      <li><i class="fa" :class="{'fa-check':ifcheck,'bgSales':!ifcheck}" id="instructions"></i>是否已批示</li>
       <li style="padding-left: 15px;width: 258px">
         <b-form-group label="销售类型&#8194;" horizontal>
           <el-select v-model="popsaletypeid" filterable>
