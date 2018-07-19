@@ -40,13 +40,14 @@
                 v-model="hoteInfo.opened " >
               </b-form-input>
             </b-form-group>
-            <b-form-group label="城&#8194;&#8194;&#8194;&#8194;市:" horizontal>
-              <el-select @change="citychange" v-model="hoteInfo.city" placeholder="请选择">
+            <b-form-group label="城&#8194;&#8194;&#8194;&#8194;市:"
+                          horizontal>
+              <el-select v-model="hoteInfo.city" @change="citychange"  clearable filterable placeholder="请输入或选择城市">
                 <el-option
                   v-for="item in cityList"
-                  :key="item.code"
+                  :key="item.citycode"
                   :label="item.descript"
-                  :value="item.code">
+                  :value="item.citycode">
                 </el-option>
               </el-select>
             </b-form-group>
@@ -88,8 +89,9 @@
               >
               </b-form-input>
             </b-form-group>
-            <b-form-group label="城&#8194;&#8194;&#8194;&#8194;区:" horizontal>
-              <el-select v-model="hoteInfo.cityarea" placeholder="请选择">
+            <b-form-group label="城&#8194;&#8194;&#8194;&#8194;区:"
+                          horizontal>
+              <el-select v-model="cityarea"  clearable filterable placeholder="请输入或选择城区">
                 <el-option
                   v-for="item in cityareaList"
                   :key="item.code"
@@ -247,6 +249,7 @@
         cityareaList:[],
         citycode:'',
         hotelid:'',
+        cityarea:'',
         ifFirst:false,
         hotelStatusNow:'',
         modelTitle:'初始化'
@@ -313,7 +316,7 @@
               if (response.data.errorCode=="0") {
                 this.hoteInfo=response.data
                 this.modelTitle='初始化'+this.hoteInfo.descript
-                this.hoteInfo.cityarea=''
+                this.getcityarealist(this.hoteInfo.city,1)
                 this.hotelStatusNow=this.hoteInfo.sta
                 if(this.hoteInfo.sign==0){
                   this.getisnewhotel()
@@ -357,17 +360,26 @@
         })
       },
       //获取城区
-      getcityarealist:function(){
+      getcityarealist:function(val,index){
         var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
           this.$http.post(methodinfo.getcntcode, {
-            citycode:_this.citycode
+            citycode:val,
+            city: 'F'
           }).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
                 this.cityareaList=response.data.citycodes
-                this.hoteInfo.cityarea=this.cityareaList[0]
+                if(index==2){
+                  this.cityarea=this.cityareaList[0].code
+                }else{
+                  this.cityareaList.forEach((item)=>{
+                    if(item.code==this.hoteInfo.cityarea){
+                      this.cityarea=item.code
+                    }
+                  })
+                }
               }
             }
           })
@@ -376,14 +388,19 @@
       citychange:function (val) {
         if(this.cityList.length){
           for(var t=0;t<this.cityList.length;t++){
-            if(this.cityList[t].code==val){
+            if(this.cityList[t].citycode==val){
               this.citycode=this.cityList[t].citycode
             }
           }
         }
-        this.getcityarealist()
+        if(this.hoteInfo.city!=''){
+          this.getcityarealist(this.citycode,2)
+        }else{
+          this.cityarea=''
+        }
       },
       btnSave:function () {
+        this.hoteInfo.cityarea=this.cityarea
         var emailreg= /(\S)+[@]{1}(\S)+[.]{1}(\w)+/;
         if(this.sign==1&&this.innhotel==''){
           this.$message({message: "请选择酒店", type: 'warning'});
@@ -464,7 +481,7 @@
           float: right;
           margin-right: 15px;
           &:last-child{background:$colorE0;border-color:$colorE0}
-          /*<!--&:first-child{background: $colorCC;border-color:$colorCC}-->*/
+          &:first-child{background:#B2D9D5;border-color:#B2D9D5}
         }
       }
     }

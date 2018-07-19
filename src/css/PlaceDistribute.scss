@@ -73,6 +73,11 @@ $colorAll:#b4b4b6;
       i{
         background: $colorWhite;border-radius: 20px; cursor:pointer; height:18px;line-height: 18px; width:18px; float:left; margin-right:8px; text-align: center;
       }
+      span{
+        height: 18px;
+        line-height: 18px;
+        display: inline-block;
+      }
       &.all{
         background:$colorAll;
         i{color: $colorAll;}
@@ -190,6 +195,7 @@ $colorAll:#b4b4b6;
       }
     }
     .item{
+      background-color: #fff;
       height: calc(100% + 0px);
       overflow-x: hidden; overflow-y: scroll;
       ul{
@@ -217,16 +223,17 @@ $colorAll:#b4b4b6;
           }
           ol{
             >li{
-              &.head{ background:#f8f8f8;overflow:hidden; padding:0 15px;border-top: 1px solid $colorGray;border-bottom: 1px solid $colorGray;}
+              &.head{ background:#f0f0f0;overflow:hidden; padding:0 15px;border-top: 1px solid $colorGray;border-bottom: 1px solid $colorGray;}
                span{ float:left;height: 24px;line-height: 24px; text-align: center; text-overflow: ellipsis; overflow: hidden;white-space: nowrap;}
-              .n1{width: 125px; text-align: left;}
+              .n1{width: 105px; text-align: left;}
               &.it{
+                max-height: 150px;overflow-y: auto;
                 border-bottom: none; padding:0;border-top:none;
-                div{ padding:0 15px;border-bottom: 1px solid $colorGray;
+                div{ padding:0 15px;border-bottom: 1px solid $colorGray;height: 24px;overflow: hidden;
                   &:nth-child(2n){background: #f8f8f8;}
                 }
               }
-              .n1{color: $colorHeadBtn; cursor: pointer;}
+              .n1{cursor: pointer;}
               .n2{width: 55px;}
               .n3{width: 90px;}
               .n4{width: 45px;}
@@ -235,7 +242,7 @@ $colorAll:#b4b4b6;
               .n7{width: 45px;}
               &:first-child{ color:$colorHeadBtn; height:30px; line-height:30px; text-align:center;}
             }
-            >.btn_add{ background-size: 13px; color: $color752;cursor:pointer;display: inline-block;margin-left: 182px;margin-top: 8px; padding-left: 17px;}
+            >.btn_add{ background-size: 13px; color: $color752;cursor:pointer;display: inline-block;margin-left: 182px;margin-top: 12px; padding-left: 17px;}
           }
         }
       }
@@ -271,6 +278,7 @@ $colorAll:#b4b4b6;
       }
     }
     .item{
+      background-color: #fff;
       height: calc(100% - 42px); overflow-x: hidden; overflow-y: scroll;
       ul{
         border-bottom:1px solid $colorGray;border-left:1px solid $colorGray;border-right:1px solid $colorGray;
@@ -286,18 +294,19 @@ $colorAll:#b4b4b6;
             >span{ background:#EEEEEF; float:left; height:24px; width:3.33%;overflow: hidden}
           }
           ol{
-            background:$colorWhite; border-radius:3px; box-shadow:0 0 15px $color4C; position:absolute; min-height:100px; padding-bottom:10px; width:470px; z-index:9;
+            background:$colorWhite; border-radius:3px; min-height:100px; width:470px; z-index:9;
             >li{
-              &.head{ background:#f8f8f8;overflow:hidden; padding:0 15px;border-top: 1px solid $colorGray;border-bottom: 1px solid $colorGray;}
+              &.head{ background:#f0f0f0;overflow:hidden; padding:0 15px;border-top: 1px solid $colorGray;border-bottom: 1px solid $colorGray;}
               span{ float:left;height: 24px;line-height: 24px; text-align: center; text-overflow: ellipsis; overflow: hidden;white-space: nowrap;}
-              .n1{width: 125px; text-align: left;}
+              .n1{width: 105px; text-align: left;}
               &.it{
+                max-height: 150px;overflow-y: auto;
                 border-bottom: none; padding:0;border-top:none;
-                div{ padding:0 15px;border-bottom: 1px solid $colorGray;
+                div{ padding:0 15px;border-bottom: 1px solid $colorGray;overflow: hidden;
                   &:nth-child(2n){background: #f8f8f8;}
                 }
               }
-              .n1{color: $colorHeadBtn; cursor: pointer;}
+              .n1{cursor: pointer;}
               .n2{width: 55px;}
               .n3{width: 90px;}
               .n4{width: 45px;}
@@ -306,7 +315,7 @@ $colorAll:#b4b4b6;
               .n7{width: 45px;}
               &:first-child{ color:$colorHeadBtn; height:30px; line-height:30px; text-align:center;}
             }
-            .btn_add{background-size: 13px; color: $color752;cursor:pointer;display: inline-block;margin-left: 182px;margin-top: 8px; padding-left: 17px;}
+            .btn_add{background-size: 13px; color: $color752;cursor:pointer;display: inline-block;margin-left: 182px;margin-top: 12px; padding-left: 17px;}
           }
         }
       }

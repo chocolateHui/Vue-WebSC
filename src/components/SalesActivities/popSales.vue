@@ -8,7 +8,7 @@
       <li><label class="title1 nofb">单位联系人</label>
         <input type="text" v-model="contact" class="contact" maxlength="25"></li>
       <li><label class="title2 nofb">单位联系方式</label>
-        <FormatInput type="number" maxlength="15" v-model="contactinfor" class="contactinfor"></FormatInput>
+        <FormatInput type="number" maxlength="11" v-model="contactinfor" class="contactinfor"></FormatInput>
        </li>
       <li><label class="title1">日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期</label>
         <el-date-picker
@@ -17,7 +17,7 @@
           placeholder="选择日期">
         </el-date-picker>
       </li>
-      <li><i class="fa" :class="{'fa-check':ifcheck}" id="instructions"></i>是否已批示</li>
+      <li><i class="fa" :class="{'fa-check':ifcheck,'bgSales':!ifcheck}" id="instructions"></i>是否已批示</li>
       <li style="padding-left: 15px;width: 258px">
         <b-form-group label="销售类型&#8194;" horizontal>
           <el-select v-model="popsaletypeid" filterable>
@@ -384,7 +384,7 @@
             }else{
               this.dayNowId=this.todayList[0].id
             }
-            if(this.diaryItemList){
+            if(this.diaryItemList.length>0){
               if(this.saletypea!=''){
                 this.popsaletypeid=this.saletypeid
               } else{
