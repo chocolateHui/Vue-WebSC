@@ -103,6 +103,7 @@
                   });
                 }else{
                   this.$alert(response.data.errorMessage)
+                  loading.close();
                 }
               });
             })
