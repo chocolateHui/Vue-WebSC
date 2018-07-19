@@ -241,7 +241,7 @@
     }
     .pagination{
       float: right;
-      padding: 5px 10px;
+      padding: 5px 0px;
     }
     .el-table__expanded-cell{
       padding: 5px!important;
