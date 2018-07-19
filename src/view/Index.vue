@@ -51,30 +51,35 @@
                 style="width: 100%">
                 <el-table-column
                   property="descript"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="事务名称"
                   width="">
                 </el-table-column>
                 <el-table-column
                   property="codedes"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="场地描述"
                   width="80">
                 </el-table-column>
                 <el-table-column
                   property="typedes"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="类型"
                   width="50">
                 </el-table-column>
                 <el-table-column
                   property="bdate"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="事务日期"
                   width="84">
                 </el-table-column>
                 <el-table-column
                   property="begintime"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="开始时间"
                   width="70">
@@ -96,24 +101,28 @@
                 style="width: 100%">
                 <el-table-column
                   property="name"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="宴会名称"
                   width="120">
                 </el-table-column>
                 <el-table-column
                   property="saleid_name"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="销售员"
                   width="80">
                 </el-table-column>
                 <el-table-column
                   :show-overflow-tooltip=true
+                  align="center"
                   property="arr"
                   label="抵达日期"
                   width="">
                 </el-table-column>
                 <el-table-column
                   property="remark"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="备注"
                   width="80">
@@ -135,12 +144,14 @@
                 style="width: 100%">
                 <el-table-column
                   property="name"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="宴会名称"
                   width="">
                 </el-table-column>
                 <el-table-column
                   property="saleid_name"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="销售员"
                   width="tableHeight">
@@ -216,9 +227,11 @@
         myChart.setOption({
           title: {
             subtext: "宴会总场地"+this.maxnum+"场",
-            left: 15,
+            left: '40%',
             top:10,
             subtextStyle: {
+              width:'20%',
+              align:'center',
               fontSize: 16,
               fontFamily: "Microsoft YaHei",
               // fontWeight: "bold",
@@ -722,6 +735,7 @@
       padding-left: 0px;
       margin-right: 0px;
       margin-left: 0px;
+      padding-top: 3px;
     }
     .refresh {
       float: right;
