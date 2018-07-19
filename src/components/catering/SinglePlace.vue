@@ -243,7 +243,8 @@
       padding: 5px 10px;
     }
     .row{
-      margin-right: 0;
+      margin-left: -15px !important;
+      margin-right: -15px !important;
       margin-bottom: 5px;
     }
     .footer-row{
@@ -251,6 +252,7 @@
       border-top: 1px solid #e9ecef;
       padding-top: 5px;
       margin-top: 43.5px;
+      margin-left: 0 !important;
       .btn{
         width: 100px;
       }

@@ -71,7 +71,7 @@
     created(){
       this.$http.defaults.headers.common['hotelid'] = this.hotel.hotelid
       this.$http.defaults.headers.common['groupid'] = this.groupid
-      this.$http.defaults.headers.common['username'] = this.username
+      this.$http.defaults.headers.common['username'] = this.$store.getters.username
     },
     methods: {
       ...mapMutations([

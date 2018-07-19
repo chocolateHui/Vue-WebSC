@@ -103,7 +103,7 @@
             width="100">
             <template slot-scope="scope">
                 <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
-                <b-button size="mini" class="Delete-button image-btn" type="danger" @click="saveitem(scope.row)"></b-button>
+                <b-button size="mini" class="Save-button image-btn" type="danger" @click="saveitem(scope.row)"></b-button>
                 <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log2(scope)"></b-button>
             </template>
           </el-table-column>
