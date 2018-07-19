@@ -114,7 +114,8 @@
                       <el-option v-for="item in getdeptlist"
                         :key = item.code
                         :value="item.code"
-                        :label="item.descript">
+                        :label="item.descript"
+                        :show-overflow-tooltip="item.showTip">
                       </el-option>
                     </el-select>
                   </b-form-group>
@@ -196,8 +197,8 @@
     {  prop: 'empno', label:  '工号',width:'100',sortable:true },
     {  prop: 'empname', label:  '姓名',width:'',sortable:true,showTip:true},
     {  prop: 'saleid', label:  '销售员ID',width:'100',sortable:true,showTip:true},
-    {  prop: 'deptnodes', label:  '岗位',width:'100',sortable:true },
-    {  prop: 'htljobdes', label:  '角色',width:'100',sortable:true },
+    {  prop: 'deptnodes', label:  '岗位',width:'100',sortable:true,showTip:true },
+    {  prop: 'htljobdes', label:  '角色',width:'100',sortable:true,showTip:true },
     {  prop: 'hoteldes', label:  '所属酒店',width:'',sortable:true }
   ]
   const able = {name:true,hotelinput:true}
@@ -354,7 +355,9 @@
         })
       },
       expandChange:function (row, expandedRows) {
-        if(expandedRows.length>1){
+        if(expandedRows.length>1 || row.hasOwnProperty("isnew")){
+          this.getempnolist.pop();
+          this.newp = true;
           let index = 0;
           for (let expandrow of expandedRows) {
             if (expandrow.empno !== row.empno) {
@@ -375,7 +378,11 @@
             })
           )
         }
-
+//        if(row.hasOwnProperty("isnew")){
+//          alert(1)
+//          this.getempnolist.pop();
+//          this.newp = true;
+//        }
         this.expandempno = Object.assign({},row);
       },
       newProp:function(){
@@ -383,6 +390,9 @@
           this.newp = false;
           this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:true });
           this.expands.push('');
+          this.$nextTick(function(){
+            this.$refs.empnotable.bodyWrapper.scrollTop =this.$refs.empnotable.bodyWrapper.scrollHeight;
+          })
         }else{
           this.$message.error('请先保存新建员工信息!');
         }
@@ -525,13 +535,16 @@
           &::after {
             width: 1.25rem;
             height: 1.25rem;
-            top:0rem;
+            top:0.135rem;
           }
         }
       }
       .container-fluid{
         >.row{
           margin-bottom: 10px;
+          .el-input{
+            .el-input__inner {height: 35px!important;}
+          }
           .my-1:last-of-type{
             .btn-primary{
               background: #7EB2DD;
@@ -559,13 +572,31 @@
           }
         }
         .el-table__body-wrapper{
+          .el-table__row{
+            .cell{ white-space: nowrap;}
+          }
           .row{
             .form-row{
               height:45px;
               .col-sm-9{
-                .custom-control-label::after{
-                  top: 0.21rem;
-                  left: -1.55rem;
+                .custom-control{
+                  .custom-control-label::after{
+                    top: 0.5rem;
+                    left: -1.25rem;
+                  }
+                }
+                .custom-control:last-child{
+                  .custom-control-label::after{
+                    top: 0.5rem;
+                    left: -1.2rem;
+                  }
+                }
+                .custom-radio .custom-control-input:checked ~ .custom-control-label::after{
+                  background-image: none;
+                  background-color: #fff;
+                  border-radius: 50%;
+                  height: 0.45rem;
+                  width: 0.45rem;
                 }
                 .el-select{
                   width: 100%;

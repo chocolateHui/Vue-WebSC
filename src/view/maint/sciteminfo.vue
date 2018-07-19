@@ -115,6 +115,7 @@
             <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
           </div>
           <el-table
+            ref="bbbb"
             id="itemtable"
             :data="placedata"
             border
@@ -662,6 +663,9 @@
         newplace["classcode"] = this.currentRow.classcode;
         this.placedata.push(newplace);
         this.placesavetype = "update";
+        this.$nextTick(function(){
+          this.$refs.bbbb.bodyWrapper.scrollTop = this.$refs.bbbb.bodyWrapper.scrollHeight;
+        })
       },
       savep:function () {
 
