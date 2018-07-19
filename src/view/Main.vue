@@ -296,7 +296,7 @@
       border-bottom: 1px solid $colorBorder;
     }
     .viewDiv{
-      padding-top: 0.75rem;
+      padding-top: 15px;
       overflow: auto;
     }
     .notetip{
