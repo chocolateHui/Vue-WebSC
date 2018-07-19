@@ -545,6 +545,14 @@
           .el-input{
             .el-input__inner {height: 35px!important;}
           }
+          .my-1{
+            .form-row{
+              .col-sm-3{
+                flex: 0 0 13%;
+                max-width: 13%;
+              }
+            }
+          }
           .my-1:last-of-type{
             .btn-primary{
               background: #7EB2DD;
