@@ -1,10 +1,11 @@
 <!-- 模板组件，用于模拟不同路由下的组件显示 -->
 <template>
-  <div id="Lossstatistics">
+  <div id="Futureincome">
     <b-container fluid>
       <!-- User Interface controls -->
-      <b-row>
-        <b-col sm="4" class="my-1">
+      <b-row style="margin-bottom:5px">
+        <b-col sm="5" class="my-1">
+          <b-form-group horizontal label="报表日期" class="mb-0">
           <el-date-picker
             v-model="reportdate"
             value-format="yyyy-MM-dd"
@@ -13,22 +14,22 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
+          </b-form-group>
         </b-col>
         <b-col sm="4" class="my-1">
-
         </b-col>
-        <b-col sm="4" class="my-1">
+        <b-col sm="3" class="my-1">
           <b-form-group class="mb-0">
             <b-button @click="getreportdata" variant="primary">查询</b-button>
             <b-button @click="exportexcel" variant="success">导出</b-button>
           </b-form-group>
         </b-col>
       </b-row>
-      <label v-if="!reportdate">请选择报表开始和结束日期</label>
-      <label v-else>
-        <span>开始日期:{{reportdate[0]}}</span>
-        <span> 结束日期:{{reportdate[1]}}</span>
-      </label>
+      <!--<label v-if="!reportdate">请选择报表开始和结束日期</label>-->
+      <!--<label v-else>-->
+        <!--<span>开始日期:{{reportdate[0]}}</span>-->
+        <!--<span> 结束日期:{{reportdate[1]}}</span>-->
+      <!--</label>-->
       <el-table
         id="datatable"
         ref="datatable"
@@ -234,9 +235,15 @@
   }
 </script>
 <style lang="scss"  type="text/scss">
-  #Lossstatistics{
+  #Futureincome{
+    .el-input_icon{
+      margin-top: -2px;
+    }
     .el-date-editor .el-range-separator{
       padding: 0;
+    }
+    .el-input_icon{
+      margin-top: -2px;
     }
     caption{
       caption-side: top;width: 100%;
@@ -258,6 +265,7 @@
     }
     .el-table td, .el-table th{
       padding: 0;
+      background: linear-gradient(#fff, #F4F5F6);
     }
     .el-table .caret-wrapper{
       width: 20px;

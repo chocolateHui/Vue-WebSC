@@ -8,8 +8,8 @@
                 <h1 class="titletext">西软宴会与销售系统</h1>
               </div>
               <div style="position: relative">
-                <div class="widget-body" style="border-radius:5px;background: white">
-                  <div style="padding: 12px">
+                <div class="widget-body" style="border-radius:3px;background: white">
+                  <div style="padding: 30px">
                     <div class="login-title">用户登录</div>
                     <label class="block">
                       <b-input-group>
@@ -34,7 +34,7 @@
                         <b-input-group-text slot="append">
                           <i class="appendicon fa fa-toggle-down" @click.native="hotelclick"></i>
                         </b-input-group-text>
-                        <b-form-input :value="hotel.descript" @click.native="hotelclick" placeholder="请选择酒店" readonly></b-form-input>
+                        <b-form-input class="hotel-input" :value="hotel.descript" @click.native="hotelclick" placeholder="请选择酒店" readonly></b-form-input>
                       </b-input-group>
                       <label class="errorlabel" v-show="hotelErrorShow">请先选择酒店!</label>
                     </label>
@@ -90,6 +90,7 @@
               hotelErrorShow:false,
               hasGroupid:false,
               isFirefox:true,
+              hasToken:false,
               empnoType:'SC'
             };
         },
@@ -124,87 +125,122 @@
           this.isFirefox = userAgent.indexOf("Firefox")>=0
         },
         methods:{
-            ...mapMutations([
-                'setUsername',
-                'setGroupid',
-            ]),
-            updatevalue:function (value) {
-                this.password = value;
-            },
-            hotelclick:function () {
-              if(!this.groupid||this.groupid===''){
-                this.$root.$emit('bv::show::popover', 'helpbtn');
-                return;
-              }
-                if(!this.hotelShow) {
-                    this.$store.dispatch('gethotels');
-                }
-                this.hotelShow = !this.hotelShow;
-            },
-            userclick:function () {
-                this.hotelShow = false;
-            },
-            login:function () {
-              if(!this.groupid||this.groupid===''){
-                this.$root.$emit('bv::show::popover', 'helpbtn');
-                return;
-              }
-                if(!this.username){
-                    this.userErrorShow = true;
-                    return;
-                }else{
-                    this.userErrorShow = false;
-                }
-                if(!this.password){
-                    this.$store.commit('setLoginerror',"密码不能为空");
-                    return;
-                }else{
-                    this.$store.commit('setLoginerror',"");
-                }
-
-                if(!this.hotel){
-                    this.hotelErrorShow = true;
-                    return;
-                }else{
-                    this.hotelErrorShow = false;
-                }
-                let empnoChange = false;
-                if(this.username!== this.empno.empno){
-                  empnoChange = true;
-                }
-
-                let tokenparam = {
-                    groupid:this.groupid,
-                    hotelid:this.hotel.hotelid,
-                    username:this.username,
-                    password:this.password,
-                };
-                //获取token
-                this.$store.dispatch('gettoken',tokenparam).then(() => {
-                    //加密token
-                    this.$store.dispatch('encrypttoken').then(() => {
-                        //获取工号信息,完成后进行路由
-                        this.$store.dispatch('getsysempno',this.$store.getters.signature).then(() => {
-                          if(this.isHotelChange||empnoChange){
-                            this.$store.commit('initTabs');
-                            this.$store.commit('setHotelChange',false);
-                          }
-                          this.$http.defaults.headers.common['username'] = this.username
-                          this.$http.defaults.headers.common['hotelid'] = this.hotel.hotelid
-                          this.$http.defaults.headers.common['groupid'] = this.groupid
-                          this.$store.dispatch('getAllSysoption')
-                          this.password = ''
-                          this.$router.push({path:"/main/index"})
-                        })
-                    })
-                }).catch(function () {
-
-                })
+          ...mapMutations([
+            'setUsername',
+            'setGroupid',
+          ]),
+          updatevalue: function (value) {
+            this.password = value;
+          },
+          userclick: function () {
+            this.hotelShow = false;
+          },
+          inputCheck(){
+            if (!this.username) {
+              this.userErrorShow = true;
+              return false;
+            } else {
+              this.userErrorShow = false;
             }
+
+            if (!this.password) {
+              this.$store.commit('setLoginerror', "请先输入密码!");
+              return false;
+            } else {
+              this.$store.commit('setLoginerror', "");
+            }
+
+            return true;
+          },
+          getToken(){
+            return new Promise((resolve, reject)=>{
+              let empnoChange = false;
+              if (this.username !== this.empno.empno) {
+                empnoChange = true;
+              }
+
+              if(this.hasToken && !empnoChange){
+                resolve();
+              }
+
+              let tokenparam = {
+                groupid: this.groupid,
+                hotelid: this.hotel.hotelid,
+                username: this.username,
+                password: this.password,
+              };
+              //获取token
+              this.$store.dispatch('gettoken', tokenparam).then(() => {
+                //加密token
+                this.$store.dispatch('encrypttoken').then(() => {
+                  this.hasToken = true;
+                  resolve();
+                })
+              }).catch(()=>{
+                reject();
+              })
+            })
+          },
+          hotelclick: function () {
+            if (!this.groupid || this.groupid === '') {
+              this.$root.$emit('bv::show::popover', 'helpbtn');
+              return;
+            }
+
+            if (!this.inputCheck()) {
+              return;
+            }
+
+            this.getToken().then(()=>{
+              if (!this.hotelShow) {
+                this.$store.dispatch('gethotels');
+              }
+              this.hotelShow = !this.hotelShow;
+            })
+          },
+          login: function () {
+            if (!this.groupid || this.groupid === '') {
+              this.$root.$emit('bv::show::popover', 'helpbtn');
+              return;
+            }
+            if (!this.inputCheck()) {
+              return;
+            }
+            if (!this.hotel) {
+              this.hotelErrorShow = true;
+              return;
+            } else {
+              this.hotelErrorShow = false;
+            }
+            let empnoChange = false;
+            if (this.username !== this.empno.empno) {
+              empnoChange = true;
+            }
+            this.getToken().then(()=>{
+              //获取工号信息,完成后进行路由
+              this.$store.dispatch('getsysempno', this.$store.getters.signature).then(() => {
+                if (this.isHotelChange || empnoChange) {
+                  this.$store.commit('initTabs');
+                  this.$store.commit('setHotelChange', false);
+                }
+                this.$http.defaults.headers.common['username'] = this.username
+                this.$http.defaults.headers.common['hotelid'] = this.hotel.hotelid
+                this.$http.defaults.headers.common['groupid'] = this.groupid
+                this.$store.dispatch('getAllSysoption')
+                this.password = ''
+                this.$router.push({path: "/main/index"})
+              })
+            })
+          }
         },
         watch:{
           loginerror(val, oldVal) {
-                this.passwordErrorShow = !!val;
+            this.passwordErrorShow = !!val;
+          },
+          password(val,oldval){
+            if(val!==oldval && this.hasToken){
+              this.hasToken = false;
+            }
           }
         },
         components: {
@@ -243,28 +279,40 @@
     width: 20px
   }
   .block{
-    width: 100%
+    width: 100%;
+    margin-bottom: .9rem;
+    .login-button{
+      width: 100%;
+      background:$color11;
+      margin-top: 10px;
+      border: none;
+    }
+    .login-button:focus,.login-button:hover{
+      opacity: 0.9;
+    }
+    .hotel-input{
+      cursor: pointer;
+    }
+    .hotel-input[readonly]{
+      background-color: white;
+    }
+    .errorlabel{
+      font-size: 0.9rem;
+      color: red;
+      padding-left: 5px
+    }
   }
   .titletext
   {
-    font-size: 2rem;
+    font-size: 1.7rem;
     color: white;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
   }
   .login-title{
-    font-size:1.5rem;
+    font-size:1.2rem;
     color:#4C8FBD;
-    padding-bottom:5px
-  }
-  .login-button{
-    width: 100%;
-    background:$color11
-  }
-  .errorlabel{
-    font-size: 0.9rem;
-    color: red;
-    padding-left: 5px
+    padding-bottom:10px;
   }
   .help-btn{
     position: absolute;

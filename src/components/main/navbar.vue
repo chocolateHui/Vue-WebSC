@@ -13,33 +13,27 @@
           <b-nav-item @click="setFullscreen" style="background-color:#F4BD51!important;">
             <i class="fa" :class="ScreenClass"></i>
           </b-nav-item>
-          <b-nav-item v-popover:msgpop style="background-color:#DADE48!important;">
-            <i class="fa fa-bell">
-              <b-badge variant="danger" v-show="message">14</b-badge>
-            </i>
-          </b-nav-item>
-          <el-popover
-            ref="msgpop"
-            placement="bottom"
-            title="消息"
-            trigger="click">
-            <b-list-group>
-              <b-list-group-item href="#">This is a default list group item</b-list-group-item>
-              <b-list-group-item href="#" variant="primary">This is a primary list group item</b-list-group-item>
-              <b-list-group-item href="#" variant="secondary">This is a secondary list group item</b-list-group-item>
-              <b-list-group-item href="#" variant="success">This is a success list group item</b-list-group-item>
-              <b-list-group-item href="#" variant="danger">This is a danger list group item</b-list-group-item>
-              <b-list-group-item href="#" variant="warning">This is a warning list group item</b-list-group-item>
-              <b-list-group-item href="#" variant="info">This is a info list group item</b-list-group-item>
-              <b-list-group-item href="#" variant="light">This is a light list group item</b-list-group-item>
-              <b-list-group-item href="#" variant="dark">This is a dark list group item</b-list-group-item>
-            </b-list-group>
-          </el-popover>
+          <!--<b-nav-item v-popover:msgpop style="background-color:#DADE48!important;">-->
+            <!--<i class="fa fa-bell">-->
+              <!--<b-badge variant="danger" v-show="message">14</b-badge>-->
+            <!--</i>-->
+          <!--</b-nav-item>-->
+          <!--<el-popover-->
+            <!--ref="msgpop"-->
+            <!--placement="bottom"-->
+            <!--title="消息"-->
+            <!--trigger="click">-->
+            <!--<b-list-group>-->
+              <!--<b-list-group-item href="#">This is a default list group item</b-list-group-item>-->
+              <!--<b-list-group-item href="#" variant="primary">This is a primary list group item</b-list-group-item>-->
+              <!--<b-list-group-item href="#" variant="secondary">This is a secondary list group item</b-list-group-item>-->
+            <!--</b-list-group>-->
+          <!--</el-popover>-->
           <b-nav-item v-b-modal.aboutmodal style="background-color:#97C144!important;">
             <i class="fa fa-tasks"></i>
           </b-nav-item>
         </b-nav-form>
-        <b-nav-item-dropdown style="background-color:#4BA6EF!important;min-width: 50px" extra-toggle-classes="nav-link-custom" right>
+        <b-nav-item-dropdown class="nav-drop" extra-toggle-classes="nav-link-custom" right>
           <template slot="button-content">
             <img src="/static/user.jpg" class="nav-user-photo d-inline-block align-middle">
             <span class="user-info">欢迎,
@@ -93,11 +87,12 @@
         <div>
           <p class="p-style version"><strong>Ver 1.2.0</strong></p>
           <p class="p-style font">本产品使用权属于：</p>
-          <p class="p-style">{{hotel.descript}}</p>
+          <p class="p-style hotel-line">&#8195;{{hotel.descript}}</p>
           <p class="p-style">本软件为杭州西软信息技术有限公司所有，受到著作权法和国际公约的保护。未经杭州西软信息技术有限公司许可，任何单位及个人均不得复制、传播本程序的部分或全部，否则可能遭到严厉的法律诉讼及制裁。</p>
           <p class="p-style">请访问我们的网站，他将提供给您最新的软件版本信息，和周到的用户服务！</p>
+          <br>
           <p class="p-style">Copyright@   1993-2018 杭州西软信息技术有限公司</p>
-          <p class="p-style">杭州文一西路1218号恒生科技园28号楼 0571-88231188</p>
+          <p class="p-style">杭州文一西路1218号恒生科技园28号楼  0571-88231188</p>
           <p class="p-style"><a href="http://www.foxhis.com">http://www.foxhis.com</a></p>
           <p class="p-style">保持联系，携手共进。</p>
         </div>
@@ -276,6 +271,11 @@
     .dropdown-item {
       color: black !important;
     }
+    .nav-drop{
+      box-shadow: 2px;
+      background-color:#4BA6EF!important;
+      min-width: 50px
+    }
   }
 
   #aboutmodal{
@@ -292,6 +292,12 @@
     .version{
       font-size: 1.2rem;
       color: blue;
+    }
+    .hotel-line{
+      font-size: 1rem;
+      padding-top: 3px;
+      height: 2rem;
+      font-weight: bold;
     }
   }
 

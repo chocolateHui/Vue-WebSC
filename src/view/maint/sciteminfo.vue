@@ -111,8 +111,8 @@
           </b-row>
           <div class="btng green">
             <b-button :disabled="btnshow.modify"  @click="modifyp" variant="primary">修改类别</b-button>
-            <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
-            <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
+            <b-button :disabled="btnshow.savep" @click="savep" variant="primary">保存</b-button>
+            <b-button :disabled="btnshow.cancelp" @click="cancel" variant="primary">取消</b-button>
           </div>
           <el-table
             ref="bbbb"
@@ -287,8 +287,9 @@
     {  prop: 'descript', label:  '名称',width:'',sortable:true,showTip:true},
   ]
 
-  const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true}
-  const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:false,cancel:false}
+  const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true,savep:true,cancelp:true}
+  const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:true,cancel:true,savep:false,cancelp:false}
+  const btnmodifyshow ={  new: true, modify:  true,delete:true,place:true ,save:false,cancel:false,savep:true,cancelp:true}
 
   const confirm = [
     { value: 'T', label: '是' },
@@ -750,7 +751,7 @@
       },
       placesavetype(newVal, oldVal){
         if(newVal==="update"){
-          this.btnshow = btnnewshow;
+          this.btnshow = btnmodifyshow;
         }
         else{
           this.btnshow = btnshow;

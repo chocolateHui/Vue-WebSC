@@ -6,7 +6,7 @@
         <b-row ref="tu" class="paddingbottom15">
           <b-col cols="8" class="paddingright0">
             <b-card border-variant="info" header="未来一周宴会会场走势图"  header-tag="header" align="left" class="height100">
-              <div id="myChart" :style="{width: '760px', height: '260px'}"></div>
+              <div id="myChart" :style="{width: tuwidth + 'px', height: '275px'}"></div>
               <div slot="header">
                 <span>未来一周宴会会场走势图</span>
                 <i class="fa fa-refresh refresh" @click="refreshline" aria-hidden="true"></i>
@@ -16,7 +16,7 @@
           <b-col cols="4" class="paddingright0">
             <div class="width100">
               <b-card border-variant="info" header-title="未来一周宴会会场排行" header-tag="header" align="left" class="widht50 height50 marginbottom15">
-                <div id="myChart3" :style="{width: '328px', height: '90px'}"></div>
+                <div id="myChart3" :style="{width: tu2width + 'px', height: '90px'}"></div>
                 <div slot="header">
                   <span>未来一周宴会会场排行</span>
                   <i class="fa fa-refresh refresh" @click="refreshzhu" aria-hidden="true"></i>
@@ -24,7 +24,7 @@
               </b-card>
 
               <b-card border-variant="info" header="未来一周宴会类型" header-tag="header" align="left" class="widht50 height50 ">
-                <div id="myChart2" :style="{width: '328px', height: '140px'}"></div>
+                <div id="myChart2" :style="{width: tu2width + 'px', height: '140px'}"></div>
                 <div slot="header">
                   <span>未来一周宴会类型</span>
                   <i class="fa fa-refresh refresh" @click="refreshpie" aria-hidden="true"></i>
@@ -51,30 +51,35 @@
                 style="width: 100%">
                 <el-table-column
                   property="descript"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="事务名称"
                   width="">
                 </el-table-column>
                 <el-table-column
                   property="codedes"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="场地描述"
                   width="80">
                 </el-table-column>
                 <el-table-column
                   property="typedes"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="类型"
                   width="50">
                 </el-table-column>
                 <el-table-column
                   property="bdate"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="事务日期"
                   width="84">
                 </el-table-column>
                 <el-table-column
                   property="begintime"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="开始时间"
                   width="70">
@@ -96,24 +101,28 @@
                 style="width: 100%">
                 <el-table-column
                   property="name"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="宴会名称"
                   width="120">
                 </el-table-column>
                 <el-table-column
                   property="saleid_name"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="销售员"
                   width="80">
                 </el-table-column>
                 <el-table-column
                   :show-overflow-tooltip=true
+                  align="center"
                   property="arr"
                   label="抵达日期"
                   width="">
                 </el-table-column>
                 <el-table-column
                   property="remark"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="备注"
                   width="80">
@@ -135,12 +144,14 @@
                 style="width: 100%">
                 <el-table-column
                   property="name"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="宴会名称"
                   width="">
                 </el-table-column>
                 <el-table-column
                   property="saleid_name"
+                  align="center"
                   :show-overflow-tooltip=true
                   label="销售员"
                   width="tableHeight">
@@ -186,11 +197,14 @@
         maxnum:'',
         linenumdata:[],
         linetimedata:[],
+        datashadow:[],
         piedata:[],
         zhuydata:[],
         zhuxdata:[],
         tuHeight:"",
-        tableHeight: ""
+        tableHeight: "",
+        tuwidth: (document.body.clientWidth-190)*2/3,
+        tu2width: (document.body.clientWidth-190)*1/3
       }
     },
     created(){
@@ -212,9 +226,17 @@
         // 绘制图表
         myChart.setOption({
           title: {
-            text: "宴会总场地"+this.maxnum+"场",
-            left: 15,
+            subtext: "宴会总场地"+this.maxnum+"场",
+            left: '40%',
             top:10,
+            subtextStyle: {
+              width:'20%',
+              align:'center',
+              fontSize: 16,
+              fontFamily: "Microsoft YaHei",
+              // fontWeight: "bold",
+              color: "black"
+            }
           },
           tooltip: {
             trigger: "axis"
@@ -274,7 +296,7 @@
             top: 10,
             data:this.piedata,
             formatter: function(e) {
-              return (e.length > 2 ? (e.slice(0, 2) + "...") : e)
+              return (e.length > 4 ? (e.slice(0, 4) + "...") : e)
             }
           },
           series: [{
@@ -305,7 +327,8 @@
             trigger: 'axis',
             axisPointer : {            // 坐标轴指示器，坐标轴触发有效
               type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-            }
+            },
+            confine: true,
           },
           grid: {
             top: 10,
@@ -315,8 +338,6 @@
           },
           xAxis: {
             type : 'value',
-
-
             axisLine: {show: false},
             axisLabel: {show: false},
             axisTick: {show: false},
@@ -327,12 +348,23 @@
             type : 'category',
 
             axisLine: {show: false},
-            axisTick: {show: false},
+            axisTick: {show:false },
             splitLine: {show: false},
             data :this.zhuxdata
           },
           series : [
+            { // For shadow
+              type: 'bar',
+              itemStyle: {
+                normal: {color: 'rgba(0,0,0,0.05)'}
+              },
+              barGap:'-100%',
+              barCategoryGap:'40%',
+              data: this.datashadow,
+              animation: false
+            },
             {
+
               name:'场数',
               type:'bar',
               stack: '总量',
@@ -343,6 +375,7 @@
                 }
               },
               itemStyle: {
+
                 normal: {
                   // 随机显示
                   label : {show: true, position: 'inside'},
@@ -402,6 +435,7 @@
                   types["name"]=typeinfo.descript;
                   this.piedata.push(types);
                 }
+
               }
 
             }
@@ -426,14 +460,26 @@
                     position: 'right'
                   }
                 }
-                var rankinfo = response.data.rankinfo;
+                var rankinfo = response.data.rankinfo
+
                 if(rankinfo.length<=2){
+                  let s = 3-rankinfo.length;
+                  for(let i=0;i<s;i++){
+                    this.zhuxdata.push("");
+                    var types={};
+                    types["value"]="";
+                    types["label"]="";
+                    this.zhuydata.push(types);
+                  }
                   for(var i=rankinfo.length-1;i>=0;i--){
                     this.zhuxdata.push(rankinfo[i].descript);
                     var types={};
                     types["value"]=rankinfo[i].rentnum;
                     types["label"]=labelRight;
                     this.zhuydata.push(types);
+                    if(i===0){
+                      this.datashadow = [rankinfo[i].rentnum,rankinfo[i].rentnum,rankinfo[i].rentnum]
+                    }
                   }
                 }
                 else{
@@ -443,6 +489,9 @@
                     types["value"]=rankinfo[i].rentnum;
                     types["label"]=labelRight;
                     this.zhuydata.push(types);
+                    if(i===0){
+                      this.datashadow = [rankinfo[i].rentnum,rankinfo[i].rentnum,rankinfo[i].rentnum]
+                    }
                   }
                 }
               }
@@ -686,6 +735,7 @@
       padding-left: 0px;
       margin-right: 0px;
       margin-left: 0px;
+      padding-top: 3px;
     }
     .refresh {
       float: right;

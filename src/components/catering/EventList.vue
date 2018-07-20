@@ -622,6 +622,8 @@
   }
 </script>
 <style lang="scss">
+  @import '../../css/color';
+
   #eventlist{
     font-size: 0.9rem;
       input{
@@ -680,6 +682,9 @@
       }
       .timeselect{
         width: 38%;
+      }
+      .el-icon-date,.fa-list{
+        color: $colorIcon;
       }
       #eventmain{
         .fa{
