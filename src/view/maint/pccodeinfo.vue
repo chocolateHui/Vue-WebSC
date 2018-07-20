@@ -514,7 +514,6 @@
             this.oldcurrentRow = Object.assign({},this.currentRow);
 
           }
-          console.log(this.changedplaceinfo);
         }
         else{
 
@@ -674,7 +673,6 @@
           this.$refs.MultiPlace.clearSelect();
           this.pccode = this.currentRow.pccode;
           this.topplacestr = row.toplace;
-          console.log( this.topplacestr);
           this.$refs.MultiPlace.resetPlace(this.topplacestr);
 
         };
