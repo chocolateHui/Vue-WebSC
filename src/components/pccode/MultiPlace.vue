@@ -204,7 +204,6 @@
           this.$http.post(methodinfo.getplacelist, {
             pccode: this.pccode
           }).then((response)=> {
-            console.log(this);
             if (response.data.errorCode==='0') {
               for(let option of response.data.places){
                 items.push(option);
