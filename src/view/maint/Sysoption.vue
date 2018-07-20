@@ -247,6 +247,7 @@
         padding: 5px 15px;
         color: #71A2CC;
         font-weight: normal;
+        font-size: 1.3rem;
       }
     }
     .el-input__inner{

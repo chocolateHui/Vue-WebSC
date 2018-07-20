@@ -14,16 +14,16 @@
         </b-col>
         <b-col class="my-1 icondiv">
           <a v-if="!isNew">
-            <i @click="showLog" class="fa fa-sticky-note titleIcon"></i>
+            <i @click="showLog" title="日志" class="fa fa-sticky-note titleIcon"></i>
           </a>
           <!--<a v-if="!isNew">-->
             <!--<i @click="showNote" class="fa fa-sticky-note titleIcon"></i>-->
           <!--</a>-->
           <a v-if="!isNew">
-            <i @click="EOShare" class="fa fa-print titleIcon"></i>
+            <i @click="EOShare" title="EO单" class="fa fa-print titleIcon"></i>
           </a>
           <a v-if="!isNew">
-            <i @click="refreshData" class="fa fa-refresh titleIcon"></i>
+            <i @click="refreshData" title="刷新" class="fa fa-refresh titleIcon"></i>
           </a>
           <a>
             <i v-b-toggle="'cater'" @click="toggleclick" class="fa toggleclass" :class="toggleclass"></i>

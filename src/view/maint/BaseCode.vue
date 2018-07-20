@@ -183,34 +183,37 @@
         let index = scope.$index;
 
         let hotelid = scope.row.hotelid;
-        if(hotelid !== this.$store.getters.hotel.hotelid){
+        if(hotelid && hotelid !== this.$store.getters.hotel.hotelid){
           this.$message.error("集团代码不允许删除!")
           return;
         }
-        console.log(hotelid)
 
         this.$confirm("是否要删除该基础代码？","提示").then(()=>{
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.$http.defaults.headers.common['username'] = this.$store.getters.username
-            this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-            this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
-            this.$http.post(methodinfo.deletebasecode, {
-              cat:this.cat,
-              code:row.code
-            }).then((response)=>{
-              if(response.data.errorCode==='0'){
-                this.$message({
-                  message: '基础代码删除成功!',
-                  type: 'success'
-                })
-                this.items.splice(index,1);
-              }else{
-                this.$message.error(response.data.errorMessage)
-              }
-            })
-          })
-        }).catch()
 
+          if(row.add==='T'){
+            this.items.splice(index,1);
+          }else{
+            this.$store.dispatch('encrypttoken').then(() => {
+              this.$http.defaults.headers.common['username'] = this.$store.getters.username
+              this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+              this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
+              this.$http.post(methodinfo.deletebasecode, {
+                cat:this.cat,
+                code:row.code
+              }).then((response)=>{
+                if(response.data.errorCode==='0'){
+                  this.$message({
+                    message: '基础代码删除成功!',
+                    type: 'success'
+                  })
+                  this.items.splice(index,1);
+                }else{
+                  this.$message.error(response.data.errorMessage)
+                }
+              })
+            })
+          }
+        }).catch()
       },
       saveBaseCode(){
         for(let elem of this.editRows){

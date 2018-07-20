@@ -50,7 +50,7 @@
               <b-col>
                 <b-form>
                   <b-form-group label="工号:" horizontal>
-                    <FormatInput type="text" maxlength="10" v-model="expandempno.empno" :disabled="able.name&&!expandempno.flag"></FormatInput>
+                    <FormatInput type="text" maxlength="10" v-model="expandempno.empno" :disabled="able.name && !expandempno.flag"></FormatInput>
                   </b-form-group>
                   <b-form-group label="姓名:"
                                 horizontal>
@@ -114,7 +114,8 @@
                       <el-option v-for="item in getdeptlist"
                         :key = item.code
                         :value="item.code"
-                        :label="item.descript">
+                        :label="item.descript"
+                        :show-overflow-tooltip="item.showTip">
                       </el-option>
                     </el-select>
                   </b-form-group>
@@ -196,16 +197,19 @@
     {  prop: 'empno', label:  '工号',width:'100',sortable:true },
     {  prop: 'empname', label:  '姓名',width:'',sortable:true,showTip:true},
     {  prop: 'saleid', label:  '销售员ID',width:'100',sortable:true,showTip:true},
-    {  prop: 'deptnodes', label:  '岗位',width:'100',sortable:true },
-    {  prop: 'htljobdes', label:  '角色',width:'100',sortable:true },
+    {  prop: 'deptnodes', label:  '岗位',width:'100',sortable:true,showTip:true },
+    {  prop: 'htljobdes', label:  '角色',width:'100',sortable:true,showTip:true },
     {  prop: 'hoteldes', label:  '所属酒店',width:'',sortable:true }
   ]
   const able = {name:true,hotelinput:true}
+  const disable = {name:false,hotelinput:false}
 
   export default {
     data () {
       return {
         newp:true,
+        isnew:true,
+        flag:true,
         getempnolist: [],
         fildes :fildes,
         saleid: '',
@@ -233,7 +237,7 @@
         deptno:'',
         htljob:'',
         hotelid:'',
-        isGourp:false,
+        isGroup:false,
         locked:'F',
         able:able,
         oldpassword: '',
@@ -273,6 +277,7 @@
       this.getHotel();
       this.getEmpnolist();
       this.getDeptlist();
+      this.name = false;
     },
     methods: {
       configDefault:function () {
@@ -332,6 +337,7 @@
           //若是新增的就直接删除不用走服务端
           if(cs.row.hasOwnProperty("isnew")){
             this.getempnolist.splice(cs.$index,1);
+            this.newp = true
           }else{
             this.$store.dispatch('encrypttoken').then(() => {
               this.configDefault()
@@ -349,7 +355,9 @@
         })
       },
       expandChange:function (row, expandedRows) {
-        if(expandedRows.length>1){
+        if(expandedRows.length>1 || row.hasOwnProperty("isnew")){
+          this.getempnolist.pop();
+          this.newp = true;
           let index = 0;
           for (let expandrow of expandedRows) {
             if (expandrow.empno !== row.empno) {
@@ -370,14 +378,21 @@
             })
           )
         }
-
+//        if(row.hasOwnProperty("isnew")){
+//          alert(1)
+//          this.getempnolist.pop();
+//          this.newp = true;
+//        }
         this.expandempno = Object.assign({},row);
       },
       newProp:function(){
         if(this.newp){
           this.newp = false;
-          this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:'T'});
+          this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:true });
           this.expands.push('');
+          this.$nextTick(function(){
+            this.$refs.empnotable.bodyWrapper.scrollTop =this.$refs.empnotable.bodyWrapper.scrollHeight;
+          })
         }else{
           this.$message.error('请先保存新建员工信息!');
         }
@@ -440,6 +455,7 @@
 
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
+            console.info(val.flag)
             if (val.flag) {
               this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
                 if (response.data.errorCode === "0") {
@@ -519,13 +535,24 @@
           &::after {
             width: 1.25rem;
             height: 1.25rem;
-            top:0rem;
+            top:0.135rem;
           }
         }
       }
       .container-fluid{
         >.row{
           margin-bottom: 10px;
+          .el-input{
+            .el-input__inner {height: 35px!important;}
+          }
+          .my-1{
+            .form-row{
+              .col-sm-3{
+                flex: 0 0 13%;
+                max-width: 13%;
+              }
+            }
+          }
           .my-1:last-of-type{
             .btn-primary{
               background: #7EB2DD;
@@ -553,13 +580,31 @@
           }
         }
         .el-table__body-wrapper{
+          .el-table__row{
+            .cell{ white-space: nowrap;}
+          }
           .row{
             .form-row{
               height:45px;
               .col-sm-9{
-                .custom-control-label::after{
-                  top: 0.21rem;
-                  left: -1.55rem;
+                .custom-control{
+                  .custom-control-label::after{
+                    top: 0.5rem;
+                    left: -1.25rem;
+                  }
+                }
+                .custom-control:last-child{
+                  .custom-control-label::after{
+                    top: 0.5rem;
+                    left: -1.2rem;
+                  }
+                }
+                .custom-radio .custom-control-input:checked ~ .custom-control-label::after{
+                  background-image: none;
+                  background-color: #fff;
+                  border-radius: 50%;
+                  height: 0.45rem;
+                  width: 0.45rem;
                 }
                 .el-select{
                   width: 100%;

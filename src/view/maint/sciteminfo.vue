@@ -73,9 +73,9 @@
                   <!--required-->
                   <!--placeholder="">-->
                   <!--</b-form-input>-->
-                  <el-select clearable v-model="pcinfo.tocode">
+                  <el-select clearable v-model="pcinfo.tocode" :disabled="changeshow.descript2disabled">
                     <el-option
-                      :disabled="changeshow.descript2disabled"
+
                       v-for="item in namedef"
                       :key="item.value"
                       :label="item.label"
@@ -87,9 +87,8 @@
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="项目属性" class="mb-0">
-                <el-select v-model="pcinfo.type">
+                <el-select v-model="pcinfo.type" :disabled="changeshow.kinddesdisabled">
                   <el-option
-                    :disabled="changeshow.kinddesdisabled"
                     v-for="item in typearry"
                     :key="item.value"
                     :label="item.label"
@@ -112,10 +111,11 @@
           </b-row>
           <div class="btng green">
             <b-button :disabled="btnshow.modify"  @click="modifyp" variant="primary">修改类别</b-button>
-            <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
-            <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
+            <b-button :disabled="btnshow.savep" @click="savep" variant="primary">保存</b-button>
+            <b-button :disabled="btnshow.cancelp" @click="cancel" variant="primary">取消</b-button>
           </div>
           <el-table
+            ref="bbbb"
             id="itemtable"
             :data="placedata"
             border
@@ -287,8 +287,9 @@
     {  prop: 'descript', label:  '名称',width:'',sortable:true,showTip:true},
   ]
 
-  const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true}
-  const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:false,cancel:false}
+  const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true,savep:true,cancelp:true}
+  const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:true,cancel:true,savep:false,cancelp:false}
+  const btnmodifyshow ={  new: true, modify:  true,delete:true,place:true ,save:false,cancel:false,savep:true,cancelp:true}
 
   const confirm = [
     { value: 'T', label: '是' },
@@ -335,7 +336,7 @@
         currentRow: null,
         placeRow: null,
 
-        tableHeight: document.body.clientHeight-278,//减去header的278px
+        tableHeight: document.body.clientHeight-295,//减去header的278px
         num:0,
         change:""
       }
@@ -663,6 +664,9 @@
         newplace["classcode"] = this.currentRow.classcode;
         this.placedata.push(newplace);
         this.placesavetype = "update";
+        this.$nextTick(function(){
+          this.$refs.bbbb.bodyWrapper.scrollTop = this.$refs.bbbb.bodyWrapper.scrollHeight;
+        })
       },
       savep:function () {
 
@@ -747,7 +751,7 @@
       },
       placesavetype(newVal, oldVal){
         if(newVal==="update"){
-          this.btnshow = btnnewshow;
+          this.btnshow = btnmodifyshow;
         }
         else{
           this.btnshow = btnshow;
@@ -780,12 +784,12 @@
       padding-right: 0px;
     }
     .maxwidth20{
-      flex: 0 0 18%;
-      max-width: 18%;
+      flex: 0 0 19%;
+      max-width: 19%;
     }
     .maxwidth70{
-      flex: 0 0 82%;
-      max-width: 82%;
+      flex: 0 0 80.5%;
+      max-width: 80.5%;
     }
     .maxwidth15{
       flex: 0 0 10%;
@@ -837,6 +841,7 @@
       .cell {
         padding-left: 5px;
         padding-right: 5px;
+        cursor: pointer;
         .form-inline{
           .btn:not(:last-child){ margin-right: 3px; }
         }
@@ -866,6 +871,10 @@
       }
       .btng-r{float: right;}
       .btng-l{float: left;}
+    }
+    .btn.disabled, .btn:disabled{
+      background-color: #c8c9ca!important;
+      border-color: #c8c9ca!important;
     }
     .side-btn{
       width: 85px;

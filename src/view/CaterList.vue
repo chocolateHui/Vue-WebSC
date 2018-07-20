@@ -24,7 +24,7 @@
       <el-tabs type="border-card" class="width100 height100" @tab-click="tabClick">
         <el-tab-pane label="当前宴会订单">
           <b-row>
-            <b-col>
+            <b-col style="padding-left: 0px;">
               <b-form inline>
                 <b-form-checkbox v-model="allSelected"
                                  :indeterminate="indeterminate"
@@ -75,7 +75,7 @@
         </el-tab-pane>
         <el-tab-pane label="历史宴会订单">
           <b-row>
-            <b-col>
+            <b-col style="padding-left: 0px;">
               <b-form inline>
 
                 <b-form-checkbox v-model="HallSelected"
@@ -515,7 +515,7 @@
     }
     .form-inline {
       padding-bottom: 10px;
-      padding-left: 15px;
+      padding-left: 0px;
       width: 100%;
     }
     table{

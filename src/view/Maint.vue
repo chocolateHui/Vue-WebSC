@@ -23,7 +23,7 @@
         </el-tree>
       </b-col>
       <b-col cols="10">
-        <b-container :style="{height: bodyHeight + 'px'}">
+        <b-container :style="{height: bodyHeight + 'px'}" class="maint-container">
           <router-view></router-view>
         </b-container>
       </b-col>
@@ -126,7 +126,7 @@
     },
     watch: {
       filterText(val) {
-        this.$refs.tree2.filter(val);
+        this.$refs.maintTree.filter(val);
       }
     },
     methods: {
@@ -169,8 +169,11 @@
   };
 </script>
 <style lang="scss">
-
   #maint{
+    .maint-container{
+      width: 100% !important;
+      max-width: 100%;
+    }
     .container{
       overflow-y: auto;
     }
