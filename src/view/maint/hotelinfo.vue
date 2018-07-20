@@ -316,7 +316,9 @@
               if (response.data.errorCode=="0") {
                 this.hoteInfo=response.data
                 this.modelTitle='初始化'+this.hoteInfo.descript
-                this.getcityarealist(this.hoteInfo.city,1)
+                if(this.hoteInfo.city!=''){
+                  this.getcityarealist(this.hoteInfo.city,1)
+                }
                 this.hotelStatusNow=this.hoteInfo.sta
                 if(this.hoteInfo.sign==0){
                   this.getisnewhotel()
@@ -418,6 +420,9 @@
               if (response.data.errorCode=="0") {
                 this.hotelStatusNow=this.hoteInfo.sta
                 _this.$message('保存成功')
+                if(this.hoteInfo.city==''){
+                  this.cityareaList=[]
+                }
               }
             }
           })

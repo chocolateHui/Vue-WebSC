@@ -23,7 +23,7 @@
               <ol>
                 <li data-id="1" v-for="(item,index) in basecodeslist"><i class="fa" :class="{'fa-check':typeof item.ifTypeCheck=='undefined'?true:item.ifTypeCheck}" @click="typeCheck(item)"></i>{{item.descript}}</li>
               </ol>
-              <input type="button" class="btn_ok" ref="reftypeok" value="确定" @click="thingTypeOk" />
+              <input type="button" class="btn_ok" ref="reftypeok" value="确定"@click="thingTypeOk" />
             </div>
           </li>
           <li><span class="el-icon-date" @click="btnDataTime" ref="refcalen">{{datatime}}</span>
@@ -59,7 +59,7 @@
                 <span v-for="(listc,indexc) in gettolist[indexto].places" v-if="tolist.tableno==placeitem.tableno&&indexc>=3">&nbsp;{{listc.toplacedes}}&nbsp;</span>
               </div>
             </li>
-            <li v-for="(timelist,index2) in timeList" @mouseenter="thingsShow(index1,index2,timelist,$event)" @mouseleave="thingsHide">
+            <li v-for="(timelist,index2) in timeList" @mouseenter="thingsShow(index1,index2,timelist,$event)" @mouseleave="thingsHide" @click="addThings(timelist,placeitem.tableno)">
               <h1 v-for="item in timeAll">
                 <label>{{item.time}}</label>
                 <p>
@@ -103,7 +103,7 @@
                 <span v-for="(listc,indexc) in gettolist[indexto].places" v-if="tolist.tableno==placeitem.tableno&&indexc>=3">&nbsp;{{listc.toplacedes}}&nbsp;</span>
               </div>
             </li>
-            <li class="nav2"  @mouseenter="thingsShow(index1,'0',datatime.substring(0,10),$event)" @mouseleave="thingsHide">
+            <li class="nav2"  @mouseenter="thingsShow(index1,'0',datatime.substring(0,10),$event)" @mouseleave="thingsHide" @click="addThings(datatime.substring(0,10),placeitem.tableno)">
               <span v-for="items in timeToday">
                  <span v-for="infolist in placeitem.bdates" v-if="(iftypelist||typeList.indexOf(infolist.eventtype)!=-1)&&((items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))">
                    <span v-if="colorlist.dataid==infolist.sta" v-for="colorlist in headList" class="bgtime2" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]"></span>
@@ -255,6 +255,14 @@
             this.timeAll[2].content.push(content1)
           }
           this.todayHour.push(num+':00')
+        }
+      }
+      var self=this;
+      document.onkeydown=function(e) {
+        var key = window.event.keyCode;
+        if(key==27){
+          self.calenShow = false
+          self.ifThingType = false
         }
       }
     },
@@ -433,24 +441,26 @@
         this.$refs.myModalchoose.hide()
       },
       addThings:function (time,addr) {
-        this.newChooseTime=time
-        var newParam={
-          begindate:time,
-          enddate:time,
-          flag:'T',
-          sta:'1,2,3,W,Q',
-        }
-        var _this=this
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch('getcateringlist',newParam)
-        })
-        for(var t=0;t<this.placeslist.length;t++){
-          if(addr==this.placeslist[t].tableno){
-            this.newChooseAddr=this.placeslist[t].descript
-            this.newChooseAddrNo=this.placeslist[t].tableno
+        if(new Date(this.today())<=new Date(time)){
+          this.newChooseTime=time
+          var newParam={
+            begindate:time,
+            enddate:time,
+            flag:'T',
+            sta:'1,2,3,W,Q',
           }
+          var _this=this
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$store.dispatch('getcateringlist',newParam)
+          })
+          for(var t=0;t<this.placeslist.length;t++){
+            if(addr==this.placeslist[t].tableno){
+              this.newChooseAddr=this.placeslist[t].descript
+              this.newChooseAddrNo=this.placeslist[t].tableno
+            }
+          }
+          this.$refs.myModalchoose.show()
         }
-        this.$refs.myModalchoose.show()
       },
       typeCheckAll:function () {
         this.ifTypeCheckAll=!this.ifTypeCheckAll
@@ -611,6 +621,7 @@
           this.ifToday="最近七天"
           this.todayNow=true
           this.datatime=this.datatime.substring(0,10)
+          this.dataNow=this.datatime.substring(0,10)
           this.formdata=[]
           this.formData(this.adddateday(this.dataNow,0))
           this.timeList=[]
@@ -622,6 +633,7 @@
           this.ifToday="查看今天"
           this.todayNow=false
           this.datatime=this.datatime.substring(0,10)+" 至 "+this.adddateday(this.datatime.substring(0,10),6)
+          this.dataNow=this.datatime.substring(0,10)
           this.formdata=[]
           this.formData(this.adddateday(this.dataNow,0))
           this.timeList=[]
@@ -732,13 +744,10 @@
         if(month<10){month="0"+month;}
         var times = date1.getFullYear() + "-" + month + "-" + day;
         return times;
-      }
+      },
     },
     mounted: function () {
       this.$nextTick(function () {
-        // this.$store.dispatch('encrypttoken').then(() => {
-        //   this.$store.dispatch('getTimeUnit')
-        // })
         this.getbasecodelist()
         this.datatimeid=this.today()
         this.$store.dispatch('encrypttoken').then(() => {
@@ -809,6 +818,7 @@
       width: 100%;
     }
     .todayThings{
+      min-height: 80px;
       background: #fff;
       position: absolute;
       padding-bottom: 10px;
@@ -818,7 +828,7 @@
       box-shadow:0 0 15px #C1C1C1;
     }
     .ifTodayThings{
-      z-index: 999999;
+      z-index: 99;
     }
     .borderleft{border-left: 2px solid #fff;}
     .gettochild{
