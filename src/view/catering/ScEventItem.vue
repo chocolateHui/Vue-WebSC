@@ -162,6 +162,11 @@
     .el-tree{
       border: 1px solid #ced4da;
       overflow-y: auto;
+      .el-tree-node__children{
+        .el-tree-node__label {
+          font-size: 12px;
+        }
+      }
     }
     input::-moz-placeholder, .form-control::-moz-placeholder{
       color: #c0c0c0;

@@ -1,17 +1,16 @@
 <template>
   <div id="multiplace">
     <b-container fluid>
-      <label>当前选择宴会:{{currentplace}}</label>
+      <label>当前选择场地:{{currentplace}}</label>
       <b-row>
         <b-col sm="2">
-
         </b-col>
         <b-col sm="5"></b-col>
         <b-col sm="4">
           <b-input v-model="filterValue" placeholder="搜索"></b-input>
         </b-col>
         <b-col sm="1">
-          <b-btn @click="refreshData">
+          <b-btn @click="refreshData('F')">
             <i class="fa fa-refresh"></i>
           </b-btn>
         </b-col>
@@ -55,17 +54,17 @@
   import methodinfo from '../../config/MethodConst.js'
 
   const fildes = [
-    {  prop: 'eventid', label:  '编码',width:'160',sortable:true,"classname":"text-center" },
+    {  prop: 'tableno', label:  '编码',width:'100',sortable:true,"classname":"text-center" },
     {  prop: 'descript', label:  '场地名称',width:'',sortable:true,showTip:true},
     {  prop: 'descript1', label:  '英文名称',width:'',sortable:true,showTip:true},
-    {  prop: 'bdate', label:  '日期',width:'120',sortable:true,showTip:true,"classname":"text-center"},
-    {  prop: 'stades', label:  '状态',width:'100',sortable:true,showTip:true,"classname":"text-center" },
-    {  prop: 'typedes', label:  '类型',width:'100',sortable:true,showTip:true,"classname":"text-center" }
+    {  prop: 'kind', label:  '类别',width:'100',sortable:true,showTip:true,"classname":"text-center" }
   ]
 
   export default {
     data () {
       return {
+        pospccode:"",
+        tablenoaaa:"",
         items: [],
         fildes :fildes,
         filterValue:'',
@@ -73,48 +72,45 @@
         currentPage:1,
         pageChange:false,
         isunuse:false,
-        placecount:0,
+        usebtndes:'查看空闲场地',
         currentplace:'',
         currentselect:[],
-        allselect:[],
-        hash:{},
+        allselect: new Set(),
+        placecount:0
       }
     },
     props:{
-      eventbdate: {
-        type: Array
-      }
+      pccode: {
+        type: String
+      },
     },
     computed: {
       ...mapGetters([
-        'corteventlist',
-        'sceventitemeventid',
       ]),
       searchitems:function () {
         let filterValue = this.filterValue;
+
         if(this.filterValue==='' || !this.filterValue){
           return this.tablePagination(this.items);
         }else{
           return this.tablePagination(this.items.filter(function (item) {
-            if (item.eventid.indexOf(filterValue) >= 0) {
+            if (item.tableno.indexOf(filterValue) >= 0) {
               return true;
             } else if (item.descript.indexOf(filterValue) >= 0) {
               return true;
             }else if (item.descript1.indexOf(filterValue) >= 0) {
               return true;
-            }else if (item.stades.indexOf(filterValue) >= 0) {
+            }else if (item.pccodedes.indexOf(filterValue) >= 0) {
               return true;
-            }else if (item.typedes.indexOf(filterValue) >= 0) {
-              return true;
-            }else if (item.bdate.indexOf(filterValue) >= 0) {
+            }else if (item.kind.indexOf(filterValue) >= 0) {
               return true;
             }
           }));
         }
-      },
+      }
     },
-    created(){
-      this.refreshData();
+    beforeMount(){
+          this.refreshData("T");
     },
     methods: {
       tablePagination(data=[]){
@@ -134,9 +130,9 @@
       },
       //页面切换数据处理
       handleSelectionChange(val) {
-        if(this.pageChange){
-          //换页时清空当前选择并重新赋值
+        if(this.pageChange&&this.allselect.size>0){
           this.pageChange=false;
+          //换页时清空当前选择并重新赋值
           this.currentselect=[];
           for(let elem of this.allselect){
             this.$refs.multiplacetable.toggleRowSelection(elem);
@@ -146,15 +142,13 @@
           if(val.length<this.currentselect.length){
             for(let i =0;i < this.currentselect.length;i++){
               if(val.indexOf(this.currentselect[i])<0){
-                let allindex = this.allselect.indexOf(this.currentselect[i]);
-                if(allindex>0){
-                  this.allselect.splice(allindex,1)
-                }
+                this.allselect.delete(this.currentselect[i])
               }
             }
           }
           this.currentselect = val;
         }
+        this.pageChange=false;
         this.currentplace = '';
         for(let elem of this.currentselect){
           this.currentplace = this.currentplace + elem.descript + ',';
@@ -163,68 +157,128 @@
       },
       tableCurrentChange(){
         for(let elem of this.currentselect){
-          if (!this.hash[elem.eventid]) {
-            this.allselect.push(elem);
-            this.hash[elem.eventid] = true;
-          }
+          this.allselect.add(elem);
         }
         this.pageChange = true;
       },
       tableRowClick(row){
         this.$refs.multiplacetable.toggleRowSelection(row);
       },
+      resetPlace(tableno){
+        this.tablenoaaa = tableno;
+        let top = tableno.split(",");
+        let select = [];
+        for(let tp of Object.assign([],top)) {
+          for(let index=0;index< this.items.length;index++){
+            let item = this.items[index];
+            if(item.tableno===tp){
+              select.push(item);
+            }
+          }
+        };
+        this.$nextTick(()=>{
+          for(let elem of select){
+            this.$refs.multiplacetable.toggleRowSelection(elem);
+          }
+        })
+
+      },
       clearSelect(){
-        this.hash = {};
-        this.allselect=[];
+        this.allselect=new Set();
         this.$refs.multiplacetable.clearSelection();
       },
       changeTableType(){
-
-        this.refreshData();
+        this.refreshData("F");
       },
-      refreshData(){
+      refreshData(flag){
+        this.filterValue = '';
         this.items=[];
-        this.allselect=[];
+        this.allselect=new Set();
+        // let eventbdate =this.eventbdate
+        let items = this.items;
+        let tbl = this.tablenoaaa;
         this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch("getcortEventlist");
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.getplacelist, {
+            pccode: this.pccode
+          }).then((response)=> {
+            console.log(this);
+            if (response.data.errorCode==='0') {
+              for(let option of response.data.places){
+                items.push(option);
+              }
+              if(flag==="F"){
+                let top =  tbl.split(",");
+                let select = [];
+                for(let tp of Object.assign([],top)) {
+                  for(let index=0;index< items.length;index++){
+                    let item = items[index];
+                    if(item.tableno===tp){
+                      select.push(item);
+                    }
+                  }
+                };
+                this.$nextTick(()=>{
+                  for(let elem of select){
+                    this.$refs.multiplacetable.toggleRowSelection(elem);
+                  }
+                })
+              }
+
+            }
+          })
         })
+
       },
       placeConfirm(){
         for(let elem of this.currentselect){
-          if (!this.hash[elem.eventid]) {
-            this.allselect.push(elem);
-            this.hash[elem.eventid] = true;
-          }
+          this.allselect.add(elem);
         }
-        console.log(this.currentselect);
-        console.log(this.allselect);
-        console.log(this.hash);
         this.$emit('placeConfirm',this.allselect)
-        this.$root.$emit('bv::hide::modal','multieventmodal')
+        this.$root.$emit('bv::hide::modal','multiplacemodal')
       },
       exitModal(){
-        this.$root.$emit('bv::hide::modal','multieventmodal')
+        this.$root.$emit('bv::hide::modal','multiplacemodal')
       }
     },
     watch:{
-      corteventlist(val,oldval){
+      pccode(val,oldval){
+        this.pospccode = val;
+
+      },
+      pospccode(val,oldval){
+        this.refreshData("F");
+      },
+      placelist(val,oldval){
         this.items = val;
       },
-      sceventitemeventid(val,oldval){
-        this.refreshData();
+      searchitems(val){
+        if(this.filterValue==='' || !this.filterValue){
+          this.placecount = this.items.length
+        }else{
+          this.placecount = this.total
+        }
       },
-      searchitems(val,oldval) {
-        if(this.filterValue===''||!this.filterValue){
-          this.placecount = this.items.length;
+      filterValue(val){
+        if(this.currentselect.length>0) {
+          let select = [];
+          for (let elem of this.currentselect) {
+            select.push(elem);
+          }
+          this.$nextTick(()=>{
+            for(let elem of select){
+              this.$refs.multiplacetable.toggleRowSelection(elem);
+            }
+          })
         }
-        else{
-          this.placecount =  this.total;
-        }
+
       }
     }
   }
 </script>
-<style lang="scss" type="text/scss">
+<style lang="scss">
   #multiplace{
     -webkit-backface-visibility: hidden;
     .el-table{
@@ -235,6 +289,15 @@
       .caret-wrapper{
         width: 20px;
       }
+      .el-checkbox__input{
+        margin-top: 5px
+      }
+      .form-control{
+        height: 33.5px;
+      }
+      .el-checkbox{
+        margin-bottom: 0;
+      }
     }
     .text-center{
       text-align: center;
@@ -242,10 +305,6 @@
     .pagination{
       float: right;
       padding: 5px 0px;
-    }
-    .el-table__expanded-cell{
-      padding: 5px!important;
-      box-shadow: none!important;
     }
     .row{
       margin-right: 0;

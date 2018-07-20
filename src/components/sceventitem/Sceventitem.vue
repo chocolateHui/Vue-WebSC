@@ -500,6 +500,30 @@
 </script>
 <style lang="scss" type="text/scss">
   #sceventitem{
+    #Syslog {
+      .container-fluid {
+        border: none!important;
+        background-color: white!important;
+      }
+    }
+    #singleplace {
+      .container-fluid {
+        border: none!important;
+        background-color: white!important;
+      }
+    }
+    #multiplace {
+      .container-fluid {
+        border: none!important;
+        background-color: white!important;
+      }
+    }
+    #remark {
+      .container-fluid {
+        border: none!important;
+        background-color: white!important;
+      }
+    }
     .container-fluid{
       border: 1px solid #ced4da;
       border-radius: 5px;
