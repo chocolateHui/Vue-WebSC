@@ -57,7 +57,7 @@
         </div>
       </div>
        </div>
-    <b-modal @shown="reasonShown" id="reasonmodal" size="lg" ref="reasonmodal" title="理由列表" hide-footer>
+    <b-modal @shown="reasonShown" id="reasonmodal" ref="reasonmodal" title="理由列表" hide-footer>
       <Reason ref="Reason" @reasonConfirm="reasonConfirm"></Reason>
     </b-modal>
     <b-modal id="remarkmodal" ref="remarkmodal" size="lg" title="宴会备注" hide-footer>
@@ -113,7 +113,10 @@
       },
       methods: {
         refreshData(){
-          this.$store.dispatch("getReasonList");
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            this.$store.dispatch("getReasonList");
+          })
         },
         configDefault:function () {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username

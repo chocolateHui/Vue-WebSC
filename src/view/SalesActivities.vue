@@ -197,6 +197,7 @@
         event.preventDefault();
         this.popSalesType=this.dom.getAttribute("type-name")
         this.popSalesTypeId=this.dom.getAttribute("type-id")
+        this.salesId=saleid
         this.popSalesTime=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10)
         this.popSaller=name
         this.clickData=''
@@ -419,6 +420,7 @@
         this.clickData=''
         this.timeDetail=timedetail
         this.timeDetailId=time
+        this.salesId=saleid
         this.$set(this,"salesFlag",this.salesFlag+1);
         this.$refs.myModalsale.show()
       },
@@ -460,6 +462,7 @@
         this.ifSalesShow=true
         this.ifMonth=false
         this.timeType="本日"
+        this.salesId=''
         this.datetime=this.$options.methods.toDay().substring(0,4)+"年"+this.$options.methods.toDay().substring(5,7)+"月"+this.$options.methods.toDay().substring(8,10)+"日"
         this.datetimeMD=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10)
          this.dataType="2"
