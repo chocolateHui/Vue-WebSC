@@ -176,7 +176,7 @@
     </b-modal>
 
     <b-modal id="EOSharemodal" ref="EOSharemodal" title="宴会EO单" hide-footer>
-      <EOShare></EOShare>
+      <EOShare ref="EOShare"></EOShare>
     </b-modal>
   </b-container>
 </template>
@@ -386,6 +386,7 @@
         this.$root.$emit('bv::show::modal', 'caterlogmodal');
       },
       EOShare(){
+        this.$refs.EOShare.getEOPrintRecord();
         this.$refs.EOSharemodal.show();
       },
       refreshData(){
