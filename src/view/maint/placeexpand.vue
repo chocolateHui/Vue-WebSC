@@ -113,7 +113,8 @@
             :on-preview="handlePictureCardPreview"
             :on-exceed="handleExceed"
             :before-upload="beforeupload"
-            :limit="5"
+            :limit="6"
+            accept="image/png, image/jpeg"
             :on-remove="handleRemove">
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -194,7 +195,17 @@
           if(val.tableno!=oldval.tableno){
             this.refreshpic();
           }
+        },
+      fileList2(val,oldval){
+        if(val.length>=6){
+          let aEle=document.getElementsByClassName('el-upload')[0];
+          aEle.style.display = 'none';
         }
+        else{
+          let aEle=document.getElementsByClassName('el-upload')[0];
+          aEle.style.display = '';
+        }
+      },
       },
     methods: {
         handleRemove(file, fileList) {
@@ -208,6 +219,13 @@
           this.dialogVisible = true;
         },
         beforeupload(files) {
+          console.log(files);
+          if(files.size>204800){
+            this.$message.error({
+              message: '图片大小不能超过200kb'
+            });
+            return false;
+          }
           if (!this.selectedexpand.tableno) {
             this.$message.error({
               message: '请选择一个场地'
@@ -233,7 +251,7 @@
        },
         handleExceed(files, fileList) {
           this.$message.error({
-            message: '图片最多为5张'
+            message: '图片最多为6张'
           });
         },
         refreshdata() {
@@ -278,6 +296,15 @@
                     data.push(type);
                   }
                   this.fileList2 = data;
+                  // console.log( this.fileList2);
+                  if(this.fileList2.length>=6){
+                    let aEle=document.getElementsByClassName('el-upload')[0];
+                    aEle.style.display = 'none';
+                  }
+                 else{
+                    let aEle=document.getElementsByClassName('el-upload')[0];
+                    aEle.style.display = '';
+                  }
 
                 }
                 else {
