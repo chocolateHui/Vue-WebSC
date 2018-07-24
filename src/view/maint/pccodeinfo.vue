@@ -11,7 +11,7 @@
             stripe
             highlight-current-row
             @current-change="handleCurrentChange"
-            max-height="tableHeight"
+            :max-height="tableHeight"
             style="width: 100%">
             <el-table-column
               v-for="item in pccodefildes"
@@ -173,8 +173,8 @@
               <template slot-scope="scope">
 
                   <b-form inline>
-                    <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
-                    <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
+                    <b-button size="mini" title="删除" class="Delete-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
+                    <b-button size="mini" title="日志" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
                   </b-form>
 
               </template>
@@ -267,6 +267,7 @@
         currentRow: null,
         placeRow: null,
         tableH: document.body.clientHeight-293,//减去header的278px
+        tableHeight:document.body.clientHeight-174,
         num:0,
         change:"",
         pccode:"",
@@ -734,14 +735,17 @@
       padding-right: 0px;
     }
     .maxwidth20{
+      -ms-flex: 0 0 21%;
       flex: 0 0 21%;
       max-width: 21%;
     }
     .maxwidth70{
+      -ms-flex: 0 0 78.5%;
       flex: 0 0 78.5%;
       max-width: 78.5%;
     }
     .maxwidth15{
+      -ms-flex: 0 0 10%;
       flex: 0 0 10%;
       max-width: 10%;
     }
@@ -774,6 +778,14 @@
     }
     .paddingtop5{
       padding-top: 5px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      .el-table{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
     }
     table{
       border-color: #dee2e6;
@@ -810,7 +822,7 @@
     .row{
       margin-right: 2px;
       .btng{
-        margin: 3px 0 5px;
+        margin: 8px 0 7px;
         .btn:not(:last-child){margin-right: 5px;}
       }
       .green{
@@ -827,7 +839,8 @@
       }
     }
     .form-row > .col, .form-row > [class*="col-"] {
-      padding-right: 0px;
+      padding-left: 0px;
+      text-align: right;
     }
     .modal-body {
       padding: 0.5rem;

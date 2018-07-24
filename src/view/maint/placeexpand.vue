@@ -27,7 +27,7 @@
             <label>场地代码:</label>
             <span>{{selectedexpand.tableno}}</span>
           </b-col>
-          <b-col sm="2"></b-col>
+          <!--<b-col sm="2"></b-col>-->
           <b-col sm="4">
             <label>场地名称:</label>
             <span>{{selectedexpand.descript}}</span>
@@ -126,7 +126,7 @@
     </b-row>
     <b-row class="btn-row">
       <b-col sm="3"></b-col>
-      <b-col sm="6" style="text-align: center;">
+      <b-col sm="6" style="text-align: right;">
         <b-button type="submit" @click="newp" variant="primary">保存</b-button>
         <b-button type="submit" variant="primary">退出</b-button>
         <b-button type="submit" @click="loglog" variant="primary">日志</b-button>
@@ -454,7 +454,7 @@
     .img-row{
       padding-left: 15px;
       padding-right: 15px;
-      padding-top: 5px;
+      padding-top: 13px;
     }
     .expand-col{
       background-color: #f2f2f2;
@@ -465,6 +465,10 @@
         .col-sm-6{
           padding-top: 1rem;
         }
+        .col-sm-4{
+          line-height: 28px;
+          label{ margin-bottom: 0px;}
+        }
       }
     }
     .input-group{
@@ -472,6 +476,12 @@
     }
     .btn-row{
       padding-top: 5px;
+      .col-sm-6{
+        text-align: right;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
     }
     .form-group{
       margin-bottom: 0.5rem;
