@@ -290,6 +290,9 @@
           type: 'warning',
           center: true
         }).then(() => {
+          if(_this.hotelData.length<=1){
+            this.$message({message: "请删除岗位", type: 'warning'});
+          }else{
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
             this.$http.post(methodinfo.deletedepthotel, {
@@ -306,11 +309,13 @@
               }
             })
           })
+          }
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
           });
+
         });
       },
       deletejob:function (item) {
@@ -406,6 +411,8 @@
         }else{
           if(_this.jobInfo.descript==''){
             this.$message({message: "中文描述不能为空", type: 'warning'});
+          }else if(_this.hotelData.length==0){
+            this.$message({message: "请选择酒店", type: 'warning'});
           }else{
             this.jobchange()
           }
