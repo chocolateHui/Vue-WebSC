@@ -804,6 +804,9 @@
       padding: 5px!important;
       box-shadow: 1px 5px 5px #dee2e6;
     }
+    .side-btn{
+      width: 85px;
+    }
     .row{
       margin-right: 2px;
       .btng{

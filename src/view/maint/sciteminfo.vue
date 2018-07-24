@@ -771,7 +771,6 @@
     }
     #btng{
       .btn{
-        width: 90px;
         margin-top:5px ;
         border-radius: 0.25rem;
       }
@@ -877,7 +876,7 @@
       border-color: #c8c9ca!important;
     }
     .side-btn{
-      width: 85px;
+      width: 80px;
     }
     .form-row > .col, .form-row > [class*="col-"] {
       padding-right: 0px;
