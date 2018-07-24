@@ -166,22 +166,23 @@
       },
       resetPlace(tableno){
         this.tablenoaaa = tableno;
-        let top = tableno.split(",");
-        let select = [];
-        for(let tp of Object.assign([],top)) {
-          for(let index=0;index< this.items.length;index++){
-            let item = this.items[index];
-            if(item.tableno===tp){
-              select.push(item);
+        if(tableno){
+          let top = tableno.split(",");
+          let select = [];
+          for(let tp of Object.assign([],top)) {
+            for(let index=0;index< this.items.length;index++){
+              let item = this.items[index];
+              if(item.tableno===tp){
+                select.push(item);
+              }
             }
-          }
-        };
-        this.$nextTick(()=>{
-          for(let elem of select){
-            this.$refs.multiplacetable.toggleRowSelection(elem);
-          }
-        })
-
+          };
+          this.$nextTick(()=>{
+            for(let elem of select){
+              this.$refs.multiplacetable.toggleRowSelection(elem);
+            }
+          })
+        }
       },
       clearSelect(){
         this.allselect=new Set();
@@ -209,23 +210,24 @@
                 items.push(option);
               }
               if(flag==="F"){
-                let top =  tbl.split(",");
-                let select = [];
-                for(let tp of Object.assign([],top)) {
-                  for(let index=0;index< items.length;index++){
-                    let item = items[index];
-                    if(item.tableno===tp){
-                      select.push(item);
+                if(tbl){
+                  let top =  tbl.split(",");
+                  let select = [];
+                  for(let tp of Object.assign([],top)) {
+                    for(let index=0;index< items.length;index++){
+                      let item = items[index];
+                      if(item.tableno===tp){
+                        select.push(item);
+                      }
                     }
-                  }
-                };
-                this.$nextTick(()=>{
-                  for(let elem of select){
-                    this.$refs.multiplacetable.toggleRowSelection(elem);
-                  }
-                })
+                  };
+                  this.$nextTick(()=>{
+                    for(let elem of select){
+                      this.$refs.multiplacetable.toggleRowSelection(elem);
+                    }
+                  })
+                }
               }
-
             }
           })
         })
