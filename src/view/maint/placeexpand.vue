@@ -124,12 +124,12 @@
         </b-row>
       </b-col>
     </b-row>
-    <b-row class="btn-row">
-      <b-col sm="3"></b-col>
-      <b-col sm="6" style="text-align: right;">
+    <b-row class="footer-row">
+      <b-col sm="6"></b-col>
+      <b-col sm="6" style="text-align: center;">
         <b-button type="submit" @click="newp" variant="primary">保存</b-button>
-        <b-button type="submit" variant="primary">退出</b-button>
         <b-button type="submit" @click="loglog" variant="primary">日志</b-button>
+        <b-button  @click="exitm">退出</b-button>
       </b-col>
     </b-row>
     <el-dialog title="日志" id="loglog"
@@ -408,6 +408,10 @@
             })
           })
         },
+      exitm(){
+        this.$root.$emit('bv::hide::modal','placeexpandmodal')
+      },
+
         handleChange(val) {
 
           if (val) {
@@ -485,6 +489,15 @@
     }
     .form-group{
       margin-bottom: 0.5rem;
+    }
+    .footer-row{
+      width: 100%;
+      border-top: 1px solid #e9ecef;
+      padding-top: 7px;
+      margin-top: 14.5px;
+      .btn{
+        width: 100px;
+      }
     }
   }
   #loglog{
