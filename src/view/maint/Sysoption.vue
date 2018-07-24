@@ -59,9 +59,9 @@
           </el-option>
         </el-select>
       </b-form-group>
-      <b-form-group :label-cols="5" horizontal label="SC第三方PMS系统接口地址">
-        <b-form-input v-model="scPmsUrl1.val"></b-form-input>
-      </b-form-group>
+      <!--<b-form-group :label-cols="5" horizontal label="SC第三方PMS系统接口地址">-->
+        <!--<b-form-input v-model="scPmsUrl1.val"></b-form-input>-->
+      <!--</b-form-group>-->
       <b-form-group horizontal :label-cols="5" label="SC连接的POS系统类别" >
         <el-select v-model="scPosType1.val" placeholder="请选择" :disabled="isToPos1.val=='F'">
           <el-option
@@ -72,12 +72,12 @@
           </el-option>
         </el-select>
       </b-form-group>
-      <b-form-group
-        :label-cols="5"
-        horizontal
-        label="SC第三方POS系统服务地址">
-        <b-form-input v-model="scPosUrl1.val" :disabled="isToPos1.val=='F'"></b-form-input>
-      </b-form-group>
+      <!--<b-form-group-->
+        <!--:label-cols="5"-->
+        <!--horizontal-->
+        <!--label="SC第三方POS系统服务地址">-->
+        <!--<b-form-input v-model="scPosUrl1.val" :disabled="isToPos1.val=='F'"></b-form-input>-->
+      <!--</b-form-group>-->
       <b-form-group :label-cols="5" horizontal>
         <b-button type="submit" variant="primary" @click="commitSysoption2">保存</b-button>
       </b-form-group>
