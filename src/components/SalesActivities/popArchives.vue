@@ -140,6 +140,7 @@
           this.clearAll()
         },
         clearAll:function () {
+          this.ifproCurrent=''
           this.name=''
           this.mobile=''
           this.no=''
@@ -147,7 +148,6 @@
           this.salesId=''
           this.$store.commit("setProfilesNull")
           this.cateringlist=[]
-          console.log(this.cateringlist +'hhh')
         },
         archClose: function () {
           this.$emit('btnArchClose')

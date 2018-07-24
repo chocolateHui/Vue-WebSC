@@ -3,15 +3,25 @@
     <div class="sales_activities">
       <div class="content_right">
         <div class="select">
-          <b-form-select v-model="salesId" @input="SalesSelect" class="mb-3" size="sm" :disabled="ifSalesShow">
-            <option v-if="role!=='02'&&role!=='03'" value="">全部</option>
-            <option v-for="item in salelist" :value="item.code" :key="item.code">{{item.name}}</option>
-          </b-form-select>
-          <!--<p ref="refsales" @click="salesShow" :data-id="salesId">{{salesName}}</p>-->
-          <!--<ul v-if="ifSales">-->
-            <!--<li v-if="role!=='02'" @click="btnSalesSelectALL" data-id="">全部</li>-->
-            <!--<li @click="btnSalesSelect(item)" v-for="item in salelist"  :data-id="item.code">{{item.name}}</li>-->
-          <!--</ul>-->
+          <!--<b-form-select v-model="salesId" @input="SalesSelect" class="mb-3" size="sm" :disabled="ifSalesShow">-->
+            <!--<option v-if="role!=='02'&&role!=='03'" value="">全部</option>-->
+            <!--<option v-for="item in salelist" :value="item.code" :key="item.code">{{item.name}}</option>-->
+          <!--</b-form-select>-->
+          <el-select v-model="salesId" @input="SalesSelect" :disabled="ifSalesShow" clearable filterable>
+            <el-option
+              v-if="role!=='02'&&role!=='03'"
+              value="0"
+              key="0"
+              label="全部"
+            >
+            </el-option>
+            <el-option
+              v-for="item in salelist"
+              :key="item.code"
+              :label="item.name"
+              :value="item.code">
+            </el-option>
+          </el-select>
         </div>
         <div class="task_type"  ref="basetype">
           <p>任务类别</p>
@@ -89,7 +99,7 @@
       </div>
     </div>
       <b-modal id="logmodal" ref="myModalsale" :no-close-on-backdrop="true" :no-close-on-esc="true" @hidden="onHidden" size="lg" title="销售日记" hide-footer>
-         <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :salesnameid="salesId==''?salesIdDay:salesId" :saletypeid="popSalesTypeId" :timedetailid="timeDetailId"></pop-sales>
+         <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :salesnameid="salesId=='0'?salesIdDay:salesId" :saletypeid="popSalesTypeId" :timedetailid="timeDetailId"></pop-sales>
       </b-modal>
       <div id="layer2"></div>
   </div>
@@ -112,8 +122,8 @@
         myData: [],
         list: [],
         thisDay:false,
-        salesId:'',
-        salesIdDay:'',
+        salesId:'0',
+        salesIdDay:'0',
         ifSales:false,
         diaryParam:{},
         sameData:false,
@@ -175,11 +185,12 @@
         })
       },
       SalesSelect:function () {
+        var saleid=this.salesId=='0'?'':this.salesId
         if(this.dataType==1){
            this.diaryParam = {
             bdate:this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+"-01",
             edate:this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+"-31",
-            saleid:this.salesId,
+            saleid:saleid,
           }
         }else{
           this.diaryParam = {
@@ -436,7 +447,7 @@
         this.diaryId='0'
       },
       monthNow:function (date, isChosedDay = true) {
-        this.salesIdDay=''
+        this.salesIdDay='0'
         this.ifSalesShow=false
         this.ifMonth=true
         this.timeType="本月"
@@ -458,7 +469,7 @@
         this.ifSalesShow=true
         this.ifMonth=false
         this.timeType="本日"
-        this.salesId=''
+        this.salesId='0'
         this.datetime=this.$options.methods.toDay().substring(0,4)+"年"+this.$options.methods.toDay().substring(5,7)+"月"+this.$options.methods.toDay().substring(8,10)+"日"
         this.datetimeMD=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10)
          this.dataType="2"

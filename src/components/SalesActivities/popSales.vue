@@ -20,7 +20,7 @@
       <li><i class="fa" :class="{'fa-check':ifcheck,'bgSales':!ifcheck}" id="instructions"></i>是否已批示</li>
       <li style="padding-left: 15px;width: 258px">
         <b-form-group label="销售类型&#8194;" horizontal>
-          <el-select v-model="popsaletypeid" filterable>
+          <el-select v-model="popsaletypeid" clearable filterable>
             <el-option
               v-for="item in diaryItemList"
               :key="item.code"
@@ -62,7 +62,7 @@
       </li>
       <li class="signstyle">
         <b-form-group label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;销售员" horizontal>
-          <el-select v-model="salesId" :disabled="ifbgSales"  filterable>
+          <el-select v-model="salesId" :disabled="ifbgSales" clearable filterable>
             <el-option
               v-for="item in salelist"
               :key="item.code"
@@ -267,6 +267,11 @@
               message: "单位和宾客至少填写一项",
               type: "warning"
             });
+          }else if(this.popsaletypeid==''){
+            this.$message({
+              message: "请选择销售类型",
+              type: "warning"
+            });
           }else if(this.amount==''||this.amount<=0||!money.test(this.amount)){
             this.$message({
               message: "请填写正确金额",
@@ -277,7 +282,8 @@
               message: "请选择销售员",
               type: "warning"
             });
-          }else{
+          }
+          else{
             var json={
               amount:parseFloat(this.amount)*1.0,
               applname:this.contact,
@@ -324,9 +330,10 @@
           }else{
             this.datetime=this.clickdata
           }
-          if(this.salesnameid==''){
+          if(this.salesnameid=='0'){
             this.ifbgSales=false
           }else{
+            console.log(this.salesnameid)
             this.ifbgSales=true
           }
           var _this=this
@@ -378,7 +385,7 @@
             _this.remarks=''
             _this.result=''
             _this.signId=this.signList[0].id
-            this.salesId=this.salesnameid
+            this.salesId=this.salesnameid=='0'?'':this.salesnameid
             if(this.timedetailid!=''&&this.timedetailid){
               this.dayNowId=this.timedetailid
             }else{

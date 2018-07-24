@@ -216,7 +216,7 @@
       </b-row>
     </b-container>
     <b-modal id="logmodal" ref="myModalInitalize" size="lg" :title="modelTitle" hide-footer>
-      <initalize-first v-if="ifFirst" :sign="hoteInfo.sign" @btnExit2="btnExit2" @btnExit1="btnExit1" :hotelid="hotelid"></initalize-first>
+      <initalize-first v-if="ifFirst" :flag="flag" :sign="hoteInfo.sign" @btnExit2="btnExit2" @btnExit1="btnExit1" :hotelid="hotelid"></initalize-first>
       <initalize v-else @btnExit="btnExit" :hotelid="hotelid"></initalize>
     </b-modal>
   </div>
@@ -252,7 +252,8 @@
         cityarea:'',
         ifFirst:false,
         hotelStatusNow:'',
-        modelTitle:'初始化'
+        modelTitle:'初始化',
+        flag:0,
       }
     },
     props:['innhotel','sign'],
@@ -432,6 +433,7 @@
         }
       },
       btnInitalize:function () {
+        this.flag++;
         if(this.sign==1&&this.innhotel==''){
           this.$message({message: "请选择酒店", type: 'warning'});
         }else if(this.hotelStatusNow!='R'){

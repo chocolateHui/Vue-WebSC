@@ -16,7 +16,7 @@ $colorD0:#5999D0;
 .salesContain{
   height: 100%;
   ul, ol,li {list-style: none;}
-  h1,ul, ol, dl, li, dt, dd, p, table, th, td, input, textarea,  img, label, span, strong, b {
+  h1,ul, ol, dl, li, dt, dd, p, table, th, td, textarea,  img, label, span, strong, b {
     margin: 0px;
     padding: 0px;
   }
@@ -44,11 +44,14 @@ $colorD0:#5999D0;
     float: right; width: 220px;
     .select{
       position: relative;height: 28px; margin-bottom: 20px;
-      option{
-        -moz-appearance:none; /* Firefox */
-        -webkit-appearance:none; /* Safari 和 Chrome */
-        appearance:none;
-        padding: 10px !important;
+      .el-select{
+        width: 100%;
+        .el-input__inner,.el-input.is-disabled .el-input__inner{
+          height: 30px !important;
+        }
+        .el-input__icon,.el-input.is-disabled .el-input__icon{
+          line-height: 30px !important;
+        }
       }
     }
     .task_type{
