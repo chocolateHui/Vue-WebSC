@@ -284,6 +284,7 @@
           this.hotelid=this.$store.getters.hotel.hotelid
         }
       },
+      // 判断是否是新建酒店
       getisnewhotel:function () {
         this.gethotelid()
         var _this=this
@@ -451,8 +452,8 @@
       }
     },
     created(){
+      this.getcitylist()
       if(this.sign!=1) {
-        this.getcitylist()
         this.getarealist()
         this.getpccodelist()
       }

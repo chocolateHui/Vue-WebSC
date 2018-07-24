@@ -160,7 +160,7 @@
         };
       },
       mixins: [archivesMixins],
-      props:['clickdata','saletypea','datadiary','saletypeid','saletime','salesnameid','sellerneme','timedetail','timedetailid','salesFlag'],
+      props:['clickdata','saletypea','datadiary','saletypeid','saletime','salesnameid','timedetailid','salesFlag'],
       components:{
         calendar,
         popArchives,
@@ -385,7 +385,7 @@
               this.dayNowId=this.todayList[0].id
             }
             if(this.diaryItemList.length>0){
-              if(this.saletypea!=''){
+              if(this.saletypeid!=''){
                 this.popsaletypeid=this.saletypeid
               } else{
                 this.popsaletypeid=this.diaryItemList[0].code

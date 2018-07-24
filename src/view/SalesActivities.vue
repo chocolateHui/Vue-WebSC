@@ -75,13 +75,13 @@
           </ol>
           <ul v-for="item in salelist" class="clearfix" :data-id="item.code">
             <li class="navfirst">{{item.name}}</li>
-            <li class="nav1" @click='dayPopSaleShow(item.name,item.code,"AM","上午")' @drop='daydrop($event,item.name,item.code,"AM","上午")' @dragover='allowDrop($event)'>
+            <li class="nav1" @click='dayPopSaleShow(item.code,"AM","上午")' @drop='daydrop($event,item.code,"AM","上午")' @dragover='allowDrop($event)'>
               <h1 @click="btnDetail(diaryList)" v-for="diaryList in guestdiarylist" v-if="item.code==diaryList.saleid&&diaryList.ctime=='AM'"><h1 :style="{background:salesType.bgcolor}" v-for="salesType in baseCodeListarc" v-if="diaryList.item==salesType.code"><span>{{salesType.descript}}</span></h1></h1>
             </li>
-            <li class="nav2" @click='dayPopSaleShow(item.name,item.code,"PM","下午")' @drop='daydrop($event,item.name,item.code,"PM","下午")' @dragover='allowDrop($event)'>
+            <li class="nav2" @click='dayPopSaleShow(item.code,"PM","下午")' @drop='daydrop($event,item.code,"PM","下午")' @dragover='allowDrop($event)'>
               <h1 @click="btnDetail(diaryList)" v-for="diaryList in guestdiarylist" v-if="item.code==diaryList.saleid&&diaryList.ctime=='PM'"><h1 :style="{background:salesType.bgcolor}" v-for="salesType in baseCodeListarc" v-if="diaryList.item==salesType.code"><span>{{salesType.descript}}</span></h1></h1>
             </li>
-            <li class="nav3" @click='dayPopSaleShow(item.name,item.code,"EM","晚上")' @drop='daydrop($event,item.name,item.code,"EM","晚上")' @dragover='allowDrop($event)'>
+            <li class="nav3" @click='dayPopSaleShow(item.code,"EM","晚上")' @drop='daydrop($event,item.code,"EM","晚上")' @dragover='allowDrop($event)'>
               <h1 @click="btnDetail(diaryList)" v-for="diaryList in guestdiarylist" v-if="item.code==diaryList.saleid&&diaryList.ctime=='EM'"><h1 :style="{background:salesType.bgcolor}" v-for="salesType in baseCodeListarc" v-if="diaryList.item==salesType.code"><span>{{salesType.descript}}</span></h1></h1>
             </li>
           </ul>
@@ -89,7 +89,7 @@
       </div>
     </div>
       <b-modal id="logmodal" ref="myModalsale" :no-close-on-backdrop="true" :no-close-on-esc="true" @hidden="onHidden" size="lg" title="销售日记" hide-footer>
-         <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :saletypea="popSalesType" :salesnameid="salesId" :saletypeid="popSalesTypeId" :sellerneme="popSaller" :timedetail="timeDetail" :timedetailid="timeDetailId"></pop-sales>
+         <pop-sales style="padding-left: 100px" :clickdata="clickData" :datadiary="diaryId" :salesFlag="salesFlag" @saveorupdateguestdiary="saveorupdateguestdiary" @btnExit="btnExit" :saletime="popSalesTime" :salesnameid="salesId==''?salesIdDay:salesId" :saletypeid="popSalesTypeId" :timedetailid="timeDetailId"></pop-sales>
       </b-modal>
       <div id="layer2"></div>
   </div>
@@ -113,18 +113,16 @@
         list: [],
         thisDay:false,
         salesId:'',
+        salesIdDay:'',
         ifSales:false,
         diaryParam:{},
         sameData:false,
         dom:null,
         clickData:'',
-        popSalesType:'',
         //销售类型
         popSalesTypeId:'',
         popSalesTime:'',
         diaryId:'0',
-        popSaller:'',
-        timeDetail:'',
         timeDetailId:'',
         bgcolorFlag:['#A0A0A0','#82AF6F','#D15B47','#9585BF','#FEE188','#D6487E','#3A87AD'],
         baseCodeListarc:[],
@@ -176,36 +174,6 @@
           })
         })
       },
-      //销售类别拖动
-      dragstart:function(event){
-        event.dataTransfer.setData("infoName"," ");
-        this.dom = event.currentTarget
-      },
-      allowDrop:function(event){
-        event.preventDefault();
-      },
-      monthdrop:function(event,e){
-        event.preventDefault();
-        this.popSalesType=this.dom.getAttribute("type-name")
-        this.popSalesTypeId=this.dom.getAttribute("type-id")
-        this.popSalesTime=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+e
-        this.clickData=''
-        this.$set(this,"salesFlag",this.salesFlag+1);
-        this.$refs.myModalsale.show()
-      },
-      daydrop:function(event,name,saleid,time,timedetail){
-        event.preventDefault();
-        this.popSalesType=this.dom.getAttribute("type-name")
-        this.popSalesTypeId=this.dom.getAttribute("type-id")
-        this.salesId=saleid
-        this.popSalesTime=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10)
-        this.popSaller=name
-        this.clickData=''
-        this.timeDetail=timedetail
-        this.timeDetailId=time
-        this.$set(this,"salesFlag",this.salesFlag+1);
-        this.$refs.myModalsale.show()
-      },
       SalesSelect:function () {
         if(this.dataType==1){
            this.diaryParam = {
@@ -225,6 +193,7 @@
       // 销售活动查询
       getDiary:function () {
         this.$store.dispatch('encrypttoken').then(() => {
+          this.configDefault()
           this.$store.dispatch('getguestdiarylist',this.diaryParam).then(() => {
 
           })
@@ -414,24 +383,50 @@
         date = new Date(date)
         return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
       },
-      dayPopSaleShow:function (name,saleid,time,timedetail) {
-        this.popSalesTime=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10)
-        this.popSaller=name
+      //销售类别拖动
+      dragstart:function(event){
+        event.dataTransfer.setData("infoName"," ");
+        this.dom = event.currentTarget
+      },
+      allowDrop:function(event){
+        event.preventDefault();
+      },
+      monthdrop:function(event,e){
+        event.preventDefault();
+        this.popSalesTypeId=this.dom.getAttribute("type-id")
+        this.popSalesTime=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+e
         this.clickData=''
-        this.timeDetail=timedetail
+        this.$set(this,"salesFlag",this.salesFlag+1);
+        this.$refs.myModalsale.show()
+      },
+      daydrop:function(event,saleid,time,timedetail){
+        event.preventDefault();
+        this.popSalesTypeId=this.dom.getAttribute("type-id")
+        this.salesIdDay=saleid
+        this.popSalesTime=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10)
+        this.clickData=''
         this.timeDetailId=time
-        this.salesId=saleid
+        this.$set(this,"salesFlag",this.salesFlag+1);
+        this.$refs.myModalsale.show()
+      },
+      dayPopSaleShow:function (saleid,time,timedetail) {
+        this.popSalesTime=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10)
+        this.popSalesTypeId=''
+        this.clickData=''
+        this.salesIdDay=saleid
+        this.timeDetailId=time
         this.$set(this,"salesFlag",this.salesFlag+1);
         this.$refs.myModalsale.show()
       },
       monthPopSaleShow :function (item) {
+        this.popSalesTypeId=''
         var data=item.id
         if(data<10){
           data="0"+data
         }
-          this.clickData=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+data
+        this.clickData=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+data
         this.$set(this,"salesFlag",this.salesFlag+1);
-          this.$refs.myModalsale.show()
+        this.$refs.myModalsale.show()
       },
       btnExit:function(){
         this.diaryId='0'
@@ -441,6 +436,7 @@
         this.diaryId='0'
       },
       monthNow:function (date, isChosedDay = true) {
+        this.salesIdDay=''
         this.ifSalesShow=false
         this.ifMonth=true
         this.timeType="本月"
