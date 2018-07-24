@@ -24,7 +24,7 @@
       </b-col>
       <b-col cols="10">
         <b-container :style="{height: bodyHeight + 'px'}">
-          <scitem></scitem>
+          <scitem v-if="!isHistory"></scitem>
           <sceventitem></sceventitem>
         </b-container>
       </b-col>
@@ -56,6 +56,7 @@
     computed: {
 
       ...mapGetters([
+        'isHistory',
         'caterid',
         'eventid',
         'isLoading',
