@@ -25,9 +25,11 @@
 
           <b-form inline class="forma" >
             <b-button
+              v-if="!isHistory"
               size="sm"
               @click="close()">复制</b-button>
             <b-button
+              v-if="!isHistory"
               size="sm"
                @click="unclose()">转移</b-button>
             <b-button style="float: right"
@@ -102,9 +104,9 @@
             label="操作"
             width="100">
             <template slot-scope="scope">
-                <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
-                <b-button size="mini" class="Delete-button image-btn" type="danger" @click="saveitem(scope.row)"></b-button>
-                <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log2(scope)"></b-button>
+                <b-button size="mini"  v-if="!isHistory" title="取消" class="Cancel-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
+                <b-button size="mini"  v-if="!isHistory" title="保存" class="Save-button image-btn" type="danger" @click="saveitem(scope.row)"></b-button>
+                <b-button size="mini" title="日志" class="Journal-button image-btn" type="danger" @click="log2(scope)"></b-button>
             </template>
           </el-table-column>
         </el-table>
@@ -142,15 +144,19 @@
         selectbm:"",
         filterText:"",
         sceventitemlist:[],
-        th:(document.body.clientHeight-272)/2
+        th: (document.body.clientHeight-272)/2
       }
     },
 
     created(){
+      if(this.isHistory){
+        this.th = (document.body.clientHeight-168);
+      }
       this.refreshdata();
     },
     computed:{
       ...mapGetters([
+        'isHistory',
         'sceventitemeventid',
         'catering',
         'eventdes',
@@ -240,14 +246,18 @@
         this.refreshdata();
       },
       refreshdata(){
-
+        let isH="F";
+        if(this.isHistory){
+          isH="T";
+        }
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
           this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
           this.$http.post(methodinfo.geteventitemlist, {
             eventid: this.sceventitemeventid,
-            sta:"0"
+            sta:"0",
+            isH:isH,
           }).then((response)=> {
             if (response.data.errorCode==='0') {
 
@@ -500,6 +510,30 @@
 </script>
 <style lang="scss" type="text/scss">
   #sceventitem{
+    #Syslog {
+      .container-fluid {
+        border: none!important;
+        background-color: white!important;
+      }
+    }
+    #singleplace {
+      .container-fluid {
+        border: none!important;
+        background-color: white!important;
+      }
+    }
+    #multiplace {
+      .container-fluid {
+        border: none!important;
+        background-color: white!important;
+      }
+    }
+    #remark {
+      .container-fluid {
+        border: none!important;
+        background-color: white!important;
+      }
+    }
     .container-fluid{
       border: 1px solid #ced4da;
       border-radius: 5px;

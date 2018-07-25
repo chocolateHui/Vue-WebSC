@@ -1,5 +1,5 @@
 <template>
-      <ol ref="thing">
+      <ol id="todayThings">
         <li>今日事务</li>
         <li class="head">
           <span class="n1">宴会名称</span>
@@ -9,8 +9,8 @@
           <span class="n3">时间</span>
           <span class="n4">修改人</span>
         </li>
-        <li class="it" v-for="(placeslist,index) in placesinfo2">
-          <div v-for="infolist in placesinfo2[index].bdates" class="clearfix" v-if="infolist.bdate==timelistthing1&&placeslistp==placeslist.tableno">
+        <li class="it" v-for="placeslist in placesinfo2" v-if="placeslistp==placeslist.tableno">
+          <div v-for="infolist in placeslist.bdates" class="clearfix" v-if="infolist.bdate==timelistthing1">
             <span class="n1" :data-id="infolist.caterid" @click="btnToEvent(infolist.caterid)">{{infolist.caterdes}}</span>
             <span class="n5">{{infolist.eventdes}}</span>
             <span class="n7" v-for="hlist in headListp" v-if="hlist.dataid==infolist.sta">{{hlist.name}}</span>
@@ -34,21 +34,17 @@
       data(){
         return{
            timenow:'',
-          placesinfo2:[]
+          placesinfo2:[],
         }
-      },
-      created(){
-          this.timenow=this.today()
       },
       computed: {
         ...mapGetters(['placesinfo']),
       },
-      watch:{
-        placesinfo:function (val,oldval) {
-          this.placesinfo2 = Object.assign({},this.placesinfo);
-        }
+      created(){
+        this.timenow=this.today()
+        this.placesinfo2 = Object.assign({},this.placesinfo);
       },
-      props:['datatimeid','timelistthing1','placeslistp','headListp'],
+      props:['timelistthing1','placeslistp','headListp'],
       methods:{
         btnToEvent:function (cater) {
           this.$store.commit('setCaterid',cater);
@@ -70,12 +66,13 @@
           return times;
         },
       },
-      mounted: function () {
-
-      },
     }
 </script>
 
-<style scoped lang="scss">
-
+<style lang="scss">
+#todayThings{
+.scoll{
+  max-height: 200px;overflow-y: auto;
+}
+}
 </style>

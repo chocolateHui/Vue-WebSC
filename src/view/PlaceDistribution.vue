@@ -2,8 +2,8 @@
   <div class="place_contain" id="place_contain" ref="contain">
     <div class="place_head clearfix">
       <ul>
-        <li class="all" @click="btnAllCheck"><i class="fa" :class="{'fa-check':ifAllCheck}"></i>所有</li>
-        <li @click="btnCheck(index)" v-for="(list, index)  in headList" :class="list.liStyle" ><i class="fa" :class="[list.iStyle, { 'fa-check': list.checked}]"></i>{{list.name}}</li>
+        <li class="all" @click="btnAllCheck"><i class="fa" :class="{'fa-check':ifAllCheck}"></i><span>所有</span></li>
+        <li @click="btnCheck(index)" v-for="(list, index)  in headList" :class="list.liStyle" ><i class="fa" :class="[list.iStyle, { 'fa-check': list.checked}]"></i><span>{{list.name}}</span></li>
       </ul>
       <ol>
         <li @click="listChange"><i class="fa fa-list"></i>列表</li>
@@ -23,7 +23,7 @@
               <ol>
                 <li data-id="1" v-for="(item,index) in basecodeslist"><i class="fa" :class="{'fa-check':typeof item.ifTypeCheck=='undefined'?true:item.ifTypeCheck}" @click="typeCheck(item)"></i>{{item.descript}}</li>
               </ol>
-              <input type="button" class="btn_ok" ref="reftypeok" value="确定" @click="thingTypeOk" />
+              <input type="button" class="btn_ok" ref="reftypeok" value="确定"@click="thingTypeOk" />
             </div>
           </li>
           <li><span class="el-icon-date" @click="btnDataTime" ref="refcalen">{{datatime}}</span>
@@ -47,8 +47,8 @@
             </li>
           </ul>
         </div>
-        <div class="item">
-          <ul v-for="(placeitem,index1) in placeslist" class="clearfix">
+        <div class="item" ref="refitem">
+          <ul v-for="(placeitem,index1) in placeSta" class="clearfix">
             <li class="nav1" style="position: relative">
               <span :dataid="placeitem.tableno">{{placeitem.descript}}</span>
               <div v-for="(tolist,indexto) in gettolist">
@@ -59,23 +59,19 @@
                 <span v-for="(listc,indexc) in gettolist[indexto].places" v-if="tolist.tableno==placeitem.tableno&&indexc>=3">&nbsp;{{listc.toplacedes}}&nbsp;</span>
               </div>
             </li>
-            <li v-for="(timelist,index2) in timeList" @mouseenter="thingsShow(index1,index2,timelist,$event)" @mouseleave="thingsHide">
-              <h1 v-for="(item,indexdetail) in timeAll">
+            <li v-for="(timelist,index2) in timeList" @mouseenter="thingsShow(index1,index2,timelist,$event)" @mouseleave="thingsHide" @click="addThings(timelist,placeitem.tableno)">
+              <h1 v-for="item in timeAll">
                 <label>{{item.time}}</label>
                 <p>
-                  <span v-for="items in timeAll[indexdetail].content" >
-                    <span v-for="(infolist1,infoindex1) in placesinfo1" v-if="infolist1.tableno==placeitem.tableno">
-                        <span v-for="infolist in (placesinfo1[infoindex1].bdates)" v-if="timelist==infolist.bdate&&((items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))">
-                            <span v-for="typeitem in typeList" v-if="iftypelist||(typeitem==infolist.eventtype)">
-                               <span v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta"  :data-id="items.dataid" :data-it="items.datait"></span>
-                            </span>
-                          </span>
-                      </span>
-                   </span>
+                   <span v-for="items in item.content">
+                     <span v-for="infolist in placeitem.bdates" v-if="timelist==infolist.bdate&&(iftypelist||typeList.indexOf(infolist.eventtype)!=-1)&&((items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))">
+                       <span v-if="colorlist.dataid==infolist.sta" v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]"></span>
+                     </span>
+                  </span>
                 </p>
               </h1>
-              <div class="todayThings" lastChild="refthings" v-show="activeIndex===index1+'-'+index2" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom}">
-                <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="timelist" :datatimeid="datatimeid" @addThings="addThings"></today-things>
+              <div class="todayThings" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex===index1+'-'+index2}">
+                <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="timelist" @addThings="addThings"></today-things>
               </div>
             </li>
           </ul>
@@ -96,7 +92,7 @@
           </ul>
         </div>
         <div class="item">
-          <ul class="clearfix" v-for="(placeitem,index1) in placeslist">
+          <ul class="clearfix" v-for="(placeitem,index1) in placeSta">
             <li class="nav1" style="position: relative">
               <span :dataid="placeitem.tableno">{{placeitem.descript}}</span>
               <div v-for="(tolist,indexto) in gettolist">
@@ -107,19 +103,15 @@
                 <span v-for="(listc,indexc) in gettolist[indexto].places" v-if="tolist.tableno==placeitem.tableno&&indexc>=3">&nbsp;{{listc.toplacedes}}&nbsp;</span>
               </div>
             </li>
-            <li class="nav2"  @mouseenter="thingsShow(index1,'0',datatime.substring(0,10),$event)" @mouseleave="thingsHide">
-             <span v-for="items in timeToday">
-                <span v-for="(infolist1,infoindex1) in placesinfo1" v-if="infolist1.tableno==placeitem.tableno">
-                  <span v-for="(infolist,infoindex) in placesinfo1[infoindex1].bdates">
-                    <span v-for="typeitem in typeList"  v-if="iftypelist||(typeitem==infolist.eventtype)">
-                       <span v-for="colorlist in headList" class="bgtime2" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]" v-if="colorlist.dataid==infolist.sta&&( (items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))"  :data-id="items.dataid" :data-it="items.datait"></span>
-                    </span>
-                  </span>
-                </span>
-             </span>
-              <div class="todayThings" lastChild="refthings" v-show="activeIndex1==index1" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom}">
-                <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="datatime.substring(0,10)" :datatimeid="datatimeid" @addThings="addThings"></today-things>
-              </div>
+            <li class="nav2"  @mouseenter="thingsShow(index1,'0',datatime.substring(0,10),$event)" @mouseleave="thingsHide" @click="addThings(datatime.substring(0,10),placeitem.tableno)">
+              <span v-for="items in timeToday">
+                 <span v-for="infolist in placeitem.bdates" v-if="(iftypelist||typeList.indexOf(infolist.eventtype)!=-1)&&((items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))">
+                   <span v-if="colorlist.dataid==infolist.sta" v-for="colorlist in headList" class="bgtime2" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]"></span>
+                 </span>
+              </span>
+              <div class="todayThings clearfix" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex1==index1}">
+                <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="datatime.substring(0,10)" @addThings="addThings"></today-things>
+               </div>
             </li>
           </ul>
         </div>
@@ -199,7 +191,7 @@
         gettolist:[],
         placeinfoparam:{},
         basecodeslist:[],
-        typeList:['1'],
+        typeList:[],
         iftypelist:true,
         gettocurrent:'',
         ifAllCheck:false,
@@ -208,7 +200,8 @@
         newChooseAddr:'',
         newChooseAddrNo:'',
         sta:'',
-        placesinfo1:[]
+        placesinfo1:[],
+        placeSta:[],
       }
     },
     filters:{
@@ -226,9 +219,6 @@
       ...mapGetters(['isLoading']),
     },
     created(){
-      this.$store.dispatch('encrypttoken').then(() => {
-        this.$store.dispatch('getTimeUnit')
-      })
           loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           for(var num=8;num<=22;num++) {
             if (num <= 12) {
@@ -265,6 +255,14 @@
             this.timeAll[2].content.push(content1)
           }
           this.todayHour.push(num+':00')
+        }
+      }
+      var self=this;
+      document.onkeydown=function(e) {
+        var key = window.event.keyCode;
+        if(key==27){
+          self.calenShow = false
+          self.ifThingType = false
         }
       }
     },
@@ -386,11 +384,32 @@
         }
         this.placeusedinfodata()
       },
+      deepClone(obj){
+        let _obj = JSON.stringify(obj),
+          objClone = JSON.parse(_obj);
+        return objClone
+      },
       placeusedinfodata:function () {
+        this.placeSta=[]
         this.$store.dispatch('encrypttoken').then(() => {
           //获取工号信息,完成后进行路由
           this.$store.dispatch('getplaceusedinfo',this.placeinfoparam).then(() => {
             this.placesinfo1 = Object.assign({},this.placesinfo);
+            if(typeof this.placeslist!='undefined'){
+              this.placeslist.forEach(function (item) {
+                item.bdates=[]
+              })
+              var placelist=this.placeslist
+              var placesinfos=this.placesinfo1
+              placelist.forEach(function (item) {
+                for(var i in placesinfos) {
+                  if(placesinfos[i].tableno==item.tableno){
+                    item.bdates=placesinfos[i].bdates
+                  }
+                }
+              })
+              this.placeSta=placelist
+            }
             loading.close();
           })
         })
@@ -424,24 +443,26 @@
         this.$refs.myModalchoose.hide()
       },
       addThings:function (time,addr) {
-        this.newChooseTime=time
-        var newParam={
-          begindate:time,
-          enddate:time,
-          flag:'T',
-          sta:'1,2,3,W,Q',
-        }
-        var _this=this
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$store.dispatch('getcateringlist',newParam)
-        })
-        for(var t=0;t<this.placeslist.length;t++){
-          if(addr==this.placeslist[t].tableno){
-            this.newChooseAddr=this.placeslist[t].descript
-            this.newChooseAddrNo=this.placeslist[t].tableno
+        if(new Date(this.today())<=new Date(time)){
+          this.newChooseTime=time
+          var newParam={
+            begindate:time,
+            enddate:time,
+            flag:'T',
+            sta:'1,2,3,W,Q',
           }
+          var _this=this
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.$store.dispatch('getcateringlist',newParam)
+          })
+          for(var t=0;t<this.placeslist.length;t++){
+            if(addr==this.placeslist[t].tableno){
+              this.newChooseAddr=this.placeslist[t].descript
+              this.newChooseAddrNo=this.placeslist[t].tableno
+            }
+          }
+          this.$refs.myModalchoose.show()
         }
-        this.$refs.myModalchoose.show()
       },
       typeCheckAll:function () {
         this.ifTypeCheckAll=!this.ifTypeCheckAll
@@ -477,7 +498,8 @@
         this.ifThingType=true
       },
       thingTypeOk:function () {
-        this.iftypelist=false
+         this.iftypelist=false
+        this.ifThingType=false
         this.typeList=[]
         for (var i=0;i<this.basecodeslist.length;i++){
           if(typeof this.basecodeslist[i].ifTypeCheck !="undefined") {
@@ -488,7 +510,6 @@
             this.typeList.push(this.basecodeslist[i].code)
           }
         }
-        this.ifThingType=false
       },
       thingsShow:function (index1,index2,timedata,event) {
         var _this=this;
@@ -498,9 +519,9 @@
         }else{
           var palceLeft=event.currentTarget.offsetLeft+30
         }
-        var palceTop=event.currentTarget.offsetTop
+        var palceTop=event.clientY
         var bodyH=this.$refs.contain.offsetHeight;
-        var thingsH=100;
+        var thingsH=event.currentTarget.lastChild.offsetHeight
         var current=event.currentTarget
         _this.showtime=setTimeout(function(){
           var todaytime=new Date(_this.today());
@@ -514,7 +535,7 @@
           }else{
             _this.isleft=true
           }
-          if(bodyH-palceTop<thingsH-90){
+          if(bodyH-palceTop<thingsH-70){
             _this.isBottom=true
           }else{
             _this.isBottom=false
@@ -602,6 +623,7 @@
           this.ifToday="最近七天"
           this.todayNow=true
           this.datatime=this.datatime.substring(0,10)
+          this.dataNow=this.datatime.substring(0,10)
           this.formdata=[]
           this.formData(this.adddateday(this.dataNow,0))
           this.timeList=[]
@@ -613,6 +635,7 @@
           this.ifToday="查看今天"
           this.todayNow=false
           this.datatime=this.datatime.substring(0,10)+" 至 "+this.adddateday(this.datatime.substring(0,10),6)
+          this.dataNow=this.datatime.substring(0,10)
           this.formdata=[]
           this.formData(this.adddateday(this.dataNow,0))
           this.timeList=[]
@@ -723,38 +746,39 @@
         if(month<10){month="0"+month;}
         var times = date1.getFullYear() + "-" + month + "-" + day;
         return times;
-      }
+      },
     },
     mounted: function () {
-    
-      this.getbasecodelist()
-      this.datatimeid=this.today()
-      this.$store.dispatch('encrypttoken').then(() => {
-         this.$store.dispatch('getTimeUnit')
+      this.$nextTick(function () {
+        this.getbasecodelist()
+        this.datatimeid=this.today()
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch('getTimeUnit')
         })
-      this.getpccodelist()
-      this.datatime=this.today()+" 至 "+this.adddateday(this.today(),6)
-      this.dataNow=this.today()
-      this.formData(this.dataNow)
-      for(var t=0;t<7;t++){
-        this.timeList.push(this.formdata[t].dataAll)
-      }
-      document.addEventListener('click',(e)=> {
-        if (this.$refs.refpccode) {
-          if (!this.$refs.refpccode.contains(e.target)) {
-            this.ifpccode = false
-          }
+        this.getpccodelist()
+        this.datatime=this.today()+" 至 "+this.adddateday(this.today(),6)
+        this.dataNow=this.today()
+        this.formData(this.dataNow)
+        for(var t=0;t<7;t++){
+          this.timeList.push(this.formdata[t].dataAll)
         }
-        if (this.$refs.refcalen) {
-          if (!this.$refs.refcalen.contains(e.target)) {
-            this.calenShow = false
+        document.addEventListener('click',(e)=> {
+          if (this.$refs.refpccode) {
+            if (!this.$refs.refpccode.contains(e.target)) {
+              this.ifpccode = false
+            }
           }
-        }
-        if (this.$refs.refchooseThing) {
-          if (!this.$refs.refchooseThing.contains(e.target)) {
-            this.ifThingType = false
+          if (this.$refs.refcalen) {
+            if (!this.$refs.refcalen.contains(e.target)) {
+              this.calenShow = false
+            }
           }
-        }
+          if (this.$refs.refchooseThing) {
+            if (!this.$refs.refchooseThing.contains(e.target)) {
+              this.ifThingType = false
+            }
+          }
+        })
       })
     },
   }
@@ -796,14 +820,17 @@
       width: 100%;
     }
     .todayThings{
+      min-height: 80px;
       background: #fff;
       position: absolute;
-      min-height: 100px;
       padding-bottom: 10px;
       width: 470px;
-      z-index: 9;
+      z-index: -1;
       border-radius:3px;
       box-shadow:0 0 15px #C1C1C1;
+    }
+    .ifTodayThings{
+      z-index: 99;
     }
     .borderleft{border-left: 2px solid #fff;}
     .gettochild{

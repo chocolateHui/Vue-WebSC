@@ -288,6 +288,7 @@
       border-top: 1px solid #e9ecef;
       padding-top: 5px;
       margin-top: 43.5px;
+      margin-left: 0 !important;
       .btn{
         width: 100px;
       }

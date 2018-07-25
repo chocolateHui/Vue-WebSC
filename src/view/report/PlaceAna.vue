@@ -264,6 +264,10 @@
     .el-table td, .el-table th{
       padding: 0;
     }
+    .el-table__header-wrapper.el-table td, .el-table th{
+      padding: 0;
+      background: linear-gradient(#fff, #F4F5F6);
+    }
     .el-table .caret-wrapper{
       width: 20px;
     }

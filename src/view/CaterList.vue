@@ -24,9 +24,10 @@
       <el-tabs type="border-card" class="width100 height100" @tab-click="tabClick">
         <el-tab-pane label="当前宴会订单">
           <b-row>
-            <b-col>
+            <b-col style="padding-left: 0px;">
               <b-form inline>
                 <b-form-checkbox v-model="allSelected"
+                                 :disabled="allSelected"
                                  :indeterminate="indeterminate"
                                  aria-describedby="flavours"
                                  aria-controls="flavours"
@@ -75,10 +76,11 @@
         </el-tab-pane>
         <el-tab-pane label="历史宴会订单">
           <b-row>
-            <b-col>
+            <b-col style="padding-left: 0px;">
               <b-form inline>
 
                 <b-form-checkbox v-model="HallSelected"
+                                 :disabled="HallSelected"
                                  :indeterminate="Hindeterminate"
                                  aria-describedby="jflavours"
                                  aria-controls="flavours"
@@ -210,6 +212,9 @@
         }
         else{
           this.selected =  [];
+          for(let key of this.flavours){
+            this.selected.push(key.value)
+          }
         }
       },
       HtoggleAll (checked) {
@@ -221,6 +226,9 @@
         }
         else{
           this.Hselected =  [];
+          for(let key of this.flavours){
+            this.Hselected.push(key.value)
+          }
         }
       },
       refresh1(){
@@ -415,7 +423,10 @@
       selected(newVal, oldVal) {
         if (newVal.length === 0) {
           this.indeterminate = false
-          this.allSelected = false
+          this.allSelected = true
+          for(let key of this.flavours){
+            this.selected.push(key.value)
+          }
         } else if (newVal.length === this.flavours.length) {
           this.indeterminate = false
           this.allSelected = true
@@ -431,7 +442,10 @@
       Hselected(newVal, oldVal) {
         if (newVal.length === 0) {
           this.Hindeterminate = false
-          this.HallSelected = false
+          this.HallSelected = true
+          for(let key of this.flavours){
+            this.Hselected.push(key.value)
+          }
         } else if (newVal.length === this.flavours.length) {
           this.Hindeterminate = false
           this.HallSelected = true
@@ -515,7 +529,7 @@
     }
     .form-inline {
       padding-bottom: 10px;
-      padding-left: 15px;
+      padding-left: 0px;
       width: 100%;
     }
     table{

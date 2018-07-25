@@ -11,7 +11,7 @@
             stripe
             highlight-current-row
             @current-change="handleCurrentChange"
-            max-height="tableHeight"
+            :max-height="tableHeight"
             style="width: 100%">
             <el-table-column
               v-for="item in pccodefildes"
@@ -100,10 +100,11 @@
           </b-row>
           <div class="btng green">
             <b-button :disabled="btnshow.modify" @click="modifyp" variant="primary">修改营业点</b-button>
-            <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
-            <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
+            <b-button :disabled="btnshow.savep" @click="savep" variant="primary">保存</b-button>
+            <b-button :disabled="btnshow.cancelp" @click="cancel" variant="primary">取消</b-button>
           </div>
           <el-table
+            ref="bbbb"
             :data="placedata"
             border
             stripe
@@ -161,24 +162,9 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="layout"
-              label="布局"
-              width="135"
-              show-overflow-tooltip>
-              <template slot-scope="scope">
-                <el-select v-model="scope.row.layoutarr" multiple @change=" handlelaySelectionChange(scope)">
-                  <el-option
-                    v-for="item in tableData3"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </template>
-            </el-table-column>
-            <el-table-column
               prop="toplace"
               label="从属场地"
+              width="160"
               show-overflow-tooltip>
             </el-table-column>
             <el-table-column
@@ -187,8 +173,8 @@
               <template slot-scope="scope">
 
                   <b-form inline>
-                    <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
-                    <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
+                    <b-button size="mini" title="删除" class="Delete-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
+                    <b-button size="mini" title="日志" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
                   </b-form>
 
               </template>
@@ -206,43 +192,8 @@
         </b-col>
 
       </b-row>
-      <b-modal id="placemodal" ref="myModalRef" hide-footer title="修改从属场地">
-
-        <div class="d-block text-center">
-          <el-input
-            style="width: 30%;float: right; padding-bottom: 0.5rem;"
-            prefix-icon="el-icon-search"
-            v-model="seachplace">
-          </el-input>
-          <el-table
-            ref="multipleTable"
-            :data="searchitems"
-            tooltip-effect="dark"
-            style="width:100%"
-            height="350"
-            border
-            stripe
-            @selection-change="handleSelectionChange">
-            <el-table-column
-              type="selection"
-              width="55">
-            </el-table-column>
-            <el-table-column
-              v-for="item in topplacefildes"
-              :prop="item.prop"
-              :label="item.label"
-              :width="item.width"
-              :sortable="item.sortable"
-              :show-overflow-tooltip="item.showTip" :key="item.prop">
-            </el-table-column>
-          </el-table>
-
-        </div>
-        <b-row style="float: right;">
-          <b-btn class="mt-3" variant="outline-danger" block @click="hideModal">取消</b-btn>
-          <b-btn class="mt-3" variant="outline-danger" block @click="rowset">确认</b-btn>
-        </b-row>
-
+      <b-modal id="multiplacemodal" ref="multiplacemodal" title="场地列表" size="lg" hide-footer>
+        <MultiPlace ref="MultiPlace" @placeConfirm="placeConfirm" :pccode="pccode" :placestr="topplacestr"></MultiPlace>
       </b-modal>
       <b-modal id="placeexpandmodal" ref="placeexpandmodel" size="lg" title="扩展属性" hide-footer>
         <placeexpand :pccode="pcinfo.pccode"></placeexpand>
@@ -254,6 +205,7 @@
 <script>
   import methodinfo from '../../config/MethodConst.js'
   import placeexpand from '../maint/placeexpand.vue'
+  import MultiPlace from '../../components/pccode/MultiPlace.vue'
 
   const show = {  pccodedisabled: true, descriptdisabled:  true,descript1disabled:true,descript2disabled:true ,kinddesdisabled:true,tablesdisabled:true}
   const newshow = {  pccodedisabled: false, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:true,tablesdisabled:true}
@@ -285,9 +237,9 @@
     {  prop: 'toplace', label:  '从属场地',width:'',sortable:true,showTip:true }
   ]
 
-  const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true}
-  const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:false,cancel:false}
-  const btnmodifyshow ={  new: true, modify:  true,delete:true,place:true ,save:true,cancel:true}
+  const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true,savep:true,cancelp:true}
+  const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:true,cancel:true,savep:false,cancelp:false}
+  const btnmodifyshow ={  new: true, modify:  true,delete:true,place:true ,save:false,cancel:false,savep:true,cancelp:true}
 
   export default {
     data () {
@@ -303,8 +255,6 @@
         btnshow :btnshow,
         placesavetype: '',
         pcinfo: pccodemoren,
-        multipleSelection:"",
-        multiplelayoutSelection:[],
         changedplaceinfo:{},
         oldcurrentRow:null,
         pccodesavetype:"",
@@ -316,9 +266,12 @@
         },
         currentRow: null,
         placeRow: null,
-        tableH: document.body.clientHeight-278,//减去header的278px
+        tableH: document.body.clientHeight-293,//减去header的278px
+        tableHeight:document.body.clientHeight-174,
         num:0,
         change:"",
+        pccode:"",
+        topplacestr:"",
       }
     },
     mounted() {
@@ -331,24 +284,6 @@
           return show;
         }else{
           return this.showchange
-        }
-      },
-      searchitems:function () {
-        if(!this.seachplace){
-          var m = Object.assign([],this.placedata);
-          var s = [];
-          for(let a of m){
-            if(a.add!="T"){
-              s.push(a);
-            }
-          }
-          return  s;
-        }else{
-          return Object.assign([],this.placedata).filter( placedata => {
-            if (placedata.tableno.indexOf(this.seachplace)>=0||placedata.descript.indexOf(this.seachplace)>=0){
-              return placedata;
-            }
-          });
         }
       },
     },
@@ -653,6 +588,9 @@
         var newplace =  Object.assign({},placemoren);
         this.placedata.push(newplace);
         this.placesavetype = "update";
+        this.$nextTick(function(){
+          this.$refs.bbbb.bodyWrapper.scrollTop = this.$refs.bbbb.bodyWrapper.scrollHeight;
+        })
       },
       savep:function () {
 
@@ -704,66 +642,40 @@
         }
       },
       showModal () {
-        this.$refs.myModalRef.show()
+        this.$refs.multiplacemodal.show()
       },
 
       hideModal () {
-        this.$refs.myModalRef.hide()
+        this.$refs.multiplacemodal.hide()
       },
-
-      handleSelectionChange(val) {
-        var a ="";
-        for(var i=0;i<val.length;i++){
-          a = a+","+val[i].tableno;
+      placeConfirm(val){
+        let str = "";
+        for(let elem of val){
+          str = str + elem.tableno + ',';
         }
-        a = a.substring(1);
-        this.multipleSelection = a;
-      },
-      handlelaySelectionChange(val) {
+        str=str.substr(0,str.length-1)
+        this.$set(this.placeRow,"toplace",str);
 
-        if(val.row.add!="T"){
-          var a = val.row.layoutarr.slice().toString();
-          val.row.layout = a;
-          this.changedplaceinfo[val.row.tableno] = val.row;
-          this.placesavetype="update";
-
-        }
-      },
-      rowset(){
-
-        this.$set( this.placeRow,"toplace",this.multipleSelection)
         this.$nextTick(function(){
           this.placesavetype = "update";
+          if(this.placeRow.add!="T"){
+            this.changedplaceinfo[this.placeRow.tableno] = this.placeRow;
+            this.placesavetype="update";
+            this.oldcurrentRow = Object.assign({},this.currentRow);
+          }
         })
         this.hideModal();
       },
       tableDbEdit(row, column, cell, event) {
-        this.multipleSelection = "";
-        this.multiplelayoutSelection = "";
         if (column.property ==="toplace") {
-          this.$refs.multipleTable.clearSelection();
           this.placeRow = row;
-          if(typeof(row.toplace) != "undefined"){
-            var top = row.toplace.split(",")
-            var m = Object.assign([],this.placedata);
-            var s = [];
-            for(let a of m){
-              if(a.add!="T"){
-                s.push(a);
-              }
-            }
-            for(let pc of Object.assign([],s)){
-              for(let tp of Object.assign([],top)) {
-                if(tp===pc.tableno){
-                  this.$nextTick(function(){
-                    this.$refs.multipleTable.toggleRowSelection(pc,true);
-                  })
-                }
-              }
-
-            }
-          }
           this.showModal();
+          this.isClear = true;
+          this.$refs.MultiPlace.clearSelect();
+          this.pccode = this.currentRow.pccode;
+          this.topplacestr = row.toplace;
+          this.$refs.MultiPlace.resetPlace(this.topplacestr);
+
         };
       },
       expand:function () {
@@ -786,6 +698,7 @@
     },
     components: {
       placeexpand,
+      MultiPlace
     },
     watch: {
       currentRow(newVal, oldVal) {
@@ -799,7 +712,7 @@
       },
       placesavetype(newVal, oldVal){
         if(newVal==="update"){
-          this.btnshow = btnnewshow;
+          this.btnshow = btnmodifyshow;
         }
         else{
           this.btnshow = btnshow;
@@ -822,14 +735,17 @@
       padding-right: 0px;
     }
     .maxwidth20{
-      flex: 0 0 20.5%;
-      max-width: 20.5%;
+      -ms-flex: 0 0 21%;
+      flex: 0 0 21%;
+      max-width: 21%;
     }
     .maxwidth70{
-      flex: 0 0 79.5%;
-      max-width: 79.5%;
+      -ms-flex: 0 0 78.5%;
+      flex: 0 0 78.5%;
+      max-width: 78.5%;
     }
     .maxwidth15{
+      -ms-flex: 0 0 10%;
       flex: 0 0 10%;
       max-width: 10%;
     }
@@ -862,6 +778,14 @@
     }
     .paddingtop5{
       padding-top: 5px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      .el-table{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
     }
     table{
       border-color: #dee2e6;
@@ -878,6 +802,7 @@
       .cell {
         padding-left: 5px;
         padding-right: 5px;
+        cursor: pointer;
         .form-inline{
           .btn:not(:last-child){ margin-right: 3px; }
         }
@@ -891,10 +816,13 @@
       padding: 5px!important;
       box-shadow: 1px 5px 5px #dee2e6;
     }
+    .side-btn{
+      width: 6.8rem;
+    }
     .row{
       margin-right: 2px;
       .btng{
-        margin: 3px 0 5px;
+        margin: 8px 0 7px;
         .btn:not(:last-child){margin-right: 5px;}
       }
       .green{
@@ -905,12 +833,14 @@
       }
       .btng-r{float: right;}
       .btng-l{float: left;}
-    }
-    .side-btn{
-      width: 85px;
+      .btn.disabled, .btn:disabled{
+        background-color: #c8c9ca!important;
+        border-color: #c8c9ca!important;
+      }
     }
     .form-row > .col, .form-row > [class*="col-"] {
-      padding-right: 0px;
+      padding-left: 0px;
+      text-align: right;
     }
     .modal-body {
       padding: 0.5rem;

@@ -11,7 +11,7 @@
             stripe
             highlight-current-row
             @current-change="handleCurrentChange"
-            max-height="tableHeight"
+            :max-height="tableHeight"
             style="width: 100%">
             <el-table-column
               v-for="item in classcodefildes"
@@ -73,9 +73,9 @@
                   <!--required-->
                   <!--placeholder="">-->
                   <!--</b-form-input>-->
-                  <el-select clearable v-model="pcinfo.tocode">
+                  <el-select clearable v-model="pcinfo.tocode" :disabled="changeshow.descript2disabled">
                     <el-option
-                      :disabled="changeshow.descript2disabled"
+
                       v-for="item in namedef"
                       :key="item.value"
                       :label="item.label"
@@ -87,9 +87,8 @@
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="项目属性" class="mb-0">
-                <el-select v-model="pcinfo.type">
+                <el-select v-model="pcinfo.type" :disabled="changeshow.kinddesdisabled">
                   <el-option
-                    :disabled="changeshow.kinddesdisabled"
                     v-for="item in typearry"
                     :key="item.value"
                     :label="item.label"
@@ -112,22 +111,23 @@
           </b-row>
           <div class="btng green">
             <b-button :disabled="btnshow.modify"  @click="modifyp" variant="primary">修改类别</b-button>
-            <b-button :disabled="btnshow.save" @click="savep" variant="primary">保存</b-button>
-            <b-button :disabled="btnshow.cancel" @click="cancel" variant="primary">取消</b-button>
+            <b-button :disabled="btnshow.savep" @click="savep" variant="primary">保存</b-button>
+            <b-button :disabled="btnshow.cancelp" @click="cancel" variant="primary">取消</b-button>
           </div>
           <el-table
+            ref="bbbb"
             id="itemtable"
             :data="placedata"
             border
             stripe
-            :height="tableHeight"
+            :height="tableH"
             style="width: 100%;font-size: 12px">
             <el-table-column
               prop="code"
               label="代码"
               width="55"
               sortable
-              show-overflow-tooltip>
+              :show-overflow-tooltip="true">
               <template slot-scope="scope" >
                 <div  v-if="scope.row.add === 'T'">
                   <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.code" placeholder=""></el-input>
@@ -252,8 +252,8 @@
               width="70">
               <template slot-scope="scope">
                 <b-form inline >
-                  <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
-                  <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
+                  <b-button size="mini" title="删除" class="Delete-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
+                  <b-button size="mini" title="日志" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
                 </b-form>
               </template>
             </el-table-column>
@@ -287,8 +287,9 @@
     {  prop: 'descript', label:  '名称',width:'',sortable:true,showTip:true},
   ]
 
-  const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true}
-  const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:false,cancel:false}
+  const btnshow = {  new: false, modify:  false,delete:false,place:false ,save:true,cancel:true,savep:true,cancelp:true}
+  const btnnewshow ={  new: true, modify:  true,delete:true,place: true,save:true,cancel:true,savep:false,cancelp:false}
+  const btnmodifyshow ={  new: true, modify:  true,delete:true,place:true ,save:false,cancel:false,savep:true,cancelp:true}
 
   const confirm = [
     { value: 'T', label: '是' },
@@ -334,8 +335,8 @@
 
         currentRow: null,
         placeRow: null,
-
-        tableHeight: document.body.clientHeight-278,//减去header的278px
+        tableH: document.body.clientHeight-295,//减去header的278px
+        tableHeight: document.body.clientHeight-176,
         num:0,
         change:""
       }
@@ -663,6 +664,9 @@
         newplace["classcode"] = this.currentRow.classcode;
         this.placedata.push(newplace);
         this.placesavetype = "update";
+        this.$nextTick(function(){
+          this.$refs.bbbb.bodyWrapper.scrollTop = this.$refs.bbbb.bodyWrapper.scrollHeight;
+        })
       },
       savep:function () {
 
@@ -747,7 +751,7 @@
       },
       placesavetype(newVal, oldVal){
         if(newVal==="update"){
-          this.btnshow = btnnewshow;
+          this.btnshow = btnmodifyshow;
         }
         else{
           this.btnshow = btnshow;
@@ -767,7 +771,6 @@
     }
     #btng{
       .btn{
-        width: 90px;
         margin-top:5px ;
         border-radius: 0.25rem;
       }
@@ -780,21 +783,26 @@
       padding-right: 0px;
     }
     .maxwidth20{
-      flex: 0 0 18%;
-      max-width: 18%;
+      -ms-flex: 0 0 19.5%;
+      flex: 0 0 19.5%;
+      max-width: 19.5%;
     }
     .maxwidth70{
-      flex: 0 0 82%;
-      max-width: 82%;
+      -ms-flex: 0 0 80%;
+      flex: 0 0 80%;
+      max-width: 80%;
     }
     .maxwidth15{
+      -ms-flex: 0 0 10%;
       flex: 0 0 10%;
       max-width: 10%;
     }
     .paddingleft5{
       padding-left: 5px;
       .row{
-        .form-control{ height: 30.5px;}
+        .form-control{
+          height: 30.5px;
+        }
       }
       .el-table{
         .el-table__body-wrapper{
@@ -821,6 +829,9 @@
     }
     .paddingtop5{
       padding-top: 5px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     table{
       border-color: #dee2e6;
@@ -837,6 +848,7 @@
       .cell {
         padding-left: 5px;
         padding-right: 5px;
+        cursor: pointer;
         .form-inline{
           .btn:not(:last-child){ margin-right: 3px; }
         }
@@ -854,8 +866,14 @@
     }
     .row{
       margin-right: 2px;
+        .col-sm-4:first-child,.col-sm-4:nth-child(2){
+          .col-sm-9{
+            padding-left: 10px!important;
+            padding-right: 0px;
+          }
+        }
       .btng{
-        margin: 3px 0 5px;
+        margin: 8px 0 7px;
         .btn:not(:last-child){margin-right: 5px;}
       }
       .green{
@@ -867,11 +885,17 @@
       .btng-r{float: right;}
       .btng-l{float: left;}
     }
-    .side-btn{
-      width: 85px;
+    .btn.disabled, .btn:disabled{
+      background-color: #c8c9ca!important;
+      border-color: #c8c9ca!important;
     }
+    .side-btn{
+      width: 6.25rem;
+    }
+
     .form-row > .col, .form-row > [class*="col-"] {
-      padding-right: 0px;
+      padding-left: 0px;
+      text-align: right;
     }
     .modal-body {
       padding: 0.5rem;

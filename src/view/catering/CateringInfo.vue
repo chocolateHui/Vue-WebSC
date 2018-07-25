@@ -55,6 +55,13 @@
     },
     methods: {
       getCateringData(){
+        if(this.isHistory){
+          this.$message({
+            message: '当前订单为历史订单,请注意!',
+            type: 'warning'
+          })
+        }
+
         this.currentTab = "EventList";
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         this.$store.dispatch('encrypttoken').then(() => {
@@ -84,24 +91,32 @@
               this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
               this.$http.post(methodinfo.updatecatering, localcatering).then((response)=>{
                 if (response.data.errorCode === '0') {
-                  this.$refs.newevent.batchSaveEvent(localcatering.caterid).then(() => {
-                    this.$message({
-                      message: '宴会保存成功!',
-                      type: 'success'
-                    })
-                    this.$store.commit('setCatering', localcatering)
-                    this.$store.commit('setCatersta', localcatering.sta)
-                    this.$store.dispatch("getEventList");
+                  this.$refs.newevent.batchSaveEvent(localcatering.caterid).then((eventrsp) => {
+                    if(eventrsp.data.errorCode==='0'){
+                      this.$message({
+                        message: '宴会保存成功!',
+                        type: 'success'
+                      })
+                      this.$store.dispatch("getEventList");
+                      this.$store.commit('setCatering', localcatering)
+                      this.$store.commit('setCatersta', localcatering.sta)
+                      this.$store.dispatch("getEventList");
+                    }else{
+                      this.$message.error(eventrsp.data.errorMessage)
+                    }
                     loading.close();
                   });
                 }else{
                   this.$alert(response.data.errorMessage)
+                  loading.close();
                 }
               });
             })
           }else{
             loading.close();
           }
+        }).catch(()=>{
+          loading.close();
         });
       },
       tabChange(activeName, oldActiveName){

@@ -1,10 +1,11 @@
 <!-- 模板组件，用于模拟不同路由下的组件显示 -->
 <template>
-  <div id="Lossstatistics">
+  <div id="Futureincomebysaleid">
     <b-container fluid>
       <!-- User Interface controls -->
-      <b-row>
-        <b-col sm="4" class="my-1">
+      <b-row style="margin-bottom:5px">
+        <b-col sm="5" class="my-1">
+          <b-form-group horizontal label="报表日期" class="mb-0">
           <el-date-picker
             v-model="reportdate"
             value-format="yyyy-MM-dd"
@@ -13,6 +14,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
+          </b-form-group>
         </b-col>
         <b-col sm="4" class="my-1">
           <b-form-group horizontal label="销售员" class="mb-0">
@@ -26,19 +28,19 @@
             </el-select>
           </b-form-group>
         </b-col>
-        <b-col sm="4" class="my-1">
+        <b-col sm="3" class="my-1">
           <b-form-group class="mb-0">
             <b-button @click="getreportdata" variant="primary">查询</b-button>
             <b-button @click="exportexcel" variant="success">导出</b-button>
           </b-form-group>
         </b-col>
       </b-row>
-      <label v-if="!reportdate">请选择报表开始和结束日期</label>
-      <label v-else>
-        <span>开始日期:{{reportdate[0]}}</span>
-        <span> 结束日期:{{reportdate[1]}}</span>
-        <span>销售员:{{saleid}}</span>
-      </label>
+      <!--<label v-if="!reportdate">请选择报表开始和结束日期</label>-->
+      <!--<label v-else>-->
+        <!--<span>开始日期:{{reportdate[0]}}</span>-->
+        <!--<span> 结束日期:{{reportdate[1]}}</span>-->
+        <!--<span>销售员:{{saleid}}</span>-->
+      <!--</label>-->
       <el-table
         id="datatable"
         ref="datatable"
@@ -158,35 +160,37 @@
                 if(typeof(response.data.fileds) != "undefined"){
                   this.items = [];
                   this.fi = Object.assign([],fildes);
-                  for(let items of response.data.fileds){
+                  for(let item of response.data.fileds){
                     let types = {};
 
-                    types["prop"]=items.props;
-                    if(items.props===""){
+                    types["prop"]=item.props;
+                    if(item.props===""){
                       types["prop"] = "zzzz";
                     }
-                    types["label"]=items.label;
-                    if(items.label===""){
-                      types["label"] = items.props;
+                    types["label"]=item.label;
+                    if(item.label===""){
+                      types["label"] = item.props;
                     }
+                    types["showTip"]=true;
                     this.fi.push(types);
                   }
                   let types = {};
                   types["prop"]="heji";
                   types["label"]="合计";
+                  types["showTip"]=true;
                   this.fi.push(types);
-                  for(let items of response.data.incomes){
+                  for(let item of response.data.incomes){
                     let types = {};
-                    types["caterid"]=items.caterid;
-                    types["caterdes"]=items.caterdes;
-                    types["sta"]=items.sta;
-                    types["arr"]=items.arr;
-                    types["dep"]=items.dep;
-                    types["cusnodes"]=items.cusnodes;
-                    types["saleid"]=items.saleid;
-                    types["salename"]=items.salename;
-                    types["heji"]=items.heji;
-                    let m = JSON.parse(items.incomejson);
+                    types["caterid"]=item.caterid;
+                    types["caterdes"]=item.caterdes;
+                    types["sta"]=item.sta;
+                    types["arr"]=item.arr;
+                    types["dep"]=item.dep;
+                    types["cusnodes"]=item.cusnodes;
+                    types["saleid"]=item.saleid;
+                    types["salename"]=item.salename;
+                    types["heji"]=item.heji;
+                    let m = JSON.parse(item.incomejson);
                     for(let s in m){
                       if(s===""){
                         types["zzzz"]=m[s];
@@ -262,6 +266,14 @@
       },
       begina(val,oldval){
         if(val==="xxxx"||val===""){
+          let data = new Date();
+          var d = new Date()
+          d.setMonth(d.getMonth()+1);
+          var d2 = new Date()
+          d2.setMonth(d2.getMonth()-1);
+          this.reportdate=[data,d];
+          this.reportdate=[d2,d];
+          this. getreportdata();
         }
         else{
           let date = [];
@@ -281,7 +293,10 @@
   }
 </script>
 <style lang="scss"  type="text/scss">
-  #Lossstatistics{
+  #Futureincomebysaleid{
+    .el-input_icon{
+      margin-top: -2px;
+    }
     .el-date-editor .el-range-separator{
       padding: 0;
     }
@@ -305,6 +320,10 @@
     }
     .el-table td, .el-table th{
       padding: 0;
+    }
+    .el-table__header-wrapper.el-table td, .el-table th{
+      padding: 0;
+      background: linear-gradient(#fff, #F4F5F6);
     }
     .el-table .caret-wrapper{
       width: 20px;

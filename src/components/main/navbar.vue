@@ -33,7 +33,7 @@
             <i class="fa fa-tasks"></i>
           </b-nav-item>
         </b-nav-form>
-        <b-nav-item-dropdown style="background-color:#4BA6EF!important;min-width: 50px" extra-toggle-classes="nav-link-custom" right>
+        <b-nav-item-dropdown class="nav-drop" extra-toggle-classes="nav-link-custom" right>
           <template slot="button-content">
             <img src="/static/user.jpg" class="nav-user-photo d-inline-block align-middle">
             <span class="user-info">欢迎,
@@ -270,6 +270,11 @@
     }
     .dropdown-item {
       color: black !important;
+    }
+    .nav-drop{
+      box-shadow: 2px;
+      background-color:#4BA6EF!important;
+      min-width: 50px
     }
   }
 

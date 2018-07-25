@@ -18,46 +18,33 @@
               <li @click="listChange"><i class="fa fa-bar-chart"></i>图表</li>
             </ol>
           </div>
-          <table class="placelist_content_list" id="placelist_table">
-            <thead>
-            <tr>
-              <th class="nav1">事务名称</th>
-              <th class="nav2">日期</th>
-              <th class="nav3">状态</th>
-              <th class="nav4">类型</th>
-              <th class="nav5">开始时间</th>
-              <th class="nav6">结束时间</th>
-              <th class="nav7">场地</th>
-              <th class="nav8" data-sort="num">预测收入</th>
-              <th class="nav9">优先级</th>
-              <th class="nav10" data-sort="num">出席数</th>
-              <th class="nav11" data-sort="num">保底数</th>
-              <th class="nav12">宴会名称</th>
-              <th class="nav13"><a class="icon1"></a><a class="icon2"></a><a class="icon3"></a><a class="icon4"></a><a class="icon5"></a></th>
-            </tr>
-            </thead>
-            <tbody id="placelist">
-                <tr v-for="list in eventlist" data-eventid="'+data.events[i].eventid+'" data-istopos="'+data.events[i].istopos+'" data-caterid="'+data.events[i].caterid+'">
-                  <td class="nav1">{{list.descript}}</td>
-                  <td class="nav2">{{list.bdate}}</td>
-                  <td class="nav3" v-for="placeitem in placeList " v-if="placeitem.dataid==list.sta">{{placeitem.name}}</td>
-                  <td class="nav4">{{list.typedes}}</td>
-                  <td class="nav5" >{{list.begintime}}</td>
-                  <td class="nav6">{{list.endtime}}</td>
-                  <td class="nav7" >{{list.codedes}}</td>
-                  <td class="nav8" >{{list.income}}</td>
-                  <td class="nav9" >{{list.degreedes}}</td>
-                  <td class="nav10">{{list.attnum}}</td>
-                  <td class="nav11" >{{list.minnum}}</td>
-                  <td class="nav12">{{list.catername}}</td>
-                  <td class="nav13"><a class="icon1" @click="btnItem(list)" title="项目"></a><a class="icon2" @click="btnSync(list)" title="同步"></a><a class="icon3" title="备注" @click="remark(list)"></a><a class="icon4" @click="placeCancel(list)" title="取消"></a></td>
-                </tr>
-            </tbody>
-          </table>
+          <div class="placeContainList">
+          <el-table
+            :data="eventlist"
+            border
+            stripe
+            style="width: 100%">
+            <el-table-column
+              v-for="item in fildes"
+              :prop="item.prop"
+              :label="item.label"
+              :min-width="item.width"
+              :sortable="item.sortable"
+              :show-overflow-tooltip="item.showTip" :key="item.prop">
+            </el-table-column>
+            <el-table-column
+              label="操作"
+              min-width="130">
+              <template slot-scope="scope">
+                <a class="icon1" @click="btnItem(scope.row)" title="项目"></a><a class="icon2" @click="btnSync(scope.row)" title="同步"></a><a class="icon3" title="备注" @click="remark(scope.row)"></a><a class="icon4" @click="placeCancel(scope.row)" title="取消"></a>
+               </template>
+            </el-table-column>
+          </el-table>
+          </div>
         </div>
       </div>
        </div>
-    <b-modal @shown="reasonShown" id="reasonmodal" size="lg" ref="reasonmodal" title="理由列表" hide-footer>
+    <b-modal @shown="reasonShown" id="reasonmodal" ref="reasonmodal" title="理由列表" hide-footer>
       <Reason ref="Reason" @reasonConfirm="reasonConfirm"></Reason>
     </b-modal>
     <b-modal id="remarkmodal" ref="remarkmodal" size="lg" title="宴会备注" hide-footer>
@@ -68,6 +55,21 @@
 <script>
   import methodinfo from '../../config/MethodConst.js'
   import '../../css/PlaceDistribute.scss';
+  let loading
+  const fildes = [
+    {  prop: 'descript', label:  '事务名称',width:'100',sortable:false,showTip: true},
+    {  prop: 'bdate', label:  '日期',width:'80',sortable:true,showTip: true},
+    {  prop: 'stades', label:  '状态',width:'50',sortable:false,showTip: true},
+    {  prop: 'typedes', label:  '类型',width:'50',sortable:false ,showTip: true},
+    {  prop: 'begintime', label:  '开始时间',width:'80',sortable:true,showTip: true },
+    {  prop: 'endtime', label:  '结束时间',width:'80',sortable:true,showTip: true},
+    {  prop: 'codedes', label:  '场地',width:'70',sortable:true,showTip: true },
+    {  prop: 'income', label:  '预测收入',width:'85',sortable:true,showTip: true },
+    {  prop: 'degreedes', label:  '优先级',width:'70',sortable:true,showTip: true},
+    {  prop: 'attnum', label:  '出席数',width:'70',sortable:true,showTip: true },
+    {  prop: 'minnum', label:  '保底数',width:'70',sortable:true,showTip: true},
+    {  prop: 'catername', label:  '宴会名称',width:'80',sortable:false,showTip: true },
+  ]
     export default {
         name: "place-distribution-single",
       data(){
@@ -86,6 +88,7 @@
               { name: 'waiting',num:1},
               { name: '所有',num:2}
             ],
+            fildes :fildes,
             allChecked:false,
             eventlist:[],
             paramevent:{},
@@ -100,7 +103,9 @@
       components:{
       },
       created(){
-          this.getListHead()
+        loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        this.getListHead()
+        this.refreshData()
       },
       watch:{
         $route(){
@@ -108,12 +113,12 @@
           this.getListHead()
         }
       },
-      beforeRouteEnter  (to, from, next) {
-        next(vm => vm.refreshData())
-      },
       methods: {
         refreshData(){
-          this.$store.dispatch("getReasonList");
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            this.$store.dispatch("getReasonList");
+          })
         },
         configDefault:function () {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
@@ -168,6 +173,7 @@
               if (response.status === 200) {
                 if (response.data.errorCode=="0") {
                     this.eventlist=response.data.events
+                  loading.close()
                 }
               }
             })
@@ -186,6 +192,7 @@
               if (response.status === 200) {
                 if (response.data.errorCode=="0") {
                     this.eventlist=response.data.events
+                  loading.close()
                 }
               }
             })
@@ -227,6 +234,7 @@
           this.$router.push({name:'宴会场地分布'})
         },
         btnCheck:function (idx) {
+          loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           this.sta=''
           var check = this.placeList[idx].checked;
           this.placeList[idx].checked = check === true ? false : true;
@@ -249,6 +257,7 @@
           }
         },
         btnAllCheck:function () {
+          loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
           this.sta=''
           this.allChecked=!this.allChecked
           var _this=this
@@ -269,17 +278,7 @@
           this.$store.dispatch('encrypttoken').then(() => {
              return new Promise((resolve, reject) => {
               this.configDefault()
-                this.$http.post(methodinfo.syncSCEvent, {
-                  caterid:paramdata.caterid,
-                  eventid:paramdata.eventid,
-                  name:paramdata.descript,
-                  code:paramdata.code,
-                  bdate:paramdata.bdate,
-                  begintime:paramdata.begintime,
-                  endtime:paramdata.endtime,
-                  sta:paramdata.sta,
-                  type:paramdata.type,
-                }).then((response) => {
+                this.$http.post(methodinfo.syncSCEvent,paramdata).then((response) => {
                   if (response.status === 200) {
                     if(response.data.errorCode=='0'){
                       this.$message({
@@ -300,6 +299,7 @@
           })
         },
         btnSync(list){
+          this.$confirm("是否要要将订单同步到前台系统？","提示").then(()=>{
           if(list.istopos==''||list.istopos=='F'){
             this.$message({
               message:"此类型事务无法创建餐饮订单",
@@ -320,6 +320,7 @@
             };
             this.syncPost(this.syncparam,false)
           }
+          })
         },
         remark(list){
           let remarkinfo = {
@@ -408,6 +409,10 @@
                 if (response.status === 200) {
                   if(response.data.errorCode==='0'){
                     let id = this.$route.params.index;
+                    this.$message({
+                      message:"取消成功",
+                      type: "success"
+                    });
                     if(id==0){
                       _this.todayeventlist()
                     }else{

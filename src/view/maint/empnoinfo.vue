@@ -2,7 +2,7 @@
   <div id="empnoinfo">
     <b-container fluid>
       <b-row>
-        <b-col sm="4" class="my-1">
+        <b-col sm="3" class="my-1">
           <b-form-group horizontal label="酒店" class="mb-0">
             <el-select v-model="hotelid" clearable filterable placeholder="请选择" :disabled="isGroup">
               <el-option
@@ -14,7 +14,7 @@
             </el-select>
           </b-form-group>
         </b-col>
-        <b-col sm="4" class="my-1">
+        <b-col sm="3" class="my-1">
           <b-form-group horizontal label="角色" class="mb-0">
             <el-select v-model="htljob" clearable filterable placeholder="请选择">
               <el-option
@@ -26,9 +26,20 @@
             </el-select>
           </b-form-group>
         </b-col>
-        <b-col sm="4" class="my-1">
+        <b-col sm="3" class="my-1">
+          <b-form-group horizontal label="状态" class="mb-0">
+            <el-select v-model="locked" clearable filterable placeholder="请选择">
+              <el-option
+                v-for="item in state"
+                :key="item.value"
+                :value="item.value"
+                :label="item.descript">
+              </el-option>
+            </el-select>
+          </b-form-group>
+        </b-col>
+        <b-col sm="3" class="my-1">
           <b-form-group class="mb-0">
-            <b-form-checkbox v-model="locked" value="T" unchecked-value="F" >停用</b-form-checkbox>
             <b-button variant="primary" @click="getEmpnolist">查询</b-button>
             <b-button variant="primary" @click="newProp">新建</b-button>
           </b-form-group>
@@ -41,16 +52,17 @@
         :row-key="getRowKeys"
         :expand-row-keys="expands"
         @expand-change = "expandChange"
+        @cell-click="cellclick"
         :data="getempnolist"
         border
         style="width: 100%" :max-height="tableHeight">
-        <el-table-column type="expand">
+        <el-table-column type="expand" >
           <template slot-scope="props">
             <b-row>
               <b-col>
                 <b-form>
                   <b-form-group label="工号:" horizontal>
-                    <FormatInput type="text" maxlength="10" v-model="expandempno.empno" :disabled="able.name&&!expandempno.flag"></FormatInput>
+                    <FormatInput type="text" maxlength="10" v-model="expandempno.empno" :disabled="able.name && !expandempno.flag"></FormatInput>
                   </b-form-group>
                   <b-form-group label="姓名:"
                                 horizontal>
@@ -114,7 +126,8 @@
                       <el-option v-for="item in getdeptlist"
                         :key = item.code
                         :value="item.code"
-                        :label="item.descript">
+                        :label="item.descript"
+                        :show-overflow-tooltip="item.showTip">
                       </el-option>
                     </el-select>
                   </b-form-group>
@@ -148,11 +161,10 @@
         </el-table-column>
         <el-table-column :width="50" label="操作">
           <template slot-scope="scope">
-            <b-button size="mini" type="danger" class="Cancel-button image-btn" @click="deleteempno(scope)"></b-button>
+            <b-button size="mini" v-if="!scope.row.isnew" type="danger" class="Delete-button image-btn" @click="deleteempno(scope)"></b-button>
           </template>
         </el-table-column>
       </el-table>
-
     </b-container>
     <b-modal id="passmodal1" ref="passmodal1" @hidden="modalhidden" size="sm" title="修改密码" hide-footer>
       <div>
@@ -196,16 +208,19 @@
     {  prop: 'empno', label:  '工号',width:'100',sortable:true },
     {  prop: 'empname', label:  '姓名',width:'',sortable:true,showTip:true},
     {  prop: 'saleid', label:  '销售员ID',width:'100',sortable:true,showTip:true},
-    {  prop: 'deptnodes', label:  '岗位',width:'100',sortable:true },
-    {  prop: 'htljobdes', label:  '角色',width:'100',sortable:true },
+    {  prop: 'deptnodes', label:  '岗位',width:'100',sortable:true,showTip:true },
+    {  prop: 'htljobdes', label:  '角色',width:'100',sortable:true,showTip:true },
     {  prop: 'hoteldes', label:  '所属酒店',width:'',sortable:true }
   ]
   const able = {name:true,hotelinput:true}
+  const disable = {name:false,hotelinput:false}
 
   export default {
     data () {
       return {
         newp:true,
+//        isnew:true,
+        flag:true,
         getempnolist: [],
         fildes :fildes,
         saleid: '',
@@ -229,11 +244,18 @@
           code:'05',
           descript:'销售协调员'
         }],
+        state:[{
+          value:'T',
+          descript:'停用'
+        }, {
+          value:'F',
+          descript:'启用'
+        }],
         getdeptlist: [],
         deptno:'',
         htljob:'',
         hotelid:'',
-        isGourp:false,
+        isGroup:false,
         locked:'F',
         able:able,
         oldpassword: '',
@@ -273,6 +295,7 @@
       this.getHotel();
       this.getEmpnolist();
       this.getDeptlist();
+      this.name = false;
     },
     methods: {
       configDefault:function () {
@@ -332,6 +355,7 @@
           //若是新增的就直接删除不用走服务端
           if(cs.row.hasOwnProperty("isnew")){
             this.getempnolist.splice(cs.$index,1);
+            this.newp = true
           }else{
             this.$store.dispatch('encrypttoken').then(() => {
               this.configDefault()
@@ -348,36 +372,55 @@
           }
         })
       },
-      expandChange:function (row, expandedRows) {
-        if(expandedRows.length>1){
-          let index = 0;
-          for (let expandrow of expandedRows) {
-            if (expandrow.empno !== row.empno) {
-              expandedRows.splice(index, 1);
-            }
-            index++;
-          }
-        }
-        if(this.lastHasSale){
-          this.empnoSaleList.splice(0, 1);
-          this.lastHasSale = false;
-        }
-
-        if(row.hasOwnProperty("saleid")&&row.saleid!==''){
-          this.lastHasSale = true;
-          this.empnoSaleList.unshift(this.salelist.find((value) =>{
-              return value.code===row.saleid
-            })
-          )
-        }
-
-        this.expandempno = Object.assign({},row);
+      cellclick:function (row, column, cell, event) {  //阻止
+//        console.log(row);
       },
-      newProp:function(){
+      expandChange:function (row, expandedRows) {
+        if (this.expandempno.hasOwnProperty("isnew")&&expandedRows.length>1) {
+          this.$confirm("新建信息未保存，即将被清除", "提示", {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.getempnolist.pop();
+            this.newp = true;
+
+            let index = 0;
+            for (let expandrow of expandedRows) {
+              if (expandrow.empno !== row.empno) {
+                expandedRows.splice(index, 1);
+              }
+              index++;
+            }
+            if (this.lastHasSale) {
+              this.empnoSaleList.splice(0, 1);
+              this.lastHasSale = false;
+            }
+
+            if (row.hasOwnProperty("saleid") && row.saleid !== '') {
+              this.lastHasSale = true;
+              this.empnoSaleList.unshift(this.salelist.find((value) => {
+                  return value.code === row.saleid
+                })
+              )
+            }
+            this.expandempno = Object.assign({}, row);
+          }).catch(() => {
+            expandedRows.splice(0, 1);
+            this.expands = [''];
+          })
+        }
+      },
+      newProp:function(){  //新建员工
         if(this.newp){
           this.newp = false;
-          this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:'T'});
+          let newempno = {age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:true };
+          this.getempnolist.push(newempno);
           this.expands.push('');
+          this.expandempno = Object.assign({}, newempno);
+          this.$nextTick(function(){
+            this.$refs.empnotable.bodyWrapper.scrollTop =this.$refs.empnotable.bodyWrapper.scrollHeight;
+          })
         }else{
           this.$message.error('请先保存新建员工信息!');
         }
@@ -396,7 +439,9 @@
       getDeptlist:function(){
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          this.$http.post(methodinfo.getdeptlist, {}).then((response) => {
+          this.$http.post(methodinfo.getdeptlist, {
+            authhotel:this.hotelid
+          }).then((response) => {
             if (response.data.errorCode === "0") {
               this.getdeptlist = response.data.depts;
             }
@@ -440,6 +485,7 @@
 
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
+            console.info(val.flag)
             if (val.flag) {
               this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
                 if (response.data.errorCode === "0") {
@@ -519,13 +565,25 @@
           &::after {
             width: 1.25rem;
             height: 1.25rem;
-            top:0rem;
+            top:0.135rem;
           }
         }
       }
       .container-fluid{
         >.row{
           margin-bottom: 10px;
+          .el-input{
+            .el-input__inner {height: 35px!important;}
+          }
+          .my-1{
+            .form-row{
+              .col-sm-3{
+                -ms-flex: 0 0 17%;
+                flex: 0 0 17%;
+                max-width: 17%;
+              }
+            }
+          }
           .my-1:last-of-type{
             .btn-primary{
               background: #7EB2DD;
@@ -553,13 +611,34 @@
           }
         }
         .el-table__body-wrapper{
+          .el-table__row{
+            .cell{ white-space: nowrap;}
+          }
           .row{
             .form-row{
               height:45px;
               .col-sm-9{
-                .custom-control-label::after{
-                  top: 0.21rem;
-                  left: -1.55rem;
+                .custom-control{
+                  .custom-control-label::before{
+                    top:0.1rem;
+                  }
+                  .custom-control-label::after{
+                    top: 0.35rem;
+                    left: -1.25rem;
+                  }
+                }
+                .custom-control:last-child{
+                  .custom-control-label::after{
+                    top: 0.35rem;
+                    left: -1.2rem;
+                  }
+                }
+                .custom-radio .custom-control-input:checked ~ .custom-control-label::after{
+                  background-image: none;
+                  background-color: #fff;
+                  border-radius: 50%;
+                  height: 0.45rem;
+                  width: 0.45rem;
                 }
                 .el-select{
                   width: 100%;

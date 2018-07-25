@@ -16,14 +16,14 @@
           :data="maintTree"
           :props="defaultProps"
           @node-click="NodeClick"
-          default-expand-all
+          :default-expanded-keys="defaultExpandedKeys"
           highlight-current
           :filter-node-method="filterNode"
           ref="maintTree">
         </el-tree>
       </b-col>
       <b-col cols="10">
-        <b-container :style="{height: bodyHeight + 'px'}">
+        <b-container :style="{height: bodyHeight + 'px'}" class="maint-container">
           <router-view></router-view>
         </b-container>
       </b-col>
@@ -44,6 +44,7 @@
         treeHeight: document.body.clientHeight-150,
         bodyHeight: document.body.clientHeight-120,
         filterText: '',
+        defaultExpandedKeys:[],
         maintTree: [{
           label: '基础信息',
           children: [{
@@ -54,18 +55,10 @@
             id:'empnoinfo',
             label: '用户管理',
             route:'/main/maint/empnoinfo'
-          }, {
-            id:'sysoption',
-            label: '系统参数',
-            route:'/main/maint/sysoption'
           }]
         }, {
           label: '宴会代码',
           children: [{
-            id:'item',
-            label: '宴会项目',
-            route:'/main/maint/item'
-          }, {
               id:'namedef',
               label: '报表数据项',
               route:'/main/maint/namedef'
@@ -118,7 +111,6 @@
       };
     },
     computed: {
-
       ...mapGetters([
         'isLoading'
       ]),
@@ -126,7 +118,7 @@
     },
     watch: {
       filterText(val) {
-        this.$refs.tree2.filter(val);
+        this.$refs.maintTree.filter(val);
       }
     },
     methods: {
@@ -140,6 +132,10 @@
         } else {
           this.$router.push({path: data.route})
         }
+      },
+      NodeExpand(Nodeid){
+        this.$refs.maintTree.setCurrentKey(Nodeid);
+        this.defaultExpandedKeys.push(Nodeid);
       }
     },
     mounted ()  {
@@ -154,23 +150,38 @@
         });
       }
       if(this.$store.getters.hotel.sign===2){
+        this.maintTree[0].children.push({
+          id:'sysoption',
+          label: '系统参数',
+          route:'/main/maint/sysoption'
+        });
         this.maintTree[1].children.splice(0,0,{
           id:'pccode',
           label: '宴会营业点',
           route:'/main/maint/pccode'
         });
+        this.maintTree[1].children.splice(1,0,{
+          id:'item',
+          label: '宴会项目',
+          route:'/main/maint/item'
+        },);
       }
-      let index = this.$route.path.indexOf('/maint/')
-      let Nodeid = this.$route.path.substring(index+7);
-      this.$refs.maintTree.setCurrentKey(Nodeid);
+    },
+    beforeRouteEnter  (to, from, next) {
+      let index = to.path.indexOf('/maint/')
+      let Nodeid = to.path.substring(index+7);
+      next(vm => vm.NodeExpand(Nodeid))
     },
     components: {
     }
   };
 </script>
 <style lang="scss">
-
   #maint{
+    .maint-container{
+      width: 100% !important;
+      max-width: 100%;
+    }
     .container{
       overflow-y: auto;
     }

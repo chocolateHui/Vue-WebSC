@@ -160,7 +160,7 @@
       border-top: 1px solid #e5e5e5;
       border-bottom: 1px solid #e5e5e5;
       .fa{
-        margin: 2px 0;
+        margin: 9px 0;
         padding: 0 5px;
         line-height: 18px;
         cursor: pointer;
@@ -244,10 +244,9 @@
     .menu-icon{
       display: inline-block;
       min-width: 30px;
-      margin-right: 2px;
       vertical-align: sub;
       text-align: center;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: normal;
     }
     .calendar-dialog-body{
