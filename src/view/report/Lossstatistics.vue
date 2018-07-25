@@ -229,6 +229,11 @@
     },
     created(){
       this.getsaleid();
+      let data = new Date();
+      var d = new Date()
+      d.setMonth(d.getMonth()+1);
+      this.reportdate=[data,d];
+      this. getreportdata();
     }
   }
 </script>
@@ -259,6 +264,9 @@
       height: 36px;
     }
     .el-table td, .el-table th{
+      padding: 0;
+    }
+    .el-table__header-wrapper.el-table td, .el-table th{
       padding: 0;
       background: linear-gradient(#fff, #F4F5F6);
     }
