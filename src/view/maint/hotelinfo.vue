@@ -216,7 +216,7 @@
       </b-row>
     </b-container>
     <b-modal id="logmodal" ref="myModalInitalize" size="lg" :title="modelTitle" hide-footer>
-      <initalize-first v-if="ifFirst" :sign="hoteInfo.sign" @btnExit2="btnExit2" @btnExit1="btnExit1" :hotelid="hotelid"></initalize-first>
+      <initalize-first v-if="ifFirst" :flag="flag" :sign="hoteInfo.sign" @btnExit2="btnExit2" @btnExit1="btnExit1" :hotelid="hotelid"></initalize-first>
       <initalize v-else @btnExit="btnExit" :hotelid="hotelid"></initalize>
     </b-modal>
   </div>
@@ -252,7 +252,8 @@
         cityarea:'',
         ifFirst:false,
         hotelStatusNow:'',
-        modelTitle:'初始化'
+        modelTitle:'初始化',
+        flag:0,
       }
     },
     props:['innhotel','sign'],
@@ -284,6 +285,7 @@
           this.hotelid=this.$store.getters.hotel.hotelid
         }
       },
+      // 判断是否是新建酒店
       getisnewhotel:function () {
         this.gethotelid()
         var _this=this
@@ -316,7 +318,7 @@
               if (response.data.errorCode=="0") {
                 this.hoteInfo=response.data
                 this.modelTitle='初始化'+this.hoteInfo.descript
-                if(this.hoteInfo.city!=''){
+                if(this.hoteInfo.city!=''&&this.hoteInfo.city!=undefined){
                   this.getcityarealist(this.hoteInfo.city,1)
                 }
                 this.hotelStatusNow=this.hoteInfo.sta
@@ -406,7 +408,8 @@
         var emailreg= /(\S)+[@]{1}(\S)+[.]{1}(\w)+/;
         if(this.sign==1&&this.innhotel==''){
           this.$message({message: "请选择酒店", type: 'warning'});
-        }else if(this.hoteInfo.email!=''&&!emailreg.test(this.hoteInfo.email)){
+        }else if((this.hoteInfo.email!=''&&this.hoteInfo.email!=undefined)&&!emailreg.test(this.hoteInfo.email)){
+          console.log(this.hoteInfo.email)
           this.$message({message: "邮箱格式不正确", type: 'warning'});
         }else{
         var _this=this
@@ -430,12 +433,12 @@
         }
       },
       btnInitalize:function () {
+        this.flag++;
         if(this.sign==1&&this.innhotel==''){
           this.$message({message: "请选择酒店", type: 'warning'});
         }else if(this.hotelStatusNow!='R'){
           this.$message({message: "此状态下酒店不能进行初始化", type: 'warning'});
         }else{
-          console.log(this.hotelid)
           this.$refs.myModalInitalize.show()
         }
       },
@@ -451,8 +454,8 @@
       }
     },
     created(){
+      this.getcitylist()
       if(this.sign!=1) {
-        this.getcitylist()
         this.getarealist()
         this.getpccodelist()
       }
@@ -465,11 +468,11 @@
   $colorCC:#71A2CC;
   #hotelinfo{
     .col-sm-3{
-      flex: 0 0 28%;
+      flex: 0 0 33%;
       max-width: 35%;
     }
     .col-sm-9{
-      flex: 0 0 72%;
+      flex: 0 0 66%;
       max-width: 75%;
     }
 
@@ -492,11 +495,11 @@
     }
     .addrcol{
       .col-sm-3{
-        flex: 0 0 14%;
-        max-width: 14%;
+        flex: 0 0 16%;
+        max-width: 16%;
       }
       .col-sm-9 {
-        flex: 0 0 86%;
+        flex: 0 0 84%;
         max-width: 86%;
       }
     }

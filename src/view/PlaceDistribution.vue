@@ -395,19 +395,21 @@
           //获取工号信息,完成后进行路由
           this.$store.dispatch('getplaceusedinfo',this.placeinfoparam).then(() => {
             this.placesinfo1 = Object.assign({},this.placesinfo);
-            this.placeslist.forEach(function (item) {
-              item.bdates=[]
-            })
-            var placelist=this.placeslist
-            var placesinfos=this.placesinfo1
-            placelist.forEach(function (item) {
-              for(var i in placesinfos) {
-                if(placesinfos[i].tableno==item.tableno){
-                  item.bdates=placesinfos[i].bdates
+            if(typeof this.placeslist!='undefined'){
+              this.placeslist.forEach(function (item) {
+                item.bdates=[]
+              })
+              var placelist=this.placeslist
+              var placesinfos=this.placesinfo1
+              placelist.forEach(function (item) {
+                for(var i in placesinfos) {
+                  if(placesinfos[i].tableno==item.tableno){
+                    item.bdates=placesinfos[i].bdates
+                  }
                 }
-              }
-            })
-            this.placeSta=placelist
+              })
+              this.placeSta=placelist
+            }
             loading.close();
           })
         })
