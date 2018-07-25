@@ -62,7 +62,7 @@
               <b-col>
                 <b-form>
                   <b-form-group label="工号:" horizontal>
-                    <FormatInput type="text" maxlength="10" v-model="expandempno.empno" :disabled="able.name && !expandempno.flag"></FormatInput>
+                    <FormatInput type="text" id ="username" maxlength="10" v-model="expandempno.empno" :disabled="able.name && !expandempno.flag"></FormatInput>
                   </b-form-group>
                   <b-form-group label="姓名:"
                                 horizontal>
@@ -492,8 +492,7 @@
       },
       modifyempnoinfo: function (val) {
         if (val.deptno && val.empname !== '' && val.htljob && val.empno !== '') {
-          val.username = val.empno
-
+          val.username = (String(val.empno)).toUpperCase()
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
             if (val.flag) {
@@ -607,6 +606,10 @@
           }
         }
       }
+     #username{
+       ime-mode:disabled;
+       text-transform:uppercase;
+     }
       #empnotable{
         table{
           border-color: #dee2e6;
