@@ -150,6 +150,7 @@
             }).then((response)=> {
               if (response.data.errorCode=="0") {
                 if(typeof(response.data.btrevocations) != "undefined"){
+                  this.items = [];
                   for(let items of response.data.btrevocations){
                     var types = {};
                     types["caterid"]=items.caterid;
