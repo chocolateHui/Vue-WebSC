@@ -376,9 +376,7 @@
 //        console.log(row);
       },
       expandChange:function (row, expandedRows) {
-        console.log(this.expandempno);
-        if (this.expandempno.hasOwnProperty("isnew") && expandedRows.length > 1) {
-
+        if (this.expandempno.hasOwnProperty("isnew")&&expandedRows.length>1) {
           this.$confirm("新建信息未保存，即将被清除", "提示", {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -386,40 +384,40 @@
           }).then(() => {
             this.getempnolist.pop();
             this.newp = true;
-          }).catch(() => {
-            if (!row.hasOwnProperty("isnew") && !this.newp) {
-              expandedRows.splice(0, 1);
 
+            let index = 0;
+            for (let expandrow of expandedRows) {
+              if (expandrow.empno !== row.empno) {
+                expandedRows.splice(index, 1);
+              }
+              index++;
             }
+            if (this.lastHasSale) {
+              this.empnoSaleList.splice(0, 1);
+              this.lastHasSale = false;
+            }
+
+            if (row.hasOwnProperty("saleid") && row.saleid !== '') {
+              this.lastHasSale = true;
+              this.empnoSaleList.unshift(this.salelist.find((value) => {
+                  return value.code === row.saleid
+                })
+              )
+            }
+            this.expandempno = Object.assign({}, row);
+          }).catch(() => {
+            expandedRows.splice(0, 1);
+            this.expands = [''];
           })
         }
-        let index = 0;
-        for (let expandrow of expandedRows) {
-          if (expandrow.empno !== row.empno) {
-            expandedRows.splice(index, 1);
-          }
-          index++;
-        }
-        if (this.lastHasSale) {
-          this.empnoSaleList.splice(0, 1);
-          this.lastHasSale = false;
-        }
-
-        if (row.hasOwnProperty("saleid") && row.saleid !== '') {
-          this.lastHasSale = true;
-          this.empnoSaleList.unshift(this.salelist.find((value) => {
-              return value.code === row.saleid
-            })
-          )
-        }
-        this.expandempno = Object.assign({}, row);
-
       },
       newProp:function(){  //新建员工
         if(this.newp){
           this.newp = false;
-          this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:true });
+          let newempno = {age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:true };
+          this.getempnolist.push(newempno);
           this.expands.push('');
+          this.expandempno = Object.assign({}, newempno);
           this.$nextTick(function(){
             this.$refs.empnotable.bodyWrapper.scrollTop =this.$refs.empnotable.bodyWrapper.scrollHeight;
           })

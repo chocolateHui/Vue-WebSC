@@ -187,6 +187,7 @@
                 <b-form-checkbox-group stacked v-model="flagselected" :options="flagoptions">
                 </b-form-checkbox-group>
               </b-form-group>
+              <b-button v-if="id==='newevent'" class="savebtn" @click="saveNewEvent">保存</b-button>
             </b-col>
           </b-row>
         </div>
@@ -302,6 +303,29 @@
           this.$root.$emit('bv::toggle::collapse','newevent')
         }
       },
+      saveNewEvent(){
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        this.eventCheck(this.catering).then((checked) => {
+          if(checked){
+            this.batchSaveEvent(this.caterid).then((response) => {
+              if(response.data.errorCode==='0'){
+                this.$message({
+                  message: '事务保存成功!',
+                  type: 'success'
+                })
+                this.$store.dispatch("getEventList");
+              }else{
+                this.$message.error(response.data.errorMessage);
+              }
+              loading.close();
+            })
+          }else{
+            loading.close();
+          }
+        }).catch(()=>{
+          loading.close();
+        })
+      },
       eventCheck(catering){
         return new Promise((resolve, reject) => {
           let newEvent = this.newEvent;
@@ -343,6 +367,7 @@
             this.newEvent.enddate = this.eventbdate[1];
             this.newEvent.begintime = this.eventtime[0];
             this.newEvent.endtime = this.eventtime[1];
+            this.newEvent.caterid = catering.caterid;
             if(this.flagselected.indexOf('noise')>=0){
               this.newEvent.flag2="T"
             }else{
@@ -393,9 +418,9 @@
               let commitEvent = Object.assign({},this.newEvent)
               commitEvent.code = eventplaces[i];
               if(i===eventplaces.length-1){
-                this.$http.post(methodinfo.newbatchevent, commitEvent).then(()=>{
+                this.$http.post(methodinfo.newbatchevent, commitEvent).then((response)=>{
                   this.$root.$emit("bv::toggle::collapse","newevent")
-                  resolve()
+                  resolve(response)
                 })
               }else{
                 this.$http.post(methodinfo.newbatchevent, commitEvent)
@@ -496,6 +521,7 @@
 <style lang="scss">
   #newevent,#newCaterEvent {
     font-size: 0.9rem;
+    margin-bottom: 15px;
     input{
       font-size: 0.9rem;
     }
@@ -509,7 +535,7 @@
       color: #8492a6; font-size: 0.9rem
     }
     .card-header{
-      background-color: #99a2f5;
+      background-color: #3375B8;
       color: white;
       height: 27px;
     }
@@ -623,17 +649,24 @@
       .custom-controls-stacked{
         padding-top: 20px;
       }
-      height: calc(100% - 10px);
       border: 1px solid #dcebf7;
       margin: 5px !important;
       padding: 15px;
       background-color: white;
       .custom-checkbox{
         font-size: 1rem;
-        margin-bottom: 35px;
+        margin-bottom: 25px;
       }
     }
-
+    .savebtn{
+      margin-top: 5px;
+      margin-left: 5px;
+      height: 36.5px;
+      width: 95%;
+      border-radius: 0;
+      background-color: #87b87f;
+      border: none;
+    }
     .form-control{
       border: none;
     }
@@ -650,5 +683,11 @@
     .timeselect{
       width: 38%;
     }
+  }
+  #newevent .checkgroup{
+    height: calc(100% - 60px);
+  }
+  #newCaterEvent .checkgroup{
+    height: calc(100% - 10px);
   }
 </style>
