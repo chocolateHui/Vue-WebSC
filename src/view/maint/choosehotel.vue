@@ -16,9 +16,13 @@
         ref = "reasontable"
         :data="searchitems"
         highlight-current-row
-        @current-change="handleCurrentChange"
+        @selection-change="handleCurrentChange"
         border
         style="width: 100%">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
         <el-table-column
           v-for="item in fildes"
           :prop="item.prop"
@@ -58,10 +62,11 @@
         filterValue:'',
         pageSize:10,
         currentPage:1,
-        currentRow:{},
+        currentRow:[],
         pageChange:false,
         itemcount:0,
-        hotellist:''
+        hotellist:'',
+        allselect: new Set(),
       }
     },
     props:['hotelData'],
@@ -131,33 +136,40 @@
         return array;
       },
       handleCurrentChange(val) {
-        if(!this.pageChange){
-          if(val){
-            this.currentRow = val;
-          }else{
-            this.currentRow = {};
+        if(this.pageChange&&this.allselect.size>0){
+          this.pageChange=false;
+          //换页时清空当前选择并重新赋值
+          this.currentRow=[];
+          for(let elem of this.allselect){
+            this.$refs.reasontable.toggleRowSelection(elem);
           }
         }else{
-          this.pageChange = false;
+          //取消选择时要把当前所有选择里面的对应值去掉
+          if(val.length<this.currentRow.length){
+            for(let i =0;i < this.currentRow.length;i++){
+              if(val.indexOf(this.currentRow[i])<0){
+                this.allselect.delete(this.currentRow[i])
+              }
+            }
+          }
+          this.currentRow = val;
         }
       },
       tableCurrentChange(){
-        this.$refs.reasontable.setCurrentRow(this.currentRow);
-        this.pageChange = true;
+        for(let elem of this.currentRow){
+          this.allselect.add(elem);
+        }
+         this.pageChange = true;
       },
       refreshData(){
         this.gethotellist()
         this.currentPage=1
       },
       clearRow(){
-        this.currentRow = {};
+        this.currentRow = [];
         this.$refs.reasontable.setCurrentRow();
       },
       reasonConfirm(){
-        if(!this.currentRow.hotelid){
-          this.$alert("请选择一个取消原因!")
-          return
-        }
         this.$emit('reasonConfirm',this.currentRow)
         this.$root.$emit('bv::hide::modal','myModalhotel')
       },
