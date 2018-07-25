@@ -11,7 +11,7 @@
             stripe
             highlight-current-row
             @current-change="handleCurrentChange"
-            max-height="tableHeight"
+            :max-height="tableHeight"
             style="width: 100%">
             <el-table-column
               v-for="item in classcodefildes"
@@ -120,14 +120,14 @@
             :data="placedata"
             border
             stripe
-            :height="tableHeight"
+            :height="tableH"
             style="width: 100%;font-size: 12px">
             <el-table-column
               prop="code"
               label="代码"
               width="55"
               sortable
-              show-overflow-tooltip>
+              :show-overflow-tooltip="true">
               <template slot-scope="scope" >
                 <div  v-if="scope.row.add === 'T'">
                   <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.code" placeholder=""></el-input>
@@ -252,8 +252,8 @@
               width="70">
               <template slot-scope="scope">
                 <b-form inline >
-                  <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
-                  <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
+                  <b-button size="mini" title="删除" class="Delete-button image-btn" type="danger" @click="deletel(scope.row)"></b-button>
+                  <b-button size="mini" title="日志" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
                 </b-form>
               </template>
             </el-table-column>
@@ -335,8 +335,8 @@
 
         currentRow: null,
         placeRow: null,
-
-        tableHeight: document.body.clientHeight-295,//减去header的278px
+        tableH: document.body.clientHeight-295,//减去header的278px
+        tableHeight: document.body.clientHeight-176,
         num:0,
         change:""
       }
@@ -771,7 +771,6 @@
     }
     #btng{
       .btn{
-        width: 90px;
         margin-top:5px ;
         border-radius: 0.25rem;
       }
@@ -784,21 +783,26 @@
       padding-right: 0px;
     }
     .maxwidth20{
-      flex: 0 0 19%;
-      max-width: 19%;
+      -ms-flex: 0 0 19.5%;
+      flex: 0 0 19.5%;
+      max-width: 19.5%;
     }
     .maxwidth70{
-      flex: 0 0 80.5%;
-      max-width: 80.5%;
+      -ms-flex: 0 0 80%;
+      flex: 0 0 80%;
+      max-width: 80%;
     }
     .maxwidth15{
+      -ms-flex: 0 0 10%;
       flex: 0 0 10%;
       max-width: 10%;
     }
     .paddingleft5{
       padding-left: 5px;
       .row{
-        .form-control{ height: 30.5px;}
+        .form-control{
+          height: 30.5px;
+        }
       }
       .el-table{
         .el-table__body-wrapper{
@@ -825,6 +829,9 @@
     }
     .paddingtop5{
       padding-top: 5px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     table{
       border-color: #dee2e6;
@@ -859,8 +866,14 @@
     }
     .row{
       margin-right: 2px;
+        .col-sm-4:first-child,.col-sm-4:nth-child(2){
+          .col-sm-9{
+            padding-left: 10px!important;
+            padding-right: 0px;
+          }
+        }
       .btng{
-        margin: 3px 0 5px;
+        margin: 8px 0 7px;
         .btn:not(:last-child){margin-right: 5px;}
       }
       .green{
@@ -877,10 +890,12 @@
       border-color: #c8c9ca!important;
     }
     .side-btn{
-      width: 85px;
+      width: 6.25rem;
     }
+
     .form-row > .col, .form-row > [class*="col-"] {
-      padding-right: 0px;
+      padding-left: 0px;
+      text-align: right;
     }
     .modal-body {
       padding: 0.5rem;
