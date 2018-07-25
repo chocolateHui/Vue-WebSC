@@ -890,7 +890,7 @@
       border-color: #c8c9ca!important;
     }
     .side-btn{
-      width: 80px;
+      width: 6.25rem;
     }
 
     .form-row > .col, .form-row > [class*="col-"] {
