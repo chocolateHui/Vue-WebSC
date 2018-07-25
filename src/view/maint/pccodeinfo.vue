@@ -31,18 +31,18 @@
           <b-row  style="font-size: 12px">
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="编码" class="mb-0">
-                <b-form-input
-                  type="text"
+                <FormatInput   type="number" maxlength="3"
                   v-model="pcinfo.pccode"
                   required
                   :disabled="changeshow.pccodedisabled"
                   placeholder="">
-                </b-form-input>
+                </FormatInput>
               </b-form-group>
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="中文描述" class="mb-0">
                 <b-form-input
+                  maxlength="32"
                   type="text"
                   v-model="pcinfo.descript"
                   required
@@ -54,6 +54,7 @@
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="英文描述" class="mb-0">
                 <b-form-input
+                  maxlength="32"
                   type="text"
                   v-model="pcinfo.descript1"
                   required
@@ -67,6 +68,7 @@
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="第三描述" class="mb-0">
                 <b-form-input
+                  maxlength="32"
                   type="text"
                   v-model="pcinfo.descript2"
                   :disabled="changeshow.descript2disabled"
@@ -119,7 +121,7 @@
               show-overflow-tooltip>
               <template slot-scope="scope" >
                 <div  v-if="scope.row.add === 'T'">
-                  <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.tableno" placeholder=""></el-input>
+                  <FormatInput  @focus="changesta()" class="el-input__inner" type="number" maxlength="6" @change="changeplace(scope)" v-model="scope.row.tableno" placeholder=""></FormatInput>
                 </div>
                 <div v-else>
                   <el-input disabled v-model="scope.row.tableno" placeholder=""></el-input>
@@ -131,7 +133,7 @@
               label="中文描述"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript" placeholder=""></el-input>
+                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript" maxlength="32" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -139,7 +141,7 @@
               label="英文描述"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input  @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript1" placeholder=""></el-input>
+                <el-input  @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript1" maxlength="32" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -147,7 +149,7 @@
               label="第三描述"
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript2" placeholder=""></el-input>
+                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript2" maxlength="32" placeholder=""></el-input>
               </template>
             </el-table-column>
 
@@ -384,8 +386,12 @@
         })
       },
       handleCurrentChange(val) {
+        if(this.placesavetype){
+
+        }
         this.currentRow = val;
         this.change="T";
+        this.btnshow = btnshow;
       },
       setCurrent(row) {
         this.$refs.aaa.setCurrentRow(row);
@@ -817,7 +823,7 @@
       box-shadow: 1px 5px 5px #dee2e6;
     }
     .side-btn{
-      width: 6.8rem;
+      padding: 0.375rem 0.55rem;
     }
     .row{
       margin-right: 2px;
