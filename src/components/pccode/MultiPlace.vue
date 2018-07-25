@@ -211,21 +211,21 @@
               }
               if(flag==="F"){
                 if(tbl){
-                  let top =  tbl.split(",");
-                  let select = [];
-                  for(let tp of Object.assign([],top)) {
-                    for(let index=0;index< items.length;index++){
-                      let item = items[index];
-                      if(item.tableno===tp){
-                        select.push(item);
+                    let top =  tbl.split(",");
+                    let select = [];
+                    for(let tp of Object.assign([],top)) {
+                      for(let index=0;index< items.length;index++){
+                        let item = items[index];
+                        if(item.tableno===tp){
+                          select.push(item);
+                        }
                       }
-                    }
-                  };
-                  this.$nextTick(()=>{
-                    for(let elem of select){
-                      this.$refs.multiplacetable.toggleRowSelection(elem);
-                    }
-                  })
+                    };
+                    this.$nextTick(()=>{
+                      for(let elem of select){
+                        this.$refs.multiplacetable.toggleRowSelection(elem);
+                      }
+                    })
                 }
               }
             }
