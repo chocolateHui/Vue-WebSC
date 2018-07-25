@@ -75,7 +75,7 @@
         sortBy: null,
         sortDesc: false,
         eloptions: [],
-        reportdate: '',
+        reportdate:[],
         sums: [],
         tableHeight: document.body.clientHeight-190,//减去header的190px
       }
@@ -230,7 +230,11 @@
 
     },
     created(){
-
+      let data = new Date();
+      var d = new Date()
+      d.setMonth(d.getMonth()+1);
+      this.reportdate=[data,d];
+      this. getreportdata();
     }
   }
 </script>
@@ -264,6 +268,9 @@
       height: 36px;
     }
     .el-table td, .el-table th{
+      padding: 0;
+    }
+    .el-table__header-wrapper.el-table td, .el-table th{
       padding: 0;
       background: linear-gradient(#fff, #F4F5F6);
     }

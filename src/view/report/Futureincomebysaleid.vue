@@ -160,35 +160,37 @@
                 if(typeof(response.data.fileds) != "undefined"){
                   this.items = [];
                   this.fi = Object.assign([],fildes);
-                  for(let items of response.data.fileds){
+                  for(let item of response.data.fileds){
                     let types = {};
 
-                    types["prop"]=items.props;
-                    if(items.props===""){
+                    types["prop"]=item.props;
+                    if(item.props===""){
                       types["prop"] = "zzzz";
                     }
-                    types["label"]=items.label;
-                    if(items.label===""){
-                      types["label"] = items.props;
+                    types["label"]=item.label;
+                    if(item.label===""){
+                      types["label"] = item.props;
                     }
+                    types["showTip"]=true;
                     this.fi.push(types);
                   }
                   let types = {};
                   types["prop"]="heji";
                   types["label"]="合计";
+                  types["showTip"]=true;
                   this.fi.push(types);
-                  for(let items of response.data.incomes){
+                  for(let item of response.data.incomes){
                     let types = {};
-                    types["caterid"]=items.caterid;
-                    types["caterdes"]=items.caterdes;
-                    types["sta"]=items.sta;
-                    types["arr"]=items.arr;
-                    types["dep"]=items.dep;
-                    types["cusnodes"]=items.cusnodes;
-                    types["saleid"]=items.saleid;
-                    types["salename"]=items.salename;
-                    types["heji"]=items.heji;
-                    let m = JSON.parse(items.incomejson);
+                    types["caterid"]=item.caterid;
+                    types["caterdes"]=item.caterdes;
+                    types["sta"]=item.sta;
+                    types["arr"]=item.arr;
+                    types["dep"]=item.dep;
+                    types["cusnodes"]=item.cusnodes;
+                    types["saleid"]=item.saleid;
+                    types["salename"]=item.salename;
+                    types["heji"]=item.heji;
+                    let m = JSON.parse(item.incomejson);
                     for(let s in m){
                       if(s===""){
                         types["zzzz"]=m[s];
@@ -264,6 +266,14 @@
       },
       begina(val,oldval){
         if(val==="xxxx"||val===""){
+          let data = new Date();
+          var d = new Date()
+          d.setMonth(d.getMonth()+1);
+          var d2 = new Date()
+          d2.setMonth(d2.getMonth()-1);
+          this.reportdate=[data,d];
+          this.reportdate=[d2,d];
+          this. getreportdata();
         }
         else{
           let date = [];
@@ -309,6 +319,9 @@
       height: 36px;
     }
     .el-table td, .el-table th{
+      padding: 0;
+    }
+    .el-table__header-wrapper.el-table td, .el-table th{
       padding: 0;
       background: linear-gradient(#fff, #F4F5F6);
     }
