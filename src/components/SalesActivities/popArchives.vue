@@ -51,13 +51,13 @@
       </ol>
       <ul>
         <li :class="{'proCurrent':ifproCurrent==proList.prono}" @click="getHistoryList(proList)" @dblclick="chooseType(proList)" v-for="proList in profileslist">
-          <span class="nav1">{{proList.proname}}</span>
-          <span class="nav2">{{proList.prono}}</span>
-          <span class="nav3">{{proList.txt}}</span>
-          <span class="nav4">{{proList.mobile}}</span>
-          <span class="nav5">{{proList.contacter}}</span>
-          <span class="nav6"></span>
-          <span class="nav7"></span>
+          <span class="nav1" :title="proList.proname">{{proList.proname}}</span>
+          <span class="nav2" :title='proList.prono'>{{proList.prono}}</span>
+          <span class="nav3" :title='proList.txt'>{{proList.txt}}</span>
+          <span class="nav4" :title='proList.mobile'>{{proList.mobile}}</span>
+          <span class="nav5" :title='proList.contacter'>{{proList.contacter}}</span>
+          <span class="nav6" ></span>
+          <span class="nav7" ></span>
           <span class="nav8"></span>
         </li>
       </ul>
@@ -73,7 +73,14 @@
         <li class="nav6">销售员</li>
       </ol>
       <ul>
-        <li v-if="cateringlist" v-for="caterList in cateringlist"><span class="nav1">{{caterList.name}}</span><span class="nav2">{{caterList.arr.substring(0,10)}}</span><span class="nav3">{{caterList.dep.substring(0,10)}}</span><span class="nav4">{{caterList.contact_mobile}}</span><span class="nav5">{{caterList.contactor}}</span><span class="nav6">{{caterList.saleid_name}}</span></li>
+        <li v-if="cateringlist" v-for="caterList in cateringlist">
+          <span class="nav1" :title='caterList.name'>{{caterList.name}}</span>
+          <span class="nav2" :title='caterList.arr.substring(0,10)'>{{caterList.arr.substring(0,10)}}</span>
+          <span class="nav3" :title='caterList.dep.substring(0,10)'>{{caterList.dep.substring(0,10)}}</span>
+          <span class="nav4" :title='caterList.contact_mobile'>{{caterList.contact_mobile}}</span>
+          <span class="nav5" :title='caterList.contactor'>{{caterList.contactor}}</span>
+          <span class="nav6" :title='caterList.saleid_name'>{{caterList.saleid_name}}</span>
+        </li>
       </ul>
     </div>
     <div class="tr"><input type="button" class="btn_ok" @click="archOk" value="确定"><input type="button" class="btn_quit" @click="archClose" value="退出"></div>
