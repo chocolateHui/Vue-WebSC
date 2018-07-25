@@ -2,7 +2,7 @@
   <div id="empnoinfo">
     <b-container fluid>
       <b-row>
-        <b-col sm="4" class="my-1">
+        <b-col sm="3" class="my-1">
           <b-form-group horizontal label="酒店" class="mb-0">
             <el-select v-model="hotelid" clearable filterable placeholder="请选择" :disabled="isGroup">
               <el-option
@@ -14,7 +14,7 @@
             </el-select>
           </b-form-group>
         </b-col>
-        <b-col sm="4" class="my-1">
+        <b-col sm="3" class="my-1">
           <b-form-group horizontal label="角色" class="mb-0">
             <el-select v-model="htljob" clearable filterable placeholder="请选择">
               <el-option
@@ -26,9 +26,20 @@
             </el-select>
           </b-form-group>
         </b-col>
-        <b-col sm="4" class="my-1">
+        <b-col sm="3" class="my-1">
+          <b-form-group horizontal label="状态" class="mb-0">
+            <el-select v-model="locked" clearable filterable placeholder="请选择">
+              <el-option
+                v-for="item in state"
+                :key="item.value"
+                :value="item.value"
+                :label="item.descript">
+              </el-option>
+            </el-select>
+          </b-form-group>
+        </b-col>
+        <b-col sm="3" class="my-1">
           <b-form-group class="mb-0">
-            <b-form-checkbox v-model="locked" value="T" unchecked-value="F" >停用</b-form-checkbox>
             <b-button variant="primary" @click="getEmpnolist">查询</b-button>
             <b-button variant="primary" @click="newProp">新建</b-button>
           </b-form-group>
@@ -41,10 +52,11 @@
         :row-key="getRowKeys"
         :expand-row-keys="expands"
         @expand-change = "expandChange"
+        @cell-click="cellclick"
         :data="getempnolist"
         border
         style="width: 100%" :max-height="tableHeight">
-        <el-table-column type="expand">
+        <el-table-column type="expand" >
           <template slot-scope="props">
             <b-row>
               <b-col>
@@ -149,11 +161,10 @@
         </el-table-column>
         <el-table-column :width="50" label="操作">
           <template slot-scope="scope">
-            <b-button size="mini" type="danger" class="Cancel-button image-btn" @click="deleteempno(scope)"></b-button>
+            <b-button size="mini" v-if="!scope.row.isnew" type="danger" class="Delete-button image-btn" @click="deleteempno(scope)"></b-button>
           </template>
         </el-table-column>
       </el-table>
-
     </b-container>
     <b-modal id="passmodal1" ref="passmodal1" @hidden="modalhidden" size="sm" title="修改密码" hide-footer>
       <div>
@@ -208,7 +219,7 @@
     data () {
       return {
         newp:true,
-        isnew:true,
+//        isnew:true,
         flag:true,
         getempnolist: [],
         fildes :fildes,
@@ -232,6 +243,13 @@
         },{
           code:'05',
           descript:'销售协调员'
+        }],
+        state:[{
+          value:'T',
+          descript:'停用'
+        }, {
+          value:'F',
+          descript:'启用'
         }],
         getdeptlist: [],
         deptno:'',
@@ -354,38 +372,50 @@
           }
         })
       },
+      cellclick:function (row, column, cell, event) {  //阻止
+//        console.log(row);
+      },
       expandChange:function (row, expandedRows) {
-        if(expandedRows.length>1 || row.hasOwnProperty("isnew")){
-          this.getempnolist.pop();
-          this.newp = true;
-          let index = 0;
-          for (let expandrow of expandedRows) {
-            if (expandrow.empno !== row.empno) {
-              expandedRows.splice(index, 1);
+        console.log(this.expandempno);
+        if (this.expandempno.hasOwnProperty("isnew") && expandedRows.length > 1) {
+
+          this.$confirm("新建信息未保存，即将被清除", "提示", {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.getempnolist.pop();
+            this.newp = true;
+          }).catch(() => {
+            if (!row.hasOwnProperty("isnew") && !this.newp) {
+              expandedRows.splice(0, 1);
+
             }
-            index++;
-          }
+          })
         }
-        if(this.lastHasSale){
+        let index = 0;
+        for (let expandrow of expandedRows) {
+          if (expandrow.empno !== row.empno) {
+            expandedRows.splice(index, 1);
+          }
+          index++;
+        }
+        if (this.lastHasSale) {
           this.empnoSaleList.splice(0, 1);
           this.lastHasSale = false;
         }
 
-        if(row.hasOwnProperty("saleid")&&row.saleid!==''){
+        if (row.hasOwnProperty("saleid") && row.saleid !== '') {
           this.lastHasSale = true;
-          this.empnoSaleList.unshift(this.salelist.find((value) =>{
-              return value.code===row.saleid
+          this.empnoSaleList.unshift(this.salelist.find((value) => {
+              return value.code === row.saleid
             })
           )
         }
-//        if(row.hasOwnProperty("isnew")){
-//          alert(1)
-//          this.getempnolist.pop();
-//          this.newp = true;
-//        }
-        this.expandempno = Object.assign({},row);
+        this.expandempno = Object.assign({}, row);
+
       },
-      newProp:function(){
+      newProp:function(){  //新建员工
         if(this.newp){
           this.newp = false;
           this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:true });
@@ -411,7 +441,9 @@
       getDeptlist:function(){
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          this.$http.post(methodinfo.getdeptlist, {}).then((response) => {
+          this.$http.post(methodinfo.getdeptlist, {
+            authhotel:this.hotelid
+          }).then((response) => {
             if (response.data.errorCode === "0") {
               this.getdeptlist = response.data.depts;
             }
@@ -548,8 +580,9 @@
           .my-1{
             .form-row{
               .col-sm-3{
-                flex: 0 0 13%;
-                max-width: 13%;
+                -ms-flex: 0 0 17%;
+                flex: 0 0 17%;
+                max-width: 17%;
               }
             }
           }
@@ -588,14 +621,17 @@
               height:45px;
               .col-sm-9{
                 .custom-control{
+                  .custom-control-label::before{
+                    top:0.1rem;
+                  }
                   .custom-control-label::after{
-                    top: 0.5rem;
+                    top: 0.35rem;
                     left: -1.25rem;
                   }
                 }
                 .custom-control:last-child{
                   .custom-control-label::after{
-                    top: 0.5rem;
+                    top: 0.35rem;
                     left: -1.2rem;
                   }
                 }

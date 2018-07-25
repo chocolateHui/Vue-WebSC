@@ -817,7 +817,7 @@
       box-shadow: 1px 5px 5px #dee2e6;
     }
     .side-btn{
-      width: 85px;
+      width: 6.8rem;
     }
     .row{
       margin-right: 2px;
