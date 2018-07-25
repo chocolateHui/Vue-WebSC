@@ -384,32 +384,39 @@
           }).then(() => {
             this.getempnolist.pop();
             this.newp = true;
-
-            let index = 0;
-            for (let expandrow of expandedRows) {
-              if (expandrow.empno !== row.empno) {
-                expandedRows.splice(index, 1);
-              }
-              index++;
-            }
-            if (this.lastHasSale) {
-              this.empnoSaleList.splice(0, 1);
-              this.lastHasSale = false;
-            }
-
-            if (row.hasOwnProperty("saleid") && row.saleid !== '') {
-              this.lastHasSale = true;
-              this.empnoSaleList.unshift(this.salelist.find((value) => {
-                  return value.code === row.saleid
-                })
-              )
-            }
-            this.expandempno = Object.assign({}, row);
+            this.empnoChange(row, expandedRows)
           }).catch(() => {
             expandedRows.splice(0, 1);
             this.expands = [''];
           })
+        }else{
+          this.empnoChange(row, expandedRows)
         }
+      },
+      empnoChange(row,expandedRows){
+        if(this.expandempno.hasOwnProperty("isnew")&&!this.newp){
+          return;
+        }
+        let index = 0;
+        for (let expandrow of expandedRows) {
+          if (expandrow.empno !== row.empno) {
+            expandedRows.splice(index, 1);
+          }
+          index++;
+        }
+        if (this.lastHasSale) {
+          this.empnoSaleList.splice(0, 1);
+          this.lastHasSale = false;
+        }
+
+        if (row.hasOwnProperty("saleid") && row.saleid !== '') {
+          this.lastHasSale = true;
+          this.empnoSaleList.unshift(this.salelist.find((value) => {
+              return value.code === row.saleid
+            })
+          )
+        }
+        this.expandempno = Object.assign({}, row);
       },
       newProp:function(){  //新建员工
         if(this.newp){
@@ -458,6 +465,10 @@
           if(this.htljob!==''){
             param.htljob = this.htljob
           }
+          if(this.hotelid !== this.$store.getters.hotel.hotelid){
+            this.getDeptlist();
+          }
+
           this.$http.post(methodinfo.getempnolist,param ).then((response) => {
             if (response.data.errorCode === "0") {
               this.getempnolist = response.data.empnos;
@@ -485,7 +496,6 @@
 
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
-            console.info(val.flag)
             if (val.flag) {
               this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
                 if (response.data.errorCode === "0") {
