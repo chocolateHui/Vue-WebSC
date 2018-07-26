@@ -106,7 +106,13 @@
         if(!this.saleid){
           return this.items;
         }else{
-          return this.items.filter( item => (~item.saleid.indexOf(this.saleid)));
+          return this.items.filter( item => {
+              if (item.saleid===this.saleid){
+                return item;
+              }
+            }
+
+          );
         }
       }
     },
@@ -268,11 +274,7 @@
         if(val==="xxxx"||val===""){
           let data = new Date();
           var d = new Date()
-          d.setMonth(d.getMonth()+1);
-          var d2 = new Date()
-          d2.setMonth(d2.getMonth()-1);
           this.reportdate=[data,d];
-          this.reportdate=[d2,d];
           this. getreportdata();
         }
         else{
@@ -289,6 +291,7 @@
     created(){
       this.getsaleid();
       this.begina = this.begin;
+      console.log(this.begina);
     }
   }
 </script>

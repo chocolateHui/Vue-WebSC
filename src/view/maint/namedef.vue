@@ -28,17 +28,17 @@
         </el-table-column>
         <el-table-column prop="descript" label="中文描述" align="center">
           <template slot-scope="scope">
-            <el-input @change="rowChange(scope)" :readonly="!scope.row.editable" maxlength="50" v-model="scope.row.descript" placeholder=""></el-input>
+            <el-input @change="rowChange(scope)" :readonly="!scope.row.editable" maxlength="30" v-model="scope.row.descript" placeholder=""></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="descript1" label="英文描述" align="center">
           <template slot-scope="scope">
-            <el-input @change="rowChange(scope)" :readonly="!scope.row.editable" maxlength="50" v-model="scope.row.descript1" placeholder=""></el-input>
+            <el-input @change="rowChange(scope)" :readonly="!scope.row.editable" maxlength="30" v-model="scope.row.descript1" placeholder=""></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="descript2" label="其他描述" align="center">
           <template slot-scope="scope">
-            <el-input @change="rowChange(scope)" :readonly="!scope.row.editable" maxlength="50" v-model="scope.row.descript2" placeholder=""></el-input>
+            <el-input @change="rowChange(scope)" :readonly="!scope.row.editable" maxlength="30" v-model="scope.row.descript2" placeholder=""></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="share" label="共享" width="75" align="center">
@@ -213,14 +213,15 @@
       },
       log(scope){
         let row = scope.row;
-        let logkey =row.code +'|'+ row.hotelid +'|'+this.groupid;
+        let logkey =row.groupid +'|'+ row.hotelid +'|'+row.code;
+        console.log(logkey)
         this.$store.commit('setLogtype','ScNamedef');
         this.$store.commit('setLogKey',logkey);
         this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       log2(){
         this.$store.commit('setLogtype','ScNamedef');
-        this.$store.commit('setLogKey',"deletenamedef");
+        this.$store.commit('setLogKey',"deletescnamedef");
         this.$root.$emit('bv::show::modal', 'maintLogModal');
       }
     },
