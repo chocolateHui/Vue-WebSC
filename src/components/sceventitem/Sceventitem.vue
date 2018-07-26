@@ -387,7 +387,7 @@
           caterid:this.caterid,
           caterdes:this.catering.name,
           eventid:this.sceventitemeventid,
-          eventdes:this.eventde,
+          eventdes:this.eventdes,
           itemid:parseInt(this.selectbm),
           type:"3"
         };
