@@ -71,7 +71,7 @@
         <el-table-column width="130" prop="changed" label="修改时间" align="center"></el-table-column>
         <el-table-column label="操作" width="72" align="center">
           <template slot-scope="scope">
-            <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
+            <b-button size="mini" class="Delete-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
             <b-button size="mini" class="Journal-button image-btn" type="danger" @click="log(scope)"></b-button>
           </template>
         </el-table-column>
