@@ -116,6 +116,10 @@
             },
             set (value) {
               this.$store.commit('setGroupid', value)
+              this.$store.commit('setHotel', {
+                hotelid:'',
+                descript:''
+              })
             }
           }
         },
@@ -206,7 +210,7 @@
             if (!this.inputCheck()) {
               return;
             }
-            if (!this.hotel) {
+            if (!this.hotel.hotelid) {
               this.hotelErrorShow = true;
               return;
             } else {
