@@ -31,19 +31,20 @@
           <b-row  style="font-size: 12px">
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="编码" class="mb-0">
-                <b-form-input
-                  type="text"
+                <FormatInput
+                  type="number" maxlength="4"
                   v-model="pcinfo.classcode"
                   required
                   :disabled="changeshow.classcodedisabled"
                   placeholder="">
-                </b-form-input>
+                </FormatInput>
               </b-form-group>
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="中文描述" class="mb-0">
                 <b-form-input
                   type="text"
+                  maxlength="32"
                   v-model="pcinfo.descript"
                   required
                   :disabled="changeshow.descriptdisabled"
@@ -55,6 +56,7 @@
               <b-form-group horizontal label="英文描述" class="mb-0">
                 <b-form-input
                   type="text"
+                  maxlength="50"
                   v-model="pcinfo.descript1"
                   required
                   :disabled="changeshow.descript1disabled"
@@ -125,12 +127,12 @@
             <el-table-column
               prop="code"
               label="代码"
-              width="55"
+              width="60"
               sortable
               :show-overflow-tooltip="true">
               <template slot-scope="scope" >
                 <div  v-if="scope.row.add === 'T'">
-                  <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.code" placeholder=""></el-input>
+                  <FormatInput @focus="changesta()" type="number" maxlength="6" @change="changeplace(scope)" v-model="scope.row.code" placeholder=""></FormatInput>
                 </div>
                 <div v-else>
                   <el-input disabled v-model="scope.row.code" placeholder=""></el-input>
@@ -143,7 +145,7 @@
               sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript" placeholder=""></el-input>
+                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript" maxlength="32" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -152,7 +154,7 @@
               sortable
               show-overflow-tooltip>
               <template slot-scope="scope">
-                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript1" placeholder=""></el-input>
+                <el-input @focus="changesta()" @change="changeplace(scope)" v-model="scope.row.descript1" maxlength="32" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -466,6 +468,7 @@
       handleCurrentChange(val) {
         this.currentRow = val;
         this.change="T";
+        this.btnshow = btnshow;
       },
       setCurrent(row) {
         this.$refs.aaa.setCurrentRow(row);
@@ -530,7 +533,8 @@
             descript1:item.descript1,
             descript2:item.descript2,
             type:item.type,
-            seq:item.seq
+            seq:item.seq,
+            tocode:item.tocode
           }).then((response)=> {
 
             if(response.data.errorCode=="0"){
@@ -855,7 +859,7 @@
       }
     }
     .el-input__inner{
-      height: 31px;
+      height: 31px!important;
     }
     .el-table .caret-wrapper{
       width: 20px;
@@ -890,7 +894,7 @@
       border-color: #c8c9ca!important;
     }
     .side-btn{
-      width: 6.25rem;
+      padding: 0.375rem 0.8rem;
     }
 
     .form-row > .col, .form-row > [class*="col-"] {

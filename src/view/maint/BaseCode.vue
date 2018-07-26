@@ -24,7 +24,7 @@
         <el-table-column prop="code" label="编码" width="50" align="center">
           <template slot-scope="scope" >
             <FormatInput @change="rowChange(scope)" v-if="cat==='sc_event_type' | cat==='sc_event_degree'" :disabled="scope.row.add !== 'T'"  class="el-input__inner" type="number" maxlength="1" v-model="scope.row.code" placeholder=""></FormatInput>
-            <el-input @change="rowChange(scope)" v-else :disabled="scope.row.add !== 'T'" :maxlength="codelength" v-model="scope.row.code" placeholder=""></el-input>
+            <FormatInput @change="rowChange(scope)" v-else :disabled="scope.row.add !== 'T'" :maxlength="codelength" v-model="scope.row.code" placeholder=""></FormatInput>
           </template>
         </el-table-column>
         <el-table-column prop="descript" label="中文描述" align="center">
@@ -101,7 +101,7 @@
         <el-table-column width="130" prop="changed" label="修改时间" align="center"></el-table-column>
         <el-table-column label="操作" width="72" align="center">
           <template slot-scope="scope">
-            <b-button size="mini" class="Cancel-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
+            <b-button size="mini" class="Delete-button image-btn" type="danger" @click="deleteBasecode(scope)"></b-button>
             <b-button size="mini" class="Journal-button image-btn" type="danger" @click="showCodeLog(scope)"></b-button>
           </template>
         </el-table-column>
@@ -161,7 +161,9 @@
             let item = this.items[i];
             if(row.code===item.code&&scope.$index!==i){
               this.$message.error('对应的基础代码已存在!');
-              row.code="";
+              this.$nextTick(()=>{
+                this.$set(row,"code","")
+              })
               return;
             }
           }

@@ -18,9 +18,9 @@
       return {
         reports: [
           { route: '/main/lostreport', title: '订单流失统计报表',descript:"显示取消的宴会订单情况,按销售员小计流失情况。",color:'c1'},
-          { route: '/main/fuincome', title: '分类预测汇总报表',descript:"分类预测汇总报表",color:'c2'},
-          { route: '/main/fuincomebysaleid', title: '分类预测明细报表',descript:"分类预测明细报表",color:'c3',sale:"xxxxx",begin:"xxxx"},
-          { route: '/main/placeana', title: '场地利用情况分析报表',descript:"场地利用情况分析报表",color:'c4'}
+          { route: '/main/fuincome', title: '分类预测汇总报表',descript:"按销售员汇总订单的分类消费预测情况。",color:'c2'},
+          { route: '/main/fuincomebysaleid', title: '分类预测明细报表',descript:"显示每个宴会订单的分类消费预测情况。",color:'c3',sale:"xxxxx",begin:"xxxx"},
+          { route: '/main/placeana', title: '场地利用情况分析报表',descript:"按月或年统计宴会场地利用情况,并显示去年同期数据进行对比。",color:'c4'}
         ]
       };
     },

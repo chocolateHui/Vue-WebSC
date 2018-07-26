@@ -135,7 +135,6 @@ const actions = {
     }
   },
   getEventList (store) {
-    store.commit('setEventlist', [])
     let method = methodinfo.geteventlist
     if (store.getters.isHistory) {
       method = methodinfo.getheventlist
@@ -153,6 +152,8 @@ const actions = {
           store.commit('setEventlist', events)
           store.commit('setDefaulttype', events[events.length - 1].type)
         }
+      } else {
+        store.commit('setEventlist', [])
       }
     })
   },
