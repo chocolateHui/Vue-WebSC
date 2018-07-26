@@ -490,5 +490,8 @@
       margin: 0 auto;
       margin-top: -10px !important;
     }
+    .el-dialog__body {
+      padding: 30px 10px;
+    }
   }
 </style>
