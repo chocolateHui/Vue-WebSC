@@ -189,8 +189,8 @@
       this.scDoCheck1 = Object.assign({},this.scDoCheck);
       this.scMessageUrl1 = Object.assign({},this.scMessageUrl);
       this.scEoSigntime1 = Object.assign({},this.scEoSigntime);
-      this.scMessageUrl1 = Object.assign({},this.scMessageUrl);
-      this.scEoSigntime1 = Object.assign({},this.scEoSigntime);
+//      this.scMessageUrl1 = Object.assign({},this.scMessageUrl);
+//      this.scEoSigntime1 = Object.assign({},this.scEoSigntime);
       this.scEoGroup1 = Object.assign({},this.scEoGroup);
       this.EOID1 = Object.assign({},this.EOID);
     },
@@ -209,17 +209,26 @@
           this.$store.dispatch('saveSysoption',this.scEoGroup1)
           this.$store.dispatch('saveSysoption',this.EOID1)
 
+          this.$store.commit('setEventDepDate',this.eventDepDate1)
+          this.$store.commit('setEventWaitingLimit',this.eventWaitingLimit1)
           this.$store.commit('setScEoGroup',this.scEoGroup1)
           this.$store.commit('setEOID',this.EOID1)
+          this.$message('保存成功！')
         })
       },
       commitSysoption2:function () {
         this.$store.dispatch('encrypttoken').then(() => {
           //获取工号信息,完成后进行路由
+          this.$store.dispatch('saveSysoption',this.isToPos1)
+          this.$store.dispatch('saveSysoption',this.isRResource1)
           this.$store.dispatch('saveSysoption',this.scPmsType1)
-          this.$store.dispatch('saveSysoption',this.scPmsUrl1)
           this.$store.dispatch('saveSysoption',this.scPosType1)
-          this.$store.dispatch('saveSysoption',this.scPosUrl1)
+
+          this.$store.commit('setIsToPos',this.isToPos1)
+          this.$store.commit('setIsRResource',this.isRResource1)
+          this.$store.commit('setScPmsType',this.scPmsType1)
+          this.$store.commit('setScPosType',this.scPosType1)
+          this.$message('保存成功！')
         })
       },
       commitSysoption3:function () {
@@ -227,6 +236,11 @@
           //获取工号信息,完成后进行路由
           this.$store.dispatch('saveSysoption',this.scEoSigntime1)
           this.$store.dispatch('saveSysoption',this.scMessageUrl1)
+
+          this.$store.commit('setScEoSigntime',this.scEoSigntime1)
+          this.$store.commit('setScMessageUrl',this.scMessageUrl1)
+          this.$store.commit('setScDoCheck',this.scDoCheck1)
+          this.$message('保存成功！')
         })
       },
       clearFile(){
