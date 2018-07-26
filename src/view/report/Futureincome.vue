@@ -223,7 +223,7 @@
       tableDbEdit(row, event) {
         let sale = row.saleid;
         let begin = row.date;
-        this.$router.push({name: "分类预测明细表", params: {sale: sale,begin:begin}})
+        this.$router.push({name: "分类预测明细报表", params: {sale: sale,begin:begin}})
       },
     },
     watch:{

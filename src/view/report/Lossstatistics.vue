@@ -47,7 +47,6 @@
         :span-method="arraySpanMethod"
         :data="searchitems"
         border
-        show-summary
         :row-class-name="tableRowClassName"
         style="width: 100%" :max-height="tableHeight">
         <el-table-column
@@ -105,7 +104,12 @@
         if(!this.saleid){
           return this.items;
         }else{
-          return this.items.filter( item => (~item.name.indexOf(this.saleid)));
+          return this.items.filter( item => {
+              if (item.saleid===this.saleid){
+                return item;
+              }
+            }
+          );
         }
       }
     },
@@ -209,6 +213,37 @@
           }
         }
       },
+      // getSummaries(param) {
+      //
+      //   const { columns, data } = param;
+      //   const sums = [];
+      //   columns.forEach((column, index) => {
+      //     if (index === 0) {
+      //       sums[index] = '合计';
+      //       return;
+      //     }
+      //     if (index === 1) {
+      //       sums[index] =data.length;;
+      //       return;
+      //     }
+      //     const values = data.map(item => Number(item[column.property]));
+      //     if (!values.every(value => isNaN(value))) {
+      //       sums[index] = values.reduce((prev, curr) => {
+      //         const value = Number(curr);
+      //         if (!isNaN(value)) {
+      //           return prev + curr;
+      //         } else {
+      //           return prev;
+      //         }
+      //       }, 0);
+      //       sums[index] += '';
+      //     } else {
+      //       sums[index] = 'N/A';
+      //     }
+      //   });
+      //   this.sums = sums;
+      //   return sums;
+      // },
       tableRowClassName({row, rowIndex}) {
         if (row.caterid === '小计') {
           return 'warning-row';

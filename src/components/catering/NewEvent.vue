@@ -420,14 +420,17 @@
               if(i===eventplaces.length-1){
                 this.$http.post(methodinfo.newbatchevent, commitEvent).then((response)=>{
                   this.$root.$emit("bv::toggle::collapse","newevent")
-                  resolve(response)
+                  resolve(response.data)
                 })
               }else{
                 this.$http.post(methodinfo.newbatchevent, commitEvent)
               }
             }
           }else{
-            resolve()
+            let response = {
+              errorCode :"0"
+            }
+            resolve(response)
           }
         })
       },

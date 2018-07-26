@@ -62,7 +62,7 @@
               <b-col>
                 <b-form>
                   <b-form-group label="工号:" horizontal>
-                    <FormatInput type="text" maxlength="10" v-model="expandempno.empno" :disabled="able.name && !expandempno.flag"></FormatInput>
+                    <FormatInput type="nospecial" id ="username" maxlength="10" v-model="expandempno.empno" :disabled="able.name && !expandempno.flag"></FormatInput>
                   </b-form-group>
                   <b-form-group label="姓名:"
                                 horizontal>
@@ -102,7 +102,7 @@
                     </el-date-picker>
                   </div>
                   <b-form-group label="QQ:" horizontal>
-                    <FormatInput type="number" maxlength="10" v-model="expandempno.qq"></FormatInput>
+                    <FormatInput type="number" maxlength="15" v-model="expandempno.qq"></FormatInput>
                   </b-form-group>
                   <b-form-group label="Email:" horizontal>
                     <b-form-input type="email" maxlength="64" v-model="expandempno.email" placeholder="">
@@ -384,32 +384,39 @@
           }).then(() => {
             this.getempnolist.pop();
             this.newp = true;
-
-            let index = 0;
-            for (let expandrow of expandedRows) {
-              if (expandrow.empno !== row.empno) {
-                expandedRows.splice(index, 1);
-              }
-              index++;
-            }
-            if (this.lastHasSale) {
-              this.empnoSaleList.splice(0, 1);
-              this.lastHasSale = false;
-            }
-
-            if (row.hasOwnProperty("saleid") && row.saleid !== '') {
-              this.lastHasSale = true;
-              this.empnoSaleList.unshift(this.salelist.find((value) => {
-                  return value.code === row.saleid
-                })
-              )
-            }
-            this.expandempno = Object.assign({}, row);
+            this.empnoChange(row, expandedRows)
           }).catch(() => {
             expandedRows.splice(0, 1);
             this.expands = [''];
           })
+        }else{
+          this.empnoChange(row, expandedRows)
         }
+      },
+      empnoChange(row,expandedRows){
+        if(this.expandempno.hasOwnProperty("isnew")&&!this.newp){
+          return;
+        }
+        let index = 0;
+        for (let expandrow of expandedRows) {
+          if (expandrow.empno !== row.empno) {
+            expandedRows.splice(index, 1);
+          }
+          index++;
+        }
+        if (this.lastHasSale) {
+          this.empnoSaleList.splice(0, 1);
+          this.lastHasSale = false;
+        }
+
+        if (row.hasOwnProperty("saleid") && row.saleid !== '') {
+          this.lastHasSale = true;
+          this.empnoSaleList.unshift(this.salelist.find((value) => {
+              return value.code === row.saleid
+            })
+          )
+        }
+        this.expandempno = Object.assign({}, row);
       },
       newProp:function(){  //新建员工
         if(this.newp){
@@ -458,6 +465,10 @@
           if(this.htljob!==''){
             param.htljob = this.htljob
           }
+          if(this.hotelid !== this.$store.getters.hotel.hotelid){
+            this.getDeptlist();
+          }
+
           this.$http.post(methodinfo.getempnolist,param ).then((response) => {
             if (response.data.errorCode === "0") {
               this.getempnolist = response.data.empnos;
@@ -480,41 +491,44 @@
         })
       },
       modifyempnoinfo: function (val) {
+        var emailreg= /(\S)+[@]{1}(\S)+[.]{1}(\w)+/;
         if (val.deptno && val.empname !== '' && val.htljob && val.empno !== '') {
-          val.username = val.empno
-
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.configDefault()
-            console.info(val.flag)
-            if (val.flag) {
-              this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
-                if (response.data.errorCode === "0") {
-                  this.$message('保存成功')
-                  this.newp = true;
-                  //如果工号选择了销售员则把元素移到第一位
-                  if(val.hasOwnProperty("saleid")&&val.saleid!==''){
-                    this.resetSaleList(val.saleid);
+          if(emailreg.test(val.email)) {
+            val.username = (String(val.empno)).toUpperCase()
+            this.$store.dispatch('encrypttoken').then(() => {
+              this.configDefault()
+              if (val.flag) {
+                this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
+                  if (response.data.errorCode === "0") {
+                    this.$message('保存成功')
+                    this.newp = true;
+                    //如果工号选择了销售员则把元素移到第一位
+                    if (val.hasOwnProperty("saleid") && val.saleid !== '') {
+                      this.resetSaleList(val.saleid);
+                    }
+                    this.getEmpnolist();
+                  } else {
+                    this.$message.error(response.data.errorMessage)
                   }
-                  this.getEmpnolist();
-                } else {
-                  this.$message.error(response.data.errorMessage)
-                }
-              });
-            } else {
-              this.$http.post(methodinfo.modifyempnoinfo, val).then((response) => {
-                if (response.data.errorCode === "0") {
-                  this.$message('保存成功')
-                  //如果工号选择了销售员则把元素移到第一位
-                  if(val.hasOwnProperty("saleid")&&val.saleid!==''){
-                    this.resetSaleList(val.saleid)
+                });
+              } else {
+                this.$http.post(methodinfo.modifyempnoinfo, val).then((response) => {
+                  if (response.data.errorCode === "0") {
+                    this.$message('保存成功')
+                    //如果工号选择了销售员则把元素移到第一位
+                    if (val.hasOwnProperty("saleid") && val.saleid !== '') {
+                      this.resetSaleList(val.saleid)
+                    }
+                    this.getEmpnolist();
+                  } else {
+                    this.$message.error(response.data.errorMessage)
                   }
-                  this.getEmpnolist();
-                }else {
-                  this.$message.error(response.data.errorMessage)
-                }
-              });
-            }
-          })
+                });
+              }
+            })
+          } else {
+            this.$message.error("邮箱格式不正确")
+          }
         } else {
           this.$message.error("请将'工号、姓名、角色、岗位'信息填写完整")
         }
@@ -597,6 +611,10 @@
           }
         }
       }
+     #username{
+       ime-mode:disabled;
+       text-transform:uppercase;
+     }
       #empnotable{
         table{
           border-color: #dee2e6;
@@ -607,6 +625,7 @@
           }
           th,td{
             padding: 0;
+            height: 32px;
             border-color: #dee2e6;
           }
         }

@@ -499,7 +499,9 @@
         this.$refs.remarkmodal.show();
       },
       showLog(row){
-        let logkey = "";
+        let groupid = this.$store.getters.groupid;
+        let hotelid = this.$store.getters.hotel.hotelid;
+        let logkey = row.eventid+"|"+hotelid+"|"+groupid;
 
         this.$store.commit('setLogtype','ScEvent');
         this.$store.commit('setLogKey',logkey);
