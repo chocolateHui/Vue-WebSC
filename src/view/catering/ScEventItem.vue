@@ -90,8 +90,9 @@
       },
       NodeClick(data){
         if(data.root!="T"){
+          this.$store.commit('setCaterid',this.caterid);
           this.$store.commit('setSceventitemeventid',data.eventid);
-          this.$store.commit('setEventdes',data.label);
+          this.$store.commit('setEventdes',data.label.substring(5));
         }
 
       },
@@ -119,7 +120,6 @@
       },
       getCateringData(){
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
-
         this.$store.commit('setCaterid',this.caterid);
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch("getCateringInfo")
