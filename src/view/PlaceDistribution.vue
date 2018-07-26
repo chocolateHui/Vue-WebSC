@@ -670,6 +670,7 @@
         }
       },
       btnAllCheck:function () {
+        this.sta=''
         loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         this.ifAllCheck=!this.ifAllCheck
         var _this=this
