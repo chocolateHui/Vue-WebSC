@@ -384,7 +384,7 @@
           return;
         }
         let remarkinfo = {
-          caterid:this.caterid,
+          caterid:this.catering.caterid,
           caterdes:this.catering.name,
           eventid:this.sceventitemeventid,
           eventdes:this.eventdes,
