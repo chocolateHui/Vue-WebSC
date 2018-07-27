@@ -466,9 +466,33 @@
         })
       },
       handleCurrentChange(val) {
-        this.currentRow = val;
-        this.change="T";
-        this.btnshow = btnshow;
+        if(this.placesavetype==="update"){
+          this.$confirm("修改了信息未保存，确认切换项目类别吗", "提示", {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.currentRow = val;
+            this.change="T";
+            this.btnshow = btnshow;
+            this.placesavetype=""
+          }).catch(()=>{
+            this.placesavetype = "next";
+            this.$nextTick(function(){
+              this.$refs.aaa.setCurrentRow(oldval);
+            })
+
+          })
+
+        }
+        else{
+          this.currentRow = val;
+          this.change="T";
+          this.btnshow = btnshow;
+          if( this.placesavetype ==="next"){
+            this.placesavetype ="update"
+          }
+        }
       },
       setCurrent(row) {
         this.$refs.aaa.setCurrentRow(row);

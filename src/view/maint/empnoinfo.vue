@@ -52,7 +52,6 @@
         :row-key="getRowKeys"
         :expand-row-keys="expands"
         @expand-change = "expandChange"
-        @cell-click="cellclick"
         :data="getempnolist"
         border
         style="width: 100%" :max-height="tableHeight">
@@ -147,7 +146,7 @@
               </b-col>
             </b-row>
             <b-button type="submit" @click="modifyempnoinfo(expandempno)" variant="primary">保存</b-button>
-            <b-button type="submit" variant="primary" v-b-modal.passmodal1>修改密码</b-button>
+            <b-button type="submit" variant="primary" @click="resetePwd(expandempno)">重置密码</b-button>
             <b-button @click="showLog(props.row)" variant="primary">日志</b-button>
           </template>
         </el-table-column>
@@ -166,35 +165,35 @@
         </el-table-column>
       </el-table>
     </b-container>
-    <b-modal id="passmodal1" ref="passmodal1" @hidden="modalhidden" size="sm" title="修改密码" hide-footer>
-      <div>
-        <b-form @submit="modifyPwd" v-if="show">
-          <b-form-group label="用户名" horizontal>
-            <b-form-input :value="expandempno.empname" disabled>
-            </b-form-input>
-          </b-form-group>
-          <b-form-group label="旧密码" horizontal>
-            <b-form-input type="password" maxlength="16" v-model="oldpassword" required>
-            </b-form-input>
-          </b-form-group>
-          <b-form-group label="新密码:" horizontal>
-            <b-form-input type="password" maxlength="16" v-model="newpassword" required>
-            </b-form-input>
-          </b-form-group>
-          <b-form-group label="确认密码:" horizontal>
-            <b-form-input type="password" maxlength="16" v-model="confirmpassword" required>
-            </b-form-input>
-          </b-form-group>
-          <b-row>
-            <b-col sm="3">
-            </b-col>
-            <b-col>
-              <b-button type="submit" variant="primary">提交</b-button>
-            </b-col>
-          </b-row>
-        </b-form>
-      </div>
-    </b-modal>
+    <!--<b-modal id="passmodal1" ref="passmodal1" @hidden="modalhidden" size="sm" title="修改密码" hide-footer>-->
+      <!--<div>-->
+        <!--<b-form @submit="modifyPwd" v-if="show">-->
+          <!--<b-form-group label="用户名" horizontal>-->
+            <!--<b-form-input :value="expandempno.empname" disabled>-->
+            <!--</b-form-input>-->
+          <!--</b-form-group>-->
+          <!--<b-form-group label="旧密码" horizontal>-->
+            <!--<b-form-input type="password" maxlength="16" v-model="oldpassword" required>-->
+            <!--</b-form-input>-->
+          <!--</b-form-group>-->
+          <!--<b-form-group label="新密码:" horizontal>-->
+            <!--<b-form-input type="password" maxlength="16" v-model="newpassword" required>-->
+            <!--</b-form-input>-->
+          <!--</b-form-group>-->
+          <!--<b-form-group label="确认密码:" horizontal>-->
+            <!--<b-form-input type="password" maxlength="16" v-model="confirmpassword" required>-->
+            <!--</b-form-input>-->
+          <!--</b-form-group>-->
+          <!--<b-row>-->
+            <!--<b-col sm="3">-->
+            <!--</b-col>-->
+            <!--<b-col>-->
+              <!--<b-button type="submit" variant="primary">提交</b-button>-->
+            <!--</b-col>-->
+          <!--</b-row>-->
+        <!--</b-form>-->
+      <!--</div>-->
+    <!--</b-modal>-->
   </div>
 </template>
 
@@ -303,34 +302,55 @@
         this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
       },
-      modifyPwd: function () {
-        if (this.newpassword !== this.confirmpassword) {
-          this.$alert('两次密码输入不一致,请检查!');
-          return;
-        }
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-          this.$http.post(methodinfo.modifypassword, {
-            username: this.expandempno.empno,
-            newpassword: this.newpassword,
-            oldpassword: this.oldpassword
-          }).then((response) => {
-            if (response.data.errorCode === '0') {
-              this.$message({message: "修改成功", type: 'success'});
-              let tokenparam = {
-                groupid: this.$store.getters.groupid,
-                hotelid: this.hotel.hotelid,
-                username: this.empno.empno,
-                password: this.newpassword
-              };
-              this.$store.dispatch('gettoken', tokenparam);
-              this.$refs.passmodal1.hide();
-            } else {
-              this.$alert(response.data.errorMessage, "修改失败", {type: 'error'})
-            }
+//      modifyPwd: function () {
+//        if (this.newpassword !== this.confirmpassword) {
+//          this.$alert('两次密码输入不一致,请检查!');
+//          return;
+//        }
+//        this.$store.dispatch('encrypttoken').then(() => {
+//          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+//          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+//          this.$http.post(methodinfo.modifypassword, {
+//            username: this.expandempno.empno,
+//            newpassword: this.newpassword,
+//            oldpassword: this.oldpassword
+//          }).then((response) => {
+//            if (response.data.errorCode === '0') {
+//              this.$message({message: "修改成功", type: 'success'});
+//              let tokenparam = {
+//                groupid: this.$store.getters.groupid,
+//                hotelid: this.hotel.hotelid,
+//                username: this.empno.empno,
+//                password: this.newpassword
+//              };
+//              this.$store.dispatch('gettoken', tokenparam);
+//              this.$refs.passmodal1.hide();
+//            } else {
+//              this.$alert(response.data.errorMessage, "修改失败", {type: 'error'})
+//            }
+//          })
+//        })
+//      },
+      resetePwd:function (cs) {
+        this.$confirm("确定重置密码？", "提示", {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            this.$http.post(methodinfo.resetempnopwd, {
+              username: cs.empno
+            }).then((response) => {
+              if (response.data.errorCode === "0") {
+                this.gethotellist = response.data.hotels;
+              }
+            });
           })
+        }).catch(() => {
+
         })
+
       },
       //触发父面板日志弹窗
       showLog(row){
@@ -371,9 +391,6 @@
             });
           }
         })
-      },
-      cellclick:function (row, column, cell, event) {  //阻止
-//        console.log(row);
       },
       expandChange:function (row, expandedRows) {
         if (this.expandempno.hasOwnProperty("isnew")&&expandedRows.length>1) {
@@ -493,7 +510,7 @@
       modifyempnoinfo: function (val) {
         var emailreg= /(\S)+[@]{1}(\S)+[.]{1}(\w)+/;
         if (val.deptno && val.empname !== '' && val.htljob && val.empno !== '') {
-          if(emailreg.test(val.email)) {
+          if( val.email =='' || emailreg.test(val.email)) {
             val.username = (String(val.empno)).toUpperCase()
             this.$store.dispatch('encrypttoken').then(() => {
               this.configDefault()
