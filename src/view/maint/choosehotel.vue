@@ -153,6 +153,7 @@
             }
           }
           this.currentRow = val;
+          this.pageChange=false;
         }
       },
       tableCurrentChange(){
@@ -195,6 +196,20 @@
           this.itemcount = this.total
         }
       },
+      filterValue(val){
+        if(this.currentRow.length>0) {
+          let select = [];
+          for (let elem of this.currentRow) {
+            select.push(elem);
+          }
+          this.$nextTick(()=>{
+            for(let elem of select){
+              this.$refs.reasontable.toggleRowSelection(elem);
+            }
+          })
+        }
+
+      }
     }
   }
 </script>

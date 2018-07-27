@@ -191,8 +191,8 @@
                     if(this.flag==2){
                       _this.dept=_this.jobInfo.code
                       this.$nextTick(function(){
-                        for(var i=0;i<_this.jobData.length;i++){
-                          if(_this.jobData[i].code==_this.jobInfo.code ){
+                        for(var i=0;i<_this.searchitems.length;i++){
+                          if(_this.searchitems[i].code==_this.jobInfo.code ){
                             this.$refs.refjob.setCurrentRow(this.searchitems[i])
                           }
                         }
@@ -284,7 +284,7 @@
       },
       deletehotel:function (item) {
         var _this=this
-        this.$confirm('此操作将永久删除'+item.descript+'该场地, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除'+item.descript+', 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
@@ -333,6 +333,7 @@
             }).then((response) => {
               if (response.status === 200) {
                 if (response.data.errorCode=="0") {
+                  this.$refs.refjob.bodyWrapper.scrollTop =0
                   this.$message({message: "删除成功", type: 'success'});
                   this.getdeptlist()
                 }else{
@@ -361,6 +362,9 @@
           }).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
+                if(this.addflag==true){
+                  this.$refs.refjob.bodyWrapper.scrollTop =0
+                }
                 this.flag=2
                 this.$message({message: "操作成功", type: 'success'});
                 this.getdeptlist()
@@ -430,14 +434,30 @@
     },
     watch:{
       searchitems:function (val,oldval) {
+        var _this=this
         if(val.length>0){
-          this.dept=this.searchitems[0].code
+          if(this.flag!=2) {
+            _this.dept=this.searchitems[0].code
+            _this.jobInfo={
+              code:_this.searchitems[0].code,
+              descript:_this.searchitems[0].descript,
+              descript1:_this.searchitems[0].descript1,
+              descript2:_this.searchitems[0].descript2
+            }
+            this.$nextTick(function(){
+              this.$refs.refjob.setCurrentRow(this.searchitems[0])
+            })
+          }
         }else{
           this.dept=''
         }
       },
       dept:function (val,oldval) {
-           this.gethotelbydept()
+        if(val!=''){
+          this.gethotelbydept()
+        }else{
+          this.hotelData=[]
+        }
       },
     },
     mounted:function () {
