@@ -456,7 +456,7 @@
     created(){
       this.getcitylist()
       this.getarealist()
-      if(this.sign!=1) { 
+      if(this.sign!=1) {
         this.getpccodelist()
       }
     }
