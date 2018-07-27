@@ -419,7 +419,7 @@
         }
       },
       showlog:function () {
-        this.logkey=this.$store.getters.hotel.hotelid+'|dept|'+this.dept+'|'+this.$store.getters.groupid
+        this.logkey= this.$store.getters.groupid+'|'+ this.$store.getters.hotel.hotelid+'|dept|'+this.dept
         this.$store.commit('setLogtype','Basecode');
         this.$store.commit('setLogKey',this.logkey);
         this.$root.$emit('bv::show::modal', 'maintLogModal');
