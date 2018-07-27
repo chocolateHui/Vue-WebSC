@@ -423,7 +423,7 @@
           if(val.hasOwnProperty('arr')){
             let groupid = this.$store.getters.groupid;
             let hotelid = this.$store.getters.hotel.hotelid;
-            this.logkey = this.localcatering.caterid+'|'+hotelid +'|'+groupid;
+            this.logkey = groupid +'|'+ hotelid +'|'+ this.localcatering.caterid ;
             this.caterdate.push(val.arr,val.dep)
           }
         }
