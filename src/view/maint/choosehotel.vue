@@ -69,7 +69,7 @@
         allselect: new Set(),
       }
     },
-    props:['hotelData'],
+    props:['hotelData','indexchoose'],
     computed: {
       searchitems:function () {
         let filterValue = this.filterValue;
@@ -189,6 +189,9 @@
       },
     },
     watch:{
+      indexchoose(){
+        this.filterValue=''
+      },
       searchitems(val){
         if(this.filterValue==='' || !this.filterValue){
           this.itemcount = this.items.length

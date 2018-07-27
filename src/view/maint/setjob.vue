@@ -114,7 +114,7 @@
       </b-row>
     </b-container>
     <b-modal id="myModalhotel" @show="chooseShow" ref="myModalhotel" size="lg" title="选择酒店" hide-footer>
-      <choosehotel :hotelData="hotelData" ref="refchoose" @reasonConfirm="reasonConfirm"></choosehotel>
+      <choosehotel :hotelData="hotelData" :indexchoose="indexchoose" ref="refchoose" @reasonConfirm="reasonConfirm"></choosehotel>
     </b-modal>
   </div>
 </template>
@@ -146,7 +146,8 @@
         ifdisabled:true,
         addflag:false,
         logkey:'',
-        flag:0
+        flag:0,
+        indexchoose:0,
       }
     },
     created(){
@@ -257,6 +258,7 @@
         }
       },
       choosehotel:function () {
+        this.indexchoose++
         this.$refs.myModalhotel.show()
       },
       reasonConfirm:function (row) {
