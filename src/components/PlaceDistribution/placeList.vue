@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="placelistid">
     <div class="place_contain">
       <div class="placelist">
         <div class="placelist_head" >
@@ -445,9 +445,12 @@
 </script>
 
 <style scoped lang="scss">
-  .place_contain{
-    height: calc(100% - 76px);
-    overflow-y: auto;
+  #placelistid{
+    .place_contain{
+      height: calc(100% - 76px);
+      overflow-y: auto;
+    }
   }
+
 </style>
 

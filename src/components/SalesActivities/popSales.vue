@@ -252,7 +252,7 @@
               feedback:this.result,
               item:this.popsaletypeid,
               memorandum:this.instructText,
-              memsta:this.ifcheck?'T':'F',
+              memsta:'F',
               saleid:this.salesId,
               ref:this.remarks,
               tag:this.signId

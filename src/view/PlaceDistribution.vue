@@ -51,13 +51,14 @@
           <ul v-for="(placeitem,index1) in placeSta" class="clearfix">
             <li class="nav1" style="position: relative">
               <span :dataid="placeitem.tableno">{{placeitem.descript}}</span>
-              <div v-for="(tolist,indexto) in gettolist">
-                <strong  v-for="(listc,indexc) in gettolist[indexto].places" v-if="tolist.tableno==placeitem.tableno&&indexc<3">{{listc.toplacedes}}</strong>
-                <strong  v-for="(listc,indexc) in gettolist[indexto].places" v-if="tolist.tableno==placeitem.tableno&&indexc==3"  @mouseenter="gettochildShow(placeitem.tableno,$event)" @mouseleave="gettochildHide">更多 </strong>
-              </div>
-              <div v-for="(tolist,indexto) in gettolist" class="gettochild" v-if="gettocurrent==placeitem.tableno">
-                <span v-for="(listc,indexc) in gettolist[indexto].places" v-if="tolist.tableno==placeitem.tableno&&indexc>=3">&nbsp;{{listc.toplacedes}}&nbsp;</span>
-              </div>
+               <div v-for="(tolist,indexto) in gettolist" v-if="tolist.tableno==placeitem.tableno" style="height: 48px;overflow: hidden">
+                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc<3">{{listc.toplacedes}}</strong>
+                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc>3"  @mouseenter="gettochildShow(placeitem.tableno,$event)" @mouseleave="gettochildHide">更多 </strong>
+                 <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc==3">{{listc.toplacedes}}</strong>
+                 <div class="gettochild" v-if="gettocurrent==placeitem.tableno">
+                   <span v-for="(listc,indexc) in tolist.places" v-if="indexc>=3">&nbsp;{{listc.toplacedes}}&nbsp;</span>
+                 </div>
+               </div>
             </li>
             <li v-for="(timelist,index2) in timeList" @mouseenter="thingsShow(index1,index2,timelist,$event)" @mouseleave="thingsHide" @click="addThings(timelist,placeitem.tableno)">
               <h1 v-for="item in timeAll">
@@ -95,12 +96,13 @@
           <ul class="clearfix" v-for="(placeitem,index1) in placeSta">
             <li class="nav1" style="position: relative">
               <span :dataid="placeitem.tableno">{{placeitem.descript}}</span>
-              <div v-for="(tolist,indexto) in gettolist">
-                <strong  v-for="(listc,indexc) in gettolist[indexto].places" v-if="tolist.tableno==placeitem.tableno&&indexc<3">{{listc.toplacedes}}</strong>
-                <strong  v-for="(listc,indexc) in gettolist[indexto].places" v-if="tolist.tableno==placeitem.tableno&&indexc==3"  @mouseenter="gettochildShow(placeitem.tableno,$event)" @mouseleave="gettochildHide">更多 </strong>
-              </div>
-              <div v-for="(tolist,indexto) in gettolist" class="gettochild" v-if="gettocurrent==placeitem.tableno">
-                <span v-for="(listc,indexc) in gettolist[indexto].places" v-if="tolist.tableno==placeitem.tableno&&indexc>=3">&nbsp;{{listc.toplacedes}}&nbsp;</span>
+              <div v-for="(tolist,indexto) in gettolist" v-if="tolist.tableno==placeitem.tableno" style="height: 48px;overflow: hidden">
+                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc<3">{{listc.toplacedes}}</strong>
+                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc>3"  @mouseenter="gettochildShow(placeitem.tableno,$event)" @mouseleave="gettochildHide">更多 </strong>
+                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc==3">{{listc.toplacedes}}</strong>
+                <div class="gettochild" v-if="gettocurrent==placeitem.tableno">
+                  <span v-for="(listc,indexc) in tolist.places" v-if="indexc>=3">&nbsp;{{listc.toplacedes}}&nbsp;</span>
+                </div>
               </div>
             </li>
             <li class="nav2"  @mouseenter="thingsShow(index1,'0',datatime.substring(0,10),$event)" @mouseleave="thingsHide" @click="addThings(datatime.substring(0,10),placeitem.tableno)">
@@ -202,6 +204,7 @@
         sta:'',
         placesinfo1:[],
         placeSta:[],
+        ifmore:false,
       }
     },
     filters:{
@@ -842,7 +845,9 @@
       z-index: 22;
       left: 60%;
       top: 82px;
-      border: 1px solid #4C4C4C;
+      border: 1px solid #dcdcdc;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #C1C1C1;
       span{
         width: auto !important;
         margin-bottom: 0 !important;
