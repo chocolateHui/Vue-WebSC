@@ -455,8 +455,8 @@
     },
     created(){
       this.getcitylist()
-      if(this.sign!=1) {
-        this.getarealist()
+      this.getarealist()
+      if(this.sign!=1) { 
         this.getpccodelist()
       }
     }
