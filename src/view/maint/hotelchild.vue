@@ -4,7 +4,7 @@
     <b-row class="childContain">
       <b-col>
         <b-form-group label="酒店品牌:" horizontal>
-          <el-select @change="gethotellist" v-model="brandid" placeholder="请选择酒店品牌">
+          <el-select @change="gethotellist" v-model="brandid" clearable filterable placeholder="请选择酒店品牌">
             <el-option
               v-for="item in brandList"
               :key="item.hotelid"
@@ -16,7 +16,7 @@
       </b-col>
       <b-col>
         <b-form-group label="子酒店:" horizontal>
-          <el-select v-model="innhotel" placeholder="请选择子酒店">
+          <el-select v-model="innhotel" clearable filterable placeholder="请选择子酒店">
             <el-option
               :key="item.hotelid"
               v-for="item in hotelList"
@@ -73,22 +73,27 @@
         })
       },
       gethotellist:function(){
-        this.innhotel=''
-        var _this=this
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.configDefault()
-          this.$http.post(methodinfo.gethotellist, {
-            brandid:_this.brandid,
-          }).then((response) => {
-            if (response.status === 200) {
-              if (response.data.errorCode=="0") {
-                this.hotelList=response.data.hotels
-              }else{
-                this.hotelList=[]
+        if(this.brandid==''){
+          this.hotelList=[]
+          this.innhotel=''
+        }else{
+          this.innhotel=''
+          var _this=this
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            this.$http.post(methodinfo.gethotellist, {
+              brandid:_this.brandid,
+            }).then((response) => {
+              if (response.status === 200) {
+                if (response.data.errorCode=="0") {
+                  this.hotelList=response.data.hotels
+                }else{
+                  this.hotelList=[]
+                }
               }
-            }
+            })
           })
-        })
+        }
       },
     },
     created(){

@@ -85,6 +85,8 @@ export default {
       loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
       let printtype= this.$store.getters.scEoGroup.val;
       this.$store.dispatch('encrypttoken').then(() => {
+        this.$http.defaults.headers.common['hotelid'] = this.$store.getters.hotel.hotelid
+        this.$http.defaults.headers.common['groupid'] = this.$store.getters.groupid
         this.$http.defaults.headers.common['username'] = this.$store.getters.username
         this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
@@ -114,6 +116,8 @@ export default {
     },
     updateEOPrintRecord(){
       this.$store.dispatch('encrypttoken').then(() => {
+        this.$http.defaults.headers.common['hotelid'] = this.$store.getters.hotel.hotelid
+        this.$http.defaults.headers.common['groupid'] = this.$store.getters.groupid
         this.$http.defaults.headers.common['username'] = this.$store.getters.username
         this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime();

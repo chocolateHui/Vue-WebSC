@@ -19,12 +19,12 @@
           default-expand-all
           highlight-current
           :filter-node-method="filterNode"
-          ref="tree2">
+          ref="maintTree">
         </el-tree>
       </b-col>
       <b-col cols="10">
         <b-container :style="{height: bodyHeight + 'px'}">
-          <scitem></scitem>
+          <scitem v-if="!isHistory"></scitem>
           <sceventitem></sceventitem>
         </b-container>
       </b-col>
@@ -56,6 +56,7 @@
     computed: {
 
       ...mapGetters([
+        'isHistory',
         'caterid',
         'eventid',
         'isLoading',
@@ -65,7 +66,7 @@
     },
     watch: {
       filterText(val) {
-        this.$refs.tree2.filter(val);
+        this.$refs.maintTree.filter(val);
       },
       caterid(val,oldval){
        this.getCateringData();
@@ -76,8 +77,7 @@
       eventlist(val,oldval){
         this.setdata();
         this.$nextTick(function() {
-
-          this.$refs.tree2.setCurrentKey(this.eventid);
+          this.$refs.maintTree.setCurrentKey(this.eventid);
           this.$store.commit('setEventdes',this.localdes);
         })
       },
@@ -85,12 +85,14 @@
 
     methods: {
       filterNode(value, data) {
-
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
       },
       NodeClick(data){
         if(data.root!="T"){
+          this.$store.commit('setCaterid',this.caterid);
           this.$store.commit('setSceventitemeventid',data.eventid);
-          this.$store.commit('setEventdes',data.label);
+          this.$store.commit('setEventdes',data.label.substring(5));
         }
 
       },
@@ -113,12 +115,11 @@
         datac["label"] =copycatering.name;
         datac["children"] = cchildren;
         datac["root"] ="T";
-        this.maintTree .push(datac);
+        this.maintTree.push(datac);
 
       },
       getCateringData(){
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
-
         this.$store.commit('setCaterid',this.caterid);
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch("getCateringInfo")
@@ -162,6 +163,11 @@
     .el-tree{
       border: 1px solid #ced4da;
       overflow-y: auto;
+      .el-tree-node__children{
+        .el-tree-node__label {
+          font-size: 12px;
+        }
+      }
     }
     input::-moz-placeholder, .form-control::-moz-placeholder{
       color: #c0c0c0;

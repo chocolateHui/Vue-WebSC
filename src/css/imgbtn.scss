@@ -37,17 +37,17 @@
   &:not(:disabled):not(.disabled).active {
     background:url('/static/SCweb-icon05.png') no-repeat!important;
   }}
-.Cancel-button{background:url('/static/SCweb-icon06.png') no-repeat;
+.Delete-button{background:url('/static/SCweb-icon06.png') no-repeat;
   &:not(:disabled):not(.disabled):active,
   &:not(:disabled):not(.disabled).active {
     background:url('/static/SCweb-icon06.png') no-repeat!important;
   }}
-.Save-button{background:url('/static/SCweb-icon07.png') no-repeat;
+.Cancel-button{background:url('/static/SCweb-icon07.png') no-repeat;
   &:not(:disabled):not(.disabled):active,
   &:not(:disabled):not(.disabled).active {
     background:url('/static/SCweb-icon07.png') no-repeat!important;
   }}
-.Delete-button{background:url('/static/SCweb-icon08.png') no-repeat;
+.Save-button{background:url('/static/SCweb-icon08.png') no-repeat;
   &:not(:disabled):not(.disabled):active,
   &:not(:disabled):not(.disabled).active {
     background:url('/static/SCweb-icon08.png') no-repeat!important;

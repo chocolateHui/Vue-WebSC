@@ -8,8 +8,8 @@
                 <h1 class="titletext">西软宴会与销售系统</h1>
               </div>
               <div style="position: relative">
-                <div class="widget-body" style="border-radius:5px;background: white">
-                  <div style="padding: 12px">
+                <div class="widget-body" style="border-radius:3px;background: white">
+                  <div style="padding: 30px">
                     <div class="login-title">用户登录</div>
                     <label class="block">
                       <b-input-group>
@@ -34,7 +34,7 @@
                         <b-input-group-text slot="append">
                           <i class="appendicon fa fa-toggle-down" @click.native="hotelclick"></i>
                         </b-input-group-text>
-                        <b-form-input :value="hotel.descript" @click.native="hotelclick" placeholder="请选择酒店" readonly></b-form-input>
+                        <b-form-input class="hotel-input" :value="hotel.descript" @click.native="hotelclick" placeholder="请选择酒店" readonly></b-form-input>
                       </b-input-group>
                       <label class="errorlabel" v-show="hotelErrorShow">请先选择酒店!</label>
                     </label>
@@ -116,6 +116,10 @@
             },
             set (value) {
               this.$store.commit('setGroupid', value)
+              this.$store.commit('setHotel', {
+                hotelid:'',
+                descript:''
+              })
             }
           }
         },
@@ -206,7 +210,7 @@
             if (!this.inputCheck()) {
               return;
             }
-            if (!this.hotel) {
+            if (!this.hotel.hotelid) {
               this.hotelErrorShow = true;
               return;
             } else {
@@ -279,28 +283,40 @@
     width: 20px
   }
   .block{
-    width: 100%
+    width: 100%;
+    margin-bottom: .9rem;
+    .login-button{
+      width: 100%;
+      background:$color11;
+      margin-top: 10px;
+      border: none;
+    }
+    .login-button:focus,.login-button:hover{
+      opacity: 0.9;
+    }
+    .hotel-input{
+      cursor: pointer;
+    }
+    .hotel-input[readonly]{
+      background-color: white;
+    }
+    .errorlabel{
+      font-size: 0.9rem;
+      color: red;
+      padding-left: 5px
+    }
   }
   .titletext
   {
-    font-size: 2rem;
+    font-size: 1.7rem;
     color: white;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
   }
   .login-title{
-    font-size:1.5rem;
+    font-size:1.2rem;
     color:#4C8FBD;
-    padding-bottom:5px
-  }
-  .login-button{
-    width: 100%;
-    background:$color11
-  }
-  .errorlabel{
-    font-size: 0.9rem;
-    color: red;
-    padding-left: 5px
+    padding-bottom:10px;
   }
   .help-btn{
     position: absolute;

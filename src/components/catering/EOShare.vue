@@ -6,7 +6,7 @@
           <label>宴会名称:&#8195;{{catering.name}}</label>
         </b-col>
         <b-col sm="6">
-          <label>宴会ID:&#8195;{{caterid}}</label>
+          <label>订单号:&#8195;{{caterid}}</label>
         </b-col>
       </b-row>
       <el-table
@@ -25,7 +25,7 @@
           :show-overflow-tooltip="item.showTip" :key="item.prop">
         </el-table-column>
       </el-table>
-      <b-row class="radio-row">
+      <b-row class="radio-row kind-row">
         <b-form-group>
           <b-form-radio-group id="radios1" v-model="kindselected" name="kindradios">
             <b-form-radio value="all">整单</b-form-radio>
@@ -36,8 +36,8 @@
       <b-row class="radio-row">
         <b-form-group>
           <b-form-radio-group id="radios2" v-model="doctypeselected" name="typeradios">
-            <b-form-radio value="pdf">预览</b-form-radio>
-            <b-form-radio value="word">下载</b-form-radio>
+            <b-form-radio value="pdf">预览(PDF)</b-form-radio>
+            <b-form-radio value="word">下载(Word)</b-form-radio>
           </b-form-radio-group>
         </b-form-group>
       </b-row>
@@ -58,7 +58,7 @@
   import methodinfo from '../../config/MethodConst'
 
   const fildes = [
-    {  prop: 'eono', label:  '打印流水号',width:'150',sortable:true,"classname":"text-center" },
+    {  prop: 'eono', label:  'EO单流水号',width:'158',sortable:true,"classname":"text-center" },
     {  prop: 'printkind', label:  '类型',width:'60',showTip:true,"classname":"text-center"},
     {  prop: 'changed', label:  '处理时间',width:'140',sortable:true,showTip:true,"classname":"text-center"},
     {  prop: 'cby', label:  '处理人',width:'',showTip:true}
@@ -77,7 +77,7 @@
       ...mapGetters([
         'caterid',
         'catering',
-        'sc_eo_group'
+        'scEoGroup'
       ])
     },
     created(){
@@ -134,6 +134,7 @@
         this.$root.$emit('bv::hide::modal','EOSharemodal')
       },
       getEOPrintRecord(){
+        this.eoprintdatas = [];
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
@@ -180,7 +181,7 @@
       width: 100px;
     }
     .form-group{
-      margin-left: 150px;
+      margin-left: 120px;
       margin-bottom: 0;
     }
     label{
@@ -188,6 +189,15 @@
     }
     .radio-row{
       padding: 5px 0;
+    }
+    .custom-radio{
+      width: 100px;
+    }
+    .footer-row{
+      margin-top: 10px !important;
+    }
+    .kind-row{
+      border-bottom: 1px solid #b4b4b5;
     }
   }
 </style>

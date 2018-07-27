@@ -27,7 +27,7 @@
             <label>场地代码:</label>
             <span>{{selectedexpand.tableno}}</span>
           </b-col>
-          <b-col sm="2"></b-col>
+          <!--<b-col sm="2"></b-col>-->
           <b-col sm="4">
             <label>场地名称:</label>
             <span>{{selectedexpand.descript}}</span>
@@ -113,7 +113,8 @@
             :on-preview="handlePictureCardPreview"
             :on-exceed="handleExceed"
             :before-upload="beforeupload"
-            :limit="5"
+            :limit="6"
+            accept="image/png, image/jpeg"
             :on-remove="handleRemove">
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -123,12 +124,12 @@
         </b-row>
       </b-col>
     </b-row>
-    <b-row class="btn-row">
-      <b-col sm="3"></b-col>
+    <b-row class="footer-row">
+      <b-col sm="6"></b-col>
       <b-col sm="6" style="text-align: center;">
         <b-button type="submit" @click="newp" variant="primary">保存</b-button>
-        <b-button type="submit" variant="primary">退出</b-button>
         <b-button type="submit" @click="loglog" variant="primary">日志</b-button>
+        <b-button  @click="exitm">退出</b-button>
       </b-col>
     </b-row>
     <el-dialog title="日志" id="loglog"
@@ -194,7 +195,17 @@
           if(val.tableno!=oldval.tableno){
             this.refreshpic();
           }
+        },
+      fileList2(val,oldval){
+        if(val.length>=6){
+          let aEle=document.getElementsByClassName('el-upload')[0];
+          aEle.style.display = 'none';
         }
+        else{
+          let aEle=document.getElementsByClassName('el-upload')[0];
+          aEle.style.display = '';
+        }
+      },
       },
     methods: {
         handleRemove(file, fileList) {
@@ -208,6 +219,13 @@
           this.dialogVisible = true;
         },
         beforeupload(files) {
+          console.log(files);
+          if(files.size>204800){
+            this.$message.error({
+              message: '图片大小不能超过200kb'
+            });
+            return false;
+          }
           if (!this.selectedexpand.tableno) {
             this.$message.error({
               message: '请选择一个场地'
@@ -233,7 +251,7 @@
        },
         handleExceed(files, fileList) {
           this.$message.error({
-            message: '图片最多为5张'
+            message: '图片最多为6张'
           });
         },
         refreshdata() {
@@ -278,6 +296,15 @@
                     data.push(type);
                   }
                   this.fileList2 = data;
+                  // console.log( this.fileList2);
+                  if(this.fileList2.length>=6){
+                    let aEle=document.getElementsByClassName('el-upload')[0];
+                    aEle.style.display = 'none';
+                  }
+                 else{
+                    let aEle=document.getElementsByClassName('el-upload')[0];
+                    aEle.style.display = '';
+                  }
 
                 }
                 else {
@@ -381,6 +408,10 @@
             })
           })
         },
+      exitm(){
+        this.$root.$emit('bv::hide::modal','placeexpandmodal')
+      },
+
         handleChange(val) {
 
           if (val) {
@@ -427,7 +458,7 @@
     .img-row{
       padding-left: 15px;
       padding-right: 15px;
-      padding-top: 5px;
+      padding-top: 13px;
     }
     .expand-col{
       background-color: #f2f2f2;
@@ -438,6 +469,10 @@
         .col-sm-6{
           padding-top: 1rem;
         }
+        .col-sm-4{
+          line-height: 28px;
+          label{ margin-bottom: 0px;}
+        }
       }
     }
     .input-group{
@@ -445,9 +480,24 @@
     }
     .btn-row{
       padding-top: 5px;
+      .col-sm-6{
+        text-align: right;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
     }
     .form-group{
       margin-bottom: 0.5rem;
+    }
+    .footer-row{
+      width: 100%;
+      border-top: 1px solid #e9ecef;
+      padding-top: 7px;
+      margin-top: 14.5px;
+      .btn{
+        width: 100px;
+      }
     }
   }
   #loglog{

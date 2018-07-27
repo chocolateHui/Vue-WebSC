@@ -10,20 +10,20 @@
         </b-col>
         <b-col sm="8" class="my-1 titleInfo">
           <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 宴会名称:&#8195;{{catering.name}}</span>
-          <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{catering.saleid_des}}</span>
+          <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{localcatering.saleid_name}}</span>
         </b-col>
         <b-col class="my-1 icondiv">
           <a v-if="!isNew">
-            <i @click="showLog" class="fa fa-sticky-note titleIcon"></i>
+            <i @click="showLog" title="日志" class="fa fa-sticky-note titleIcon"></i>
           </a>
           <!--<a v-if="!isNew">-->
             <!--<i @click="showNote" class="fa fa-sticky-note titleIcon"></i>-->
           <!--</a>-->
           <a v-if="!isNew">
-            <i @click="EOShare" class="fa fa-print titleIcon"></i>
+            <i @click="EOShare" title="EO单" class="fa fa-print titleIcon"></i>
           </a>
           <a v-if="!isNew">
-            <i @click="refreshData" class="fa fa-refresh titleIcon"></i>
+            <i @click="refreshData" title="刷新" class="fa fa-refresh titleIcon"></i>
           </a>
           <a>
             <i v-b-toggle="'cater'" @click="toggleclick" class="fa toggleclass" :class="toggleclass"></i>
@@ -61,14 +61,13 @@
               <b-form-group label="联系人:" horizontal>
                 <b-form-input  type="text" v-model="localcatering.contactor" maxlength="10"></b-form-input>
               </b-form-group>
-              <b-form-group label="销售员:"
-                            horizontal>
-                <el-select v-model="localcatering.saleid" clearable filterable placeholder="请输入销售员名称">
+              <b-form-group label="销售员:" horizontal>
+                <el-select v-model="sale" value-key="code" clearable filterable placeholder="请输入销售员名称">
                   <el-option
                     v-for="item in saleoptions"
                     :key="item.code"
                     :label="item.name"
-                    :value="item.code">
+                    :value="item">
                     <span style="float: left">{{ item.name }}</span>
                     <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.code }}</span>
                   </el-option>
@@ -176,7 +175,7 @@
     </b-modal>
 
     <b-modal id="EOSharemodal" ref="EOSharemodal" title="宴会EO单" hide-footer>
-      <EOShare></EOShare>
+      <EOShare ref="EOShare"></EOShare>
     </b-modal>
   </b-container>
 </template>
@@ -217,6 +216,7 @@
         ],
         //销售员列表
         saleoptions:[],
+        sale:{},
         cancelWidth:'cancelwidth',
         dialogVisible:false,
         logkey:'',
@@ -265,6 +265,8 @@
         this.localcatering.sta = this.catersta;
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
+        this.localcatering.saleid = this.sale.code;
+        this.localcatering.saleid_name = this.sale.name;
         this.$emit('saveCatering',this.localcatering);
       },
       updateCatering(){
@@ -278,6 +280,8 @@
         }
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
+        this.localcatering.saleid = this.sale.code;
+        this.localcatering.saleid_name = this.sale.name;
         this.$emit('updateCatering',this.localcatering);
       },
       updateCateringSta(sta){
@@ -332,7 +336,6 @@
           this.isClear =false;
         }
       },
-
       profileClear(){
         this.localcatering.cusno = '';
         this.localcatering.cusno_des = '';
@@ -386,6 +389,7 @@
         this.$root.$emit('bv::show::modal', 'caterlogmodal');
       },
       EOShare(){
+        this.$refs.EOShare.getEOPrintRecord();
         this.$refs.EOSharemodal.show();
       },
       refreshData(){
@@ -415,6 +419,7 @@
         if(!this.isNew){
           this.localcatering = Object.assign({},val);
           this.caterdate = [];
+          this.sale = { code:val.saleid,name:val.saleid_name};
           if(val.hasOwnProperty('arr')){
             let groupid = this.$store.getters.groupid;
             let hotelid = this.$store.getters.hotel.hotelid;

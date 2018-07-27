@@ -9,6 +9,8 @@ const methodinfo = {
   login: '/SC/reserve/sysempno/login',
   // 修改密码
   modifypassword: '/SC/reserve/sysempno/modifypassword',
+  // 重置工号密码
+  resetempnopwd: '/SC/reserve/sysempno/resetempnopwd',
   // 根据工号获取酒店信息
   getempnohotellist: '/SC/reserve/sysempno/getempnohotellist',
   // 获取工号信息列表

@@ -62,7 +62,12 @@
         this.BusinesHours=this.dateFormat()
         this.gethotellist()
       },
-      props:['hotelid','sign'],
+      watch:{
+        flag(){
+          this.gethotellist()
+        }
+      },
+      props:['hotelid','sign','flag'],
       methods:{
         dateFormat: function () {
           let date = new Date()

@@ -24,8 +24,8 @@
         }
 
         if(this.type==='nospecial'){
-          let pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]") ;
-          if(pattern.exec(val)){
+          let pattern = new RegExp(/^[A-Za-z0-9_]{0,16}$/) ;
+          if(!pattern.exec(val)){
             this.inputvalue = oldval;
             return;
           }

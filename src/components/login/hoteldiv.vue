@@ -1,12 +1,12 @@
 <template>
     <div class="hotel-div">
-        <b-input-group style="padding: 4px">
+        <b-input-group class="hotel-search">
             <b-input-group-text slot="append">
                 <i class="fa fa-search"></i>
             </b-input-group-text>
             <b-form-input @input="updatevalue" placeholder="请输入查询条件"></b-form-input>
         </b-input-group>
-        <hotel-list :hotel="hotel" @hotelselect="hotelselect" :hotels="searchhotels" :searchtext="searchtext"></hotel-list>
+        <hotel-list class="hotel-list" :hotel="hotel" @hotelselect="hotelselect" :hotels="searchhotels" :searchtext="searchtext"></hotel-list>
     </div>
 </template>
 <script>
@@ -61,5 +61,14 @@
     }
 </script>
 <style lang="scss">
-.hotel-div{top: 0; right: -260px;width: 250px; margin: 0 !important; z-index: 1000; position: absolute;background-color: white;border-radius:5px}
+  .hotel-div{
+    top: 0; right: -260px;width: 250px; margin: 0 !important; z-index: 1000; position: absolute;background-color: white;border-radius:5px
+  }
+  .hotel-search{
+    padding: 20px;
+  }
+  .hotel-list{
+    margin: 20px;
+    margin-top: -10px;
+  }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div id="singleplace">
     <b-container fluid>
-      <label>当前选择场地:{{currentplace}}</label>
+      <label>当前选择宴会:{{currentplace}}</label>
       <b-row>
         <b-col sm="2">
         </b-col>
@@ -212,7 +212,7 @@
     }
     .pagination{
       float: right;
-      padding: 5px 10px;
+      padding: 5px 0px;
     }
     .row{
       margin-right: 0;

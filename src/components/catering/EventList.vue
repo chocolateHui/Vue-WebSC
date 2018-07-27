@@ -499,7 +499,9 @@
         this.$refs.remarkmodal.show();
       },
       showLog(row){
-        let logkey = "";
+        let groupid = this.$store.getters.groupid;
+        let hotelid = this.$store.getters.hotel.hotelid;
+        let logkey = row.eventid+"|"+hotelid+"|"+groupid;
 
         this.$store.commit('setLogtype','ScEvent');
         this.$store.commit('setLogKey',logkey);
@@ -622,6 +624,8 @@
   }
 </script>
 <style lang="scss">
+  @import '../../css/color';
+
   #eventlist{
     font-size: 0.9rem;
       input{
@@ -680,6 +684,9 @@
       }
       .timeselect{
         width: 38%;
+      }
+      .el-icon-date,.fa-list{
+        color: $colorIcon;
       }
       #eventmain{
         .fa{

@@ -40,7 +40,7 @@
             </el-table-column>
           </el-table>
           <b-form>
-            <b-form-group label="编&#8194;&#8194;&#8194;&#8194;码:" horizontal>
+            <b-form-group label="编&#8194;&#8194;&#8194;&#8194;码:" horizontal style="font-weight: bold">
               <b-form-input
                 type="text"
                 v-model="jobInfo.code "
@@ -49,7 +49,7 @@
               >
               </b-form-input>
             </b-form-group>
-            <b-form-group label="中文描述:" horizontal>
+            <b-form-group label="中文描述:" horizontal style="font-weight: bold">
               <b-form-input
                 type="text"
                 v-model="jobInfo.descript "
@@ -146,6 +146,7 @@
         ifdisabled:true,
         addflag:false,
         logkey:'',
+        flag:0
       }
     },
     created(){
@@ -177,8 +178,8 @@
       },
       getdeptlist:function () {
         var _this=this
+        return new Promise((resolve, reject) => {
         this.$store.dispatch('encrypttoken').then(() => {
-          return new Promise((resolve, reject) => {
             this.configDefault()
             this.$http.post(methodinfo.getdeptlist, {
               hotelid:this.$store.getters.hotel.hotelid
@@ -187,16 +188,28 @@
                 if (response.data.errorCode=="0") {
                   _this.jobData=response.data.depts
                   if( _this.jobData.length>0){
-                    _this.dept=_this.jobData[0].code
-                    _this.jobInfo={
-                      code:_this.jobData[0].code,
-                      descript:_this.jobData[0].descript,
-                      descript1:_this.jobData[0].descript1,
-                      descript2:_this.jobData[0].descript2
+                    if(this.flag==2){
+                      _this.dept=_this.jobInfo.code
+                      this.$nextTick(function(){
+                        for(var i=0;i<_this.jobData.length;i++){
+                          if(_this.jobData[i].code==_this.jobInfo.code ){
+                            this.$refs.refjob.setCurrentRow(this.searchitems[i])
+                          }
+                        }
+                      })
+                    }else{
+                      _this.dept=_this.jobData[0].code
+                      _this.jobInfo={
+                        code:_this.jobData[0].code,
+                        descript:_this.jobData[0].descript,
+                        descript1:_this.jobData[0].descript1,
+                        descript2:_this.jobData[0].descript2
+                      }
+                      this.$nextTick(function(){
+                        this.$refs.refjob.setCurrentRow(this.searchitems[0])
+                      })
                     }
-                    this.$nextTick(function(){
-                      this.$refs.refjob.setCurrentRow(this.searchitems[0])
-                    })
+
                     resolve();
                   }
                 }else{
@@ -209,6 +222,7 @@
       },
       gethotelbydept:function () {
         var _this=this
+        return new Promise((resolve, reject) => {
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
           this.$http.post(methodinfo.gethotelbydept, {
@@ -220,14 +234,17 @@
               }else{
                 _this.hotelData=[]
               }
+              resolve();
             }
           })
+            })
         })
       },
       handleCurrentChange(val){
         if(val==null){
           return
         }
+        this.flag=0
         this.ifdisabled=true
         this.addflag=false
         var _this=this
@@ -246,18 +263,23 @@
         var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          this.$http.post(methodinfo.adddepthotel, {
-            authhtl :row.hotelid,
-            deptcode:_this.dept,
-            sign:row.sign
-          }).then((response) => {
-            if (response.status === 200) {
-              if (response.data.errorCode=="0") {
-                this.$message({message: "添加成功", type: 'success'});
-                this.gethotelbydept()
+          if(this.flag!=1){
+          row.forEach((item)=>{
+            this.$http.post(methodinfo.adddepthotel, {
+              authhtl :item.hotelid,
+              deptcode:_this.dept,
+              sign:item.sign
+            }).then((response) => {
+              if (response.status === 200) {
+                if (response.data.errorCode=="0") {
+                     this.gethotelbydept()
+                }
               }
-            }
+            })
           })
+          }else{
+             _this.hotelData=row
+          }
         })
       },
       deletehotel:function (item) {
@@ -268,6 +290,9 @@
           type: 'warning',
           center: true
         }).then(() => {
+          if(_this.hotelData.length<=1){
+            this.$message({message: "请删除岗位", type: 'warning'});
+          }else{
           this.$store.dispatch('encrypttoken').then(() => {
             this.configDefault()
             this.$http.post(methodinfo.deletedepthotel, {
@@ -284,11 +309,13 @@
               }
             })
           })
+          }
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
           });
+
         });
       },
       deletejob:function (item) {
@@ -308,6 +335,8 @@
                 if (response.data.errorCode=="0") {
                   this.$message({message: "删除成功", type: 'success'});
                   this.getdeptlist()
+                }else{
+                  this.$message({message:response.data.errorMessage, type: 'success'});
                 }
               }
             })
@@ -322,6 +351,7 @@
       jobchange:function () {
         var _this=this
         this.$store.dispatch('encrypttoken').then(() => {
+            return new Promise((resolve, reject) => {
           this.configDefault()
           this.$http.post(methodinfo.addhtldept, {
             code: _this.jobInfo.code,
@@ -331,16 +361,24 @@
           }).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
+                this.flag=2
                 this.$message({message: "操作成功", type: 'success'});
                 this.getdeptlist()
+                this.dept=_this.jobInfo.code
+                this.reasonConfirm(_this.hotelData)
+                resolve()
               }
             }
           })
+        })
         })
       },
       btnAdd:function () {
         this.addflag=true
         this.ifdisabled=false
+        this.$refs.refjob.setCurrentRow()
+        this.hotelData=[]
+        this.flag=1
         this.jobInfo={
           code:'',
           descript:'',
@@ -364,12 +402,17 @@
             this.$message({message: "编码只允许输入数字或英文", type: 'warning'});
           }else if(_this.jobInfo.descript==''){
             this.$message({message: "中文描述不能为空", type: 'warning'});
-          }else{
+          }else if(_this.hotelData.length==0){
+            this.$message({message: "请选择酒店", type: 'warning'});
+          }
+          else{
             this.jobchange()
           }
         }else{
           if(_this.jobInfo.descript==''){
             this.$message({message: "中文描述不能为空", type: 'warning'});
+          }else if(_this.hotelData.length==0){
+            this.$message({message: "请选择酒店", type: 'warning'});
           }else{
             this.jobchange()
           }
@@ -394,7 +437,7 @@
         }
       },
       dept:function (val,oldval) {
-        this.gethotelbydept()
+           this.gethotelbydept()
       },
     },
     mounted:function () {
