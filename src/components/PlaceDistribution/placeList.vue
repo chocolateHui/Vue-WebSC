@@ -450,9 +450,6 @@
       height: calc(100% - 76px);
       overflow-y: auto;
     }
-    .el-table th{
-      padding: 0 !important;
-    }
   }
 
 </style>

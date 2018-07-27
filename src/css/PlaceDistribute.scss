@@ -219,7 +219,7 @@ $colorAll:#b4b4b6;
             span{
               color:#4c4c4c;font-size:14px !important;display: inline-block;margin-bottom: 4px; vertical-align: middle; width: 176px; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;
             }
-            strong{background: #f8f8f8;border: 1px solid #dcdcdc;border-radius: 10px;color: $color4C;display:inline-block;font-size: 12px;font-weight: initial; height: 19px;line-height: 18px;margin-right:5px;overflow:hidden;text-align: center;width: 80px; padding: 0 8px; text-overflow: ellipsis; white-space: nowrap;}
+            strong{background: #f8f8f8;border: 1px solid #dcdcdc;border-radius: 10px;color: $color4C;display:inline-block;font-size: 12px;font-weight: initial; height: 20px;line-height: 18px;margin-right:5px;overflow:hidden;text-align: center;width: 80px; padding: 0 8px; text-overflow: ellipsis; white-space: nowrap;}
           }
           ol{
             >li{
@@ -287,7 +287,7 @@ $colorAll:#b4b4b6;
           &.nav1{
             border-right:1px solid $colorGray; padding-left:15px; position:relative; text-align:left; width:200px;padding-top: 7px;
             span{color:#4c4c4c;font-size:14px !important;display: inline-block;margin-bottom: 4px; vertical-align: middle; width: 172px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
-            strong{background: #f8f8f8;font-weight: initial;border: 1px solid #dcdcdc;border-radius: 10px;color: $color4C;display:inline-block;font-size: 12px; height: 20px;line-height: 18px;margin-right:5px;overflow:hidden;text-align: center;width: 75px;padding: 0 8px; text-overflow: ellipsis;white-space: nowrap;}
+            strong{background: #f8f8f8;font-weight: inherit; border: 1px solid #dcdcdc;border-radius: 10px;color: $color4C;display:inline-block;font-size: 12px; height: 20px;line-height: 18px;margin-right:5px;overflow:hidden;text-align: center;width: 75px;padding: 0 8px; text-overflow: ellipsis;white-space: nowrap;}
           }
           &.nav2{
             border-left:none; padding:25px 15px; width:calc(100% - 200px);
@@ -453,6 +453,10 @@ $colorAll:#b4b4b6;
       }
       .el-table thead tr th{
         background: #F2F2F2!important;
+        padding: 0 !important;
+      }
+      .el-table tr td{
+        padding: 0 !important;
       }
     }
     tbody tr{border-top: 1px solid #dbdcdc;}
