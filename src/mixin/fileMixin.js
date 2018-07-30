@@ -22,7 +22,7 @@ let uploadMixin = {
   created () {
     let hotelid = this.$store.getters.hotel.hotelid
     this.topath = topath + hotelid + '/'
-    this.imageurl = imageurl + groupid + this.topath
+    this.imageurl = imageurl + groupid + '/' + this.topath
     this.fileserver = this.fileserver + 'groupid=' + groupid + '&access=' + access
   },
   methods: {
