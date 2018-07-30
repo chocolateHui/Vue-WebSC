@@ -120,6 +120,7 @@
                 hotelid:'',
                 descript:''
               })
+              this.$store.commit('setHotels', [])
             }
           }
         },
@@ -244,6 +245,11 @@
           password(val,oldval){
             if(val!==oldval && this.hasToken){
               this.hasToken = false;
+            }
+          },
+          hotel(val,oldval){
+            if (val.hotelid) {
+              this.hotelErrorShow = false;
             }
           }
         },
