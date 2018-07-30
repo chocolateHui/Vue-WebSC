@@ -53,7 +53,7 @@
         <li :class="{'proCurrent':ifproCurrent==proList.prono}" @click="getHistoryList(proList)" @dblclick="chooseType(proList)" v-for="proList in profileslist">
           <span class="nav1" :title="proList.proname">{{proList.proname}}</span>
           <span class="nav2" :title='proList.prono'>{{proList.prono}}</span>
-          <span class="nav3" :title='proList.txt'>{{proList.txt}}</span>
+          <span class="nav3" :title='proList.protype' v-for="type in ifunit" v-if="type.id==proList.protype">{{type.name}}</span>
           <span class="nav4" :title='proList.mobile'>{{proList.mobile}}</span>
           <span class="nav5" :title='proList.contacter'>{{proList.contacter}}</span>
           <span class="nav6" ></span>
@@ -227,7 +227,7 @@
     }
     .search{padding: 0 35px;
       ul{display: inline-block;width: 620px;padding-left: 0;
-        >li{float: left;margin-right: 12px; margin-bottom: 10px;list-style: none;}
+        >li{float: left;margin-right: 12px; margin-bottom: 10px;list-style: none;height:22px}
         li{
           label{ color: #595757;display: inline-block; font-size: 13px;height:22px;line-height:22px;width: 50px;float: left}
           .text_input{background: $colorWhite;border:1px solid $colorGray; color: #9E9E9F;font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif ;height: 22px;line-height: 22px;padding: 0 3px;border-radius: 0}
@@ -260,6 +260,7 @@
       .nav3,.nav2,.nav5,.nav6,.nav7{width: 75px;}
       .nav8{width: 85px;}
       ul{ height: 135px; width: 710px;
+        padding-left: 0;
         border: 1px solid #DBDCDC;
         border-top: none;
         overflow-x: hidden;
@@ -284,7 +285,7 @@
       .nav4{width: 112px;}
       .nav5{width: 75px;}
       .nav6{width: 85px;}
-      ul{ height: 108px;   width: 710px;
+      ul{ height: 108px;   width: 710px;padding-left: 0;
         border: 1px solid #DBDCDC;
         border-top: none;
         overflow-x: hidden;

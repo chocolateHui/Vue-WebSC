@@ -101,7 +101,7 @@
         let sheetopt = {skipHeader:true};
         let exportitems = this.reportDatas.slice(0);
         let fia = {};
-        for(let items of this.fi ){
+        for(let items of this.fildes ){
           fia[items.prop] = items.label;
         }
         let sums = {};
@@ -150,10 +150,12 @@
             }).then((response)=> {
               if (response.data.errorCode==="0") {
                 this.reportDatas = response.data.placeanadata;
-                this.reportDatas.forEach((data, index)=>{
-                  data.userate = (Math.round(data.userate * 10000) / 100) + '%';
-                  data.lastuserate = (Math.round(data.lastuserate * 10000) / 100) + '%';
-                })
+                if(this.reportDatas.length>0){
+                  this.reportDatas.forEach((data, index)=>{
+                    data.userate = (Math.round(data.userate * 10000) / 100) + '%';
+                    data.lastuserate = (Math.round(data.lastuserate * 10000) / 100) + '%';
+                  })
+                }
               }
               else{
                 this.reportDatas = [];

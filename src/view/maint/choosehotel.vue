@@ -69,7 +69,7 @@
         allselect: new Set(),
       }
     },
-    props:['hotelData'],
+    props:['hotelData','indexchoose'],
     computed: {
       searchitems:function () {
         let filterValue = this.filterValue;
@@ -153,6 +153,7 @@
             }
           }
           this.currentRow = val;
+          this.pageChange=false;
         }
       },
       tableCurrentChange(){
@@ -188,6 +189,9 @@
       },
     },
     watch:{
+      indexchoose(){
+        this.filterValue=''
+      },
       searchitems(val){
         if(this.filterValue==='' || !this.filterValue){
           this.itemcount = this.items.length
@@ -195,6 +199,20 @@
           this.itemcount = this.total
         }
       },
+      filterValue(val){
+        if(this.currentRow.length>0) {
+          let select = [];
+          for (let elem of this.currentRow) {
+            select.push(elem);
+          }
+          this.$nextTick(()=>{
+            for(let elem of select){
+              this.$refs.reasontable.toggleRowSelection(elem);
+            }
+          })
+        }
+
+      }
     }
   }
 </script>

@@ -252,7 +252,7 @@
               feedback:this.result,
               item:this.popsaletypeid,
               memorandum:this.instructText,
-              memsta:this.ifcheck?'T':'F',
+              memsta:'F',
               saleid:this.salesId,
               ref:this.remarks,
               tag:this.signId
@@ -489,6 +489,9 @@
     .el-dialog{
       margin: 0 auto;
       margin-top: -10px !important;
+    }
+    .el-dialog__body {
+      padding: 30px 10px;
     }
   }
 </style>

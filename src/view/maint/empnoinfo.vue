@@ -52,7 +52,6 @@
         :row-key="getRowKeys"
         :expand-row-keys="expands"
         @expand-change = "expandChange"
-        @cell-click="cellclick"
         :data="getempnolist"
         border
         style="width: 100%" :max-height="tableHeight">
@@ -62,7 +61,7 @@
               <b-col>
                 <b-form>
                   <b-form-group label="工号:" horizontal>
-                    <FormatInput type="text" maxlength="10" v-model="expandempno.empno" :disabled="able.name && !expandempno.flag"></FormatInput>
+                    <FormatInput type="nospecial" id ="username" maxlength="10" v-model="expandempno.empno" :disabled="able.name && !expandempno.flag"></FormatInput>
                   </b-form-group>
                   <b-form-group label="姓名:"
                                 horizontal>
@@ -102,7 +101,7 @@
                     </el-date-picker>
                   </div>
                   <b-form-group label="QQ:" horizontal>
-                    <FormatInput type="number" maxlength="10" v-model="expandempno.qq"></FormatInput>
+                    <FormatInput type="number" maxlength="15" v-model="expandempno.qq"></FormatInput>
                   </b-form-group>
                   <b-form-group label="Email:" horizontal>
                     <b-form-input type="email" maxlength="64" v-model="expandempno.email" placeholder="">
@@ -147,7 +146,7 @@
               </b-col>
             </b-row>
             <b-button type="submit" @click="modifyempnoinfo(expandempno)" variant="primary">保存</b-button>
-            <b-button type="submit" variant="primary" v-b-modal.passmodal1>修改密码</b-button>
+            <b-button type="submit" variant="primary" @click="resetePwd(expandempno)">重置密码</b-button>
             <b-button @click="showLog(props.row)" variant="primary">日志</b-button>
           </template>
         </el-table-column>
@@ -166,35 +165,35 @@
         </el-table-column>
       </el-table>
     </b-container>
-    <b-modal id="passmodal1" ref="passmodal1" @hidden="modalhidden" size="sm" title="修改密码" hide-footer>
-      <div>
-        <b-form @submit="modifyPwd" v-if="show">
-          <b-form-group label="用户名" horizontal>
-            <b-form-input :value="expandempno.empname" disabled>
-            </b-form-input>
-          </b-form-group>
-          <b-form-group label="旧密码" horizontal>
-            <b-form-input type="password" maxlength="16" v-model="oldpassword" required>
-            </b-form-input>
-          </b-form-group>
-          <b-form-group label="新密码:" horizontal>
-            <b-form-input type="password" maxlength="16" v-model="newpassword" required>
-            </b-form-input>
-          </b-form-group>
-          <b-form-group label="确认密码:" horizontal>
-            <b-form-input type="password" maxlength="16" v-model="confirmpassword" required>
-            </b-form-input>
-          </b-form-group>
-          <b-row>
-            <b-col sm="3">
-            </b-col>
-            <b-col>
-              <b-button type="submit" variant="primary">提交</b-button>
-            </b-col>
-          </b-row>
-        </b-form>
-      </div>
-    </b-modal>
+    <!--<b-modal id="passmodal1" ref="passmodal1" @hidden="modalhidden" size="sm" title="修改密码" hide-footer>-->
+      <!--<div>-->
+        <!--<b-form @submit="modifyPwd" v-if="show">-->
+          <!--<b-form-group label="用户名" horizontal>-->
+            <!--<b-form-input :value="expandempno.empname" disabled>-->
+            <!--</b-form-input>-->
+          <!--</b-form-group>-->
+          <!--<b-form-group label="旧密码" horizontal>-->
+            <!--<b-form-input type="password" maxlength="16" v-model="oldpassword" required>-->
+            <!--</b-form-input>-->
+          <!--</b-form-group>-->
+          <!--<b-form-group label="新密码:" horizontal>-->
+            <!--<b-form-input type="password" maxlength="16" v-model="newpassword" required>-->
+            <!--</b-form-input>-->
+          <!--</b-form-group>-->
+          <!--<b-form-group label="确认密码:" horizontal>-->
+            <!--<b-form-input type="password" maxlength="16" v-model="confirmpassword" required>-->
+            <!--</b-form-input>-->
+          <!--</b-form-group>-->
+          <!--<b-row>-->
+            <!--<b-col sm="3">-->
+            <!--</b-col>-->
+            <!--<b-col>-->
+              <!--<b-button type="submit" variant="primary">提交</b-button>-->
+            <!--</b-col>-->
+          <!--</b-row>-->
+        <!--</b-form>-->
+      <!--</div>-->
+    <!--</b-modal>-->
   </div>
 </template>
 
@@ -303,34 +302,58 @@
         this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
       },
-      modifyPwd: function () {
-        if (this.newpassword !== this.confirmpassword) {
-          this.$alert('两次密码输入不一致,请检查!');
-          return;
-        }
-        this.$store.dispatch('encrypttoken').then(() => {
-          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
-          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
-          this.$http.post(methodinfo.modifypassword, {
-            username: this.expandempno.empno,
-            newpassword: this.newpassword,
-            oldpassword: this.oldpassword
-          }).then((response) => {
-            if (response.data.errorCode === '0') {
-              this.$message({message: "修改成功", type: 'success'});
-              let tokenparam = {
-                groupid: this.$store.getters.groupid,
-                hotelid: this.hotel.hotelid,
-                username: this.empno.empno,
-                password: this.newpassword
-              };
-              this.$store.dispatch('gettoken', tokenparam);
-              this.$refs.passmodal1.hide();
-            } else {
-              this.$alert(response.data.errorMessage, "修改失败", {type: 'error'})
-            }
+//      modifyPwd: function () {
+//        if (this.newpassword !== this.confirmpassword) {
+//          this.$alert('两次密码输入不一致,请检查!');
+//          return;
+//        }
+//        this.$store.dispatch('encrypttoken').then(() => {
+//          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+//          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+//          this.$http.post(methodinfo.modifypassword, {
+//            username: this.expandempno.empno,
+//            newpassword: this.newpassword,
+//            oldpassword: this.oldpassword
+//          }).then((response) => {
+//            if (response.data.errorCode === '0') {
+//              this.$message({message: "修改成功", type: 'success'});
+//              let tokenparam = {
+//                groupid: this.$store.getters.groupid,
+//                hotelid: this.hotel.hotelid,
+//                username: this.empno.empno,
+//                password: this.newpassword
+//              };
+//              this.$store.dispatch('gettoken', tokenparam);
+//              this.$refs.passmodal1.hide();
+//            } else {
+//              this.$alert(response.data.errorMessage, "修改失败", {type: 'error'})
+//            }
+//          })
+//        })
+//      },
+      resetePwd:function (cs) {
+        this.$confirm("确定重置密码？", "提示", {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('encrypttoken').then(() => {
+            this.configDefault()
+            this.$http.post(methodinfo.resetempnopwd, {
+              username: cs.empno
+            }).then((response) => {
+              if (response.data.errorCode === "0") {
+                this.$message({
+                  message: '密码重置成功!',
+                  type: 'success'
+                })
+              }
+            });
           })
+        }).catch(() => {
+
         })
+
       },
       //触发父面板日志弹窗
       showLog(row){
@@ -372,13 +395,8 @@
           }
         })
       },
-      cellclick:function (row, column, cell, event) {  //阻止
-//        console.log(row);
-      },
       expandChange:function (row, expandedRows) {
-        console.log(this.expandempno);
-        if (this.expandempno.hasOwnProperty("isnew") && expandedRows.length > 1) {
-
+        if (this.expandempno.hasOwnProperty("isnew")&&expandedRows.length>1) {
           this.$confirm("新建信息未保存，即将被清除", "提示", {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -386,12 +404,18 @@
           }).then(() => {
             this.getempnolist.pop();
             this.newp = true;
+            this.empnoChange(row, expandedRows)
           }).catch(() => {
-            if (!row.hasOwnProperty("isnew") && !this.newp) {
-              expandedRows.splice(0, 1);
-
-            }
+            expandedRows.splice(0, 1);
+            this.expands = [''];
           })
+        }else{
+          this.empnoChange(row, expandedRows)
+        }
+      },
+      empnoChange(row,expandedRows){
+        if(this.expandempno.hasOwnProperty("isnew")&&!this.newp){
+          return;
         }
         let index = 0;
         for (let expandrow of expandedRows) {
@@ -413,13 +437,14 @@
           )
         }
         this.expandempno = Object.assign({}, row);
-
       },
       newProp:function(){  //新建员工
         if(this.newp){
           this.newp = false;
-          this.getempnolist.push({age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:true });
+          let newempno = {age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:true };
+          this.getempnolist.push(newempno);
           this.expands.push('');
+          this.expandempno = Object.assign({}, newempno);
           this.$nextTick(function(){
             this.$refs.empnotable.bodyWrapper.scrollTop =this.$refs.empnotable.bodyWrapper.scrollHeight;
           })
@@ -460,6 +485,10 @@
           if(this.htljob!==''){
             param.htljob = this.htljob
           }
+          if(this.hotelid !== this.$store.getters.hotel.hotelid){
+            this.getDeptlist();
+          }
+
           this.$http.post(methodinfo.getempnolist,param ).then((response) => {
             if (response.data.errorCode === "0") {
               this.getempnolist = response.data.empnos;
@@ -482,41 +511,50 @@
         })
       },
       modifyempnoinfo: function (val) {
+        var emailreg= /(\S)+[@]{1}(\S)+[.]{1}(\w)+/;
         if (val.deptno && val.empname !== '' && val.htljob && val.empno !== '') {
-          val.username = val.empno
-
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.configDefault()
-            console.info(val.flag)
-            if (val.flag) {
-              this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
-                if (response.data.errorCode === "0") {
-                  this.$message('保存成功')
-                  this.newp = true;
-                  //如果工号选择了销售员则把元素移到第一位
-                  if(val.hasOwnProperty("saleid")&&val.saleid!==''){
-                    this.resetSaleList(val.saleid);
+          if( val.email =='' || emailreg.test(val.email)) {
+            val.username = (String(val.empno)).toUpperCase()
+            this.$store.dispatch('encrypttoken').then(() => {
+              this.configDefault()
+              if (val.flag) {
+                this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
+                  if (response.data.errorCode === "0") {
+                    this.$message({
+                      message: '保存成功!',
+                      type: 'success'
+                    })
+                    this.newp = true;
+                    //如果工号选择了销售员则把元素移到第一位
+                    if (val.hasOwnProperty("saleid") && val.saleid !== '') {
+                      this.resetSaleList(val.saleid);
+                    }
+                    this.getEmpnolist();
+                  } else {
+                    this.$message.error(response.data.errorMessage)
                   }
-                  this.getEmpnolist();
-                } else {
-                  this.$message.error(response.data.errorMessage)
-                }
-              });
-            } else {
-              this.$http.post(methodinfo.modifyempnoinfo, val).then((response) => {
-                if (response.data.errorCode === "0") {
-                  this.$message('保存成功')
-                  //如果工号选择了销售员则把元素移到第一位
-                  if(val.hasOwnProperty("saleid")&&val.saleid!==''){
-                    this.resetSaleList(val.saleid)
+                });
+              } else {
+                this.$http.post(methodinfo.modifyempnoinfo, val).then((response) => {
+                  if (response.data.errorCode === "0") {
+                    this.$message({
+                      message: '保存成功!',
+                      type: 'success'
+                    })
+                    //如果工号选择了销售员则把元素移到第一位
+                    if (val.hasOwnProperty("saleid") && val.saleid !== '') {
+                      this.resetSaleList(val.saleid)
+                    }
+                    this.getEmpnolist();
+                  } else {
+                    this.$message.error(response.data.errorMessage)
                   }
-                  this.getEmpnolist();
-                }else {
-                  this.$message.error(response.data.errorMessage)
-                }
-              });
-            }
-          })
+                });
+              }
+            })
+          } else {
+            this.$message.error("邮箱格式不正确")
+          }
         } else {
           this.$message.error("请将'工号、姓名、角色、岗位'信息填写完整")
         }
@@ -599,6 +637,10 @@
           }
         }
       }
+     #username{
+       ime-mode:disabled;
+       text-transform:uppercase;
+     }
       #empnotable{
         table{
           border-color: #dee2e6;
@@ -609,6 +651,7 @@
           }
           th,td{
             padding: 0;
+            height: 32px;
             border-color: #dee2e6;
           }
         }
