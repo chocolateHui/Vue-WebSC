@@ -5,10 +5,10 @@ let loading
 
 let fileserver = 'http://xrfiles.test.foxhis.com/FoxhisFileServer/action?'
 let imageurl = 'http://xrfiles.test.foxhis.com/FoxhisFileServer/image/'
-let groupid = 'XRSC'
-let access = 'pw@123456'
+let groupid = 'C0000001'
+let access = 'FOXHIS.WOP'
 let topath = 'SC/'
-const filetoken = '0E4553BF52DACCB9A78389697D3648A8'
+const filetoken = '71DFD83564CD06366DA6C6E35496B61D'
 
 let uploadMixin = {
   data () {
@@ -21,7 +21,6 @@ let uploadMixin = {
   },
   created () {
     let hotelid = this.$store.getters.hotel.hotelid
-    // let groupid = this.$store.getters.groupid
     this.topath = topath + hotelid + '/'
     this.imageurl = imageurl + groupid + this.topath
     this.fileserver = this.fileserver + 'groupid=' + groupid + '&access=' + access
