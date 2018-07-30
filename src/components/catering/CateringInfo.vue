@@ -10,20 +10,20 @@
         </b-col>
         <b-col sm="8" class="my-1 titleInfo">
           <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 宴会名称:&#8195;{{catering.name}}</span>
-          <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{localcatering.saleid_name}}</span>
+          <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{catering.saleid_des}}</span>
         </b-col>
         <b-col class="my-1 icondiv">
           <a v-if="!isNew">
-            <i @click="showLog" title="日志" class="fa fa-sticky-note titleIcon"></i>
+            <i @click="showLog" class="fa fa-sticky-note titleIcon"></i>
           </a>
           <!--<a v-if="!isNew">-->
             <!--<i @click="showNote" class="fa fa-sticky-note titleIcon"></i>-->
           <!--</a>-->
           <a v-if="!isNew">
-            <i @click="EOShare" title="EO单" class="fa fa-print titleIcon"></i>
+            <i @click="EOShare" class="fa fa-print titleIcon"></i>
           </a>
           <a v-if="!isNew">
-            <i @click="refreshData" title="刷新" class="fa fa-refresh titleIcon"></i>
+            <i @click="refreshData" class="fa fa-refresh titleIcon"></i>
           </a>
           <a>
             <i v-b-toggle="'cater'" @click="toggleclick" class="fa toggleclass" :class="toggleclass"></i>
@@ -61,13 +61,14 @@
               <b-form-group label="联系人:" horizontal>
                 <b-form-input  type="text" v-model="localcatering.contactor" maxlength="10"></b-form-input>
               </b-form-group>
-              <b-form-group label="销售员:" horizontal>
-                <el-select v-model="sale" value-key="code" clearable filterable placeholder="请输入销售员名称">
+              <b-form-group label="销售员:"
+                            horizontal>
+                <el-select v-model="localcatering.saleid" clearable filterable placeholder="请输入销售员名称">
                   <el-option
                     v-for="item in saleoptions"
                     :key="item.code"
                     :label="item.name"
-                    :value="item">
+                    :value="item.code">
                     <span style="float: left">{{ item.name }}</span>
                     <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.code }}</span>
                   </el-option>
@@ -95,14 +96,14 @@
           <b-col sm="2" class="my-1" v-if="!isHistory">
             <div class="btndiv" v-if="!isNew">
               <div>
-                <transition @before-enter="btnenter" @after-leave="btnleave" mode="out-in">
-                  <b-button v-if="catersta==='Q'||catersta==='0'" key="reserve" class="reservebtn" @click="updateCateringSta('1')">预订</b-button>
-                  <b-button v-if="catersta==='1'" key="confirm" class="confirmbtn" @click="updateCateringSta('2')">确认</b-button>
-                </transition>
-                <b-button class="cancelbtn" :class="cancelWidth" @click="cancelCatering">取消</b-button>
+                  <transition @before-enter="btnenter" @after-leave="btnleave" name="fade" mode="out-in">
+                    <b-button v-if="catersta==='Q'||catersta==='0'" key="reserve" class="reservebtn" :class="btnWidth" @click="updateCateringSta('1')">预订</b-button>
+                    <b-button v-if="catersta==='1'" key="confirm" class="confirmbtn" @click="updateCateringSta('2')">确认</b-button>
+                  </transition>
+                  <b-button v-if="catersta!=='0'" key="cancel" class="cancelbtn" :class="btnWidth" @click="cancelCatering">取消</b-button>
               </div>
               <div>
-                <b-button class="savebtn" @click="updateCatering">保存</b-button>
+                <b-button v-if="catersta!=='0'" class="savebtn" @click="updateCatering">保存</b-button>
               </div>
             </div>
             <div class="btndiv" v-if="isNew">
@@ -175,7 +176,7 @@
     </b-modal>
 
     <b-modal id="EOSharemodal" ref="EOSharemodal" title="宴会EO单" hide-footer>
-      <EOShare ref="EOShare"></EOShare>
+      <EOShare></EOShare>
     </b-modal>
   </b-container>
 </template>
@@ -216,8 +217,7 @@
         ],
         //销售员列表
         saleoptions:[],
-        sale:{},
-        cancelWidth:'cancelwidth',
+        btnWidth:'halfbtn-width',
         dialogVisible:false,
         logkey:'',
         isClear:false
@@ -265,8 +265,6 @@
         this.localcatering.sta = this.catersta;
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
-        this.localcatering.saleid = this.sale.code;
-        this.localcatering.saleid_name = this.sale.name;
         this.$emit('saveCatering',this.localcatering);
       },
       updateCatering(){
@@ -280,8 +278,6 @@
         }
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
-        this.localcatering.saleid = this.sale.code;
-        this.localcatering.saleid_name = this.sale.name;
         this.$emit('updateCatering',this.localcatering);
       },
       updateCateringSta(sta){
@@ -336,6 +332,7 @@
           this.isClear =false;
         }
       },
+
       profileClear(){
         this.localcatering.cusno = '';
         this.localcatering.cusno_des = '';
@@ -369,10 +366,12 @@
         }
       },
       btnenter(el){
-        this.cancelWidth = 'cancelwidth'
+        if(this.staFont!=='X'){
+          this.btnWidth = 'halfbtn-width'
+        }
       },
       btnleave(el){
-        this.cancelWidth = 'maxbtnwidth'
+        this.btnWidth = 'maxbtn-width'
       },
       showNote(){
         let caterinfo = {
@@ -389,7 +388,6 @@
         this.$root.$emit('bv::show::modal', 'caterlogmodal');
       },
       EOShare(){
-        this.$refs.EOShare.getEOPrintRecord();
         this.$refs.EOSharemodal.show();
       },
       refreshData(){
@@ -419,7 +417,6 @@
         if(!this.isNew){
           this.localcatering = Object.assign({},val);
           this.caterdate = [];
-          this.sale = { code:val.saleid,name:val.saleid_name};
           if(val.hasOwnProperty('arr')){
             let groupid = this.$store.getters.groupid;
             let hotelid = this.$store.getters.hotel.hotelid;
@@ -441,6 +438,13 @@
       salelist(val){
         if(val){
           this.saleoptions = val;
+        }
+      },
+      staFont(val,oldval){
+        if(val==='X'){
+          this.btnWidth = 'maxbtn-width'
+        }else if(oldval ==='X'){
+          this.btnWidth = 'halfbtn-width'
         }
       }
     }
@@ -573,10 +577,10 @@
         width: 48.5%;
         background-color: $colorQuitBtn;
       }
-      .cancelwidth{
+      .halfbtn-width{
         width: 48.5%;
       }
-      .maxbtnwidth{
+      .maxbtn-width{
         width: 99%;
       }
       .cancelbtn{
@@ -585,6 +589,9 @@
         -moz-transition:width .5s; /* Firefox 4 */
         -webkit-transition:width .5s; /* Safari and Chrome */
         -o-transition:width .5s; /* Opera */
+      }
+      .fade-enter, .fade-leave-to {
+        opacity: 0;
       }
       .savebtn {
         width: 99%;
