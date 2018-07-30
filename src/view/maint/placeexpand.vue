@@ -219,7 +219,6 @@
           this.dialogVisible = true;
         },
         beforeupload(files) {
-          console.log(files);
           if(files.size>204800){
             this.$message.error({
               message: '图片大小不能超过200kb'
@@ -265,9 +264,14 @@
             }).then((response) => {
               if (response.data.errorCode == "0") {
                 this.selectedexpand = {};
+                this.items = [];
                 if (typeof(response.data.expands) != "undefined") {
-                  this.items = response.data.expands;
-                  this.selectedexpand = response.data.expands[0];
+                  for(let pc of response.data.expands){
+                     pc["pccode"] = this.pccode;
+                    this.items.push(pc);
+                  }
+
+                  this.selectedexpand = this.items[0];
                   this.$nextTick(function () {
                     this.$refs.logtable.setCurrentRow(this.selectedexpand);
                   })
@@ -296,7 +300,6 @@
                     data.push(type);
                   }
                   this.fileList2 = data;
-                  // console.log( this.fileList2);
                   if(this.fileList2.length>=6){
                     let aEle=document.getElementsByClassName('el-upload')[0];
                     aEle.style.display = 'none';
@@ -413,7 +416,6 @@
       },
 
         handleChange(val) {
-
           if (val) {
             this.selectedexpand = val;
           }
