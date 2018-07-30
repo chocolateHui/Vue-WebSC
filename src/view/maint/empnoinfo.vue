@@ -442,6 +442,7 @@
         if(this.newp){
           this.newp = false;
           let newempno = {age: '',empno:'', empname:'',email:'',sex:'0',locked:'F',hotelid:this.hotelid,flag:true,isnew:true };
+          console.log(this.getempnolist);
           this.getempnolist.push(newempno);
           this.expands.push('');
           this.expandempno = Object.assign({}, newempno);
@@ -476,6 +477,7 @@
         })
       },
       getEmpnolist:function(){
+        this.newp = true;
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
           let param = {
@@ -488,23 +490,25 @@
           if(this.hotelid !== this.$store.getters.hotel.hotelid){
             this.getDeptlist();
           }
-
           this.$http.post(methodinfo.getempnolist,param ).then((response) => {
             if (response.data.errorCode === "0") {
               this.getempnolist = response.data.empnos;
-              if(this.empnoSaleList.length===0){
-                let saleids = [];
-                this.getempnolist.forEach((empnoinfo,index)=>{
-                  if(empnoinfo.hasOwnProperty("saleid")){
-                    saleids.push(empnoinfo.saleid)
-                  }
-                })
-
-                this.salelist.forEach((sale, index) => {
-                  if(saleids.indexOf(sale.code)<0){
-                    this.empnoSaleList.push(sale)
-                  }
-                })
+              if(typeof this.getempnolist!='undefined'){
+                if(this.empnoSaleList.length===0 ){
+                  let saleids = [];
+                  this.getempnolist.forEach((empnoinfo,index)=>{
+                    if(empnoinfo.hasOwnProperty("saleid")){
+                      saleids.push(empnoinfo.saleid)
+                    }
+                  })
+                  this.salelist.forEach((sale, index) => {
+                    if(saleids.indexOf(sale.code)<0){
+                      this.empnoSaleList.push(sale)
+                    }
+                  })
+                }
+              }else{
+                this.getempnolist = []
               }
             }
           });
