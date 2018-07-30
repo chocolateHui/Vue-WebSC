@@ -6,7 +6,7 @@ let loading
 let fileserver = 'http://xrfiles.test.foxhis.com/FoxhisFileServer/action?'
 let imageurl = 'http://xrfiles.test.foxhis.com/FoxhisFileServer/image/'
 let groupid = 'C0000001'
-let access = 'FOXHIS.WOP'
+let access = 'dsajlkda1'
 let topath = 'SC/'
 const filetoken = '71DFD83564CD06366DA6C6E35496B61D'
 
