@@ -170,6 +170,9 @@
     beforeRouteEnter  (to, from, next) {
       let index = to.path.indexOf('/maint/')
       let Nodeid = to.path.substring(index+7);
+      if(Nodeid===''){
+        Nodeid = 'hotelinfo'
+      }
       next(vm => vm.NodeExpand(Nodeid))
     },
     components: {
