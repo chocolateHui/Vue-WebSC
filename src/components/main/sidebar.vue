@@ -17,7 +17,7 @@
     </div>
     <b-modal ref="calendarModal" title="日历" hide-footer>
       <div class="calendar-dialog-body">
-        <calendar :zero="calendar.zero" :lunar="calendar.lunar" :value="calendar.value"></calendar>
+        <calendar ref="calendar" :zero="calendar.zero" :lunar="calendar.lunar" :value="calendar.value"></calendar>
       </div>
     </b-modal>
   </div>
@@ -88,6 +88,7 @@
         this.$emit("barclose",this.isClose);
       },
       openCalendar(){
+        this.$refs.calendar.init();
         this.$refs.calendarModal.show();
       }
     },

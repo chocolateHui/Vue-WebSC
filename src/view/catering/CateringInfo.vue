@@ -73,6 +73,8 @@
             this.isNew = false;
           }
           this.eventshow = false;
+          this.$store.commit('setEventlist', [])
+          this.$store.commit('setRoomlist', [])
           this.$store.dispatch("getCateringInfo")
           this.$store.dispatch("getEventList");
           this.$store.dispatch("getRoomList");

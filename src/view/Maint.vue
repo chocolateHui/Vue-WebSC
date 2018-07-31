@@ -134,6 +134,9 @@
         }
       },
       NodeExpand(Nodeid){
+        if(Nodeid==='maint'){
+          Nodeid = 'hotelinfo'
+        }
         this.$refs.maintTree.setCurrentKey(Nodeid);
         this.defaultExpandedKeys.push(Nodeid);
       }
