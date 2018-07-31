@@ -457,7 +457,9 @@
         this.hotelid = this.$store.state.user.hotel.hotelid;
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          this.$http.post(methodinfo.gethotellist, {}).then((response) => {
+          this.$http.post(methodinfo.gethotellist, {
+            sta:'I'
+          }).then((response) => {
             if (response.data.errorCode === "0") {
               this.gethotellist = response.data.hotels;
             }
