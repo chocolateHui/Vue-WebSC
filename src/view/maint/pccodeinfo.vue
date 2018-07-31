@@ -30,7 +30,7 @@
         <b-col   class="maxwidth70 paddingright0 paddingleft15">
           <b-row  style="font-size: 12px">
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="编码" class="mb-0">
+              <b-form-group horizontal label="编码" class="mb-0 bold">
                 <FormatInput   type="number" maxlength="3"
                   v-model="pcinfo.pccode"
                   required
@@ -40,7 +40,7 @@
               </b-form-group>
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="中文描述" class="mb-0">
+              <b-form-group horizontal label="中文描述" class="mb-0 bold">
                 <b-form-input
                   maxlength="32"
                   type="text"
@@ -78,7 +78,7 @@
               </b-form-group>
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="所属类型" class="mb-0">
+              <b-form-group horizontal label="所属类型" class="mb-0 bold">
                 <b-form-input
                   type="text"
                   v-model="pcinfo.kinddes"
@@ -850,6 +850,11 @@
     }
     .row{
       margin-right: 2px;
+      .bold{
+        .col-form-label{
+          font-weight: bold;
+        }
+      }
       .btng{
         margin: 8px 0 7px;
         .btn:not(:last-child){margin-right: 5px;}

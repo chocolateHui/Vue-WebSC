@@ -62,11 +62,14 @@
               </el-select>
             </b-form-group>
             <b-form-group label="共享:" :label-cols="4" horizontal>
-              <b-form-checkbox id="checkbox1"
-                               v-model="selectedexpand.share"
-                               value="T"
-                               unchecked-value="F">
-              </b-form-checkbox>
+              <el-select v-model="selectedexpand.share">
+                <el-option
+                  v-for="item in sharedata"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </b-form-group>
           </b-col>
           <b-col sm="6">
@@ -151,6 +154,10 @@
     {prop: 'tableno', label: '代码', width: '70'},
     {prop: 'descript', label: '描述', width: '', sortable: false, showTip: true}
   ]
+  const sharedata = [
+    {value: 'T', label: '是'},
+    {value: 'F', label: '否'}
+  ]
 
   export default {
     data () {
@@ -162,6 +169,7 @@
         fileList2: [],
         dialogImageUrl: '',
         dialogVisible: false,
+        sharedata:sharedata,
         kinddata:[],
         styledata:[],
         locationdata:[],
@@ -219,7 +227,6 @@
           this.dialogVisible = true;
         },
         beforeupload(files) {
-          console.log(files);
           if(files.size>204800){
             this.$message.error({
               message: '图片大小不能超过200kb'
@@ -265,9 +272,14 @@
             }).then((response) => {
               if (response.data.errorCode == "0") {
                 this.selectedexpand = {};
+                this.items = [];
                 if (typeof(response.data.expands) != "undefined") {
-                  this.items = response.data.expands;
-                  this.selectedexpand = response.data.expands[0];
+                  for(let pc of response.data.expands){
+                     pc["pccode"] = this.pccode;
+                    this.items.push(pc);
+                  }
+
+                  this.selectedexpand = this.items[0];
                   this.$nextTick(function () {
                     this.$refs.logtable.setCurrentRow(this.selectedexpand);
                   })
@@ -296,7 +308,6 @@
                     data.push(type);
                   }
                   this.fileList2 = data;
-                  // console.log( this.fileList2);
                   if(this.fileList2.length>=6){
                     let aEle=document.getElementsByClassName('el-upload')[0];
                     aEle.style.display = 'none';
@@ -413,7 +424,6 @@
       },
 
         handleChange(val) {
-
           if (val) {
             this.selectedexpand = val;
           }
@@ -468,6 +478,10 @@
         background-color: white;
         .col-sm-6{
           padding-top: 1rem;
+          .el-input{height: 37px;}
+          .el-input__inner,.el-select{
+            height: 35px;
+          }
         }
         .col-sm-4{
           line-height: 28px;
