@@ -267,7 +267,7 @@
     .el-input__inner{
       height: 35px;
     }
-    .numinput{
+    .numinput,.el-select{
       width: 30%;
     }
     legend{

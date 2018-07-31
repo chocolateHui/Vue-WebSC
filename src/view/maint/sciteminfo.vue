@@ -898,6 +898,9 @@
           .col-sm-9{
             padding-left: 10px!important;
             padding-right: 0px;
+            .el-select{
+              width: 100%;
+            }
           }
         }
       .btng{
