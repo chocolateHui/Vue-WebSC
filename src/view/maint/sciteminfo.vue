@@ -30,7 +30,7 @@
         <b-col   class="maxwidth70 paddingright0 paddingleft5">
           <b-row  style="font-size: 12px">
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="编码" class="mb-0">
+              <b-form-group horizontal label="编码" class="mb-0 bold">
                 <FormatInput
                   type="number" maxlength="4"
                   v-model="pcinfo.classcode"
@@ -41,7 +41,7 @@
               </b-form-group>
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="中文描述" class="mb-0">
+              <b-form-group horizontal label="中文描述" class="mb-0 bold">
                 <b-form-input
                   type="text"
                   maxlength="32"
@@ -88,7 +88,7 @@
                 </b-form-group>
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="项目属性" class="mb-0">
+              <b-form-group horizontal label="项目属性" class="mb-0 bold">
                 <el-select v-model="pcinfo.type" :disabled="changeshow.kinddesdisabled">
                   <el-option
                     v-for="item in typearry"
@@ -636,7 +636,7 @@
         }
       },
       deletep:function () {
-        this.$confirm('此操作将永久删除'+this.currentRow.descript+'该营业点, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除'+this.currentRow.descript+'该项目类别, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
@@ -652,7 +652,7 @@
 
       },
       deletel:function (row) {
-        this.$confirm('此操作将永久删除'+row.descript+'该场地, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除'+row.descript+'该项目, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
@@ -701,7 +701,7 @@
         if(this.classcodesavetype){
           var url = "";
           if(!this.pcinfo.classcode){
-            this.$message.error('项目类别不能为空');
+            this.$message.error('项目类别编码不能为空');
             return
           }
           if(!this.pcinfo.descript){
@@ -754,14 +754,14 @@
       },
       log(scope){
         let row = scope.row;
-        let logkey = row.id+'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
+        let logkey = this.$store.getters.groupid+'|'+this.$store.getters.hotel.hotelid +'|'+ row.id;
         this.$store.commit('setLogtype','ScItem');
         this.$store.commit('setLogKey',logkey);
         this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       log2(){
 
-        let logkey =this.pcinfo.classcode +'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
+        let logkey =this.$store.getters.groupid+'|'+this.$store.getters.hotel.hotelid +'|'+ this.pcinfo.classcode;
         this.$store.commit('setLogtype','ScItemclass');
         this.$store.commit('setLogKey',logkey);
         this.$root.$emit('bv::show::modal', 'maintLogModal');
@@ -894,10 +894,18 @@
     }
     .row{
       margin-right: 2px;
+      .bold{
+        .col-form-label{
+          font-weight: bold;
+        }
+      }
         .col-sm-4:first-child,.col-sm-4:nth-child(2){
           .col-sm-9{
             padding-left: 10px!important;
             padding-right: 0px;
+            .el-select{
+              width: 100%;
+            }
           }
         }
       .btng{

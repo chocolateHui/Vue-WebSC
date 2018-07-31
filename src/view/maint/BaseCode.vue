@@ -23,7 +23,7 @@
         style="width: 100%">
         <el-table-column prop="code" label="编码" width="50" align="center">
           <template slot-scope="scope" >
-            <FormatInput @change="rowChange(scope)" v-if="cat==='sc_event_type' | cat==='sc_event_degree'" :disabled="scope.row.add !== 'T'"  class="el-input__inner" type="number" maxlength="1" v-model="scope.row.code" placeholder=""></FormatInput>
+            <FormatInput @change="rowChange(scope)" v-if="cat==='sc_event_type' | cat==='sc_event_degree'" :disabled="scope.row.add !== 'T'"  class="el-input__inner" type="number" :maxlength="codelength" v-model="scope.row.code" placeholder=""></FormatInput>
             <FormatInput @change="rowChange(scope)" v-else :disabled="scope.row.add !== 'T'" :maxlength="codelength" v-model="scope.row.code" placeholder=""></FormatInput>
           </template>
         </el-table-column>
@@ -123,7 +123,7 @@
       return {
         items: [],
         editRows:[],
-        codelength:5,
+        codelength:2,
         pageSize:12,
         currentPage:1,
         pageChange:false,
@@ -132,6 +132,13 @@
     },
     props:['cat'],
     created(){
+      if(this.cat==='sc_event_type'||this.cat==='sc_event_degree'){
+        this.codelength = 1;
+      }else if(this.cat==='sc_cancel_reason'){
+        this.codelength = 3;
+      }else{
+        this.codelength = 2;
+      }
       this.refreshData();
     },
     methods: {
@@ -222,7 +229,13 @@
           if(!elem.hasOwnProperty('code')||!elem.code){
             this.$message.error("编码不能为空!")
             return
+          }else{
+            if(elem.code.length!==this.codelength){
+              this.$message.error("编码长度错误,当前基础代码长度必须为"+this.codelength+"位!")
+              return
+            }
           }
+
           if(!elem.hasOwnProperty('descript')||!elem.descript){
             this.$message.error("中文描述不能为空!")
             return
@@ -287,6 +300,13 @@
     watch:{
       cat(val,oldval){
         if(val!==oldval){
+          if(this.cat==='sc_event_type'||this.cat==='sc_event_degree'){
+            this.codelength = 1;
+          }else if(this.cat==='sc_cancel_reason'){
+            this.codelength = 3;
+          }else{
+            this.codelength = 2;
+          }
           this.refreshData();
         }
       }

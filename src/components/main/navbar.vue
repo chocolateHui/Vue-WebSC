@@ -158,7 +158,9 @@
                 username: this.empno.empno,
                 password: this.newpassword
               };
-              this.$store.dispatch('gettoken', tokenparam);
+              this.$store.dispatch('gettoken', tokenparam).then(() => {
+                this.$store.dispatch('encrypttoken');
+              });
               this.$refs.passmodal.hide();
             } else {
               this.$alert(response.data.errorMessage, "修改失败", {type: 'error'})

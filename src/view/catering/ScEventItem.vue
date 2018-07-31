@@ -150,6 +150,7 @@
       overflow-y: auto;
       padding-left: 0px;
       padding-right: 0px;
+      max-width: 100%;
     }
     .col-2{
       padding-right: 0.5rem;
