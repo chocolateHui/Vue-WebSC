@@ -436,6 +436,7 @@
         width: 290px;
         float: left;
         .el-input--suffix .el-input__inner {
+          width: 200px;
           padding-right: 30px;
           flex: 1 1 auto;
           height: 34px;
@@ -448,6 +449,7 @@
       width: 260px;
       float: left;
       .el-input--suffix .el-input__inner {
+        width: 200px;
         padding-right: 30px;
         flex: 1 1 auto;
         height: 34px;

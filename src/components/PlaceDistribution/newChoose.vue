@@ -38,7 +38,7 @@
           <li>抵达日期</li>
         </ol>
         <ul>
-          <li v-for="list in cateringitem" @click="btnCatering(list)" :class="{'caterCurrent':ifCaterChoose==list.caterid}">
+          <li v-for="list in searchItem" @click="btnCatering(list)" :class="{'caterCurrent':ifCaterChoose==list.caterid}">
             <span class="nav1" v-for="colorlist in headlist" :class="colorlist.liStyle" v-if="colorlist.dataid==list.sta"></span>
             <span class="nav2">{{list.caterid}}</span>
             <span class="nav3">{{list.name}}</span>
@@ -47,6 +47,10 @@
             <span class="nav6">{{list.arr.substring(0,10)}}</span>
           </li>
         </ul>
+        <div class="searchOrder">
+          <b-input v-model="filterValue" placeholder="搜索"></b-input>
+          <i class="fa fa-search"></i>
+        </div>
       </div>
     </div>
   </div>
@@ -75,6 +79,7 @@
             endTime: '',
             eventtime:[],
             cateringitem:[],
+            filterValue:''
           }
       },
       created(){
@@ -91,6 +96,28 @@
       computed:{
         ...mapGetters(['cateringlist2']),
         ...mapGetters(['timechoose']),
+        searchItem(){
+          let filterValue = this.filterValue;
+          if(this.filterValue==='' || !this.filterValue){
+            return this.cateringitem;
+          }else{
+            return this.cateringitem.filter(function (item) {
+              if (item.caterid.indexOf(filterValue) >= 0) {
+                return true;
+              } else if (item.name.indexOf(filterValue) >= 0) {
+                return true;
+              }else if (item.stades.indexOf(filterValue) >= 0) {
+                return true;
+              }
+              else if (item.saleid_name.indexOf(filterValue) >= 0) {
+                return true;
+              }
+              else if (item.arr.substring(0,10).indexOf(filterValue) >= 0) {
+                return true;
+              }
+            });
+          }
+        }
       },
       props:['newChooseTime','newChooseAddr','headlist','newChooseAddrNo'],
       methods:{
@@ -205,6 +232,24 @@
       ul{
         border-right: 1px solid #DBDCDC;
       }
+      .searchOrder{
+        position: relative;
+        padding: 7px;
+        .form-control{
+          width: 200px;
+          float: left;
+          padding-left: 10px;
+          height: 26px;
+          line-height: 26px;
+        }
+        .fa-search{
+          position: absolute;
+          left: 184px;
+          top:12px;
+          color: #6C757D;
+        }
+      }
+
     }
     .caterCurrent{
       background: #F5F5F5;
