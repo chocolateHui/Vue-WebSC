@@ -319,5 +319,18 @@
     .el-table .success-row {
       background: #CCC;
     }
+    .el-date-editor .el-range-separator {
+      padding: 0 5px;
+      line-height: 28px;
+      width: 7%;
+      color: #303133;
+    }
+    .el-date-editor .el-range__icon {
+      font-size: 14px;
+      margin-left: -5px;
+      color: #c0c4cc;
+      float: left;
+      line-height: 25px;
+    }
   }
 </style>
