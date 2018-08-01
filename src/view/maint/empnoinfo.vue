@@ -60,17 +60,17 @@
             <b-row>
               <b-col>
                 <b-form>
-                  <b-form-group label="工号:" horizontal class="bold">
+                  <b-form-group label="工&#8194;&#8194;&#8194;&#8194;&#8194;号&#8194;&#8194;:" horizontal class="bold">
                     <FormatInput type="nospecial" id ="username" maxlength="10" v-model="expandempno.empno" :disabled="able.name && !expandempno.flag"></FormatInput>
                   </b-form-group>
-                  <b-form-group label="姓名:" horizontal class="bold">
+                  <b-form-group label="姓&#8194;&#8194;&#8194;&#8194;&#8194;名&#8194;&#8194;:" horizontal class="bold">
                     <b-form-input type="text" maxlength="20" v-model="expandempno.empname">
                     </b-form-input>
                   </b-form-group>
-                  <b-form-group label="电话:" horizontal>
+                  <b-form-group label="电&#8194;&#8194;&#8194;&#8194;&#8194;话&#8194;&#8194;:" horizontal>
                     <FormatInput type="number" v-model="expandempno.phone" maxlength="11" placeholder=""></FormatInput>
                   </b-form-group>
-                  <b-form-group horizontal label="酒店:" class="mb-0">
+                  <b-form-group horizontal label="酒&#8194;&#8194;&#8194;&#8194;&#8194;店&#8194;&#8194;:" class="mb-0">
                     <el-select v-model="expandempno.hotelid" clearable filterable placeholder="请选择" :disabled="isGroup">
                       <el-option
                         v-for="item in gethotellist"
@@ -84,13 +84,13 @@
               </b-col>
               <b-col>
                 <b-form>
-                  <b-form-group label="性别:" horizontal>
+                  <b-form-group label="性&#8194;&#8194;&#8194;&#8194;&#8194;别&#8194;&#8194;:" horizontal>
                     <b-form-radio-group class="pt-2" v-model="expandempno.sex"
                                         :options="[{text: '男', value: '0'},{text: '女', value: '1'}]">
                     </b-form-radio-group>
                   </b-form-group>
                   <div class="block">
-                    <span class="demonstration">生日:</span>
+                    <span class="demonstration">生&#8194;&#8194;&#8194;&#8194;&#8194;日&#8194;&#8194;:</span>
                     <el-date-picker
                       v-model="expandempno.birth"
                       type="date"
@@ -99,10 +99,10 @@
                       value-format="yyyy-MM-dd">
                     </el-date-picker>
                   </div>
-                  <b-form-group label="QQ:" horizontal>
+                  <b-form-group label="QQ&#8194;&#8194;&#8194;&#8194;&#8194;&#8194;&#8194;&#8194;:" horizontal>
                     <FormatInput type="number" maxlength="15" v-model="expandempno.qq"></FormatInput>
                   </b-form-group>
-                  <b-form-group label="Email:" horizontal>
+                  <b-form-group label="Email&#8194;&#8194;&#8194;&#8194;&#8194;&#8194;:" horizontal>
                     <b-form-input type="email" maxlength="64" v-model="expandempno.email" placeholder="">
                     </b-form-input>
                   </b-form-group>
@@ -110,7 +110,7 @@
               </b-col>
               <b-col>
                 <b-form>
-                  <b-form-group label="销售员:" horizontal>
+                  <b-form-group label="销&#8194;&#8194;售&#8194;&#8194;员&#8194;&#8194;:" horizontal>
                     <el-select v-model="expandempno.saleid" clearable filterable placeholder="请选择">
                       <el-option v-for="item in empnoSaleList"
                         :key = item.code
@@ -119,7 +119,7 @@
                       </el-option>
                     </el-select>
                   </b-form-group>
-                  <b-form-group label="岗位:" horizontal class="bold">
+                  <b-form-group label="岗&#8194;&#8194;&#8194;&#8194;&#8194;&#8194;位&#8194;&#8194;:" horizontal class="bold">
                     <el-select v-model="expandempno.deptno" clearable filterable placeholder="请选择">
                       <el-option v-for="item in getdeptlist"
                         :key = item.code
@@ -129,7 +129,7 @@
                       </el-option>
                     </el-select>
                   </b-form-group>
-                  <b-form-group label="角色:" horizontal class="bold">
+                  <b-form-group label="角&#8194;&#8194;&#8194;&#8194;&#8194;&#8194;色&#8194;&#8194;:" horizontal class="bold">
                     <el-select v-model="expandempno.htljob" clearable filterable placeholder="请选择">
                       <el-option v-for="item in joblist"
                         :key="item.code"
@@ -139,7 +139,7 @@
                     </el-select>
                   </b-form-group>
                   <b-form-group>
-                    <b-form-checkbox v-model="expandempno.locked" value="T" unchecked-value="F">停用</b-form-checkbox>
+                    <b-form-checkbox v-model="expandempno.locked" value="T" unchecked-value="F" class="ty">停用</b-form-checkbox>
                   </b-form-group>
                 </b-form>
               </b-col>
@@ -630,16 +630,9 @@
                   width: 100%;
                 }
               }
-              .col-form-label{
-                text-align: justify;
-                &::after{
-                  content: " ";
-                  display: inline-block;
-                  width: 100%;
-                }
-              }
             }
             .form-group{
+              .ty{ margin-top: 6px;}
               margin-bottom: 0px;
             }
             .block{
@@ -647,18 +640,21 @@
               display:flex;
               .demonstration{
                 display: inline-block;
-                width: 22.5%;
+                width: 24.5%;
+/*
                 text-align: justify;
-                margin-right:10px;
+*/
+                padding-right:5px;
                 line-height:30px;
-                &::after{
+                /*&::after{
                   content: " ";
                   display: inline-block;
                   width: 100%;
-                }
+                }*/
               }
               .el-date-editor.el-input{
-                width: 74.35%;
+                width: 75.5%;
+                padding-left: 5px;
                 .el-input__prefix, .el-input__suffix{
                   height: 34px;
                   .el-input__icon{
