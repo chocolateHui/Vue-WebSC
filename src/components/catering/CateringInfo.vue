@@ -10,20 +10,24 @@
         </b-col>
         <b-col sm="8" class="my-1 titleInfo">
           <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 宴会名称:&#8195;{{catering.name}}</span>
-          <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{catering.saleid_des}}</span>
+          <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{localcatering.saleid_name}}</span>
         </b-col>
         <b-col class="my-1 icondiv">
+
           <a v-if="!isNew">
-            <i @click="showLog" class="fa fa-sticky-note titleIcon"></i>
-          </a>
-          <!--<a v-if="!isNew">-->
-            <!--<i @click="showNote" class="fa fa-sticky-note titleIcon"></i>-->
-          <!--</a>-->
-          <a v-if="!isNew">
-            <i @click="EOShare" class="fa fa-print titleIcon"></i>
+            <el-tooltip class="item" effect="dark" content="日志" placement="top">
+              <i @click="showLog" class="fa fa-sticky-note titleIcon"></i>
+            </el-tooltip>
           </a>
           <a v-if="!isNew">
-            <i @click="refreshData" class="fa fa-refresh titleIcon"></i>
+            <el-tooltip class="item" effect="dark" content="EO单" placement="top">
+              <i @click="EOShare" class="fa fa-print titleIcon"></i>
+            </el-tooltip>
+          </a>
+          <a v-if="!isNew">
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+              <i @click="refreshData" class="fa fa-refresh titleIcon"></i>
+            </el-tooltip>
           </a>
           <a>
             <i v-b-toggle="'cater'" @click="toggleclick" class="fa toggleclass" :class="toggleclass"></i>
@@ -34,7 +38,8 @@
         <b-row id="catermain">
           <b-col sm="1" class="my-1">
             <div class="Sta">
-              <label class="StaFont">{{staFont}}</label>
+              <img :src="staFont"/>
+              <!--<label class="StaFont">{{staFont}}</label>-->
             </div>
           </b-col>
           <b-col sm="3" class="my-1">
@@ -61,14 +66,13 @@
               <b-form-group label="联系人:" horizontal>
                 <b-form-input  type="text" v-model="localcatering.contactor" maxlength="10"></b-form-input>
               </b-form-group>
-              <b-form-group label="销售员:"
-                            horizontal>
-                <el-select v-model="localcatering.saleid" clearable filterable placeholder="请输入销售员名称">
+              <b-form-group label="销售员:" horizontal>
+                <el-select v-model="sale" value-key="code" clearable filterable placeholder="请输入销售员名称">
                   <el-option
                     v-for="item in saleoptions"
                     :key="item.code"
                     :label="item.name"
-                    :value="item.code">
+                    :value="item">
                     <span style="float: left">{{ item.name }}</span>
                     <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.code }}</span>
                   </el-option>
@@ -192,11 +196,19 @@
   import popArchives from '../SalesActivities/popArchives.vue'
   import EOShare from '../catering/EOShare.vue'
 
+  const staPath = {
+    Q:"../../../static/SC-Q.png",
+    R:"../../../static/SC-R.png",
+    C:"../../../static/SC-C.png",
+    X:"../../../static/SC-X.png",
+    I:"../../../static/SC-I.png",
+    O:"../../../static/SC-O.png",
+  }
+
   export default {
     name: 'CateringInfo',
     data () {
       return {
-        staFont:'R',
         caterdate:[],
         toggleclass:'fa-chevron-up',
         caterclose:false,
@@ -217,6 +229,7 @@
         ],
         //销售员列表
         saleoptions:[],
+        sale:{},
         btnWidth:'halfbtn-width',
         dialogVisible:false,
         logkey:'',
@@ -252,6 +265,22 @@
          disabledDate:this.getDisableDate
        }
       },
+      staFont(){
+        let val = this.catersta;
+        if(val==='1'){
+          return staPath.R;
+        } else if(val==='2'){
+          return staPath.C;
+        } else if(val==='3'){
+          return staPath.I;
+        } else if(val==='0'){
+          return staPath.X;
+        } else if(val==='Q'){
+          return staPath.Q;
+        } else{
+          return staPath.O;
+        }
+      }
     },
     methods: {
       saveCatering(){
@@ -265,6 +294,8 @@
         this.localcatering.sta = this.catersta;
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
+        this.localcatering.saleid = this.sale.code;
+        this.localcatering.saleid_name = this.sale.name;
         this.$emit('saveCatering',this.localcatering);
       },
       updateCatering(){
@@ -278,6 +309,14 @@
         }
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
+        this.localcatering.saleid = this.sale.code;
+        this.localcatering.saleid_name = this.sale.name;
+        let now = new Date(new Date() - 24 * 60 * 60 * 1000);
+        if(dateValid(this.caterdate[1],now.toString())){
+          this.$alert("宴会离开日期不能早于当前日期!")
+          return;
+        }
+
         this.$emit('updateCatering',this.localcatering);
       },
       updateCateringSta(sta){
@@ -349,24 +388,8 @@
         }
         this.caterclose=!this.caterclose;
       },
-      getStaFont(){
-        let val = this.catersta;
-        if(val==='1'){
-          this.staFont='R';
-        } else if(val==='2'){
-          this.staFont='C';
-        } else if(val==='3'){
-          this.staFont = "I";
-        } else if(val==='0'){
-          this.staFont = "X";
-        } else if(val==='Q'){
-          this.staFont = val;
-        } else{
-          this.staFont = val;
-        }
-      },
       btnenter(el){
-        if(this.staFont!=='X'){
+        if(this.catersta!=='0'){
           this.btnWidth = 'halfbtn-width'
         }
       },
@@ -388,6 +411,7 @@
         this.$root.$emit('bv::show::modal', 'caterlogmodal');
       },
       EOShare(){
+        this.$refs.EOShare.getEOPrintRecord();
         this.$refs.EOSharemodal.show();
       },
       refreshData(){
@@ -410,13 +434,14 @@
       EOShare
     },
     mounted(){
-      this.getStaFont();
+
     },
     watch: {
       catering(val,oldval){
         if(!this.isNew){
           this.localcatering = Object.assign({},val);
           this.caterdate = [];
+          this.sale = { code:val.saleid,name:val.saleid_name};
           if(val.hasOwnProperty('arr')){
             let groupid = this.$store.getters.groupid;
             let hotelid = this.$store.getters.hotel.hotelid;
@@ -432,18 +457,15 @@
           this.caterdate.push(val.arr,val.dep)
         }
       },
-      catersta(val,oldval){
-        this.getStaFont();
-      },
       salelist(val){
         if(val){
           this.saleoptions = val;
         }
       },
-      staFont(val,oldval){
-        if(val==='X'){
+      catersta(val,oldval){
+        if(val==='0'){
           this.btnWidth = 'maxbtn-width'
-        }else if(oldval ==='X'){
+        }else if(oldval ==='0'){
           this.btnWidth = 'halfbtn-width'
         }
       }
@@ -515,18 +537,16 @@
       .Sta{
         width: 75px;
         height: 65px;
-        background: $color11;
-        border-radius: 10px;
-        padding: 0 20px;
-        margin: auto;
+        border-radius: 5px;
+        /*padding: 0 20px;*/
         margin-top: 6px;
-        .StaFont{
-          padding-top: 3px;
-          font-size: 3.5rem;
-          color: white;
-          height: 55px;
-          line-height: 55px;
-        }
+        /*.StaFont{*/
+          /*padding-top: 3px;*/
+          /*font-size: 3.5rem;*/
+          /*color: white;*/
+          /*height: 55px;*/
+          /*line-height: 55px;*/
+        /*}*/
       }
       .required{
         .col-form-label{

@@ -304,20 +304,31 @@
         }
       },
       saveNewEvent(){
+        if(!this.eventbdate[0]){
+          this.$alert("事务日期不允许为空!")
+          return;
+        } else if(!this.newEvent.code){
+          this.$alert("事务场地不允许为空!")
+          return;
+        }
+
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         this.eventCheck(this.catering).then((checked) => {
           if(checked){
-            this.batchSaveEvent(this.caterid).then((response) => {
-              if(response.data.errorCode==='0'){
+            this.batchSaveEvent(this.caterid).then((resdata) => {
+              if(resdata.errorCode==='0'){
                 this.$message({
                   message: '事务保存成功!',
                   type: 'success'
                 })
                 this.$store.dispatch("getEventList");
               }else{
-                this.$message.error(response.data.errorMessage);
+                this.$message.error(resdata.errorMessage);
               }
               loading.close();
+            }).catch(()=>{
+              loading.close();
+              this.$message.error("事务保存失败!")
             })
           }else{
             loading.close();
@@ -465,6 +476,7 @@
         }
       },
       placeClear(){
+        this.newEvent.code = '';
         this.isClear = true;
         this.$refs.MultiPlace.clearSelect();
       },
@@ -504,6 +516,9 @@
       },
       catering(val,oldval){
         if(val.hasOwnProperty('name')&&!this.isNew){
+          if(val.caterid!==this.newEvent.caterid){
+            this.clearData();
+          }
           this.$set(this.newEvent,'descript',val.name)
           if(this.isOpen&&!(this.newEventParam.hasOwnProperty('code')||this.newEvent.hasOwnProperty('code'))){
             this.$root.$emit('bv::toggle::collapse','newevent')

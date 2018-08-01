@@ -105,6 +105,7 @@
           this.configDefault()
           // 获取营业点
           this.$http.post(methodinfo.gethotellist, {
+            sta:'I'
           }).then((response) => {
             if (response.status === 200) {
               if (response.data.errorCode=="0") {
