@@ -13,17 +13,21 @@
           <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{catering.saleid_des}}</span>
         </b-col>
         <b-col class="my-1 icondiv">
+
           <a v-if="!isNew">
-            <i @click="showLog" class="fa fa-sticky-note titleIcon"></i>
-          </a>
-          <!--<a v-if="!isNew">-->
-            <!--<i @click="showNote" class="fa fa-sticky-note titleIcon"></i>-->
-          <!--</a>-->
-          <a v-if="!isNew">
-            <i @click="EOShare" class="fa fa-print titleIcon"></i>
+            <el-tooltip class="item" effect="dark" content="日志" placement="top">
+              <i @click="showLog" class="fa fa-sticky-note titleIcon"></i>
+            </el-tooltip>
           </a>
           <a v-if="!isNew">
-            <i @click="refreshData" class="fa fa-refresh titleIcon"></i>
+            <el-tooltip class="item" effect="dark" content="EO单" placement="top">
+              <i @click="EOShare" class="fa fa-print titleIcon"></i>
+            </el-tooltip>
+          </a>
+          <a v-if="!isNew">
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+              <i @click="refreshData" class="fa fa-refresh titleIcon"></i>
+            </el-tooltip>
           </a>
           <a>
             <i v-b-toggle="'cater'" @click="toggleclick" class="fa toggleclass" :class="toggleclass"></i>

@@ -3,7 +3,7 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
-import { Input, Badge, DatePicker, Select, Loading, Option, Switch, Tree, Table, TableColumn, Tabs, TabPane, Message, MessageBox, Upload, Dialog, Popover } from 'element-ui'
+import { Input, Badge, DatePicker, Select, Loading, Option, Switch, Tree, Table, TableColumn, Tabs, TabPane, Message, MessageBox, Upload, Dialog, Popover, Tooltip } from 'element-ui'
 import axiosinstance from '../src/common/axiosinstance'
 
 import upperFirst from 'lodash/upperFirst'
@@ -31,7 +31,7 @@ Vue.use(TabPane)
 Vue.use(Upload)
 Vue.use(Dialog)
 Vue.use(Popover)
-
+Vue.use(Tooltip)
 Vue.config.productionTip = false
 Vue.prototype.$message = Message
 Vue.prototype.$loading = Loading
