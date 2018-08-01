@@ -716,7 +716,7 @@ export default {
   }
   .calendar td .text{
     position: absolute;
-    top:28px;
+    top:24px;
     left:0;
     right:0;
     text-align: center;

@@ -38,7 +38,8 @@
         <b-row id="catermain">
           <b-col sm="1" class="my-1">
             <div class="Sta">
-              <label class="StaFont">{{staFont}}</label>
+              <img :src="staFont"/>
+              <!--<label class="StaFont">{{staFont}}</label>-->
             </div>
           </b-col>
           <b-col sm="3" class="my-1">
@@ -195,11 +196,19 @@
   import popArchives from '../SalesActivities/popArchives.vue'
   import EOShare from '../catering/EOShare.vue'
 
+  const staPath = {
+    Q:"../../../static/SC-Q.png",
+    R:"../../../static/SC-R.png",
+    C:"../../../static/SC-C.png",
+    X:"../../../static/SC-X.png",
+    I:"../../../static/SC-I.png",
+    O:"../../../static/SC-O.png",
+  }
+
   export default {
     name: 'CateringInfo',
     data () {
       return {
-        staFont:'R',
         caterdate:[],
         toggleclass:'fa-chevron-up',
         caterclose:false,
@@ -256,6 +265,22 @@
          disabledDate:this.getDisableDate
        }
       },
+      staFont(){
+        let val = this.catersta;
+        if(val==='1'){
+          return staPath.R;
+        } else if(val==='2'){
+          return staPath.C;
+        } else if(val==='3'){
+          return staPath.I;
+        } else if(val==='0'){
+          return staPath.X;
+        } else if(val==='Q'){
+          return staPath.Q;
+        } else{
+          return staPath.O;
+        }
+      }
     },
     methods: {
       saveCatering(){
@@ -363,24 +388,8 @@
         }
         this.caterclose=!this.caterclose;
       },
-      getStaFont(){
-        let val = this.catersta;
-        if(val==='1'){
-          this.staFont='R';
-        } else if(val==='2'){
-          this.staFont='C';
-        } else if(val==='3'){
-          this.staFont = "I";
-        } else if(val==='0'){
-          this.staFont = "X";
-        } else if(val==='Q'){
-          this.staFont = val;
-        } else{
-          this.staFont = val;
-        }
-      },
       btnenter(el){
-        if(this.staFont!=='X'){
+        if(this.catersta!=='0'){
           this.btnWidth = 'halfbtn-width'
         }
       },
@@ -425,7 +434,7 @@
       EOShare
     },
     mounted(){
-      this.getStaFont();
+
     },
     watch: {
       catering(val,oldval){
@@ -448,18 +457,15 @@
           this.caterdate.push(val.arr,val.dep)
         }
       },
-      catersta(val,oldval){
-        this.getStaFont();
-      },
       salelist(val){
         if(val){
           this.saleoptions = val;
         }
       },
-      staFont(val,oldval){
-        if(val==='X'){
+      catersta(val,oldval){
+        if(val==='0'){
           this.btnWidth = 'maxbtn-width'
-        }else if(oldval ==='X'){
+        }else if(oldval ==='0'){
           this.btnWidth = 'halfbtn-width'
         }
       }
@@ -531,18 +537,16 @@
       .Sta{
         width: 75px;
         height: 65px;
-        background: $color11;
-        border-radius: 10px;
-        padding: 0 20px;
-        margin: auto;
+        border-radius: 5px;
+        /*padding: 0 20px;*/
         margin-top: 6px;
-        .StaFont{
-          padding-top: 3px;
-          font-size: 3.5rem;
-          color: white;
-          height: 55px;
-          line-height: 55px;
-        }
+        /*.StaFont{*/
+          /*padding-top: 3px;*/
+          /*font-size: 3.5rem;*/
+          /*color: white;*/
+          /*height: 55px;*/
+          /*line-height: 55px;*/
+        /*}*/
       }
       .required{
         .col-form-label{
