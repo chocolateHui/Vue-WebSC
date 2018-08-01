@@ -463,6 +463,9 @@
 <style lang="scss"  type="text/scss">
   #CaterListpanel{
     padding: 0 1rem;
+    .el-tabs--border-card>.el-tabs__header {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
     .el-tabs__content{
       overflow: hidden!important;
       .row{ margin-right: 0px; margin-left: 0px;}
@@ -520,9 +523,16 @@
     }
     .el-date-editor .el-range-separator {
       padding: 0 5px;
-      line-height: 32px;
+      line-height: 25px;
       width: 7%;
       color: #303133;
+    }
+    .el-date-editor .el-range__icon {
+      font-size: 14px;
+      margin-left: -5px;
+      color: #c0c4cc;
+      float: left;
+      line-height: 25px;
     }
     .el-tabs__nav {
       float: none;
