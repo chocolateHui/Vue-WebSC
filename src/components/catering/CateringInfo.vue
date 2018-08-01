@@ -8,12 +8,11 @@
         <b-col sm="2" class="my-1">
           <span v-if="!isNew" class="title">订单号:{{catering.caterid}}</span>
         </b-col>
-        <b-col sm="8" class="my-1 titleInfo">
+        <b-col sm="9" class="my-1 titleInfo">
           <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 宴会名称:&#8195;{{catering.name}}</span>
           <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{localcatering.saleid_name}}</span>
         </b-col>
         <b-col class="my-1 icondiv">
-
           <a v-if="!isNew">
             <el-tooltip class="item" effect="dark" content="日志" placement="top">
               <i @click="showLog" class="fa fa-sticky-note titleIcon"></i>
@@ -210,7 +209,7 @@
     data () {
       return {
         caterdate:[],
-        toggleclass:'fa-chevron-up',
+        toggleclass:'fa-angle-up ',
         caterclose:false,
         editable:false,
         localcatering:{
@@ -382,9 +381,9 @@
       },
       toggleclick(){
         if(!this.caterclose){
-          this.toggleclass = "fa-chevron-down";
+          this.toggleclass = "fa-angle-down";
         }else{
-          this.toggleclass = "fa-chevron-up";
+          this.toggleclass = "fa-angle-up";
         }
         this.caterclose=!this.caterclose;
       },
@@ -491,13 +490,14 @@
     }
     .icondiv{
       border-left: 1px solid $colorBorder;
+      padding-top: 3px;
     }
     input{
       font-size: 0.9rem;
     }
     .titleIcon{
       color: $colorIcon;
-      font-size: 20px;
+      font-size: 18px;
       cursor: pointer;
       padding: 0 2px;
     }
@@ -505,6 +505,7 @@
       float: right;
       font-size: 20px;
       cursor: pointer;
+      margin-top: -3px;
     }
     .el-input__inner{
       height: 33px;
@@ -523,11 +524,9 @@
     .option-sub{
       float: right; color: #8492a6; font-size: 0.9rem
     }
-    .title{
-      color: #4C8FBD;
-    }
+
     .titleInfo{
-      flex: 0 0 64%;
+      flex: 0 0 65%;
     }
     //宴会主单主要信息
     #catermain{

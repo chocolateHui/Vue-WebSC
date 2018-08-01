@@ -87,13 +87,12 @@
                         <b-form inline>
                           <FormatInput class="priceinput" type="float" maxlength="19" :readonly="priceread" v-model="expandevent.price"></FormatInput>
                           <span class="input-separator">/</span>
-                          <el-select @change="priceChange" v-model="expandevent.unit" class="priceselect">
+                          <el-select @change="priceChange" v-model="eventitem" value-key="id" class="priceselect">
                             <el-option
                               v-for="item in priceoptions"
                               :key="item.code"
                               :label="item.descript"
-                              :value="item"
-                              :value-key="item.id">
+                              :value="item">
                               <span style="float: left">{{ item.descript }}</span>
                               <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.price }}</span>
                             </el-option>
@@ -279,6 +278,7 @@
         expandevent:{},
         eventtime:[],
         eventflags:[],
+        eventitem:{},
         stdunit:'',
         staoptions:[
           { code: '1', descript: '预订' }

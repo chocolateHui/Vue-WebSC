@@ -90,13 +90,12 @@
                       <b-form inline>
                         <FormatInput class="priceinput" type="float" maxlength="19" :readonly="priceread" v-model="newEvent.price"></FormatInput>
                         <span class="input-separator">/</span>
-                        <el-select @change="priceChange" v-model="newEvent.unit" class="priceselect">
+                        <el-select @change="priceChange" v-model="eventItem" value-key="id" class="priceselect">
                           <el-option
                             v-for="item in priceoptions"
                             :key="item.id"
                             :label="item.descript"
-                            :value="item"
-                            :value-key="item.id">
+                            :value="item">
                             <span style="float: left">{{ item.descript }}</span>
                             <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.price }}</span>
                           </el-option>
@@ -234,7 +233,8 @@
           { code: 'Q', descript: '问询' },
           { code: '1', descript: '预订' }
         ],
-        toggleclass:'fa-chevron-up',
+        toggleclass:'fa-angle-up',
+        eventItem:{},
         isClear:false,
         priceread:true,
         editable:false,
@@ -293,6 +293,7 @@
       },
       initEventParam(){
         let eventparam = this.newEventParam;
+        eventparam.caterid = this.caterid;
         this.eventbdate= [];
         this.eventtime= [];
         this.eventbdate.push(eventparam.begindate,eventparam.enddate)
@@ -516,6 +517,8 @@
       },
       catering(val,oldval){
         if(val.hasOwnProperty('name')&&!this.isNew){
+          console.log(val.caterid)
+          console.log(this.newEvent.caterid)
           if(val.caterid!==this.newEvent.caterid){
             this.clearData();
           }
