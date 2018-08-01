@@ -453,7 +453,7 @@
             this.staoptions = [{ code: '3', descript: '登记' }];
           }else if(this.expandevent.sta==="0"){
             this.staoptions = [{ code: '0', descript: '取消' }];
-            if(this.catering.sta==='0'){
+            if(this.catering.sta!=='0'){
               this.staoptions.push({ code: '1', descript: '预订' })
             }
           }else{
@@ -616,6 +616,7 @@
         }else {
           this.$store.commit('setEventstas','0');
         }
+
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch("getEventList");
         })

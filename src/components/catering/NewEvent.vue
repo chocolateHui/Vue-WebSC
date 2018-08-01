@@ -307,17 +307,20 @@
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         this.eventCheck(this.catering).then((checked) => {
           if(checked){
-            this.batchSaveEvent(this.caterid).then((response) => {
-              if(response.data.errorCode==='0'){
+            this.batchSaveEvent(this.caterid).then((resdata) => {
+              if(resdata.errorCode==='0'){
                 this.$message({
                   message: '事务保存成功!',
                   type: 'success'
                 })
                 this.$store.dispatch("getEventList");
               }else{
-                this.$message.error(response.data.errorMessage);
+                this.$message.error(resdata.errorMessage);
               }
               loading.close();
+            }).catch(()=>{
+              loading.close();
+              this.$message.error("事务保存失败!")
             })
           }else{
             loading.close();
@@ -465,6 +468,7 @@
         }
       },
       placeClear(){
+        this.newEvent.code = '';
         this.isClear = true;
         this.$refs.MultiPlace.clearSelect();
       },

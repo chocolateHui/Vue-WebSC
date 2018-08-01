@@ -144,13 +144,15 @@ const actions = {
     axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
     axiosinstance.post(method, {
       caterid: store.getters.caterid,
-      sta: state.eventstas
+      sta: store.getters.eventstas
     }).then(function (response) {
       if (response.data.errorCode === '0') {
         let events = response.data.events
         if (events) {
           store.commit('setEventlist', events)
           store.commit('setDefaulttype', events[events.length - 1].type)
+        } else {
+          store.commit('setEventlist', [])
         }
       } else {
         store.commit('setEventlist', [])

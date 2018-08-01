@@ -62,11 +62,14 @@
               </el-select>
             </b-form-group>
             <b-form-group label="共享:" :label-cols="4" horizontal>
-              <b-form-checkbox id="checkbox1"
-                               v-model="selectedexpand.share"
-                               value="T"
-                               unchecked-value="F">
-              </b-form-checkbox>
+              <el-select v-model="selectedexpand.share">
+                <el-option
+                  v-for="item in sharedata"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </b-form-group>
           </b-col>
           <b-col sm="6">
@@ -151,6 +154,10 @@
     {prop: 'tableno', label: '代码', width: '70'},
     {prop: 'descript', label: '描述', width: '', sortable: false, showTip: true}
   ]
+  const sharedata = [
+    {value: 'T', label: '是'},
+    {value: 'F', label: '否'}
+  ]
 
   export default {
     data () {
@@ -162,6 +169,7 @@
         fileList2: [],
         dialogImageUrl: '',
         dialogVisible: false,
+        sharedata:sharedata,
         kinddata:[],
         styledata:[],
         locationdata:[],
@@ -470,6 +478,10 @@
         background-color: white;
         .col-sm-6{
           padding-top: 1rem;
+          .el-input{height: 37px;}
+          .el-input__inner,.el-select{
+            height: 35px;
+          }
         }
         .col-sm-4{
           line-height: 28px;
