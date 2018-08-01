@@ -304,6 +304,14 @@
         }
       },
       saveNewEvent(){
+        if(!this.eventbdate[0]){
+          this.$alert("事务日期不允许为空!")
+          return;
+        } else if(!this.newEvent.code){
+          this.$alert("事务场地不允许为空!")
+          return;
+        }
+
         const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         this.eventCheck(this.catering).then((checked) => {
           if(checked){
@@ -508,6 +516,9 @@
       },
       catering(val,oldval){
         if(val.hasOwnProperty('name')&&!this.isNew){
+          if(val.caterid!==this.newEvent.caterid){
+            this.clearData();
+          }
           this.$set(this.newEvent,'descript',val.name)
           if(this.isOpen&&!(this.newEventParam.hasOwnProperty('code')||this.newEvent.hasOwnProperty('code'))){
             this.$root.$emit('bv::toggle::collapse','newevent')
