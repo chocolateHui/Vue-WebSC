@@ -61,14 +61,13 @@
               <b-form-group label="联系人:" horizontal>
                 <b-form-input  type="text" v-model="localcatering.contactor" maxlength="10"></b-form-input>
               </b-form-group>
-              <b-form-group label="销售员:"
-                            horizontal>
-                <el-select v-model="localcatering.saleid" clearable filterable placeholder="请输入销售员名称">
+              <b-form-group label="销售员:" horizontal>
+                <el-select v-model="sale" value-key="code" clearable filterable placeholder="请输入销售员名称">
                   <el-option
                     v-for="item in saleoptions"
                     :key="item.code"
                     :label="item.name"
-                    :value="item.code">
+                    :value="item">
                     <span style="float: left">{{ item.name }}</span>
                     <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.code }}</span>
                   </el-option>
@@ -217,6 +216,7 @@
         ],
         //销售员列表
         saleoptions:[],
+        sale:{},
         btnWidth:'halfbtn-width',
         dialogVisible:false,
         logkey:'',
@@ -265,6 +265,8 @@
         this.localcatering.sta = this.catersta;
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
+        this.localcatering.saleid = this.sale.code;
+        this.localcatering.saleid_name = this.sale.name;
         this.$emit('saveCatering',this.localcatering);
       },
       updateCatering(){
@@ -278,6 +280,8 @@
         }
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
+        this.localcatering.saleid = this.sale.code;
+        this.localcatering.saleid_name = this.sale.name;
         let now = new Date(new Date() - 24 * 60 * 60 * 1000);
         if(dateValid(this.caterdate[1],now.toString())){
           this.$alert("宴会离开日期不能早于当前日期!")
@@ -394,6 +398,7 @@
         this.$root.$emit('bv::show::modal', 'caterlogmodal');
       },
       EOShare(){
+        this.$refs.EOShare.getEOPrintRecord();
         this.$refs.EOSharemodal.show();
       },
       refreshData(){
@@ -423,6 +428,7 @@
         if(!this.isNew){
           this.localcatering = Object.assign({},val);
           this.caterdate = [];
+          this.sale = { code:val.saleid,name:val.saleid_name};
           if(val.hasOwnProperty('arr')){
             let groupid = this.$store.getters.groupid;
             let hotelid = this.$store.getters.hotel.hotelid;
