@@ -468,6 +468,7 @@
         }
       },
       placeClear(){
+        this.newEvent.code = '';
         this.isClear = true;
         this.$refs.MultiPlace.clearSelect();
       },

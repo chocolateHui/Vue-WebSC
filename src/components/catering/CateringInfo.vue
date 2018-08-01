@@ -278,6 +278,12 @@
         }
         this.localcatering.arr = this.caterdate[0];
         this.localcatering.dep = this.caterdate[1];
+        let now = new Date(new Date() - 24 * 60 * 60 * 1000);
+        if(dateValid(this.caterdate[1],now.toString())){
+          this.$alert("宴会离开日期不能早于当前日期!")
+          return;
+        }
+
         this.$emit('updateCatering',this.localcatering);
       },
       updateCateringSta(sta){
