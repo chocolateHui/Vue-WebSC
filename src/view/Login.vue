@@ -59,7 +59,7 @@
           <li>
             <label v-if="!hasGroupid">1.系统首次登录时</label>
             <label v-else>1.当前登录集团为</label>
-            <FormatInput @change="setGroupid" class="gorupid-input" v-model="groupid" placeholder="请输入集团ID"></FormatInput>
+            <FormatInput @change="setGroupid" type="nospecial" class="gorupid-input" v-model="groupid" placeholder="请输入集团ID"></FormatInput>
           </li>
           <li v-if="!isFirefox">2.本系统推荐使用火狐浏览器。
             <br>推荐前往：<a href="http://www.firefox.com.cn/"  target="_blank">http://www.firefox.com.cn/</a>下载安装
@@ -120,6 +120,7 @@
                 hotelid:'',
                 descript:''
               })
+              this.$store.commit('setHotels', [])
             }
           }
         },
@@ -244,6 +245,11 @@
           password(val,oldval){
             if(val!==oldval && this.hasToken){
               this.hasToken = false;
+            }
+          },
+          hotel(val,oldval){
+            if (val.hotelid) {
+              this.hotelErrorShow = false;
             }
           }
         },

@@ -754,14 +754,14 @@
       },
       log(scope){
         let row = scope.row;
-        let logkey = row.id+'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
+        let logkey = this.$store.getters.groupid+'|'+this.$store.getters.hotel.hotelid +'|'+ row.id;
         this.$store.commit('setLogtype','ScItem');
         this.$store.commit('setLogKey',logkey);
         this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       log2(){
 
-        let logkey =this.pcinfo.classcode +'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
+        let logkey =this.$store.getters.groupid+'|'+this.$store.getters.hotel.hotelid +'|'+ this.pcinfo.classcode;
         this.$store.commit('setLogtype','ScItemclass');
         this.$store.commit('setLogKey',logkey);
         this.$root.$emit('bv::show::modal', 'maintLogModal');

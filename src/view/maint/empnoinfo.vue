@@ -284,7 +284,10 @@
               username: cs.empno
             }).then((response) => {
               if (response.data.errorCode === "0") {
-                this.gethotellist = response.data.hotels;
+                this.$message({
+                  message: '密码重置成功!',
+                  type: 'success'
+                })
               }
             });
           })
@@ -395,7 +398,9 @@
         this.hotelid = this.$store.state.user.hotel.hotelid;
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
-          this.$http.post(methodinfo.gethotellist, {}).then((response) => {
+          this.$http.post(methodinfo.gethotellist, {
+            sta:'I'
+          }).then((response) => {
             if (response.data.errorCode === "0") {
               this.gethotellist = response.data.hotels;
             }
@@ -462,7 +467,10 @@
               if (val.flag) {
                 this.$http.post(methodinfo.addempnoinfo, val).then((response) => {
                   if (response.data.errorCode === "0") {
-                    this.$message('保存成功')
+                    this.$message({
+                      message: '保存成功!',
+                      type: 'success'
+                    })
                     this.newp = true;
                     //如果工号选择了销售员则把元素移到第一位
                     if (val.hasOwnProperty("saleid") && val.saleid !== '') {
@@ -476,7 +484,10 @@
               } else {
                 this.$http.post(methodinfo.modifyempnoinfo, val).then((response) => {
                   if (response.data.errorCode === "0") {
-                    this.$message('保存成功')
+                    this.$message({
+                      message: '保存成功!',
+                      type: 'success'
+                    })
                     //如果工号选择了销售员则把元素移到第一位
                     if (val.hasOwnProperty("saleid") && val.saleid !== '') {
                       this.resetSaleList(val.saleid)

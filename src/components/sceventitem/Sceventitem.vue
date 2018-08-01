@@ -56,6 +56,8 @@
           :height="th"
           style="width: 100%">
           <el-table-column
+            align="center"
+            header-align="center"
             prop="inumber"
             label="流水号"
             width="80"
@@ -63,38 +65,50 @@
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
+            align="left"
+            header-align="center"
             prop="descript"
             width="120"
             label="项目名称"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
+            align="right"
+            header-align="center"
             prop="number"
             label="数量"
             width="100"
             show-overflow-tooltip>
             <template slot-scope="scope">
-            <FormatInput class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></FormatInput>
+            <FormatInput style="text-align: right" class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></FormatInput>
              </template>
           </el-table-column>
           <el-table-column
+            align="left"
+            header-align="center"
             prop="unit"
             label="单位"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
+            align="right"
+            header-align="center"
             prop="price"
             label="单价"
             width="100"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
+            align="right"
+            header-align="center"
             prop="amount"
             label="总价"
             width="100"
             show-overflow-tooltip>
           </el-table-column>
           <el-table-column
+            align="left"
+            header-align="center"
             prop="remark"
             label="备注"
             width=""
@@ -544,7 +558,7 @@
     }
     #sel{
       padding-top: 0.5rem;
-      width: 300px;
+      width: 290px;
       float: left;
       .el-input--suffix .el-input__inner {
         padding-right: 30px;
@@ -573,7 +587,7 @@
       th,td{
         padding: 0;
         border-color: #dee2e6;
-        text-align: center;
+        /*text-align: center;*/
       }
       .cell {
         padding-left: 5px;

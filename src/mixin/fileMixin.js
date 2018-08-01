@@ -3,9 +3,10 @@ import axios from 'axios'
 
 let loading
 
-let fileserver = 'https://files.foxhis.com/FoxhisFileServer/action?'
-let imageurl = 'https://files.foxhis.com/FoxhisFileServer/image/'
-let access = 'FOXHIS.WOP'
+let fileserver = 'http://xrfiles.test.foxhis.com/FoxhisFileServer/action?'
+let imageurl = 'http://xrfiles.test.foxhis.com/FoxhisFileServer/image/'
+let groupid = 'C0000001'
+let access = 'dsajlkda1'
 let topath = 'SC/'
 const filetoken = '71DFD83564CD06366DA6C6E35496B61D'
 
@@ -20,9 +21,8 @@ let uploadMixin = {
   },
   created () {
     let hotelid = this.$store.getters.hotel.hotelid
-    let groupid = this.$store.getters.groupid
     this.topath = topath + hotelid + '/'
-    this.imageurl = imageurl + groupid + this.topath
+    this.imageurl = imageurl + groupid + '/' + this.topath
     this.fileserver = this.fileserver + 'groupid=' + groupid + '&access=' + access
   },
   methods: {

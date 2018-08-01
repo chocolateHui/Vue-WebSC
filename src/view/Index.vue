@@ -45,32 +45,37 @@
               </div>
               <el-table
                 :data="tableData1"
+                @row-dblclick="tableDbEdit"
                 border
                 stripe
                 :height="tableHeight"
                 style="width: 100%">
                 <el-table-column
+                  header-align="center"
                   property="descript"
-                  align="center"
+                  align="left"
                   :show-overflow-tooltip=true
                   label="事务名称"
                   width="">
                 </el-table-column>
                 <el-table-column
+                  header-align="center"
                   property="codedes"
-                  align="center"
+                  align="left"
                   :show-overflow-tooltip=true
                   label="场地描述"
                   width="80">
                 </el-table-column>
                 <el-table-column
+                  header-align="center"
                   property="typedes"
-                  align="center"
+                  align="left"
                   :show-overflow-tooltip=true
                   label="类型"
                   width="50">
                 </el-table-column>
                 <el-table-column
+                  header-align="center"
                   property="bdate"
                   align="center"
                   :show-overflow-tooltip=true
@@ -78,6 +83,7 @@
                   width="84">
                 </el-table-column>
                 <el-table-column
+                  header-align="center"
                   property="begintime"
                   align="center"
                   :show-overflow-tooltip=true
@@ -94,21 +100,24 @@
                 <i class="fa fa-refresh refresh" @click="refreshtable2" aria-hidden="true"></i>
               </div>
               <el-table
+                @row-dblclick="tableDbEdit"
                 :data="tableData2"
                 border
                 stripe
                 :height="tableHeight"
                 style="width: 100%">
                 <el-table-column
+                  header-align="center"
                   property="name"
-                  align="center"
+                  align="left"
                   :show-overflow-tooltip=true
                   label="宴会名称"
-                  width="120">
+                  width="">
                 </el-table-column>
                 <el-table-column
+                  header-align="center"
                   property="saleid_name"
-                  align="center"
+                  align="left"
                   :show-overflow-tooltip=true
                   label="销售员"
                   width="80">
@@ -121,11 +130,12 @@
                   width="">
                 </el-table-column>
                 <el-table-column
+                  header-align="center"
                   property="remark"
-                  align="center"
+                  align="left"
                   :show-overflow-tooltip=true
                   label="备注"
-                  width="80">
+                  width="">
                 </el-table-column>
               </el-table>
             </b-card>
@@ -137,21 +147,24 @@
                 <i class="fa fa-refresh refresh" @click="refreshtable3" aria-hidden="true"></i>
               </div>
               <el-table
+                @row-dblclick="tableDbEdit"
                 :data="tableData3"
                 border
                 stripe
                 :height="tableHeight"
                 style="width: 100%">
                 <el-table-column
+                  header-align="center"
                   property="name"
-                  align="center"
+                  align="left"
                   :show-overflow-tooltip=true
                   label="宴会名称"
                   width="">
                 </el-table-column>
                 <el-table-column
+                  header-align="center"
                   property="saleid_name"
-                  align="center"
+                  align="left"
                   :show-overflow-tooltip=true
                   label="销售员"
                   width="tableHeight">
@@ -518,6 +531,7 @@
               if(typeof(response.data.caterings) != "undefined"){
                 for(let caterings of response.data.caterings){
                   var types = {};
+                  types["caterid"]=caterings.caterid;
                   types["name"]=caterings.name;
                   types["saleid_name"]=caterings.saleid_name;
                   this.tableData3.push(types);
@@ -545,6 +559,7 @@
                 this.tableData2 = [];
                 for(let caterings of response.data.caterings){
                   var types = {};
+                  types["caterid"]=caterings.caterid;
                   types["name"]=caterings.name;
                   types["saleid_name"]=caterings.saleid_name;
                   types["arr"]=caterings.arr;
@@ -573,6 +588,7 @@
               if(typeof(response.data.events) != "undefined"){
                 for(let events of response.data.events){
                   var types = {};
+                  types["caterid"]=events.caterid;
                   types["descript"]=events.descript;
                   types["codedes"]=events.codedes;
                   types["typedes"]=events.typedes;
@@ -627,7 +643,12 @@
           loading.close();
         }, 500);
         this.gettable3data();
-      }
+      },
+      tableDbEdit(row, event) {
+        this.$store.commit('setCaterid',row.caterid);
+        this.$store.commit('setIsHistory',false);
+        this.$router.push({ name: '宴会预订详情'});
+      },
     }
 
   }

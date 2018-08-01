@@ -65,21 +65,25 @@
             :label="item.label"
             :width="item.width"
             :sortable="item.sortable"
+            :align="item.align"
+            :header-align="item.headeralign"
             :show-overflow-tooltip="item.showTip" :key="item.prop">
           </el-table-column>
 
           <el-table-column
+            header-align="center"
             prop="number"
             label="数量"
             width=""
             sortable
             show-overflow-tooltip>
             <template slot-scope="scope">
-              <FormatInput class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></FormatInput>
+              <FormatInput style="text-align:right" class="el-input__inner" type="float"  v-model="scope.row.number" placeholder=""></FormatInput>
               <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
             </template>
           </el-table-column>
           <el-table-column
+            header-align="center"
             prop="remark"
             label="备注"
             width="170"
@@ -116,11 +120,11 @@
   import { mapGetters, mapMutations } from 'vuex'
   import methodinfo from '../../config/MethodConst.js'
    const fildes = [
-    {  prop: 'code', label:  '项目编号',width:'110',sortable:true,showTip: true},
-    {  prop: 'descript', label:  '宴会名称',width:'',sortable:true,showTip: true},
-    {  prop: 'helpcode', label:  '帮助码',width:'',sortable:true,showTip: true},
-    {  prop: 'unit', label:  '单位',width:'70',sortable:true ,showTip: true},
-    {  prop: 'price', label:  '单价',width:'',sortable:true,showTip: true },
+    {  prop: 'code', label:  '项目编号',width:'110',sortable:true,showTip: true,headeralign:'center'},
+    {  prop: 'descript', label:  '宴会名称',width:'',sortable:true,showTip: true,align:'left',headeralign:'center'},
+    {  prop: 'helpcode', label:  '帮助码',width:'',sortable:true,showTip: true,align:'left',headeralign:'center'},
+    {  prop: 'unit', label:  '单位',width:'70',sortable:true ,showTip: true,align:'left',headeralign:'center'},
+    {  prop: 'price', label:  '单价',width:'',sortable:true,showTip: true ,align:'right',headeralign:'center'},
 
   ]
 
@@ -429,7 +433,7 @@
     }
     #sel{
         padding-top: 0.5rem;
-        width: 300px;
+        width: 290px;
         float: left;
         .el-input--suffix .el-input__inner {
           padding-right: 30px;
@@ -441,7 +445,7 @@
     }
     #sel2{
       padding-top: 0.5rem;
-      width: 300px;
+      width: 260px;
       float: left;
       .el-input--suffix .el-input__inner {
         padding-right: 30px;
@@ -456,6 +460,9 @@
       th,td{
         padding: 0;
         border-color: #dee2e6;
+        /*text-align: center;*/
+      }
+      .el-table-column--selection{
         text-align: center;
       }
       .cell {

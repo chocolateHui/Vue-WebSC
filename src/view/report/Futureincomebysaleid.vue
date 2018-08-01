@@ -274,6 +274,7 @@
         if(val==="xxxx"||val===""){
           let data = new Date();
           var d = new Date()
+          d.setMonth(d.getMonth()+1);
           this.reportdate=[data,d];
           this. getreportdata();
         }

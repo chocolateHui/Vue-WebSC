@@ -53,7 +53,7 @@
         <li :class="{'proCurrent':ifproCurrent==proList.prono}" @click="getHistoryList(proList)" @dblclick="chooseType(proList)" v-for="proList in profileslist">
           <span class="nav1" :title="proList.proname">{{proList.proname}}</span>
           <span class="nav2" :title='proList.prono'>{{proList.prono}}</span>
-          <span class="nav3" :title='proList.txt'>{{proList.txt}}</span>
+          <span class="nav3" :title='proList.protype' v-for="type in ifunit" v-if="type.id==proList.protype">{{type.name}}</span>
           <span class="nav4" :title='proList.mobile'>{{proList.mobile}}</span>
           <span class="nav5" :title='proList.contacter'>{{proList.contacter}}</span>
           <span class="nav6" ></span>
