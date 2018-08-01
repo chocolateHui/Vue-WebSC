@@ -45,9 +45,8 @@
         <li class="nav3">类型</li>
         <li class="nav4">手机号</li>
         <li class="nav5">联系人</li>
-        <li class="nav6">签单人</li>
         <li class="nav7">销售员</li>
-        <li class="nav8">城市</li>
+        <li class="nav8">地址</li>
       </ol>
       <ul>
         <li :class="{'proCurrent':ifproCurrent==proList.prono}" @click="getHistoryList(proList)" @dblclick="chooseType(proList)" v-for="proList in profileslist">
@@ -56,9 +55,8 @@
           <span class="nav3" :title='proList.protype' v-for="type in ifunit" v-if="type.id==proList.protype">{{type.name}}</span>
           <span class="nav4" :title='proList.mobile'>{{proList.mobile}}</span>
           <span class="nav5" :title='proList.contacter'>{{proList.contacter}}</span>
-          <span class="nav6" ></span>
-          <span class="nav7" ></span>
-          <span class="nav8"></span>
+          <span class="nav7"  :title='proList.saleid'v-for="item in popSalesList" v-if="item.code==proList.saleid">{{item.name=='所有'?'':item.name}}</span>
+          <span class="nav8"  :title='proList.address'>{{proList.address}}</span>
         </li>
       </ul>
     </div>
@@ -257,8 +255,8 @@
       }
       .nav1{width: 120px;}
       .nav4{width: 129px;}
-      .nav3,.nav2,.nav5,.nav6,.nav7{width: 75px;}
-      .nav8{width: 85px;}
+      .nav3,.nav2,.nav5,.nav7{width: 75px;}
+      .nav8{width: 160px;}
       ul{ height: 135px; width: 710px;
         padding-left: 0;
         border: 1px solid #DBDCDC;

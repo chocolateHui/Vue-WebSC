@@ -335,13 +335,13 @@ $colorAll:#b4b4b6;
   .content{
     padding: 13px 20px;
     .content_left{
-      background:$colorF5;border: 1px solid $colorGray;height: 310px; width: 460px;
+      background:$colorF5;border: 1px solid $colorGray;height: 320px; width: 460px;
       ol{
         background:$colorF5;border-bottom: 1px solid $colorGray;color: #595757;font-size: 12px; height: 34px;line-height: 34px;
         li{
           float: left;
-          &:nth-child(1){margin-left: 33px;width: 112px; text-align: center;}
-          &:nth-child(2){width: 65px;}
+          &:nth-child(1){width: 134px; text-align: center;}
+          &:nth-child(2){width: 75px; text-align: center; }
           &:nth-child(3){width: 65px; text-align: center;}
           &:nth-child(4){width: 70px; text-align: center;}
           &:nth-child(5){width: 100px; text-align: center;}
@@ -357,7 +357,7 @@ $colorAll:#b4b4b6;
             float: left; display: inline-block;height: 18px;line-height: 18px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;
             &:nth-child(1){height: 9px;width: 15px;margin-left: 2px; margin-top: 5px;}
             &:nth-child(2){width: 112px; margin-left: 5px;}
-            &:nth-child(3){width: 75px; border-left: 1px solid $colorGray; padding: 0 5px;}
+            &:nth-child(3){width: 75px; border-left: 1px solid $colorGray; padding: 0 5px; text-align: center;}
             &:nth-child(4){width: 65px; border-left: 1px solid $colorGray; text-align: center;}
             &:nth-child(5){width: 70px; border-left: 1px solid $colorGray; text-align: center;}
             &:nth-child(6){width: 100px; border-left: 1px solid $colorGray; text-align: center; overflow: hidden;}
