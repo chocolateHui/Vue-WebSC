@@ -5,7 +5,7 @@
       <!-- User Interface controls -->
       <b-row style="margin-bottom:5px">
         <b-col sm="5" class="my-1">
-          <b-form-group horizontal label="报表日期" class="mb-0">
+          <b-input-group prepend="报表日期" id="sel">
           <el-date-picker
             v-model="reportdate"
             value-format="yyyy-MM-dd"
@@ -14,10 +14,10 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期">
           </el-date-picker>
-          </b-form-group>
+          </b-input-group>
         </b-col>
         <b-col sm="4" class="my-1">
-          <b-form-group horizontal label="销售员" class="mb-0">
+          <b-input-group prepend="销售员" id="sel">
             <el-select v-model="saleid" clearable filterable placeholder="请选择">
               <el-option
                 v-for="item in eloptions"
@@ -26,7 +26,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-          </b-form-group>
+          </b-input-group>
         </b-col>
         <b-col sm="3" class="my-1">
           <b-form-group class="mb-0">
