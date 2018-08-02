@@ -364,7 +364,6 @@
             this.$http.post(methodinfo.checkevent, event).then((response)=> {
               if (response.data.errorCode === '0') {
                 this.updateEvent();
-                this.$message('事务保存成功')
               }else if(response.data.errorCode === 'SC101000'){
                 this.$confirm(response.data.errorMessage).then(() =>{
                   this.updateEvent();
@@ -453,7 +452,7 @@
             this.staoptions = [{ code: '3', descript: '登记' }];
           }else if(this.expandevent.sta==="0"){
             this.staoptions = [{ code: '0', descript: '取消' }];
-            if(this.catering.sta==='0'){
+            if(this.catering.sta!=='0'){
               this.staoptions.push({ code: '1', descript: '预订' })
             }
           }else{
@@ -616,6 +615,7 @@
         }else {
           this.$store.commit('setEventstas','0');
         }
+
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch("getEventList");
         })

@@ -384,7 +384,8 @@
               label: {
                 normal: {
                   show: true,
-                  position: 'left'
+                  position: 'left',
+                  color:'black'
                 }
               },
               itemStyle: {

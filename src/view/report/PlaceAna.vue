@@ -285,5 +285,8 @@
     .el-table .success-row {
       background: #CCC;
     }
+    .el-input__icon {
+      line-height: 36px;
+    }
   }
 </style>

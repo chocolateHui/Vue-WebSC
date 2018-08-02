@@ -1,6 +1,6 @@
 <template>
   <div id="login">
-      <div class="logo"><img src="/static/SCweb-index-09.png"></div>
+      <div class="logo"><img src="/static/WestsoftRGB.png"></div>
       <b-container id="loginContainer">
         <b-row>
           <b-col sm="4" class="col-sm-offset-1">
