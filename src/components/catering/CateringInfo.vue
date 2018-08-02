@@ -537,7 +537,6 @@
         width: 75px;
         height: 65px;
         border-radius: 5px;
-        /*padding: 0 20px;*/
         margin-top: 6px;
         /*.StaFont{*/
           /*padding-top: 3px;*/

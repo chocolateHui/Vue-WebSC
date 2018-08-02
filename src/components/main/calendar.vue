@@ -598,7 +598,7 @@ export default {
     width: 100%;
     min-width:300px;
     background: #fff;
-    font-family: "PingFang SC","Hiragino Sans GB","STHeiti","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+    font-family: 'Open Sans',"Hiragino Sans GB","STHeiti","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
     user-select:none;
   }
 

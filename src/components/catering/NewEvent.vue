@@ -90,7 +90,7 @@
                       <b-form inline>
                         <FormatInput class="priceinput" type="float" maxlength="19" :readonly="priceread" v-model="newEvent.price"></FormatInput>
                         <span class="input-separator">/</span>
-                        <el-select @change="priceChange" v-model="eventItem" value-key="id" class="priceselect">
+                        <el-select @change="priceChange" v-model="eventItem" value-key="id" class="priceselect" clearable>
                           <el-option
                             v-for="item in priceoptions"
                             :key="item.id"
@@ -123,9 +123,8 @@
                 </b-row>
                 <b-row>
                   <b-col sm="6">
-                    <b-form-group label="布&#8195;&#8195;局&#8194;|" :label-cols="2"
-                                  horizontal>
-                      <el-select class="sub-select" v-model="newEvent.layout">
+                    <b-form-group label="布&#8195;&#8195;局&#8194;|" :label-cols="2" horizontal>
+                      <el-select class="sub-select" v-model="newEvent.layout" clearable>
                         <el-option
                           v-for="item in layoutoptions"
                           :key="item.code"
@@ -136,17 +135,15 @@
                     </b-form-group>
                   </b-col>
                   <b-col sm="6">
-                    <b-form-group label="门牌信息&#8194;|" :label-cols="2"
-                                  horizontal>
+                    <b-form-group label="门牌信息&#8194;|" :label-cols="2" horizontal>
                       <b-form-input  type="text" v-model="newEvent.infor" maxlength="100"></b-form-input>
                     </b-form-group>
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col sm="6">
-                    <b-form-group label="优先等级&#8194;|" :label-cols="2"
-                                  horizontal>
-                      <el-select class="sub-select" v-model="newEvent.degree">
+                    <b-form-group label="优先等级&#8194;|" :label-cols="2" horizontal>
+                      <el-select class="sub-select" v-model="newEvent.degree" clearable>
                         <el-option
                           v-for="item in degreeoptions"
                           :key="item.code"
