@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar id="navbar" style="background-color:#3375B8;padding: 0px 14px">
+    <b-navbar id="navbar">
       <b-navbar-brand class="b-class" style="float: left">
         <img src="/static/SCweb-55.png" class="d-inline-block align-middle" style="padding-bottom: 1px" alt="BV">
         宴会与销售系统
@@ -226,6 +226,8 @@
 </script>
 <style lang="scss">
   #navbar {
+    background-color:#3375B8;
+    padding: 0 14px;
     .nav-user-photo {
       margin: 0 auto;
       border-radius: 100%;
@@ -281,11 +283,18 @@
   }
 
   #aboutmodal{
+
     header{
-      background-color: #4C58A4;
+      background-color: #3375B8;
+    }
+    .modal-content{
+      background-color: transparent;
     }
     .modal-title,.close{
       color: white;
+    }
+    .modal-body{
+      background-color: white;
     }
     .p-style{
       margin: 0;

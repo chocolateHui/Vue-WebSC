@@ -586,6 +586,7 @@
       float: right;
       font-size: 20px;
       cursor: pointer;
+      color: white;
     }
     #eventmain{
       .fa{

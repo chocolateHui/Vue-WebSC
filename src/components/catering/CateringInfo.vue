@@ -254,7 +254,13 @@
       ]),
       minDate() {
         if(!this.isNew){
-          return new Date(this.localcatering.arr.replace(/-/g,"/"));
+          let arr = new Date(this.localcatering.arr.replace(/-/g,"/"))
+          let now =  new Date(new Date() - 24 * 60 * 60 * 1000)
+          if(arr > now){
+            return now
+          }else{
+            return arr
+          }
         }else{
           return new Date(new Date() - 24 * 60 * 60 * 1000)
         }
