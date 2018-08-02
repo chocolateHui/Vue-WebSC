@@ -30,7 +30,7 @@
         <b-col   class="maxwidth70 paddingright0 paddingleft15">
           <b-row  style="font-size: 12px">
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="编码" class="mb-0 bold">
+              <b-form-group horizontal label="编&#8194;&#8194;&#8194;&#8194;码" class="mb-0 bold">
                 <FormatInput   type="number" maxlength="3"
                   v-model="pcinfo.pccode"
                   required
@@ -89,7 +89,7 @@
               </b-form-group>
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="场地数" class="mb-0">
+              <b-form-group horizontal label="场&#8194;地&#8194;数" class="mb-0">
                 <b-form-input
                   type="text"
                   v-model="pcinfo.tables"
