@@ -22,14 +22,16 @@
       </b-form-group>
       <b-form-group horizontal :label-cols="5" label="宴会EO单模版">
         <b-row>
-          <b-col v-if="EOID.val !=''" sm="5" class="EOLabel rowCol">
-            <div>{{EOID.val.substr(8)}}</div>
-          </b-col>
           <b-col>
             <b-form-file ref="EOFile" v-model="file" placeholder="选择新模版" accept=".docx"></b-form-file>
           </b-col>
+        </b-row>
+        <b-row style="margin-top: 10px">
+          <b-col v-if="EOID.val !=''" sm="5" class="EOLabel rowCol">
+            <div>{{EOID.val.substr(8)}}</div>
+          </b-col>
           <b-col v-if="EOID.val !=''" sm="3" class="rowCol">
-            <b-button type="submit" variant="primary" @click="clearFile">清除模版</b-button>
+            <b-button type="submit" variant="primary" @click="clearFile" class="EQdel">清除模版</b-button>
           </b-col>
         </b-row>
       </b-form-group>
@@ -267,8 +269,8 @@
     .el-input__inner{
       height: 35px;
     }
-    .numinput,.el-select{
-      width: 30%;
+    .numinput,.el-select,.b-form-file{
+      width: 38%;
     }
     legend{
       text-align: right;
@@ -294,6 +296,11 @@
       background: #6FB3E0;
       border-color: #6FB3E0;
       margin-bottom: 0.5rem;
+    }
+    .EQdel{
+      background-color: #ffffff;
+      color: #6FB3E0;
+      border: none;
     }
   }
 </style>
