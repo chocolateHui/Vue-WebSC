@@ -279,7 +279,7 @@
     left:50px
   }
   .container{
-    padding-top:calc( (100vh - 300px)/2 )
+    padding-top:calc( (100vh - 350px)/2 )
   }
   .col-sm-offset-1{
     width: 375px;
