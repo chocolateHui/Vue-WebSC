@@ -690,6 +690,7 @@
       addplace:function () {
         let newplace =  Object.assign({},placemoren);
         newplace["classcode"] = this.currentRow.classcode;
+        newplace["type"] = this.currentRow.type;
         this.placedata.push(newplace);
         this.placesavetype = "update";
         this.$nextTick(function(){
@@ -740,6 +741,7 @@
               this.$message.error('项目描述不能为空');
               return
             }
+
             finnaldata.push(copydata[cd]);
           }
           this.saveplace(finnaldata);

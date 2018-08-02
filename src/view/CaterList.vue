@@ -435,7 +435,6 @@
           this.allSelected = false
         }
         let sta = newVal.slice(0).toString();
-        this.timechose = "";
         this.getNowcateringlist(sta);
 
       },

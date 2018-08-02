@@ -214,7 +214,7 @@
   const modifyshow = {  pccodedisabled: true, descriptdisabled:  false,descript1disabled:false,descript2disabled:false ,kinddesdisabled:true,tablesdisabled:true}
 
   const pccodemoren = {  pccode: "", descript:""  ,descript1:"",descript2:"" ,kinddes:"宴会",kind:"3",tables:"0"}
-  const placemoren = {  tableno: "", descript:""  ,descript1:"",descript2:"" ,layout:"",cover:"0",topplace:"",add:"T",layoutarr:[]}
+  const placemoren = {  tableno: "", descript:""  ,descript1:"",descript2:"" ,layout:"",cover:0,topplace:"",add:"T",layoutarr:[]}
 
   const pccodefildes = [
     {  prop: 'pccode', label:  '编号',width:'70',sortable:true },
