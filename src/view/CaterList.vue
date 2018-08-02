@@ -465,6 +465,9 @@
     .el-tabs--border-card>.el-tabs__header {
       background-color: rgba(0, 0, 0, 0.03);
     }
+    .btn-secondary:focus, .btn-secondary.focus {
+      box-shadow: none;
+    }
     .el-tabs__content{
       overflow: hidden!important;
       .row{ margin-right: 0px; margin-left: 0px;}
