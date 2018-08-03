@@ -435,7 +435,6 @@
           this.allSelected = false
         }
         let sta = newVal.slice(0).toString();
-        this.timechose = "";
         this.getNowcateringlist(sta);
 
       },
@@ -465,6 +464,9 @@
     padding: 0 1rem;
     .el-tabs--border-card>.el-tabs__header {
       background-color: rgba(0, 0, 0, 0.03);
+    }
+    .btn-secondary:focus, .btn-secondary.focus {
+      box-shadow: none;
     }
     .el-tabs__content{
       overflow: hidden!important;

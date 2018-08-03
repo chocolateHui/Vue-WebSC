@@ -54,41 +54,46 @@
                   header-align="center"
                   property="descript"
                   align="left"
+                  sortable
                   :show-overflow-tooltip=true
                   label="事务名称"
                   width="">
                 </el-table-column>
                 <el-table-column
+                  sortable
                   header-align="center"
                   property="codedes"
                   align="left"
                   :show-overflow-tooltip=true
                   label="场地描述"
-                  width="80">
+                  width="">
                 </el-table-column>
                 <el-table-column
+                  sortable
                   header-align="center"
                   property="typedes"
                   align="left"
                   :show-overflow-tooltip=true
                   label="类型"
-                  width="50">
+                  width="60">
                 </el-table-column>
                 <el-table-column
+                  sortable
                   header-align="center"
                   property="bdate"
                   align="center"
                   :show-overflow-tooltip=true
                   label="事务日期"
-                  width="84">
+                  width="">
                 </el-table-column>
                 <el-table-column
+                  sortable
                   header-align="center"
                   property="begintime"
                   align="center"
                   :show-overflow-tooltip=true
                   label="开始时间"
-                  width="70">
+                  width="">
                 </el-table-column>
               </el-table>
             </b-card>
@@ -107,6 +112,7 @@
                 :height="tableHeight"
                 style="width: 100%">
                 <el-table-column
+                  sortable
                   header-align="center"
                   property="name"
                   align="left"
@@ -115,6 +121,7 @@
                   width="">
                 </el-table-column>
                 <el-table-column
+                  sortable
                   header-align="center"
                   property="saleid_name"
                   align="left"
@@ -123,6 +130,7 @@
                   width="80">
                 </el-table-column>
                 <el-table-column
+                  sortable
                   :show-overflow-tooltip=true
                   align="center"
                   property="arr"
@@ -130,6 +138,7 @@
                   width="">
                 </el-table-column>
                 <el-table-column
+                  sortable
                   header-align="center"
                   property="remark"
                   align="left"
@@ -154,6 +163,7 @@
                 :height="tableHeight"
                 style="width: 100%">
                 <el-table-column
+                  sortable
                   header-align="center"
                   property="name"
                   align="left"
@@ -162,6 +172,7 @@
                   width="">
                 </el-table-column>
                 <el-table-column
+                  sortable
                   header-align="center"
                   property="saleid_name"
                   align="left"
@@ -221,7 +232,7 @@
       }
     },
     created(){
-      this.tableHeight = document.body.clientHeight-480
+      this.tableHeight = document.body.clientHeight-470
     },
     mounted() {
 
@@ -299,10 +310,10 @@
           },
           tooltip: {
             trigger: "item",
-            formatter: "{a}<br/>{b}:{c}({d}%)"
+            formatter: "{b}:{c}({d}%)"
           },
           legend: {
-            type: "scroll",
+            type: "plain",
             orient: "vertical",
             x: "left",
             left: 230,
@@ -657,6 +668,34 @@
 </script>
 <style lang="scss"  type="text/scss">
   #indexpanel{
+    table{
+      border-color: #dee2e6;
+      thead{
+        th,td{
+          background: linear-gradient(#fff, #F4F5F6);
+        }
+      }
+      th,td{
+        padding: 0;
+        border-color: #dee2e6;
+      }
+      .cell {
+        padding-left: 5px;
+        padding-right: 5px;
+        cursor: pointer;
+        .form-inline{
+          .btn:not(:last-child){ margin-right: 3px; }
+        }
+      }
+
+    }
+    .el-table .caret-wrapper{
+      width: 20px;
+    }
+    .el-table__expanded-cell{
+      padding: 5px!important;
+      box-shadow: 1px 5px 5px #dee2e6;
+    }
     .router-template2 {
       color: #000;
       font-size: 15px;
@@ -700,16 +739,12 @@
     }
     .cell {
       font-size:12px;
-      height: 20px;
     }
     .el-table{
       thead {
         th,td{
           background: linear-gradient(#fff, #F4F5F6);
         }
-      }
-      th,td {
-        padding: 6px 0
       }
     }
     .paddingright0{
