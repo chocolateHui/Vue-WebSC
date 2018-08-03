@@ -11,13 +11,13 @@
         </li>
         <li class="it" v-for="placeslist in placesinfo2" v-if="placeslistp==placeslist.tableno">
           <div v-for="infolist in placeslist.bdates" class="clearfix" v-if="infolist.bdate==timelistthing1">
-            <span class="n1" :data-id="infolist.caterid" @click="btnToEvent(infolist.caterid)">{{infolist.caterdes}}</span>
-            <span class="n5">{{infolist.eventdes}}</span>
-            <span class="n7" v-for="hlist in headListp" v-if="hlist.dataid==infolist.sta">{{hlist.name}}</span>
+            <span class="n1" :data-id="infolist.caterid" @click="btnToEvent(infolist.caterid)" :title="infolist.caterdes">{{infolist.caterdes}}</span>
+            <span class="n5" :title="infolist.eventdes">{{infolist.eventdes}}</span>
+            <span class="n7" v-for="hlist in headListp" v-if="hlist.dataid==infolist.sta" :title="infolist.name">{{hlist.name}}</span>
             <span class="n2">{{infolist.salename}}</span>
             <span class="n3">{{infolist.begintime.substring(11,16)}}~ {{infolist.endtime.substring(11,16)}}</span>
-            <span class="n4">{{infolist.cby}}</span>
-            <span class="n6" v-if="infolist.remark!=''&&infolist.remark">{{infolist.remark}}</span>
+            <span class="n4" :title="infolist.cby">{{infolist.cby}}</span>
+            <span class="n6" :title="infolist.remark" v-if="infolist.remark!=''&&infolist.remark">{{infolist.remark}}</span>
           </div>
         </li>
         <li></li>
