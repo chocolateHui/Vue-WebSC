@@ -24,7 +24,7 @@
         <el-table-column prop="code" label="编码" width="50" align="center">
           <template slot-scope="scope" >
             <FormatInput @change="rowChange(scope)" v-if="cat==='sc_event_type' | cat==='sc_event_degree'" :disabled="scope.row.add !== 'T'"  class="el-input__inner" type="number" :maxlength="codelength" v-model="scope.row.code" placeholder=""></FormatInput>
-            <FormatInput @change="rowChange(scope)" v-else :disabled="scope.row.add !== 'T'" :maxlength="codelength" v-model="scope.row.code" placeholder=""></FormatInput>
+            <FormatInput @change="rowChange(scope)" v-else :disabled="scope.row.add !== 'T'" :maxlength="codelength" type="nosepcial" v-model="scope.row.code" placeholder=""></FormatInput>
           </template>
         </el-table-column>
         <el-table-column prop="descript" label="中文描述" align="center">
