@@ -428,7 +428,7 @@ $colorAll:#b4b4b6;
   }
   .placelist_content{
     border-color: #cbd5df;border-style: solid; border-width: 0 1px 1px;
-    .placelist_content_head{background:#ebf1f3; padding:10px; overflow:hidden;
+    .placelist_content_head{padding:10px; overflow:hidden;
       ul{ float:left;
         li{ color:$colorBlack; cursor: pointer; float:left; font-size:14px; height: 24px; line-height:24px; margin-right:10px; margin-top: 2px;
           i{background: #F9F9F9;border: 1px solid #d4d4d4; cursor:pointer; height:22px;line-height: 22px; width:22px; float:left; margin-right:8px; text-align: center;}
@@ -452,7 +452,7 @@ $colorAll:#b4b4b6;
         padding-right: 5px;
       }
       .el-table thead tr th{
-        background: #F2F2F2!important;
+        background: linear-gradient(#fff, #F4F5F6);
         padding: 0 !important;
       }
       .el-table tr td{
