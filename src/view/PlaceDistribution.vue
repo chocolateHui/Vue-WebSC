@@ -43,7 +43,7 @@
               </ol>
             </li>
             <li v-for="item in formdata">
-              {{item.data}}<br/>{{item.dataLun}}
+              <i style="font-size: 16px;font-style: normal">{{item.data}}</i><br/><i style="font-size: 12px;font-style: normal">{{item.dataLun}}</i>
             </li>
           </ul>
         </div>
@@ -61,19 +61,21 @@
                  <strong  v-for="(listc,indexc) in tolist.places" style="margin-left: -3px" v-if="indexc==3" :title="listc.toplacedes">{{listc.toplacedes}}</strong>
                </div>
             </li>
-            <li v-for="(timelist,index2) in timeList" @mouseenter="thingsShow(index1,index2,timelist,$event)" @mouseleave="thingsHide" @click="addThings(timelist,placeitem.tableno)">
-              <h1 v-for="item in timeAll">
-                <label>{{item.time}}</label>
-                <p>
-                   <span v-for="items in item.content">
-                     <span v-for="infolist in placeitem.bdates" v-if="timelist==infolist.bdate&&(iftypelist||typeList.indexOf(infolist.eventtype)!=-1)&&((items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))">
-                       <span v-if="colorlist.dataid==infolist.sta" v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]"></span>
-                     </span>
-                  </span>
-                </p>
-              </h1>
-              <div class="todayThings" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex===index1+'-'+index2}">
-                <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="timelist" @addThings="addThings"></today-things>
+            <li v-for="(timelist,index2) in timeList" @mouseenter="thingsShow(index1,index2,timelist,$event)" @mouseleave="thingsHide"  @click="addThings(timelist,placeitem.tableno)">
+              <div>
+                <h1 v-for="item in timeAll">
+                  <label>{{item.time}}</label>
+                  <p>
+                     <span v-for="items in item.content">
+                       <span v-for="infolist in placeitem.bdates" v-if="timelist==infolist.bdate&&(iftypelist||typeList.indexOf(infolist.eventtype)!=-1)&&((items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))">
+                         <span v-if="colorlist.dataid==infolist.sta" v-for="colorlist in headList" class="bgtime" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]"></span>
+                       </span>
+                    </span>
+                  </p>
+                </h1>
+              </div>
+                <div class="todayThings" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex===index1+'-'+index2}">
+                <today-things @hideThing="hideThing" :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="timelist" @addThings="addThings"></today-things>
               </div>
             </li>
           </ul>
@@ -108,13 +110,14 @@
               </div>
             </li>
             <li class="nav2"  @mouseenter="thingsShow(index1,'0',datatime.substring(0,10),$event)" @mouseleave="thingsHide" @click="addThings(datatime.substring(0,10),placeitem.tableno)">
-              <span v-for="items in timeToday">
+               <span v-for="items in timeToday">
                  <span v-for="infolist in placeitem.bdates" v-if="(iftypelist||typeList.indexOf(infolist.eventtype)!=-1)&&((items.dataid>infolist.begintime.substring(11,13)&&items.dataid<infolist.endtime.substring(11,13)) || ( items.dataid==infolist.begintime.substring(11,13)&& ((infolist.begintime.substring(14,16)<30)||(infolist.begintime.substring(14,16)>=30&&items.datait=='2')) ) ||(items.dataid==infolist.endtime.substring(11,13)&&(infolist.endtime.substring(14,16)>0&&infolist.endtime.substring(14,16)<=30)&&items.datait=='1'))">
                    <span v-if="colorlist.dataid==infolist.sta" v-for="colorlist in headList" class="bgtime2" :class="[colorlist.liStyle, { 'borderleft': (items.dataid==12||items.dataid==18)&&infolist.eventtype=='POS'}]"></span>
                  </span>
               </span>
+
               <div class="todayThings clearfix" :class="{'thingsLeft':isleft,'thingsRight':!isleft,'thingsBottom':isBottom,'thingsTop':!isBottom,'ifTodayThings':activeIndex1==index1}">
-                <today-things :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="datatime.substring(0,10)" @addThings="addThings"></today-things>
+                <today-things @hideThing="hideThing" :ifadd="ifadd" :headListp="headList" :placeslistp="placeitem.tableno" :timelistthing1="datatime.substring(0,10)" @addThings="addThings"></today-things>
                </div>
             </li>
           </ul>
@@ -140,7 +143,7 @@
     name: "place-distribution",
     data(){
       return{
-        ifToday:'查看今天',
+        ifToday:'查看单天',
         todayNow:false,//今天和七天切换
         headList: [
           { liStyle: 'inquiries',iStyle: 'font_inquiries', name: '问询',checked:true,dataid:'Q'},
@@ -207,6 +210,7 @@
         placesinfo1:[],
         placeSta:[],
         ifmore:false,
+        thingunclick:true
       }
     },
     filters:{
@@ -447,26 +451,36 @@
       closeChoose:function () {
         this.$refs.myModalchoose.hide()
       },
+      hideThing(){
+        this.activeIndex=-1
+        this.activeIndex1=-1
+        this.thingunclick=false
+        this.$router.push({ name: '宴会预订详情'});
+      },
       addThings:function (time,addr) {
-        if(new Date(this.today())<=new Date(time)){
-          this.newChooseTime=time
-          var newParam={
-            begindate:time,
-            enddate:time,
-            flag:'T',
-            sta:'1,2,3,W,Q',
-          }
-          var _this=this
-          this.$store.dispatch('encrypttoken').then(() => {
-            this.$store.dispatch('getcateringlist',newParam)
-          })
-          for(var t=0;t<this.placeslist.length;t++){
-            if(addr==this.placeslist[t].tableno){
-              this.newChooseAddr=this.placeslist[t].descript
-              this.newChooseAddrNo=this.placeslist[t].tableno
+        if(this.thingunclick==false){
+          this.thingunclick=true
+        }else{
+          if(new Date(this.today())<=new Date(time)){
+            this.newChooseTime=time
+            var newParam={
+              begindate:time,
+              enddate:time,
+              flag:'T',
+              sta:'1,2,3,W,Q',
             }
+            var _this=this
+            this.$store.dispatch('encrypttoken').then(() => {
+              this.$store.dispatch('getcateringlist',newParam)
+            })
+            for(var t=0;t<this.placeslist.length;t++){
+              if(addr==this.placeslist[t].tableno){
+                this.newChooseAddr=this.placeslist[t].descript
+                this.newChooseAddrNo=this.placeslist[t].tableno
+              }
+            }
+            this.$refs.myModalchoose.show()
           }
-          this.$refs.myModalchoose.show()
         }
       },
       typeCheckAll:function () {
@@ -624,7 +638,7 @@
       chooseDay: function () {
         loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
         this.flagdata=0
-        if(this.ifToday=="查看今天"){
+        if(this.ifToday=="查看单天"){
           this.ifToday="最近七天"
           this.todayNow=true
           this.datatime=this.datatime.substring(0,10)
@@ -637,7 +651,7 @@
           }
           this.getplaceusedinfo2()
         }else{
-          this.ifToday="查看今天"
+          this.ifToday="查看单天"
           this.todayNow=false
           this.datatime=this.datatime.substring(0,10)+" 至 "+this.adddateday(this.datatime.substring(0,10),6)
           this.dataNow=this.datatime.substring(0,10)

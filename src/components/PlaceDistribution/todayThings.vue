@@ -44,12 +44,12 @@
         this.timenow=this.today()
         this.placesinfo2 = Object.assign({},this.placesinfo);
       },
-      props:['timelistthing1','placeslistp','headListp'],
+      props:['timelistthing1','placeslistp','headListp','activeIndex'],
       methods:{
         btnToEvent:function (cater) {
           this.$store.commit('setCaterid',cater);
           this.$store.commit('setIsHistory',false);
-          this.$router.push({ name: '宴会预订详情'});
+          this.$emit('hideThing')
         },
         addThings:function () {
           this.$emit('addThings',this.timelistthing1,this.placeslistp)
