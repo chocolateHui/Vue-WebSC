@@ -68,7 +68,7 @@
     {  prop: 'degreedes', label:  '优先级',width:'70',sortable:true,showTip: true},
     {  prop: 'attnum', label:  '出席数',width:'70',sortable:true,showTip: true },
     {  prop: 'minnum', label:  '保底数',width:'70',sortable:true,showTip: true},
-    {  prop: 'catername', label:  '宴会名称',width:'80',sortable:false,showTip: true },
+    {  prop: 'catername', label:  '宴会名称',width:'',sortable:false,showTip: true },
   ]
     export default {
         name: "place-distribution-single",
