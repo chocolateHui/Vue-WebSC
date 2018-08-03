@@ -90,13 +90,12 @@
                       <b-form inline>
                         <FormatInput class="priceinput" type="float" maxlength="19" :readonly="priceread" v-model="newEvent.price"></FormatInput>
                         <span class="input-separator">/</span>
-                        <el-select @change="priceChange" v-model="newEvent.unit" class="priceselect">
+                        <el-select @change="priceChange" v-model="eventItem" value-key="id" class="priceselect" clearable>
                           <el-option
                             v-for="item in priceoptions"
                             :key="item.id"
                             :label="item.descript"
-                            :value="item"
-                            :value-key="item.id">
+                            :value="item">
                             <span style="float: left">{{ item.descript }}</span>
                             <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.price }}</span>
                           </el-option>
@@ -124,9 +123,8 @@
                 </b-row>
                 <b-row>
                   <b-col sm="6">
-                    <b-form-group label="布&#8195;&#8195;局&#8194;|" :label-cols="2"
-                                  horizontal>
-                      <el-select class="sub-select" v-model="newEvent.layout">
+                    <b-form-group label="布&#8195;&#8195;局&#8194;|" :label-cols="2" horizontal>
+                      <el-select class="sub-select" v-model="newEvent.layout" clearable>
                         <el-option
                           v-for="item in layoutoptions"
                           :key="item.code"
@@ -137,17 +135,15 @@
                     </b-form-group>
                   </b-col>
                   <b-col sm="6">
-                    <b-form-group label="门牌信息&#8194;|" :label-cols="2"
-                                  horizontal>
+                    <b-form-group label="门牌信息&#8194;|" :label-cols="2" horizontal>
                       <b-form-input  type="text" v-model="newEvent.infor" maxlength="100"></b-form-input>
                     </b-form-group>
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col sm="6">
-                    <b-form-group label="优先等级&#8194;|" :label-cols="2"
-                                  horizontal>
-                      <el-select class="sub-select" v-model="newEvent.degree">
+                    <b-form-group label="优先等级&#8194;|" :label-cols="2" horizontal>
+                      <el-select class="sub-select" v-model="newEvent.degree" clearable>
                         <el-option
                           v-for="item in degreeoptions"
                           :key="item.code"
@@ -234,7 +230,8 @@
           { code: 'Q', descript: '问询' },
           { code: '1', descript: '预订' }
         ],
-        toggleclass:'fa-chevron-up',
+        toggleclass:'fa-angle-up',
+        eventItem:{},
         isClear:false,
         priceread:true,
         editable:false,
@@ -293,6 +290,7 @@
       },
       initEventParam(){
         let eventparam = this.newEventParam;
+        eventparam.caterid = this.caterid;
         this.eventbdate= [];
         this.eventtime= [];
         this.eventbdate.push(eventparam.begindate,eventparam.enddate)
@@ -516,6 +514,8 @@
       },
       catering(val,oldval){
         if(val.hasOwnProperty('name')&&!this.isNew){
+          console.log(val.caterid)
+          console.log(this.newEvent.caterid)
           if(val.caterid!==this.newEvent.caterid){
             this.clearData();
           }
@@ -586,6 +586,7 @@
       float: right;
       font-size: 20px;
       cursor: pointer;
+      color: white;
     }
     #eventmain{
       .fa{

@@ -1,811 +1,724 @@
 <template>
-    <div class="calendar">
-        <div class="calendar-tools">
-            <span class="calendar-prev" @click="prev">
-                <svg width="20" height="20" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <g class="transform-group">
-                    <g transform="scale(0.015625, 0.015625)">
-                        <path d="M671.968 912c-12.288 0-24.576-4.672-33.952-14.048L286.048 545.984c-18.752-18.72-18.752-49.12 0-67.872l351.968-352c18.752-18.752 49.12-18.752 67.872 0 18.752 18.72 18.752 49.12 0 67.872l-318.016 318.048 318.016 318.016c18.752 18.752 18.752 49.12 0 67.872C696.544 907.328 684.256 912 671.968 912z" fill="#5e7a88"></path>
-                    </g>
-                </g>
-                </svg>
-            </span>
-            <span class="calendar-next"  @click="next">
-                <svg width="20" height="20" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <g class="transform-group">
-                    <g transform="scale(0.015625, 0.015625)">
-                        <path d="M761.056 532.128c0.512-0.992 1.344-1.824 1.792-2.848 8.8-18.304 5.92-40.704-9.664-55.424L399.936 139.744c-19.264-18.208-49.632-17.344-67.872 1.888-18.208 19.264-17.376 49.632 1.888 67.872l316.96 299.84-315.712 304.288c-19.072 18.4-19.648 48.768-1.248 67.872 9.408 9.792 21.984 14.688 34.56 14.688 12 0 24-4.48 33.312-13.44l350.048-337.376c0.672-0.672 0.928-1.6 1.6-2.304 0.512-0.48 1.056-0.832 1.568-1.344C757.76 538.88 759.2 535.392 761.056 532.128z" fill="#5e7a88"></path>
-                    </g>
-                </g>
-                </svg>
-            </span>
-            <div class="calendar-info" @click.stop="changeYear">
-                <!-- {{monthString}} -->
-                <div class="month">
-                    <div class="month-inner" :style="{'top':-(this.month*20)+'px'}">
-                        <span v-for="m in months">{{m}}</span>
-                    </div>
-                </div>
-                <div class="year">{{year}}</div>
+  <b-container id="caterinfo" fluid>
+    <b-card header-tag="header">
+      <b-row slot="header">
+        <b-col sm="1" class="my-1 catertitle">
+          <span class="title">宴会信息</span>
+        </b-col>
+        <b-col sm="2" class="my-1">
+          <span v-if="!isNew" class="title">订单号:{{catering.caterid}}</span>
+        </b-col>
+        <b-col sm="9" class="my-1 titleInfo">
+          <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 宴会名称:&#8195;{{catering.name}}</span>
+          <span v-if="!isNew" class="title" v-show="caterclose">&#8195;| 销售员:&#8195;{{localcatering.saleid_name}}</span>
+        </b-col>
+        <b-col class="my-1 icondiv">
+          <a v-if="!isNew">
+            <el-tooltip class="item" effect="dark" content="日志" placement="top">
+              <i @click="showLog" class="fa fa-sticky-note titleIcon"></i>
+            </el-tooltip>
+          </a>
+          <a v-if="!isNew">
+            <el-tooltip class="item" effect="dark" content="EO单" placement="top">
+              <i @click="EOShare" class="fa fa-print titleIcon"></i>
+            </el-tooltip>
+          </a>
+          <a v-if="!isNew">
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+              <i @click="refreshData" class="fa fa-refresh titleIcon"></i>
+            </el-tooltip>
+          </a>
+          <a>
+            <i v-b-toggle="'cater'" @click="toggleclick" class="fa toggleclass" :class="toggleclass"></i>
+          </a>
+        </b-col>
+      </b-row>
+      <b-collapse visible id="cater">
+        <b-row id="catermain">
+          <b-col sm="1" class="my-1">
+            <div class="Sta">
+              <img :src="staFont"/>
+              <!--<label class="StaFont">{{staFont}}</label>-->
             </div>
-        </div>
-        <table cellpadding="5">
-        <thead>
-            <tr>
-                <td v-for="week in weeks" class="week">{{week}}</td>
-            </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(day,k1) in days" style="{'animation-delay',(k1*30)+'ms'}">
-            <td v-for="(child,k2) in day" :class="{'selected':child.selected,'disabled':child.disabled}">
-                <span :class="{'red':k2==0||k2==6||((child.isLunarFestival||child.isGregorianFestival) && lunar)}">{{child.day}}</span>
-                <div class="text" v-if="child.eventName!=undefined">{{child.eventName}}</div>
-                <div class="text" :class="{'isLunarFestival':child.isLunarFestival,'isGregorianFestival':child.isGregorianFestival}" v-if="lunar">{{child.lunar}}</div>
-            </td>
-        </tr>
-        </tbody>
-        </table>
+          </b-col>
+          <b-col sm="3" class="my-1">
+            <b-form>
+              <b-form-group class="required" label="宴会名称:" horizontal>
+                <b-form-input v-model="localcatering.name" type="text" maxlength="50"></b-form-input>
+              </b-form-group>
+              <b-form-group class="required" label="抵离日期:" horizontal>
+                <el-date-picker
+                  v-model="caterdate"
+                  value-format="yyyy-MM-dd"
+                  type="daterange"
+                  :clearable="editable"
+                  :editable="editable"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  :picker-options="datepickerOptions">
+                </el-date-picker>
+              </b-form-group>
+            </b-form>
+          </b-col>
+          <b-col sm="3" class="my-1">
+            <b-form>
+              <b-form-group label="联系人:" horizontal>
+                <b-form-input  type="text" v-model="localcatering.contactor" maxlength="10"></b-form-input>
+              </b-form-group>
+              <b-form-group label="销售员:" horizontal>
+                <el-select v-model="sale" value-key="code" clearable filterable placeholder="请输入销售员名称">
+                  <el-option
+                    v-for="item in saleoptions"
+                    :key="item.code"
+                    :label="item.name"
+                    :value="item">
+                    <span style="float: left">{{ item.name }}</span>
+                    <span style="float: right;color: #8492a6; font-size: 0.9rem">{{ item.code }}</span>
+                  </el-option>
+                </el-select>
+              </b-form-group>
+            </b-form>
+          </b-col>
+          <b-col sm="3" class="my-1">
+            <b-form>
+              <b-form-group label="联系电话:" horizontal>
+                <FormatInput type="number" maxlength="15" v-model="localcatering.contact_mobile"></FormatInput>
+              </b-form-group>
+              <b-form-group label="宴会类型:" horizontal>
+                <el-select v-model="localcatering.type" placeholder="请选择">
+                  <el-option
+                    v-for="item in typeOptions"
+                    :key="item.code"
+                    :label="item.descript"
+                    :value="item.code">
+                  </el-option>
+                </el-select>
+              </b-form-group>
+            </b-form>
+          </b-col>
+          <b-col sm="2" class="my-1" v-if="!isHistory">
+            <div class="btndiv" v-if="!isNew">
+              <div>
+                  <transition @before-enter="btnenter" @after-leave="btnleave" name="fade" mode="out-in">
+                    <b-button v-if="catersta==='Q'||catersta==='0'" key="reserve" class="reservebtn" :class="btnWidth" @click="updateCateringSta('1')">预订</b-button>
+                    <b-button v-if="catersta==='1'" key="confirm" class="confirmbtn" @click="updateCateringSta('2')">确认</b-button>
+                  </transition>
+                  <b-button v-if="catersta!=='0'" key="cancel" class="cancelbtn" :class="btnWidth" @click="cancelCatering">取消</b-button>
+              </div>
+              <div>
+                <b-button v-if="catersta!=='0'" class="savebtn" @click="updateCatering">保存</b-button>
+              </div>
+            </div>
+            <div class="btndiv" v-if="isNew">
+              <b-button class="savebtn newbtn" @click="saveCatering">保存</b-button>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row id = "catersub">
+          <b-row style="width: 100%">
+            <b-form-group class="numinput" :label-cols="6" label="房&#8195;&#8195;数"
+                          horizontal>
+              <FormatInput type="number" maxlength="5" v-model="localcatering.rmnum"></FormatInput>
+            </b-form-group>
+            <b-form-group class="numinput" :label-cols="6" label="入住人数"
+                          horizontal>
+              <FormatInput type="number" maxlength="5" v-model="localcatering.attends"></FormatInput>
+            </b-form-group>
+            <b-form-group class="normalput" :label-cols="4" label="协议单位" horizontal>
+              <el-input @click.native="profileShow" @clear="profileClear" class="modalinput" clearable readonly v-model="localcatering.cusno_des">
+                <i slot="prefix" class="fa fa-list"></i>
+              </el-input>
+            </b-form-group>
+            <b-form-group class="normalput" :label-cols="4" label="跟进时间" horizontal>
+              <el-date-picker
+                v-model="localcatering.join_date"
+                value-format="yyyy-MM-dd"
+                type="date"
+                :editable="editable"
+                :picker-options="datepickerOptions">
+              </el-date-picker>
+            </b-form-group>
+            <b-form-group class="normalput" :label-cols="4" label="确认期限"
+                          horizontal>
+              <el-date-picker
+                v-model="localcatering.confirm_date"
+                value-format="yyyy-MM-dd"
+                type="date"
+                :editable="editable"
+                :picker-options="datepickerOptions">
+              </el-date-picker>
+            </b-form-group>
+            <b-form-group class="normalput" label="现场联系人" :label-cols="5" horizontal>
+              <b-form-input type="text" v-model="localcatering.contacter" maxlength="10"></b-form-input>
+            </b-form-group>
+          </b-row>
+          <b-row style="width: 100%">
+            <b-form-group class="longinput" :label-cols="1" label="迎&#8194;宾&#8194;词" horizontal>
+              <b-form-input  type="text" v-model="localcatering.subject" maxlength="100"></b-form-input>
+            </b-form-group>
+          </b-row>
+          <b-row style="width: 100%">
+            <b-form-group class="longinput" :label-cols="1" label="备&#8195;&#8195;注" horizontal>
+              <b-form-input  type="text" v-model="localcatering.remark" maxlength="200"></b-form-input>
+            </b-form-group>
+          </b-row>
+        </b-row>
+      </b-collapse>
+    </b-card>
 
-        <div class="calendar-years" :class="{'show':yearsShow}">
-            <span v-for="y in years" @click.stop="selectYear(y)" :class="{'active':y==year}">{{y}}</span>
-        </div>
+    <b-modal @shown="reasonShown" id="caterReasonmodal" ref="caterReasonmodal" title="理由列表" hide-footer>
+      <Reason ref="caterReason" @reasonConfirm="reasonConfirm"></Reason>
+    </b-modal>
 
-    </div>
+    <el-dialog title="宾客档案查询" id="profilemodal" ref="profilemodal" :visible.sync="poparch">
+      <pop-archives ref="refarch" @btnArchClose="btnArchClose"  @btnArchOk="btnArchOk" @btnChooseName="btnChooseName" :ifunit="profileType"></pop-archives>
+    </el-dialog>
+
+    <b-modal id="remarkmodal" ref="remarkmodal" size="lg" title="宴会备注" hide-footer>
+      <remark></remark>
+    </b-modal>
+
+    <b-modal id="EOSharemodal" ref="EOSharemodal" title="宴会EO单" hide-footer>
+      <EOShare></EOShare>
+    </b-modal>
+  </b-container>
 </template>
-
 <script>
-import calendar from '../../common/calendar.js'
-export default {
-    props: {
-        // 多选模式
-        multi: {
-            type: Boolean,
-            default: false
-        },
-        // 范围模式
-        range:{
-            type: Boolean,
-            default: false
-        },
-        // 默认日期
-        value: {
-            type: Array,
-            default: function(){
-                return []
-            }
-        },
-        // 开始选择日期
-        begin:  {
-            type: Array,
-            default: function(){
-                return []
-            }
-        },
-        // 结束选择日期
-        end:  {
-            type: Array,
-            default: function(){
-                return []
-            }
-        },
+  // 框架相关
+  import vue from 'vue'
+  import { mapGetters, mapMutations } from 'vuex'
+  import 'font-awesome/css/font-awesome.css'
+  import methodinfo from '../../config/MethodConst.js'
+  import {dateValid,formatDate} from '../../common/date'
+  import archivesMixins from './../SalesActivities/archivesMixins'
+  // 组件和参数
+  import popArchives from '../SalesActivities/popArchives.vue'
+  import EOShare from '../catering/EOShare.vue'
 
-        // 是否小于10补零
-        zero:{
-            type: Boolean,
-            default: false
-        },
-        // 屏蔽的日期
-        disabled:{
-            type: Array,
-            default: function(){
-                return []
-            }
-        },
-        // 是否显示农历
-        lunar: {
-            type: Boolean,
-            default: false
-        },
+  const staPath = {
+    Q:"../../../static/SC-Q.png",
+    R:"../../../static/SC-R.png",
+    C:"../../../static/SC-C.png",
+    X:"../../../static/SC-X.png",
+    I:"../../../static/SC-I.png",
+    O:"../../../static/SC-O.png",
+  }
 
-        // 自定义星期名称
-        weeks: {
-            type: Array,
-            default:function(){
-                return window.navigator.language.toLowerCase() == "zh-cn"?['日', '一', '二', '三', '四', '五', '六']:['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-            }
+  export default {
+    name: 'CateringInfo',
+    data () {
+      return {
+        caterdate:[],
+        toggleclass:'fa-angle-up ',
+        caterclose:false,
+        editable:false,
+        localcatering:{
+          type:'1'
         },
-        // 自定义月份
-        months:{
-            type: Array,
-            default:function(){
-                return window.navigator.language.toLowerCase() == "zh-cn"?['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']:['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-            }
-        },
-        // 自定义事件
-        events:  {
-            type: Object,
-            default: function(){
-                return {}
-            }
-        },
+        profileType:[
+        {name:'公司',id:'C'},
+        {name:'旅行社',id:'A'}
+        ],
+        //宴会类型
+        typeOptions: [
+          { code: '1', descript: '宴席' },
+          { code: '2', descript: '会议' },
+          { code: '3', descript: '活动' },
+          { code: '4', descript: '其他' }
+        ],
+        //销售员列表
+        saleoptions:[],
+        sale:{},
+        btnWidth:'halfbtn-width',
+        dialogVisible:false,
+        logkey:'',
+        isClear:false
+      }
     },
-    data() {
-        return {
-            years:[],
-            yearsShow:false,
-            year: 0,
-            month: 0,
-            day: 0,
-            days: [],
-            multiDays:[],
-            today: [],
-            festival:{
-                lunar:{
-                    "1-1":"春节",
-                    "1-15":"元宵节",
-                    "2-2":"龙头节",
-                    "5-5":"端午节",
-                    "7-7":"七夕节",
-                    "7-15":"中元节",
-                    "8-15":"中秋节",
-                    "9-9":"重阳节",
-                    "10-1":"寒衣节",
-                    "10-15":"下元节",
-                    "12-8":"腊八节",
-                    "12-23":"祭灶节",
-                },
-                gregorian:{
-                    "1-1":"元旦",
-                    "2-14":"情人节",
-                    "3-8":"妇女节",
-                    "3-12":"植树节",
-                    "4-5":"清明节",
-                    "5-1":"劳动节",
-                    "5-4":"青年节",
-                    "6-1":"儿童节",
-                    "7-1":"建党节",
-                    "8-1":"建军节",
-                    "9-10":"教师节",
-                    "10-1":"国庆节",
-                    "12-24":"平安夜",
-                    "12-25":"圣诞节",
-                },
-            },
-            rangeBegin:[],
-            rangeEnd:[],
+    props:{
+      isNew :{
+        type:Boolean,
+        default:false
+      },
+    },
+    mixins: [archivesMixins],
+    computed: {
+      ...mapGetters([
+        'caterid',
+        'catersta',
+        'saleid',
+        'catering',
+        'salelist',
+        'newCateringParam',
+        'isHistory'
+      ]),
+      minDate() {
+        if(!this.isNew){
+          let arr = new Date(this.localcatering.arr.replace(/-/g,"/"))
+          let now =  new Date(new Date() - 24 * 60 * 60 * 1000)
+          if(arr > now){
+            return now
+          }else{
+            return arr
+          }
+        }else{
+          return new Date(new Date() - 24 * 60 * 60 * 1000)
         }
-    },
-    watch:{
-        events(){
-            this.render(this.year,this.month)
-        },
-        value(){
-            this.init();
+      },
+      datepickerOptions() {
+       return {
+         disabledDate:this.getDisableDate
+       }
+      },
+      staFont(){
+        let val = this.catersta;
+        if(val==='1'){
+          return staPath.R;
+        } else if(val==='2'){
+          return staPath.C;
+        } else if(val==='3'){
+          return staPath.I;
+        } else if(val==='0'){
+          return staPath.X;
+        } else if(val==='Q'){
+          return staPath.Q;
+        } else{
+          return staPath.O;
         }
-    },
-    mounted() {
-        this.init()
+      }
     },
     methods: {
-        init(){
-            let now = new Date();
-            this.year = now.getFullYear()
-            this.month = now.getMonth()
-            this.day = now.getDate()
-            if (this.value.length>0) {
-                if (this.range) { //范围
-                    this.year = parseInt(this.value[0][0])
-                    this.month = parseInt(this.value[0][1]) - 1
-                    this.day = parseInt(this.value[0][2])
+      saveCatering(){
+        if(!this.localcatering.name){
+          this.$alert("宴会名称不允许为空!")
+          return;
+        }else if(!this.caterdate[0]){
+          this.$alert("抵离日期不允许为空!")
+          return;
+        }
+        this.localcatering.sta = this.catersta;
+        this.localcatering.arr = this.caterdate[0];
+        this.localcatering.dep = this.caterdate[1];
+        this.localcatering.saleid = this.sale.code;
+        this.localcatering.saleid_name = this.sale.name;
+        this.$emit('saveCatering',this.localcatering);
+      },
+      updateCatering(){
+        if(this.catersta==='0'){
+          this.$alert("请先恢复预订再进行保存!")
+          return;
+        }
+        if(!this.localcatering.name){
+          this.$alert("宴会名称不允许为空!")
+          return;
+        }
+        this.localcatering.arr = this.caterdate[0];
+        this.localcatering.dep = this.caterdate[1];
+        this.localcatering.saleid = this.sale.code;
+        this.localcatering.saleid_name = this.sale.name;
+        let now = new Date(new Date() - 24 * 60 * 60 * 1000);
+        if(dateValid(this.caterdate[1],now.toString())){
+          this.$alert("宴会离开日期不能早于当前日期!")
+          return;
+        }
 
-                    let year2 = parseInt(this.value[1][0])
-                    let month2 = parseInt(this.value[1][1]) - 1
-                    let day2 = parseInt(this.value[1][2])
-
-                    this.rangeBegin = [this.year, this.month,this.day]
-                    this.rangeEnd = [year2, month2 , day2]
-                }else if(this.multi){//多选
-                    this.multiDays=this.value;
-                    this.year = parseInt(this.value[0][0])
-                    this.month = parseInt(this.value[0][1]) - 1
-                    this.day = parseInt(this.value[0][2])
-                }else{ //单选
-                    this.year = parseInt(this.value[0])
-                    this.month = parseInt(this.value[1]) - 1
-                    this.day = parseInt(this.value[2])
-                }
-            }
-            this.render(this.year, this.month)
-        },
-        // 渲染日期
-        render(y, m) {
-            let firstDayOfMonth = new Date(y, m, 1).getDay()         //当月第一天
-            let lastDateOfMonth = new Date(y, m + 1, 0).getDate()    //当月最后一天
-            let lastDayOfLastMonth = new Date(y, m, 0).getDate()     //最后一月的最后一天
-            this.year = y
-            let seletSplit = this.value
-            let i, line = 0,temp = [],nextMonthPushDays = 1
-            for (i = 1; i <= lastDateOfMonth; i++) {
-                let day = new Date(y, m, i).getDay() //返回星期几（0～6）
-                let k
-                // 第一行
-                if (day == 0) {
-                    temp[line] = []
-                } else if (i == 1) {
-                    temp[line] = []
-                    k = lastDayOfLastMonth - firstDayOfMonth + 1
-                    for (let j = 0; j < firstDayOfMonth; j++) {
-                        // console.log("第一行",lunarYear,lunarMonth,lunarValue,lunarInfo)
-                        temp[line].push(Object.assign(
-                            {day: k,disabled: true},
-                            this.getLunarInfo(this.computedPrevYear(),this.computedPrevMonth(true),k),
-                            this.getEvents(this.computedPrevYear(),this.computedPrevMonth(true),k),
-                        ))
-                        k++;
-                    }
-                }
-
-                if (this.range) { // 范围
-                    // console.log("日期范围",this.getLunarInfo(this.year,this.month+1,i))
-                    let options = Object.assign(
-                        {day: i},
-                        this.getLunarInfo(this.year,this.month+1,i),
-                        this.getEvents(this.year,this.month+1,i),
-                     )
-                    if (this.rangeBegin.length > 0) {
-                        let beginTime = Number(new Date(this.rangeBegin[0], this.rangeBegin[1], this.rangeBegin[2]))
-                        let endTime = Number(new Date(this.rangeEnd[0], this.rangeEnd[1], this.rangeEnd[2]))
-                        let stepTime = Number(new Date(this.year, this.month, i))
-                        if (beginTime <= stepTime && endTime >= stepTime) {
-                            options.selected = true
-                        }
-                    }
-                    if (this.begin.length>0) {
-                        let beginTime = Number(new Date(parseInt(this.begin[0]),parseInt(this.begin[1]) - 1,parseInt(this.begin[2])))
-                        if (beginTime > Number(new Date(this.year, this.month, i))) options.disabled = true
-                    }
-                    if (this.end.length>0){
-                        let endTime = Number(new Date(parseInt(this.end[0]),parseInt(this.end[1]) - 1,parseInt(this.end[2])))
-                        if (endTime <  Number(new Date(this.year, this.month, i))) options.disabled = true
-                    }
-                    if (this.disabled.length>0){
-                        if (this.disabled.filter(v => {return this.year === v[0] && this.month === v[1]-1 && i === v[2] }).length>0) {
-                            options.disabled = true
-                        }
-                    }
-                    temp[line].push(options)
-                }else if(this.multi){//多选
-                    let options
-                    // 判断是否选中
-                    if(this.value.filter(v => {return this.year === v[0] && this.month === v[1]-1 && i === v[2] }).length>0 ){
-                        options = Object.assign({day: i,selected:true},this.getLunarInfo(this.year,this.month+1,i),this.getEvents(this.year,this.month+1,i))
-                    }else{
-                        options = Object.assign({day: i,selected:false},this.getLunarInfo(this.year,this.month+1,i),this.getEvents(this.year,this.month+1,i))
-                        if (this.begin.length>0) {
-                            let beginTime = Number(new Date(parseInt(this.begin[0]),parseInt(this.begin[1]) - 1,parseInt(this.begin[2])))
-                            if (beginTime > Number(new Date(this.year, this.month, i))) options.disabled = true
-                        }
-                        if (this.end.length>0){
-                            let endTime = Number(new Date(parseInt(this.end[0]),parseInt(this.end[1]) - 1,parseInt(this.end[2])))
-                            if (endTime <  Number(new Date(this.year, this.month, i))) options.disabled = true
-                        }
-                        if (this.disabled.length>0){
-                            if (this.disabled.filter(v => {return this.year === v[0] && this.month === v[1]-1 && i === v[2] }).length>0) {
-                                options.disabled = true
-                            }
-                        }
-                    }
-
-                    temp[line].push(options)
-                } else { // 单选
-                     // console.log(this.lunar(this.year,this.month,i));
-
-                    let chk = new Date()
-                    let chkY = chk.getFullYear()
-                    let chkM = chk.getMonth()
-                    // 匹配上次选中的日期
-                    if (parseInt(seletSplit[0]) == this.year && parseInt(seletSplit[1]) - 1 == this.month && parseInt(seletSplit[2]) == i) {
-                        // console.log("匹配上次选中的日期",lunarYear,lunarMonth,lunarValue,lunarInfo)
-                        temp[line].push(Object.assign(
-                            {day: i,selected: true},
-                            this.getLunarInfo(this.year,this.month+1,i),
-                            this.getEvents(this.year,this.month+1,i),
-                        ))
-                        this.today = [line, temp[line].length - 1]
-                    }
-                     // 没有默认值的时候显示选中今天日期
-                    else if (chkY == this.year && chkM == this.month && i == this.day && this.value == "") {
-
-                        // console.log("今天",lunarYear,lunarMonth,lunarValue,lunarInfo)
-                        temp[line].push(Object.assign(
-                            {day: i,selected: true},
-                            this.getLunarInfo(this.year,this.month+1,i),
-                            this.getEvents(this.year,this.month+1,i),
-                        ))
-                        this.today = [line, temp[line].length - 1]
-                    }else{
-                        // 普通日期
-                        // console.log("设置可选范围",i,lunarYear,lunarMonth,lunarValue,lunarInfo)
-                        let options = Object.assign(
-                            {day: i,selected:false},
-                            this.getLunarInfo(this.year,this.month+1,i),
-                            this.getEvents(this.year,this.month+1,i),
-                        )
-                        if (this.begin.length>0) {
-                            let beginTime = Number(new Date(parseInt(this.begin[0]),parseInt(this.begin[1]) - 1,parseInt(this.begin[2])))
-                            if (beginTime > Number(new Date(this.year, this.month, i))) options.disabled = true
-                        }
-                        if (this.end.length>0){
-                            let endTime = Number(new Date(parseInt(this.end[0]),parseInt(this.end[1]) - 1,parseInt(this.end[2])))
-                            if (endTime <  Number(new Date(this.year, this.month, i))) options.disabled = true
-                        }
-                        if (this.disabled.length>0){
-                            if (this.disabled.filter(v => {return this.year === v[0] && this.month === v[1]-1 && i === v[2] }).length>0) {
-                                options.disabled = true
-                            }
-                        }
-                        temp[line].push(options)
-                    }
-                }
-                // 到周六换行
-                if (day == 6 && i < lastDateOfMonth) {
-                    line++
-                }else if (i == lastDateOfMonth) {
-                    // line++
-                    let k = 1
-                    for (let d=day; d < 6; d++) {
-                         // console.log(this.computedNextYear()+"-"+this.computedNextMonth(true)+"-"+k)
-                        temp[line].push(Object.assign(
-                            {day: k,disabled: true},
-                            this.getLunarInfo(this.computedNextYear(),this.computedNextMonth(true),k),
-                            this.getEvents(this.computedNextYear(),this.computedNextMonth(true),k),
-                        ))
-                        k++
-                    }
-                    // 下个月除了补充的前几天开始的日期
-                    nextMonthPushDays=k
-                }
-            } //end for
-
-            // console.log(this.year+"/"+this.month+"/"+this.day+":"+line)
-            // 补充第六行让视觉稳定
-            if(line<=5 && nextMonthPushDays>0){
-                // console.log({nextMonthPushDays:nextMonthPushDays,line:line})
-                for (let i = line+1; i<=5; i++) {
-                    temp[i] = []
-                    let start=nextMonthPushDays+(i-line-1)*7
-                    for (let d=start; d <= start+6; d++) {
-                        temp[i].push(Object.assign(
-                            {day: d,disabled: true},
-                            this.getLunarInfo(this.computedNextYear(),this.computedNextMonth(true),d),
-                            this.getEvents(this.computedNextYear(),this.computedNextMonth(true),d),
-                        ))
-                    }
-                }
-            }
-            this.days = temp
-        },
-        computedPrevYear(){
-            let value=this.year
-            if(this.month-1<0){
-                value--
-            }
-            return value
-        },
-        computedPrevMonth(isString){
-            let value=this.month
-            if(this.month-1<0){
-                value=11
-            }else{
-                value--
-            }
-            // 用于显示目的（一般月份是从0开始的）
-            if(isString){
-                return value+1
-            }
-            return value
-        },
-        computedNextYear(){
-            let value=this.year
-            if(this.month+1>11){
-                value++
-            }
-            return value
-        },
-        computedNextMonth(isString){
-            let value=this.month
-            if(this.month+1>11){
-                value=0
-            }else{
-                value++
-            }
-            // 用于显示目的（一般月份是从0开始的）
-            if(isString){
-                return value+1
-            }
-            return value
-        },
-        // 获取农历信息
-        getLunarInfo(y,m,d){
-            let lunarInfo=calendar.solar2lunar(y,m,d)
-            let lunarValue=lunarInfo.IDayCn
-            // console.log(lunarInfo)
-            let isLunarFestival=false
-            let isGregorianFestival=false
-            if(this.festival.lunar[lunarInfo.lMonth+"-"+lunarInfo.lDay]!=undefined){
-                lunarValue=this.festival.lunar[lunarInfo.lMonth+"-"+lunarInfo.lDay]
-                isLunarFestival=true
-            }else if(this.festival.gregorian[m+"-"+d]!=undefined){
-                lunarValue=this.festival.gregorian[m+"-"+d]
-                isGregorianFestival=true
-            }
-            return {
-                lunar:lunarValue,
-                isLunarFestival:isLunarFestival,
-                isGregorianFestival:isGregorianFestival,
-            }
-        },
-        // 获取自定义事件
-        getEvents(y,m,d){
-            if(Object.keys(this.events).length==0)return false;
-            let eventName=this.events[y+"-"+m+"-"+d]
-            let data={}
-            if(eventName!=undefined){
-                data.eventName=eventName
-            }
-            return data
-        },
-        // 上月
-        prev(e) {
-            e.stopPropagation()
-            if (this.month == 0) {
-                this.month = 11
-                this.year = parseInt(this.year) - 1
+        this.$emit('updateCatering',this.localcatering);
+      },
+      updateCateringSta(sta){
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.updatecateringsta, {
+            caterid: this.localcatering.caterid,
+            sta: sta
+          }).then((response)=>{
+            if (response.data.errorCode === '0') {
+              this.$message('宴会保存成功')
+              this.localcatering.sta = sta;
+              this.$store.commit('setCatering', this.localcatering)
+              this.$store.commit('setCatersta', sta)
+              this.$store.dispatch("getEventList");
             } else {
-                this.month = parseInt(this.month) - 1
+              this.$alert(response.data.errorMessage)
             }
-            this.render(this.year, this.month)
-            this.$emit('selectMonth',this.month+1,this.year)
-            this.$emit('prev',this.month+1,this.year)
-        },
-        //  下月
-        next(e) {
-            e.stopPropagation()
-            if (this.month == 11) {
-                this.month = 0
-                this.year = parseInt(this.year) + 1
-            } else {
-                this.month = parseInt(this.month) + 1
-            }
-            this.render(this.year, this.month)
-            this.$emit('selectMonth',this.month+1,this.year)
-            this.$emit('next',this.month+1,this.year)
-        },
-        // 选中日期
-        select(k1, k2, e) {
-            if (e != undefined) e.stopPropagation()
-                // 日期范围
-            if (this.range) {
-                if (this.rangeBegin.length == 0 || this.rangeEndTemp != 0) {
-                    this.rangeBegin = [this.year, this.month,this.days[k1][k2].day]
-                    this.rangeBeginTemp = this.rangeBegin
-                    this.rangeEnd = [this.year, this.month, this.days[k1][k2].day]
-                    this.rangeEndTemp = 0
+          });
+        })
+      },
+      cancelCatering(){
+        this.$refs.caterReasonmodal.show();
+      },
+      reasonShown(){
+        this.$refs.caterReason.clearRow();
+      },
+      reasonConfirm(reason){
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$http.defaults.headers.common['username'] = this.$store.getters.username
+          this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
+          this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
+          this.$http.post(methodinfo.updatecateringsta, {
+            caterid: this.localcatering.caterid,
+            sta: '0',
+            cancelreason:reason.code
+          }).then(()=>{
+            this.localcatering.sta = '0';
+            this.$store.commit('setCatering', this.localcatering)
+            this.$store.commit('setCatersta', '0')
+            this.$store.dispatch("getEventList");
+          })
+        })
+      },
+      profileShow(){
+        if(!this.isClear){
+          this.poparch = true;
+          this.$refs.refarch.clearAll()
+        }else{
+          this.isClear =false;
+        }
+      },
 
-                } else {
-                    this.rangeEnd = [this.year, this.month,this.days[k1][k2].day]
-                    this.rangeEndTemp = 1
-                        // 判断结束日期小于开始日期则自动颠倒过来
-                    if (+new Date(this.rangeEnd[0], this.rangeEnd[1], this.rangeEnd[2]) < +new Date(this.rangeBegin[0], this.rangeBegin[1], this.rangeBegin[2])) {
-                        this.rangeBegin = this.rangeEnd
-                        this.rangeEnd = this.rangeBeginTemp
-                    }
-                    // 小于10左边打补丁
-                    let begin=[]
-                    let end=[]
-                    if(this.zero){
-                        this.rangeBegin.forEach((v,k)=>{
-                            if(k==1)v=v+1
-                            begin.push(this.zeroPad(v))
-                        })
-                        this.rangeEnd.forEach((v,k)=>{
-                            if(k==1)v=v+1
-                            end.push(this.zeroPad(v))
-                        })
-                    }else{
-                        begin=this.rangeBegin
-                        end=this.rangeEnd
-                    }
-                    // console.log("选中日期",begin,end)
-                    this.$emit('select',begin,end)
-                }
-                this.render(this.year, this.month)
-            }else if (this.multi) {
-                // 如果已经选过则过滤掉
-                let filterDay=this.multiDays.filter(v => {
-                  return this.year === v[0] && this.month === v[1]-1 && this.days[k1][k2].day === v[2]
-                })
-                if( filterDay.length>0 ){
-                    this.multiDays=this.multiDays.filter(v=> {
-                      return this.year !== v[0] || this.month !== v[1]-1 || this.days[k1][k2].day !== v[2]
-                    })
-                }else{
-                    this.multiDays.push([this.year,this.month+1,this.days[k1][k2].day]);
-                }
-                this.days[k1][k2].selected = !this.days[k1][k2].selected
-                this.$emit('select',this.multiDays)
-            } else {
-                // 取消上次选中
-                if (this.today.length > 0) {
-                    this.days.forEach(v=>{
-                        v.forEach(vv=>{
-                            vv.selected= false
-                        })
-                    })
-                }
-                // 设置当前选中天
-                this.days[k1][k2].selected = true
-                this.day = this.days[k1][k2].day
-                this.today = [k1, k2]
-                this.$emit('select',[this.year,this.zero?this.zeroPad(this.month + 1):this.month + 1,this.zero?this.zeroPad(this.days[k1][k2].day):this.days[k1][k2].day])
-            }
-        },
-        changeYear(){
-            if(this.yearsShow){
-                this.yearsShow=false
-                return false
-            }
-            this.yearsShow=true
-            this.years=[];
-            for(let i=~~this.year-10;i<~~this.year+10;i++){
-                this.years.push(i)
-            }
-        },
-        selectYear(value){
-            this.yearsShow=false
-            this.year=value
-            this.render(this.year,this.month)
-            this.$emit('selectYear',value)
-        },
-        // 返回今天
-        setToday(){
-            let now = new Date();
-            this.year = now.getFullYear()
-            this.month = now.getMonth()
-            this.day = now.getDate()
-            this.render(this.year,this.month)
-            // 遍历当前日找到选中
-            this.days.forEach(v => {
-                let day=v.find(vv => {
-                    return vv.day==this.day && !vv.disabled
-                })
-                if(day!=undefined ){
-                  day.selected=true
-                }
+      profileClear(){
+        this.localcatering.cusno = '';
+        this.localcatering.cusno_des = '';
+        this.isClear =true;
+      },
+      getDisableDate(time){
+        return time<this.minDate;
+      },
+      toggleclick(){
+        if(!this.caterclose){
+          this.toggleclass = "fa-angle-down";
+        }else{
+          this.toggleclass = "fa-angle-up";
+        }
+        this.caterclose=!this.caterclose;
+      },
+      btnenter(el){
+        if(this.catersta!=='0'){
+          this.btnWidth = 'halfbtn-width'
+        }
+      },
+      btnleave(el){
+        this.btnWidth = 'maxbtn-width'
+      },
+      showNote(){
+        let caterinfo = {
+          caterid:this.caterid,
+          caterdes:this.catering.name,
+          type:1
+        };
+        this.$store.commit('setNoteParam',caterinfo);
+        this.$refs.remarkmodal.show();
+      },
+      showLog(){
+        this.$store.commit('setLogtype','ScCatering');
+        this.$store.commit('setLogKey',this.logkey);
+        this.$root.$emit('bv::show::modal', 'caterlogmodal');
+      },
+      EOShare(){
+        this.$refs.EOShare.getEOPrintRecord();
+        this.$refs.EOSharemodal.show();
+      },
+      refreshData(){
+        const loading = this.$loading.service({fullscreen:true, background: 'rgba(0, 0, 0, 0.7)'});
+        setTimeout(() => {
+          loading.close();
+        }, 500);
+        this.$store.dispatch('encrypttoken').then(() => {
+          this.$store.dispatch('getCateringInfo');
+          this.$store.dispatch('getEventList');
+        })
+      },
+      clearData(){
+        this.localcatering = {};
+        this.caterdate = [];
+      }
+    },
+    components: {
+      popArchives,
+      EOShare
+    },
+    mounted(){
 
-            })
-        },
-        // 日期补零
-        zeroPad(n){
-            return String(n < 10 ? '0' + n : n)
-        },
+    },
+    watch: {
+      catering(val,oldval){
+        if(!this.isNew){
+          this.localcatering = Object.assign({},val);
+          this.caterdate = [];
+          this.sale = { code:val.saleid,name:val.saleid_name};
+          if(val.hasOwnProperty('arr')){
+            let groupid = this.$store.getters.groupid;
+            let hotelid = this.$store.getters.hotel.hotelid;
+            this.logkey = groupid +'|'+ hotelid +'|'+ this.localcatering.caterid ;
+            this.caterdate.push(val.arr,val.dep)
+          }
+        }
+      },
+      newCateringParam(val){
+        if(val.hasOwnProperty('arr')){
+          this.localcatering = Object.assign({},val);
+          this.caterdate = [];
+          this.caterdate.push(val.arr,val.dep)
+        }
+      },
+      salelist(val){
+        if(val){
+          this.saleoptions = val;
+        }
+      },
+      catersta(val,oldval){
+        if(val==='0'){
+          this.btnWidth = 'maxbtn-width'
+        }else if(oldval ==='0'){
+          this.btnWidth = 'halfbtn-width'
+        }
+      }
     }
-}
+  }
 </script>
-<style scoped>
-  .calendar {
-    margin:auto;
-    width: 100%;
-    min-width:300px;
-    background: #fff;
-    font-family: "PingFang SC","Hiragino Sans GB","STHeiti","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
-    user-select:none;
-  }
+<style lang="scss">
+  @import '../../css/color';
+  #caterinfo{
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    .row{
+      margin: 0;
+    }
+    .card-header,.card-body{
+      padding: 0;
+    }
+    .card-header{
+      height: 29px;
+    }
+    .catertitle{
+      border-right: 1px solid $colorBorder;
+    }
+    .icondiv{
+      border-left: 1px solid $colorBorder;
+      padding-top: 3px;
+    }
+    input{
+      font-size: 0.9rem;
+    }
+    .titleIcon{
+      color: $colorIcon;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0 2px;
+    }
+    .toggleclass{
+      float: right;
+      font-size: 20px;
+      cursor: pointer;
+      margin-top: -3px;
+    }
+    .el-input__inner{
+      height: 33px;
+      border-radius: 0;
+    }
+    .el-range-separator{
+      padding: 0;
+      width: 15px;
+    }
+    .el-range__close-icon{
+      display: none;
+    }
+    .option-main{
+      float: left;
+    }
+    .option-sub{
+      float: right; color: #8492a6; font-size: 0.9rem
+    }
 
-  .calendar-tools{
-    height:40px;
-    font-size: 20px;
-    line-height: 40px;
-    color:#5e7a88;
-  }
-  .calendar-tools span{
-    cursor: pointer;
-  }
-  .calendar-prev{
-    width: 14.28571429%;
-    float:left;
-    text-align: center;
-  }
-  .calendar-info{
-    padding-top: 3px;
-    font-size:16px;
-    line-height: 1.3;
-    text-align: center;
-  }
-  .calendar-info>div.month{
-    margin:auto;
-    height:20px;
-    width:100px;
-    text-align: center;
-    color:#5e7a88;
-    overflow: hidden;
-    position: relative;
-  }
-  .calendar-info>div.month .month-inner{
-    position: absolute;
-    left:0;
-    top:0;
-    height:240px;
-    transition:top .5s cubic-bezier(0.075, 0.82, 0.165, 1);
-  }
-  .calendar-info>div.month .month-inner>span{
-    display: block;
-    font-size: 14px;
-    height:20px;
-    width:100px;
-    overflow: hidden;
-    text-align: center;
-  }
-  .calendar-info>div.year{
-    font-size:1rem;
-    line-height: 1;
-    color:#999;
-  }
-  .calendar-next{
-    width: 14.28571429%;
-    float:right;
-    text-align: center;
-  }
+    .titleInfo{
+      flex: 0 0 65%;
+    }
+    //宴会主单主要信息
+    #catermain{
+      .el-icon-date,.fa{
+        color: $colorIcon;
+      }
+      .Sta{
+        width: 75px;
+        height: 65px;
+        border-radius: 5px;
+        margin-top: 6px;
+        /*.StaFont{*/
+          /*padding-top: 3px;*/
+          /*font-size: 3.5rem;*/
+          /*color: white;*/
+          /*height: 55px;*/
+          /*line-height: 55px;*/
+        /*}*/
+      }
+      .required{
+        .col-form-label{
+          font-weight: bold;
+        }
+      }
+      .form-group{
+        margin-bottom: 2px;
+      }
+      .form-row{
+        margin-bottom: 1px;
+      }
+      .col-sm-1,.col-sm-2{
+        padding: 0 10px;
+      }
+      .form-control{
+        border: none;
+        border-bottom: 1px solid $colorBorder;
+        border-radius: 0;
 
-  .calendar table {
-    clear: both;
-    width: 100%;
-    margin-bottom:10px;
-    border-collapse: collapse;
-    color: #444444;
-  }
-  .calendar td {
-    margin:2px !important;
-    padding:0px 0;
-    width: 14.28571429%;
-    height:44px;
-    text-align: center;
-    vertical-align: middle;
-    font-size:14px;
-    line-height: 125%;
-    cursor: pointer;
-    position: relative;
-    vertical-align: top;
-  }
-  .calendar td.week{
-    font-size:1rem;
-    pointer-events:none !important;
-    cursor: default !important;
-  }
-  .calendar td.disabled {
-    color: #ccc;
-    pointer-events:none !important;
-    cursor: default !important;
-  }
-  .calendar td.disabled div{
-    color: #ccc;
-  }
-  .calendar td span{
-    display:block;
-    max-width:40px;
-    height:26px;
-    font-size: 16px;
-    line-height:26px;
-    margin:0px auto;
-    border-radius:20px;
-  }
-  .calendar td:not(.selected) span:not(.red):hover{
-    background:#f3f8fa;
-    color:#444;
-  }
-  .calendar td:not(.selected) span.red:hover{
-    background:#f9efef;
-  }
+      }
+      .el-input__inner{
+        width: 100%;
+        padding: 0;
+        border: none;
+        border-bottom: 1px solid $colorBorder;
+      }
+      .el-input__inner:focus{
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+      .el-select{
+        width: 100%;
+        .el-input__inner{
+          padding: 0.375rem 0.75rem;
+        }
+      }
+      .btn{
+        border: none;
+      }
+      .btndiv{
+        padding: 5px 0;
+      }
+      .reservebtn{
+        width: 48.5%;
+        background-color: $colorQuitBtn;
+      }
+      .confirmbtn{
+        width: 48.5%;
+        background-color: $colorQuitBtn;
+      }
+      .halfbtn-width{
+        width: 48.5%;
+      }
+      .maxbtn-width{
+        width: 99%;
+      }
+      .cancelbtn{
+        background-color: $color8;
+        transition:width .5s;
+        -moz-transition:width .5s; /* Firefox 4 */
+        -webkit-transition:width .5s; /* Safari and Chrome */
+        -o-transition:width .5s; /* Opera */
+      }
+      .fade-enter, .fade-leave-to {
+        opacity: 0;
+      }
+      .savebtn {
+        width: 99%;
+        background-color: $colorSaveBtn;
+        margin-top: 0.25rem;
+      }
+      .newbtn{
+        margin-top: 20px;
+        margin-bottom: 15px;
+      }
 
-  .calendar td:not(.disabled) span.red{
-    color:#ea6151;
-  }
-  .calendar td.selected span{
-    background-color: #5e7a88;
-    color: #fff;
-  }
-  .calendar td .text{
-    position: absolute;
-    top:24px;
-    left:0;
-    right:0;
-    text-align: center;
-
-    padding:2px;
-    font-size:11px;
-    line-height: 1.2;
-    color:#666;
-  }
-  .calendar td .isGregorianFestival,
-  .calendar td .isLunarFestival{
-    color:#ea6151;
-  }
-  .calendar td.selected span.red{
-    background-color: #ea6151;
-    color: #fff;
-  }
-  .calendar td.selected span.red:hover{
-    background-color: #ea6151;
-    color: #fff;
-  }
-  .calendar thead{
-    border-bottom: 1px solid #6666;
-  }
-  .calendar-button{
-    text-align: center;
-  }
-  .calendar thead td {
-    text-transform: uppercase;
-    height:30px;
-    vertical-align: middle;
-  }
-  .calendar-button{
-    text-align: center;
-  }
-  .calendar-button span{
-    cursor: pointer;
-    display: inline-block;
-    min-height: 1em;
-    min-width: 5em;
-    vertical-align: baseline;
-    background:#5e7a88;
-    color:#fff;
-    margin: 0 .25em 0 0;
-    padding: .6em 2em;
-    font-size: 1em;
-    line-height: 1em;
-    text-align: center;
-    border-radius: .3em;
-  }
-  .calendar-button span.cancel{
-    background:#efefef;
-    color:#666;
-  }
-  .calendar-years{
-    position: absolute;
-    left:0px;
-    top:60px;
-    right:0px;
-    bottom:0px;
-    background:#fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap:wrap;
-    overflow: auto;
-    transition:all .5s cubic-bezier(0.075, 0.82, 0.165, 1);
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-10px);
-  }
-  .calendar-years.show{
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0px);
-  }
-  .calendar-years>span{
-    margin:1px 5px;
-    display: inline-block;
-    width:60px;
-    line-height: 30px;
-    border-radius: 20px;
-    text-align:center;
-    border:1px solid #fbfbfb;
-    color:#999;
-  }
-  .calendar-years>span.active{
-    border:1px solid #5e7a88;
-    background-color: #5e7a88;
-    color:#fff;
+    }
+    //宴会主单附加信息
+    #catersub{
+      .el-icon-date,.fa{
+        color: $colorIcon;
+      }
+      .modalinput{
+        i{
+          padding-top: 9px;
+          padding-left: 5px;
+        }
+        .el-input__inner{
+          padding-right: 25px;
+        }
+      }
+      .form-control:focus{
+        box-shadow: none;
+      }
+      margin-bottom: 10px;
+      .form-group{
+        margin: 0;
+      }
+      .form-row{
+        margin: 0;
+      }
+      .row{
+        padding: 0 10px;
+      }
+      .form-control{
+        border-radius: 0;
+        border-color:$colorForm;
+        line-height:1.7;
+      }
+      .el-input{
+        width: 100% !important;
+        .el-input__icon{
+          margin-top: -4px;
+        }
+      }
+      .el-input__inner{
+        width: 101%;
+        border-color: $colorForm;
+      }
+      .col-form-label{
+        padding-top: calc(0.375rem + 2px);
+      }
+      .numinput{
+        flex:0 0 12%;
+        div{
+          padding: 0;
+        }
+      }
+      .normalput {
+        flex:0 0 19%;
+        div {
+          padding: 0;
+        }
+      }
+      //备注和迎宾词输入框
+      .longinput{
+        div{
+          padding: 0;
+          flex: 0 0 94%;
+          max-width: 100%
+        }
+        .form-control{
+          border-top: none;
+        }
+        //文本和上面对齐
+        legend{
+          flex: 0 0 6%;
+        }
+      }
+      legend{
+        background-color: $colorForm;
+        font-size: 0.85rem;
+        padding-left: 10px;
+      }
+      .longinput{
+        width: 100%;
+      }
+    }
+    .el-dialog{
+      width: 800px;
+      margin: 0 auto;
+      margin-top: 10px !important;
+    }
+    .el-dialog__header{
+      border-bottom: 1px solid $colorBorder;
+    }
+    .el-dialog__body{
+      padding: 30px 10px;
+    }
   }
 </style>

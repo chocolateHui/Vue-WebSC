@@ -66,6 +66,7 @@
   }
   .hotel-search{
     padding: 20px;
+    font-size: 0.9rem;
   }
   .hotel-list{
     margin: 20px;

@@ -30,7 +30,7 @@
         <b-col   class="maxwidth70 paddingright0 paddingleft5">
           <b-row  style="font-size: 12px">
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="编码" class="mb-0 bold">
+              <b-form-group horizontal label="编&#8194;&#8194;&#8194;&#8194;码" class="mb-0 bold">
                 <FormatInput
                   type="number" maxlength="4"
                   v-model="pcinfo.classcode"
@@ -100,7 +100,7 @@
               </b-form-group>
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
-              <b-form-group horizontal label="排序码" class="mb-0">
+              <b-form-group horizontal label="排&#8194;序&#8194;码" class="mb-0">
                 <b-form-input
                   type="text"
                   v-model="pcinfo.seq"
@@ -690,6 +690,7 @@
       addplace:function () {
         let newplace =  Object.assign({},placemoren);
         newplace["classcode"] = this.currentRow.classcode;
+        newplace["type"] = this.currentRow.type;
         this.placedata.push(newplace);
         this.placesavetype = "update";
         this.$nextTick(function(){
@@ -740,6 +741,7 @@
               this.$message.error('项目描述不能为空');
               return
             }
+
             finnaldata.push(copydata[cd]);
           }
           this.saveplace(finnaldata);

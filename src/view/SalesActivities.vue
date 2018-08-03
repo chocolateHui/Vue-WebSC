@@ -3,10 +3,6 @@
     <div class="sales_activities">
       <div class="content_right">
         <div class="select">
-          <!--<b-form-select v-model="salesId" @input="SalesSelect" class="mb-3" size="sm" :disabled="ifSalesShow">-->
-            <!--<option v-if="role!=='02'&&role!=='03'" value="">全部</option>-->
-            <!--<option v-for="item in salelist" :value="item.code" :key="item.code">{{item.name}}</option>-->
-          <!--</b-form-select>-->
           <el-select v-model="salesId" @input="SalesSelect" :disabled="ifSalesShow" clearable filterable>
             <el-option
               v-if="role!=='02'&&role!=='03'"
@@ -26,7 +22,7 @@
         <div class="task_type"  ref="basetype">
           <p>任务类别</p>
           <ul>
-            <li :style="{background:item.bgcolor}" v-for="(item,index) in baseCodeListarc" :key="index" draggable='true' @dragstart='dragstart($event)' :type-name="item.descript" :type-id="item.code">{{item.descript}}</li>
+            <li :style="{background:item.bgcolor}" v-for="(item,index) in baseCodeListarc" :key="index" draggable='true' @dragstart='dragstart($event)' @dragend="dragend($event)" :type-name="item.descript" :type-id="item.code">{{item.descript}}</li>
           </ul>
         </div>
       </div>
@@ -42,8 +38,8 @@
             </li>
             <li class="fr"><input type="button" class="btn_month" :class="{'current':ifMonth}" value="月" @click="monthNow"><input type="button" class="btn_day"
                                                                                                                                   value="日" @click="dayNow":class="{'current':!ifMonth}"  ></li>
-            <li class="tc"><span data-type="1" id="timeData" >{{datetime}}</span>
-              <div id="saleCalendar">
+            <li class="tc"><span data-type="1" id="timeData">{{datetime}}</span>
+              <div id="saleCalendar"  v-if="refdata">
                 <el-date-picker v-show="ifMonth" v-model="datetimeMD" type="month" @change="changeTime"  :clearable="false">
                 </el-date-picker>
                 <el-date-picker v-show="!ifMonth" v-model="datetimeMD" type="date" @change="changeTime"  :clearable="false">
@@ -140,7 +136,8 @@
         salesFlag:1,
         infoName:'11',
         datetimeMD:'',
-        ifSalesShow:false
+        ifSalesShow:false,
+        refdata:true,
       }
     },
     computed: {
@@ -396,9 +393,13 @@
       },
       //销售类别拖动
       dragstart:function(event){
-        event.dataTransfer.setData("infoName"," ");
+        this.refdata=false
+         event.dataTransfer.setData("infoName"," ");
         this.dom = event.currentTarget
       },
+      dragend(event){
+        this.refdata=true
+       },
       allowDrop:function(event){
         event.preventDefault();
       },
@@ -577,6 +578,7 @@
       })
     },
     watch: {
+
       datetimeMD:function (val) {
         if(val!=null){
           if(val.length!=10&&val.length!=7){
