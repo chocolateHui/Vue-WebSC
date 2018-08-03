@@ -52,12 +52,13 @@
             <li class="nav1" style="position: relative">
               <span :dataid="placeitem.tableno">{{placeitem.descript}}</span>
                <div v-for="(tolist,indexto) in gettolist" v-if="tolist.tableno==placeitem.tableno" style="height: 48px;overflow: hidden">
-                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc<3">{{listc.toplacedes}}</strong>
-                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc>3"  @mouseenter="gettochildShow(placeitem.tableno,$event)" @mouseleave="gettochildHide">更多 </strong>
-                 <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc==3">{{listc.toplacedes}}</strong>
+                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc<3" :title="listc.toplacedes">{{listc.toplacedes}}</strong>
+                <strong style="margin-left: -3px"   v-for="(listc,indexc) in tolist.places" v-if="indexc>3" @mouseenter="gettochildShow(placeitem.tableno,$event)" @mouseleave="gettochildHide">更多 </strong>
                  <div class="gettochild" v-if="gettocurrent==placeitem.tableno">
+                   <div class="arrowTop"></div>
                    <span v-for="(listc,indexc) in tolist.places" v-if="indexc>=3">&nbsp;{{listc.toplacedes}}&nbsp;</span>
                  </div>
+                 <strong  v-for="(listc,indexc) in tolist.places" style="margin-left: -3px" v-if="indexc==3" :title="listc.toplacedes">{{listc.toplacedes}}</strong>
                </div>
             </li>
             <li v-for="(timelist,index2) in timeList" @mouseenter="thingsShow(index1,index2,timelist,$event)" @mouseleave="thingsHide" @click="addThings(timelist,placeitem.tableno)">
@@ -97,12 +98,13 @@
             <li class="nav1" style="position: relative">
               <span :dataid="placeitem.tableno">{{placeitem.descript}}</span>
               <div v-for="(tolist,indexto) in gettolist" v-if="tolist.tableno==placeitem.tableno" style="height: 48px;overflow: hidden">
-                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc<3">{{listc.toplacedes}}</strong>
-                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc>3"  @mouseenter="gettochildShow(placeitem.tableno,$event)" @mouseleave="gettochildHide">更多 </strong>
-                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc==3">{{listc.toplacedes}}</strong>
+                <strong  v-for="(listc,indexc) in tolist.places" v-if="indexc<3" :title="listc.toplacedes">{{listc.toplacedes}}</strong>
+                <strong style="margin-left: -3px"   v-for="(listc,indexc) in tolist.places" v-if="indexc>3" @mouseenter="gettochildShow(placeitem.tableno,$event)" @mouseleave="gettochildHide">更多 </strong>
                 <div class="gettochild" v-if="gettocurrent==placeitem.tableno">
+                  <div class="arrowTop"></div>
                   <span v-for="(listc,indexc) in tolist.places" v-if="indexc>=3">&nbsp;{{listc.toplacedes}}&nbsp;</span>
                 </div>
+                <strong  v-for="(listc,indexc) in tolist.places" style="margin-left: -3px" v-if="indexc==3" :title="listc.toplacedes">{{listc.toplacedes}}</strong>
               </div>
             </li>
             <li class="nav2"  @mouseenter="thingsShow(index1,'0',datatime.substring(0,10),$event)" @mouseleave="thingsHide" @click="addThings(datatime.substring(0,10),placeitem.tableno)">
@@ -838,19 +840,47 @@
     }
     .borderleft{border-left: 2px solid #fff;}
     .gettochild{
+      border: 1px solid #e4e7ed;
+      border-radius: 4px;
+      background-color: #fff;
+      -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+      box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      margin: 5px 0;
       position: absolute;
       width: auto;
       display: inline-block;
-      background: #ffffff;
       z-index: 22;
-      left: 60%;
+      left: 50%;
       top: 82px;
-      border: 1px solid #dcdcdc;
-      border-radius: 10px;
-      box-shadow: 0 0 15px #C1C1C1;
+      padding: 2px 5px;
+      .arrowTop {
+        position: absolute;
+        top: -8px;
+        left: 31px;
+        z-index: 23;
+        display: inline-block;
+        border-right: 6px solid transparent;
+        border-bottom: 8px solid  #e4e7ed;
+        border-left: 6px solid transparent;
+        content: '';
+        &:after {
+          position: absolute;
+          top: 1px;
+          left: -6px;
+          z-index: 24;
+          display: inline-block;
+          border-right: 6px solid transparent;
+          border-bottom: 8px solid #fff;
+          border-left:6px solid transparent;
+          content: '';
+        }
+      }
       span{
         width: auto !important;
         margin-bottom: 0 !important;
+        display: block;
       }
     }
     .modal-content{

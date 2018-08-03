@@ -37,6 +37,9 @@
       flex-wrap: wrap;
       padding: 0 3% 0 3%;
       width: 100%;
+      .wh_content_item {
+        margin-bottom: 7px;
+      }
     }
     .weeken{
       background: #f3f3f3;
@@ -55,7 +58,7 @@
       text-align: center;
       color: #000;
       position: relative;
-      height: 35px;
+      height: 40px;
       div {
         position: absolute;
         top: 0;
