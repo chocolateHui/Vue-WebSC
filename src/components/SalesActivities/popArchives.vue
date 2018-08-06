@@ -55,7 +55,7 @@
           <span class="nav3" :title='proList.protype' v-for="type in ifunit" v-if="type.id==proList.protype">{{type.name}}</span>
           <span class="nav4" :title='proList.mobile'>{{proList.mobile}}</span>
           <span class="nav5" :title='proList.contacter'>{{proList.contacter}}</span>
-          <span class="nav7"  :title='proList.saleid'v-for="item in popSalesList" v-if="item.code==proList.saleid">{{item.name=='所有'?'':item.name}}</span>
+          <span class="nav7"  :title='proList.saleid'>{{proList.saleid}}</span>
           <span class="nav8"  :title='proList.address'>{{proList.address}}</span>
         </li>
       </ul>

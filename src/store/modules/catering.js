@@ -115,24 +115,30 @@ const actions = {
     })
   },
   getCateringInfo (store) {
-    if (store.getters.caterid) {
-      let method = methodinfo.getcateringinfo
-      if (store.getters.isHistory) {
-        method = methodinfo.gethistorycateringinfo
-      }
-      axiosinstance.defaults.headers.common['signature'] = store.getters.signature
-      axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
-      axiosinstance.post(method, {
-        caterid: store.getters.caterid
-      }).then(function (response) {
-        if (response.data.errorCode === '0') {
-          store.commit('setCatering', response.data)
-          let sta = response.data.sta
-          store.commit('setCatersta', sta)
+    return new Promise((resolve, reject) => {
+      if (store.getters.caterid) {
+        let method = methodinfo.getcateringinfo
+        if (store.getters.isHistory) {
+          method = methodinfo.gethistorycateringinfo
         }
-      }).catch(function () {
-      })
-    }
+        axiosinstance.defaults.headers.common['signature'] = store.getters.signature
+        axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
+        axiosinstance.post(method, {
+          caterid: store.getters.caterid
+        }).then(function (response) {
+          if (response.data.errorCode === '0') {
+            store.commit('setCatering', response.data)
+            let sta = response.data.sta
+            store.commit('setCatersta', sta)
+            resolve()
+          }
+        }).catch((error) => {
+          reject(error)
+        })
+      } else {
+        resolve()
+      }
+    })
   },
   getEventList (store) {
     let method = methodinfo.geteventlist
@@ -160,11 +166,12 @@ const actions = {
     })
   },
   getRoomList (store) {
-    if (state.catering.blockid) {
+    if (store.getters.catering.blockid) {
       axiosinstance.defaults.headers.common['signature'] = store.getters.signature
       axiosinstance.defaults.headers.common['timestamp'] = new Date().getTime()
       axiosinstance.post(methodinfo.getMasterRsvsrc, {
-        blockid: state.catering.blockid
+        caterid: store.getters.catering.caterid,
+        blockid: store.getters.catering.blockid
       }).then(function (response) {
         if (response.data.errorCode === '0') {
           store.commit('setRoomlist', response.data.rsvsrcs)

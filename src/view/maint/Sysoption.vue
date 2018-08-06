@@ -199,8 +199,11 @@
     methods: {
       commitSysoption1:function () {
         if(this.file){
+          if(this.file.type!=="application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
+            this.$alert("目标上传文件不是docx文件,请重新上传!");
+            return;
+          }
           let filename = this.$store.getters.hotel.hotelid + "_"+this.file.name;
-          console.log(filename)
           this.fileupload(this.file,filename);
           this.EOID1.val = filename;
         }

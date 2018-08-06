@@ -564,6 +564,7 @@
           this.$http.post(methodinfo.getcateringlist, {
             sdate:formatDate(new Date(),"yyyy-MM-dd"),
             edate:formatDate(edate,"yyyy-MM-dd"),
+            flag:'T',
             sta:'1,2'
           }).then((response)=> {
             if (response.status === 200) {

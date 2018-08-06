@@ -21,7 +21,7 @@
         </el-select>
         <ul>
           <li>
-            <TimePicker :steps="[1, 30, 15]" v-model="eventtime" format="HH:mm" type="timerange"></TimePicker>
+            <TimePicker :steps="[1, 10, 15]" v-model="eventtime" format="HH:mm" type="timerange"></TimePicker>
           </li>
         </ul>
          <button type="button" class="btn_addThing" @click="addThing">新建事务</button>
@@ -151,7 +151,8 @@
               begintime:this.eventtime[0],
               endtime:this.eventtime[1],
               code:this.newChooseAddrNo,
-              codedes:this.newChooseAddr
+              codedes:this.newChooseAddr,
+              stdunit:this.timebegin
             }
             this.$store.commit('setCaterid',this.ifCaterChoose);
             this.$store.commit('setNewEventParam',paramNewEvent);
@@ -166,7 +167,8 @@
             begintime:this.eventtime[0],
             endtime:this.eventtime[1],
             code:this.newChooseAddrNo,
-            codedes:this.newChooseAddr
+            codedes:this.newChooseAddr,
+            stdunit:this.timebegin
           };
           let paramNewCatering={
             arr:this.newChooseTime,
@@ -185,7 +187,8 @@
             begintime:this.eventtime[0],
             endtime:this.eventtime[1],
             code:this.newChooseAddrNo,
-            codedes:this.newChooseAddr
+            codedes:this.newChooseAddr,
+            stdunit:this.timebegin
           }
           let paramNewCatering={
             arr:this.newChooseTime,

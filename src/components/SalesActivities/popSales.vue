@@ -3,8 +3,8 @@
   <div id="pop_sales" class="pop_sales">
     <div class="pop_sales_tou">销售日记<i class="fa fa-close" @click="popExit"></i></div>
     <ul class="clearfix">
-      <li><label class="title1">单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位</label><input type="text" v-model="popunit" class="unit" @click="btnUnit" readonly="readonly"></li>
-      <li><label class="title2">宾客</label><input type="text" class="guests" @click="btnGuests" v-model="popguest" readonly="readonly"></li>
+      <li><label class="title1 saleBlod">单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位</label><input type="text" v-model="popunit" class="unit" @click="btnUnit" readonly="readonly"></li>
+      <li><label class="title2 saleBlod">宾客</label><input type="text" class="guests" @click="btnGuests" v-model="popguest" readonly="readonly"></li>
       <li><label class="title1 nofb">单位联系人</label>
         <input type="text" v-model="contact" class="contact" maxlength="25"></li>
       <li><label class="title2 nofb">单位联系方式</label>
@@ -12,6 +12,7 @@
        </li>
       <li><label class="title1">日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期</label>
         <el-date-picker
+          :clearable="false"
           v-model="datetime"
           type="date"
           placeholder="选择日期">
@@ -19,7 +20,7 @@
       </li>
       <li><i class="fa" :class="{'fa-check':ifcheck,'bgSales':!ifcheck}" id="instructions"></i>是否已批示</li>
       <li style="padding-left: 15px;width: 258px">
-        <b-form-group label="销售类型&#8194;" horizontal>
+        <b-form-group label="销售类型&#8194;" class="boldgroup" horizontal>
           <el-select v-model="popsaletypeid" clearable filterable>
             <el-option
               v-for="item in diaryItemList"
@@ -42,7 +43,7 @@
           </el-select>
         </b-form-group>
       </li>
-      <li><label class="title2">金额</label>
+      <li><label class="title2 saleBlod">金额</label>
         <!--<input type="text" id="amount" v-model.trim="amount" maxlength="20">-->
         <FormatInput type="float" maxlength="10" v-model="amount" id="amount"></FormatInput>
       </li>
@@ -61,7 +62,7 @@
         </b-form-group>
       </li>
       <li class="signstyle">
-        <b-form-group label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;销售员" horizontal>
+        <b-form-group class="boldgroup" label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;销售员" horizontal>
           <el-select v-model="salesId" :disabled="ifbgSales" clearable filterable>
             <el-option
               v-for="item in salelist"
@@ -408,6 +409,13 @@
 
 <style lang="scss">
   #pop_sales{
+    .saleBlod{
+      font-weight: bold;
+    }
+    .boldgroup legend{
+      font-weight: bold;
+      padding-top: 3px;
+    }
     .bgSales{
       background-color: #F5F5F5!important;
     }

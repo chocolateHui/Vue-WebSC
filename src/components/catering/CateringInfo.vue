@@ -427,6 +427,7 @@
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch('getCateringInfo');
           this.$store.dispatch('getEventList');
+          this.$store.dispatch("getRoomList");
         })
       },
       clearData(){
@@ -438,8 +439,13 @@
       popArchives,
       EOShare
     },
-    mounted(){
-
+    created(){
+      if(this.newCateringParam.hasOwnProperty('arr')){
+        let param = this.newCateringParam
+        this.localcatering = Object.assign({},param);
+        this.caterdate.push(param.arr,param.dep)
+        this.$store.commit('setNewCateringParam',{});
+      }
     },
     watch: {
       catering(val,oldval){
@@ -447,12 +453,12 @@
           this.localcatering = Object.assign({},val);
           this.caterdate = [];
           this.sale = { code:val.saleid,name:val.saleid_name};
-          if(val.hasOwnProperty('arr')){
-            let groupid = this.$store.getters.groupid;
-            let hotelid = this.$store.getters.hotel.hotelid;
-            this.logkey = groupid +'|'+ hotelid +'|'+ this.localcatering.caterid ;
-            this.caterdate.push(val.arr,val.dep)
-          }
+          let groupid = this.$store.getters.groupid;
+          let hotelid = this.$store.getters.hotel.hotelid;
+          this.logkey = groupid +'|'+ hotelid +'|'+ this.localcatering.caterid ;
+        }
+        if(val.hasOwnProperty('arr')){
+          this.caterdate.push(val.arr,val.dep)
         }
       },
       newCateringParam(val){
@@ -460,6 +466,7 @@
           this.localcatering = Object.assign({},val);
           this.caterdate = [];
           this.caterdate.push(val.arr,val.dep)
+          this.$store.commit('setNewCateringParam',{});
         }
       },
       salelist(val){
