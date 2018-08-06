@@ -2,7 +2,7 @@
   <div id="Catering">
     <CateringInfo @updateCatering="updateCatering" :caterid="caterid"></CateringInfo>
     <NewEvent ref="newevent" :eventshow="false" :toggleshow="toggleshow"></NewEvent>
-    <b-button v-if="!isHistory" v-b-toggle.newevent class="newEventbtn">新建事务</b-button>
+    <b-button v-if="!isHistory && catering.sta!=='0' && catering.sta!=='O'" v-b-toggle.newevent class="newEventbtn">新建事务</b-button>
     <el-tabs type="border-card" :before-leave="tabChange" v-model="currentTab">
       <el-tab-pane label="事务列表" name="EventList">
         <EventList :caterid="caterid"></EventList>
@@ -13,7 +13,7 @@
     </el-tabs>
 
     <b-modal id="caterlogmodal" size="lg" title="操作日志" ok-only ok-title="退出">
-      <Syslog></Syslog>
+      <Syslog ref="log"></Syslog>
     </b-modal>
   </div>
 </template>
@@ -107,6 +107,7 @@
                     }
                     loading.close();
                   });
+                  this.$refs.log.getLogData();
                 }else{
                   this.$alert(response.data.errorMessage)
                   loading.close();
@@ -187,13 +188,13 @@
     }
     .newEventbtn{
       margin-right: 32px;
-      margin-top: 6px;
+      margin-top: 4px;
       position: relative;
       z-index: 1002;
       float: right;
       background-color: #D15B47 !important;
       border: none;
-      border-radius: 0px;
+      border-radius: 2px;
       text-align: center;
     }
     .form-control{

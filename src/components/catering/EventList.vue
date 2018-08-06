@@ -381,10 +381,14 @@
         this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
         this.$http.post(methodinfo.updateevent, this.expandevent).then((response)=> {
           if (response.data.errorCode === '0') {
-            this.$message('事务保存成功')
+            this.$message({
+              message: '事务保存成功!',
+              type: 'success'
+            })
             this.$store.dispatch("getEventList")
             this.$nextTick(()=>{
               this.expandRows.push(this.expandevent.eventid)
+              this.$refs.log.getLogData();
             })
           }else{
             this.$message.error(response.data.errorMessage)
@@ -498,7 +502,7 @@
       showLog(row){
         let groupid = this.$store.getters.groupid;
         let hotelid = this.$store.getters.hotel.hotelid;
-        let logkey = row.eventid+"|"+hotelid+"|"+groupid;
+        let logkey = groupid+"|"+hotelid+"|"+row.eventid;
 
         this.$store.commit('setLogtype','ScEvent');
         this.$store.commit('setLogKey',logkey);
@@ -537,7 +541,10 @@
             cancelreason:reason.code
           }).then((response)=> {
             if (response.data.errorCode === '0') {
-              this.$message('事务取消成功')
+              this.$message({
+                message: '事务取消成功!',
+                type: 'success'
+              })
               this.$store.dispatch("getEventList")
             }else{
               this.$message.error(response.data.errorMessage)
@@ -563,7 +570,7 @@
           return;
         }
 
-        if(!row.hasOwnProperty("istopos"||row.istopos==='F')){
+        if(row.istopos==='F'){
           this.$message.error("此类型事务无法创建餐饮订单!")
           return;
         }
@@ -585,7 +592,10 @@
               type :row.type,
             }).then((response)=> {
               if (response.data.errorCode === '0') {
-                this.$message('事务同步成功')
+                this.$message({
+                  message: '事务同步成功!',
+                  type: 'success'
+                })
               }else{
                 this.$message.error(response.data.errorMessage)
               }
