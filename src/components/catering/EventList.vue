@@ -582,7 +582,7 @@
             this.$http.defaults.headers.common['timestamp'] = new Date().getTime()
             this.$http.post(methodinfo.syncSCEvent, {
               caterid:this.caterid,
-              eventid:this.cancelRow.eventid,
+              eventid:row.eventid,
               name:row.descript,
               code :row.code,
               bdate :row.bdate,
