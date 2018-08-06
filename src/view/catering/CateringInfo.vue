@@ -75,9 +75,11 @@
           this.eventshow = false;
           this.$store.commit('setEventlist', [])
           this.$store.commit('setRoomlist', [])
-          this.$store.dispatch("getCateringInfo")
+          this.$store.dispatch("getCateringInfo").then(()=>{
+            this.$store.dispatch("getRoomList");
+          })
           this.$store.dispatch("getEventList");
-          this.$store.dispatch("getRoomList");
+
         });
         setTimeout(() => {
           loading.close();

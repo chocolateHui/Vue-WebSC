@@ -427,6 +427,7 @@
         this.$store.dispatch('encrypttoken').then(() => {
           this.$store.dispatch('getCateringInfo');
           this.$store.dispatch('getEventList');
+          this.$store.dispatch("getRoomList");
         })
       },
       clearData(){
