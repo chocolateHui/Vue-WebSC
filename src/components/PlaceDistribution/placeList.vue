@@ -67,7 +67,7 @@
     {  prop: 'income', label:  '预测收入',width:'85',sortable:true,showTip: true },
     {  prop: 'degreedes', label:  '优先级',width:'70',sortable:true,showTip: true},
     {  prop: 'attnum', label:  '出席数',width:'70',sortable:true,showTip: true },
-    {  prop: 'minnum', label:  '保底数',width:'70',sortable:true,showTip: true},
+    {  prop: 'minnum', label:  '备席数',width:'70',sortable:true,showTip: true},
     {  prop: 'catername', label:  '宴会名称',width:'',sortable:false,showTip: true },
   ]
     export default {
