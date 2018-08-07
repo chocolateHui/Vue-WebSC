@@ -248,10 +248,7 @@
               message: '文件名不能含有汉字！'
             });
             return false ;
-          } else {
-            return true ;
           }
-
           if(files.size>204800){
             this.$message.error({
               message: '图片大小不能超过200kb'
