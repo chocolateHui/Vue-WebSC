@@ -72,7 +72,6 @@
                   type="text"
                   v-model="pcinfo.descript2"
                   :disabled="changeshow.descript2disabled"
-                  required
                   placeholder="">
                 </b-form-input>
               </b-form-group>
@@ -711,14 +710,15 @@
       },
       log(scope){
         let row = scope.row;
-        let logkey =this.$store.getters.hotel.hotelid +'|'+ row.tableno +'|'+this.$store.getters.groupid;
+        let logkey =this.$store.getters.groupid+'|'+this.$store.getters.hotel.hotelid +'|'+ row.tableno ;
         this.$store.commit('setLogtype','PosTblsta');
         this.$store.commit('setLogKey',logkey);
         this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       log2(){
 
-        let logkey =this.$store.getters.hotel.hotelid +'|'+ this.pcinfo.pccode +'|'+this.$store.getters.groupid;
+        let logkey =this.$store.getters.groupid+'|'+this.$store.getters.hotel.hotelid +'|'+ this.pcinfo.pccode ;
+        console.log(logkey);
         this.$store.commit('setLogtype','PosPccode');
         this.$store.commit('setLogKey',logkey);
         this.$root.$emit('bv::show::modal', 'maintLogModal');

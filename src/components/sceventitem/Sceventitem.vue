@@ -97,6 +97,10 @@
             label="单价"
             width="100"
             show-overflow-tooltip>
+            <template slot-scope="scope">
+              <FormatInput style="text-align:right" class="el-input__inner" :disabled="!scope.row.priceedit" type="float"  v-model="scope.row.price" placeholder=""></FormatInput>
+              <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
+            </template>
           </el-table-column>
           <el-table-column
             align="right"
@@ -284,6 +288,12 @@
                   if(typeof(elm.descript1) == "undefined"){
                     event["descript1"] = "";
                   }
+                  if(elm.flag6==="T"){
+                    event["priceedit"] = true;
+                  }
+                  else{
+                    event["priceedit"] = false;
+                  }
                   type.push(event);
                 }
                 this.sceventitemlist=type;
@@ -372,6 +382,7 @@
             price:row.price*1.0,
             number:row.number*1.0,
             flag5:"F",
+            flag6:row.flag6
           }).then((response)=> {
             if(response.data.errorCode==="0"){
               this.$message({

@@ -69,7 +69,19 @@
             :header-align="item.headeralign"
             :show-overflow-tooltip="item.showTip" :key="item.prop">
           </el-table-column>
-
+          <el-table-column
+            header-align="center"
+            align="right"
+            prop="price"
+            label="价格"
+            width=""
+            sortable
+            show-overflow-tooltip>
+            <template slot-scope="scope">
+              <FormatInput style="text-align:right" class="el-input__inner" :disabled="!scope.row.priceedit" type="float"  v-model="scope.row.price" placeholder=""></FormatInput>
+              <!--<el-input @change="changeplace(scope)" v-model="scope.row.cover" placeholder=""></el-input>-->
+            </template>
+          </el-table-column>
           <el-table-column
             header-align="center"
             prop="number"
@@ -124,7 +136,6 @@
     {  prop: 'descript', label:  '宴会名称',width:'',sortable:true,showTip: true,align:'left',headeralign:'center'},
     {  prop: 'helpcode', label:  '帮助码',width:'',sortable:true,showTip: true,align:'left',headeralign:'center'},
     {  prop: 'unit', label:  '单位',width:'70',sortable:true ,showTip: true,align:'left',headeralign:'center'},
-    {  prop: 'price', label:  '单价',width:'',sortable:true,showTip: true ,align:'right',headeralign:'center'},
 
   ]
 
@@ -276,6 +287,15 @@
                       if(typeof (pc.helpcode) == "undefined"){
                         type["helpcode"]="";
                       }
+                      if(pc.price === 0){
+                        type["flag6"]="T";
+                        type["priceedit"]=true;
+                        type["price"]="0";
+                      }
+                      else{
+                        type["flag6"]="F";
+                        type["priceedit"]=false;
+                      }
                       type["number"]=1;
                       this.localscitem.push(type);
                     }
@@ -386,6 +406,8 @@
             type["id"] = elm.id;
             type["sta"] = '0';
             type["number"] = elm.number*1.0;
+            type["price"] = elm.price*1.0;
+            type["flag6"] = elm.flag6;
             if(elm.number*1.0<=0){
               this.$message.error({
                 message:"数量不能为0或者为负"
@@ -395,6 +417,7 @@
             addsel.push(type);
           }
         }
+        console.log(addsel);
         this.$store.dispatch('encrypttoken').then(() => {
           this.$http.defaults.headers.common['username'] = this.$store.getters.username
           this.$http.defaults.headers.common['signature'] = this.$store.getters.signature

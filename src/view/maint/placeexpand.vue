@@ -5,7 +5,7 @@
         <el-table
           ref="logtable"
           :data="searchitems"
-          height="430"
+          :height="th"
           border
           highlight-current-row
         @current-change="handleChange"
@@ -22,15 +22,18 @@
       </b-col>
       <b-col sm="9" class="expand-col">
         <b-row>
-          <b-col sm="2"></b-col>
-          <b-col sm="4">
-            <label>场地代码:</label>
-            <span>{{selectedexpand.tableno}}</span>
+          <b-col id="sel" sm="6">
+            <b-form-group label="场地代码:" :label-cols="4" horizontal>
+              <div style="line-height: 33.5px;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; ">{{selectedexpand.tableno}}</div>
+            </b-form-group>
           </b-col>
           <!--<b-col sm="2"></b-col>-->
-          <b-col sm="4">
-            <label>场地名称:</label>
-            <span>{{selectedexpand.descript}}</span>
+          <b-col id="sel" sm="6">
+            <b-form-group label="场地名称:" :label-cols="4" horizontal>
+                <el-tooltip class="item" effect="dark" :content="selectedexpand.descript" placement="top-start">
+                  <div style="line-height: 33.5px;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; ">{{selectedexpand.descript}}</div>
+                </el-tooltip>
+            </b-form-group>
           </b-col>
         </b-row>
         <b-row>
@@ -40,7 +43,10 @@
                 <b-input-group-text slot="append">
                   <span>分钟</span>
                 </b-input-group-text>
-                <b-form-input type="text" v-model="selectedexpand.setup"></b-form-input>
+                <FormatInput   type="number" maxlength="11"
+                               v-model="selectedexpand.setup"
+                               placeholder="">
+                </FormatInput>
               </b-input-group>
             </b-form-group>
             <b-form-group label="面积:" :label-cols="4" horizontal>
@@ -48,11 +54,14 @@
                 <b-input-group-text slot="append">
                   <span>平米</span>
                 </b-input-group-text>
-                <b-form-input type="text" v-model="selectedexpand.squre"></b-form-input>
+                <FormatInput   type="number" maxlength="11"
+                               v-model="selectedexpand.squre"
+                               placeholder="">
+                </FormatInput>
               </b-input-group>
             </b-form-group>
             <b-form-group label="位置:" :label-cols="4" horizontal>
-              <el-select v-model="selectedexpand.location">
+              <el-select clearable v-model="selectedexpand.location">
                 <el-option
                   v-for="item in locationdata"
                   :key="item.value"
@@ -62,7 +71,7 @@
               </el-select>
             </b-form-group>
             <b-form-group label="共享:" :label-cols="4" horizontal>
-              <el-select v-model="selectedexpand.share">
+              <el-select clearable v-model="selectedexpand.share">
                 <el-option
                   v-for="item in sharedata"
                   :key="item.value"
@@ -78,11 +87,14 @@
                 <b-input-group-text slot="append">
                   <span>分钟</span>
                 </b-input-group-text>
-              <b-form-input type="text" v-model="selectedexpand.setdown"></b-form-input>
+                <FormatInput   type="number" maxlength="11"
+                               v-model="selectedexpand.setdown"
+                               placeholder="">
+                </FormatInput>
               </b-input-group>
             </b-form-group>
             <b-form-group label="场地类型:" :label-cols="4" horizontal>
-              <el-select v-model="selectedexpand.kind">
+              <el-select clearable v-model="selectedexpand.kind">
                 <el-option
                   v-for="item in kinddata"
                   :key="item.value"
@@ -96,7 +108,7 @@
               <!--</b-form-input>-->
             </b-form-group>
             <b-form-group label="场地风格:" :label-cols="4" horizontal>
-              <el-select v-model="selectedexpand.style">
+              <el-select clearable v-model="selectedexpand.style">
                 <el-option
                   v-for="item in styledata"
                   :key="item.value"
@@ -173,7 +185,9 @@
         kinddata:[],
         styledata:[],
         locationdata:[],
-        change :true
+        change :true,
+        th:document.body.clientHeight-180
+
       }
     },
     props: {
@@ -227,6 +241,14 @@
           this.dialogVisible = true;
         },
         beforeupload(files) {
+          let re = /[\u4E00-\u9FA5]/g;
+          if (re.test(files.name))
+          {
+            this.$message.error({
+              message: '文件名不能含有汉字！'
+            });
+            return false ;
+          }
           if(files.size>204800){
             this.$message.error({
               message: '图片大小不能超过200kb'
@@ -331,7 +353,8 @@
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
             this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
             this.$http.post(methodinfo.getbasecodelist, {
-              cat: cat
+              cat: cat,
+              halt:"F"
             }).then((response) => {
               if (response.data.errorCode == "0") {
                 let data = [];
@@ -410,6 +433,7 @@
                   type: 'success',
                   message: '删除成功!'
                 });
+                this.refreshpic();
               }
               else {
                 this.$message.error({
@@ -429,7 +453,7 @@
           }
         },
         loglog(){
-          let logkey =this.selectedexpand.tableno +'|'+ this.$store.getters.hotel.hotelid +'|'+this.$store.getters.groupid;
+          let logkey =this.$store.getters.groupid +'|'+ this.$store.getters.hotel.hotelid +'|'+this.selectedexpand.tableno;
           this.$store.commit('setLogtype','ScPalceExpand');
           this.$store.commit('setLogKey',logkey);
           this.dialoglogVisible = true;
@@ -442,6 +466,14 @@
 </script>
 <style lang="scss"  type="text/scss">
   #placeexpand {
+    #sel {
+      padding-top: 0rem;
+      height: 35px;
+      .form-row > .col, .form-row > [class*="col-sm-8"] {
+        padding-left: 0px;
+        text-align: left;
+      }
+    }
     body, span, input, label {
       font-family: 'Open Sans',sans-serif;
       overflow-y: inherit;
@@ -480,11 +512,10 @@
           padding-top: 1rem;
           .el-input{height: 37px;}
           .el-input__inner,.el-select{
-            height: 35px;
+            height: 33.5px;
           }
         }
         .col-sm-4{
-          line-height: 28px;
           label{ margin-bottom: 0px;}
         }
       }
@@ -519,5 +550,6 @@
       padding-bottom: 50px;
     }
   }
+
 
 </style>
