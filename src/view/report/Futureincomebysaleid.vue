@@ -17,7 +17,7 @@
           </b-input-group>
         </b-col>
         <b-col sm="4" class="my-1">
-          <b-form-group horizontal label="销售员" class="mb-0">
+          <b-input-group prepend="销售员" id="sel">
             <el-select v-model="saleid" clearable filterable placeholder="请选择">
               <el-option
                 v-for="item in eloptions"
@@ -26,7 +26,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-          </b-form-group>
+          </b-input-group>
         </b-col>
         <b-col sm="3" class="my-1">
           <b-form-group class="mb-0">
@@ -298,6 +298,14 @@
 </script>
 <style lang="scss"  type="text/scss">
   #Futureincomebysaleid{
+    .el-input--suffix .el-input__inner {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    .el-date-editor{
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
     .el-input_icon{
       margin-top: -2px;
     }

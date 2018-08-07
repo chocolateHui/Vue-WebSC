@@ -51,6 +51,7 @@
         style="width: 100%" :max-height="tableHeight">
         <el-table-column
           v-for="item in fildes"
+          header-align="center"
           :prop="item.prop"
           :label="item.label"
           :width="item.width"
@@ -76,10 +77,11 @@
     {  prop: 'eventid', label:  '事务ID',width:'150',sortable:false,showTip:true },
     {  prop: 'place', label:  '事务场地',width:'100',sortable:false,showTip:true },
     {  prop: 'eventtype', label:  '事务类型',width:'100',sortable:false ,showTip:true},
-    {  prop: 'ostades', label:  '原状态',width:'90',sortable:false ,showTip:true},
+    {  prop: 'ostades', label:  '原状态',width:'70',sortable:false ,showTip:true},
     {  prop: 'reason', label:  '取消理由',width:'100',sortable:false ,showTip:true},
     {  prop: 'salename', label:  '销售员',width:'90',sortable:false ,showTip:true},
-    {  prop: 'cby', label:  '操作员',width:'80',showTip:true }
+    {  prop: 'cby', label:  '操作员',width:'80',showTip:true },
+    {  prop: 'changed', label:  '操作时间',width:'140',showTip:true }
   ]
 
   export default {
@@ -105,7 +107,7 @@
           return this.items;
         }else{
           return this.items.filter( item => {
-              if (item.saleid===this.saleid){
+              if (item.salename===this.saleid){
                 return item;
               }
             }
@@ -174,11 +176,10 @@
                       types["eventtype"]="";
                     }
                     types["salename"]=items.salename;
-                    types["saleid"]=items.saleid;
-                    types["osta"]=items.osta;
                     types["ostades"]=items.ostades;
                     types["reason"]=items.cancelreason;
                     types["cby"]=items.cby;
+                    types["changed"]=items.changed;
                     this.items.push(types);
                   }
                 }
@@ -257,7 +258,7 @@
       salelist(val,oldval){
         for(let elm of val ){
           let type = {};
-          type["value"] = elm.code;
+          type["value"] = elm.name;
           type["label"] = elm.name;
           this.eloptions.push(type);
         }
@@ -275,6 +276,14 @@
 </script>
 <style lang="scss"  type="text/scss">
   #Lossstatistics{
+    .el-input--suffix .el-input__inner {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    .el-date-editor{
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
     .el-input_icon{
       margin-top: -2px;
     }
