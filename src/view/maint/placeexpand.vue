@@ -356,7 +356,8 @@
             this.$http.defaults.headers.common['signature'] = this.$store.getters.signature
             this.$http.defaults.headers.common['timestamp'] = new Date().getTime();
             this.$http.post(methodinfo.getbasecodelist, {
-              cat: cat
+              cat: cat,
+              halt:"F"
             }).then((response) => {
               if (response.data.errorCode == "0") {
                 let data = [];
