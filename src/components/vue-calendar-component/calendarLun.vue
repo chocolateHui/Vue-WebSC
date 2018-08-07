@@ -37,6 +37,9 @@
       flex-wrap: wrap;
       padding: 0 3% 0 3%;
       width: 100%;
+      .wh_content_item {
+        margin-bottom: 8px;
+      }
     }
     .weeken{
       background: #f3f3f3;
@@ -55,7 +58,7 @@
       text-align: center;
       color: #000;
       position: relative;
-      height: 35px;
+      height: 43px;
       div {
         position: absolute;
         top: 0;
@@ -68,7 +71,7 @@
       }
       li {
         width: 45px;
-        height: 40px;
+        height: 43px;
       }
     }
   }
@@ -161,10 +164,10 @@
         <div class="wh_content_item" v-for="(item,index) in list" @click="clickDay(item,index)">
           <div>
             <li class="wh_nextDayShow" v-if="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" :class="{wh_isToday:item.isTodayNow}">
-              {{item.id}}<br/>{{item.lun}}
+              <i style="font-size: 16px;font-style: normal">{{item.id}}</i><br/><i style="font-size: 12px;font-style: normal ">{{item.lun}}</i>
             </li>
             <li v-else="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" :class="{ wh_isToday: item.isToday,wh_isMark:item.isMark,isTodayNow:item.isTodayNow}">
-              {{item.id}}<br/>{{item.lun}}
+              <i style="font-size: 16px;font-style: normal">{{item.id}}</i><br/><i style="font-size: 12px;font-style: normal ">{{item.lun}}</i>
             </li>
           </div>
         </div>

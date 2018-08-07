@@ -227,8 +227,7 @@
           { value: 'share', text: '共享' }
         ],
         staoptions:[
-          { code: 'Q', descript: '问询' },
-          { code: '1', descript: '预订' }
+          { code: 'Q', descript: '问询' }
         ],
         toggleclass:'fa-angle-up',
         eventItem:{},
@@ -274,6 +273,13 @@
     mounted(){
       if(this.eventshow){
         this.id='newCaterEvent'
+        if(this.catersta==="1"){
+          this.staoptions.push({ code: '1', descript: '预订' });
+        }else if(this.catersta==="Q"){
+          this.$nextTick(()=>{
+            this.$set(this.newEvent,'sta','Q')
+          })
+        }
       }
       if(this.newEventParam.hasOwnProperty('code')){
         this.initEventParam();
@@ -319,6 +325,8 @@
                   message: '事务保存成功!',
                   type: 'success'
                 })
+                this.clearData();
+                this.$set(this.newEvent,'caterid',catering.caterid)
                 this.$store.dispatch("getEventList");
               }else{
                 this.$message.error(resdata.errorMessage);
@@ -491,7 +499,10 @@
         this.$set(this.newEvent,'codedes',eventcodedes);
       },
       clearData(){
-        this.newEvent = {};
+        this.newEvent = {
+          sta:this.catering.sta,
+          stdunit:'0'
+        };
         this.eventbdate= [];
         this.eventtime= [];
       }
@@ -501,27 +512,28 @@
       MultiPlace
     },
     watch:{
-      catersta(val, oldval){
-        if(val!==oldval&&!this.catering.hasOwnProperty('name')){
-
-        }
-        if(this.catersta==='1'||this.catersta==='Q'){
-          this.$set(this.newEvent,'sta',this.catersta)
-        }
-        if(this.catersta==='2'){
-          this.staoptions = [{ code: 'Q', descript: '问询' },{ code: '1', descript: '预订' },{ code: '2', descript: '确认' }];
-        }
-      },
       catering(val,oldval){
         if(val.hasOwnProperty('name')&&!this.isNew){
-          console.log(val.caterid)
-          console.log(this.newEvent.caterid)
           if(val.caterid!==this.newEvent.caterid){
             this.clearData();
+            this.$set(this.newEvent,'caterid',val.caterid)
           }
           this.$set(this.newEvent,'descript',val.name)
           if(this.isOpen&&!(this.newEventParam.hasOwnProperty('code')||this.newEvent.hasOwnProperty('code'))){
             this.$root.$emit('bv::toggle::collapse','newevent')
+          }
+        }
+        if(val.hasOwnProperty("sta")){
+          let sta = val.sta;
+          this.staoptions = [{ code: 'Q', descript: '问询' }];
+          if(sta==='1'||sta==='Q'){
+            this.$set(this.newEvent,'sta',sta)
+            if(sta==='1'){
+              this.staoptions.push({ code: '1', descript: '预订' });
+            }
+          }
+          if(sta==='2'||sta ==='I'){
+            this.staoptions.push({ code: '1', descript: '预订' },{ code: '2', descript: '确认' });
           }
         }
         if(this.newEventParam.hasOwnProperty('code')){

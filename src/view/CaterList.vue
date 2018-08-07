@@ -308,7 +308,7 @@
                 for(let caterings of response.data.caterings){
                   let catering = Object.assign({},caterings);
                   if(['02','03'].indexOf(role)>=0){
-                    if(catering.saleid===empsale||catering.saleid===''){
+                    if(catering.saleid===empsale){
                       this.tableData.push(catering);
                     }
                   }else{

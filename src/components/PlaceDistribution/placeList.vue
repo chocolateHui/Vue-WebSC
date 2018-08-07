@@ -67,8 +67,8 @@
     {  prop: 'income', label:  '预测收入',width:'85',sortable:true,showTip: true },
     {  prop: 'degreedes', label:  '优先级',width:'70',sortable:true,showTip: true},
     {  prop: 'attnum', label:  '出席数',width:'70',sortable:true,showTip: true },
-    {  prop: 'minnum', label:  '保底数',width:'70',sortable:true,showTip: true},
-    {  prop: 'catername', label:  '宴会名称',width:'80',sortable:false,showTip: true },
+    {  prop: 'minnum', label:  '备席数',width:'70',sortable:true,showTip: true},
+    {  prop: 'catername', label:  '宴会名称',width:'',sortable:false,showTip: true },
   ]
     export default {
         name: "place-distribution-single",
@@ -139,12 +139,29 @@
           var times = date1.getFullYear() + "-" + month + "-" + day;
           return times;
         },
-        todayeventlist:function () {
-          for(var t=0;t<this.placeList.length;t++){
-            if(this.placeList[t].checked==true){
-              this.sta+=this.placeList[t].dataid+','
+        // 选项判断
+        placechoose:function () {
+          this.sta=''
+          var ifcheckedallf=false
+          for(var i=0;i<this.placeList.length;i++){
+            if(this.placeList[i].checked==true){
+              ifcheckedallf=true
             }
           }
+          if(this.allChecked==true||ifcheckedallf==false){
+            for(var i=0;i<this.placeList.length;i++){
+              this.sta+=this.placeList[i].dataid+','
+            }
+          }else{
+            for(var t=0;t<this.placeList.length;t++){
+              if(this.placeList[t].checked==true){
+                this.sta+=this.placeList[t].dataid+','
+              }
+            }
+          }
+        },
+        todayeventlist:function () {
+           this.placechoose()
           this.paramevent={
             begindate:this.today(),
             enddate:this.today(),
@@ -153,11 +170,7 @@
           this.geteventlist(this.paramevent)
         },
         othereventlist:function () {
-          for(var t=0;t<this.placeList.length;t++){
-            if(this.placeList[t].checked==true){
-              this.sta+=this.placeList[t].dataid+','
-            }
-          }
+          this.placechoose()
           this.paramevent={
             sta:this.sta.substring(0,this.sta.length-1)
           }

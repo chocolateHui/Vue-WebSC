@@ -51,23 +51,23 @@ const actions = {
       })
     })
   },
-    getTypeItem:function (store) {
-      return new Promise((resolve, reject) => {
-        getAllMsg(store)
-        axiosinstance.post(methodinfo.getbasecodelist, {
-          cat:'guest_diary_item',
-        }).then(function (response) {
-          if (response.status === 200) {
-            if (response.data.errorCode === '0') {
-              if(response.data.hasOwnProperty('basecodes')){
-                store.commit('setDiaryItemList', response.data.basecodes)
-                resolve()
-              }
+  getTypeItem: function (store) {
+    return new Promise((resolve, reject) => {
+      getAllMsg(store)
+      axiosinstance.post(methodinfo.getbasecodelist, {
+        cat: 'guest_diary_item'
+      }).then(function (response) {
+        if (response.status === 200) {
+          if (response.data.errorCode === '0') {
+            if (response.data.hasOwnProperty('basecodes')) {
+              store.commit('setDiaryItemList', response.data.basecodes)
+              resolve()
             }
           }
-        })
+        }
       })
-    },
+    })
+  },
   getguestdiarylist: function (store, diaryParam) {
     getAllMsg(store)
     axiosinstance.post(methodinfo.getguestdiarylist, {

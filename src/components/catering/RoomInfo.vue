@@ -3,7 +3,7 @@
     <b-container fluid>
       <el-table
         ref = "roomtable"
-        :data="rooms"
+        :data="roomlist"
         border
         style="width: 100%">
         <el-table-column
@@ -12,6 +12,7 @@
           :label="item.label"
           :width="item.width"
           :sortable="item.sortable"
+          :class-name="item.classname"
           :show-overflow-tooltip="item.showTip" :key="item.prop">
         </el-table-column>
         <template slot="append">
@@ -33,13 +34,13 @@
   const fildes = [
     {  prop: 'sta', label:  '状态',width:'72',sortable:true,"classname":"text-center" },
     {  prop: 'roomtypedes', label:  '房类',width:'',sortable:true,showTip:true},
-    {  prop: 'number ', label:  '房数',width:'72',sortable:true,"classname":"text-right" },
+    {  prop: 'number', label:  '房数',width:'72',sortable:true,"classname":"text-right" },
     {  prop: 'cover', label:  '人数',width:'72',sortable:true ,"classname":"text-right"},
-    {  prop: 'sdate ', label:  '抵达日期',width:'110',sortable:true ,"classname":"text-center"},
+    {  prop: 'sdate', label:  '抵达日期',width:'110',sortable:true ,"classname":"text-center"},
     {  prop: 'edate', label:  '离开日期',width:'110',sortable:true,"classname":"text-center" },
-    {  prop: 'days', label:  '天数',width:'72',sortable:true,"classname":"text-right"},
-    {  prop: 'price ', label:  '定价',width:'72',sortable:true,"classname":"text-right"},
-    {  prop: 'pkgdes ', label:  '包价',width:'150',sortable:true,showTip:true},
+    {  prop: 'days', label:  '房晚数',width:'85',sortable:true,"classname":"text-right"},
+    {  prop: 'price', label:  '定价',width:'72',sortable:true,"classname":"text-right"},
+    {  prop: 'pkgdes', label:  '包价',width:'120',sortable:true,showTip:true},
     {  prop: 'remark', label:  '备注',width:'',sortable:true,showTip:true},
     {  prop: 'accnt', label:  '团队帐号',width:'110',sortable:true ,"classname":"text-right"}
   ]
@@ -47,7 +48,6 @@
   export default {
     data () {
       return {
-        rooms: [],
         fildes :fildes,
       }
     },
@@ -62,8 +62,8 @@
         'roomlist'
       ]),
       roomcount(){
-        if (this.rooms) {
-          return this.rooms.length
+        if (this.roomlist) {
+          return this.roomlist.length
         } else {
           return 0
         }
@@ -71,13 +71,6 @@
     },
     methods: {
     },
-    watch:{
-      roomlist(val,oldval){
-        if(val){
-          this.rooms = val;
-        }
-      }
-    }
   }
 </script>
 <style lang="scss">
@@ -94,9 +87,10 @@
     .container-fluid{
       padding: 0;
     }
+    .el-table__empty-block{
+      border-bottom: 1px solid #dee2e6;
+    }
     .sum-row{
-      border-top: 1px solid #dee2e6;
-      margin-top: 6px;
       .sumlabel{
         margin-top: 5px;
         margin-bottom: 0;
