@@ -87,9 +87,10 @@
     .container-fluid{
       padding: 0;
     }
+    .el-table__empty-block{
+      border-bottom: 1px solid #dee2e6;
+    }
     .sum-row{
-      border-top: 1px solid #dee2e6;
-      margin-top: 6px;
       .sumlabel{
         margin-top: 5px;
         margin-bottom: 0;
