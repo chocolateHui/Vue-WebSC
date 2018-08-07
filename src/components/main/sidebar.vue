@@ -104,7 +104,7 @@
         }
       }
 
-      if(role==='ADM'||['00','01','02','04','05'].indexOf(role)>=0){
+      if(role==='ADM'||['00','01','04','05'].indexOf(role)>=0){
         this.menus.push({ route: '/main/report', name: '报表专家',iconClass:"fa-list-alt"});
       }
       if(role==='ADM'||role==='00'){

@@ -3,7 +3,7 @@
     <div class="sales_activities">
       <div class="content_right">
         <div class="select">
-          <el-select v-model="salesId" @input="SalesSelect" :disabled="ifSalesShow" clearable filterable>
+          <el-select v-model="salesId" @input="SalesSelect" :disabled="ifSalesShow" filterable>
             <el-option
               v-if="role!=='02'&&role!=='03'"
               value="0"
@@ -182,8 +182,8 @@
         })
       },
       SalesSelect:function () {
-        var saleid=this.salesId=='0'?'':this.salesId
-        if(this.dataType==1){
+        let saleid=this.salesId==='0'?'':this.salesId;
+        if(this.dataType==='1'){
            this.diaryParam = {
             bdate:this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+"-01",
             edate:this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+"-31",
@@ -193,7 +193,7 @@
           this.diaryParam = {
             bdate:this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10),
             edate:this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10),
-            saleid:'',
+            saleid:saleid,
           }
         };
         this.getDiary()
@@ -203,7 +203,6 @@
         this.$store.dispatch('encrypttoken').then(() => {
           this.configDefault()
           this.$store.dispatch('getguestdiarylist',this.diaryParam).then(() => {
-
           })
         })
       },
@@ -470,7 +469,6 @@
         this.ifSalesShow=true
         this.ifMonth=false
         this.timeType="本日"
-        this.salesId='0'
         this.datetime=this.$options.methods.toDay().substring(0,4)+"年"+this.$options.methods.toDay().substring(5,7)+"月"+this.$options.methods.toDay().substring(8,10)+"日"
         this.datetimeMD=this.datetime.substring(0,4)+'-'+this.datetime.substring(5,7)+'-'+this.datetime.substring(8,10)
          this.dataType="2"
@@ -567,12 +565,11 @@
         this.configDefault()
         this.getbasecodelist()
         this.$store.dispatch("getSale").then(()=>{
-          if(['02', '03'].indexOf(this.$store.getters.role) < 0){
-            this.SalesSelect()
-          }else{
+          if(['02', '03'].indexOf(this.$store.getters.role) >= 0){
             this.salesId = this.$store.getters.empsale;
           }
           this.salelist = this.$store.getters.salelist;
+          this.SalesSelect()
         });
       });
       })
