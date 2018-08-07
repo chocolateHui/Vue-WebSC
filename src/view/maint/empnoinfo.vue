@@ -103,8 +103,7 @@
                     <FormatInput type="number" maxlength="15" v-model="expandempno.qq"></FormatInput>
                   </b-form-group>
                   <b-form-group label="Email&#8194;&#8194;&#8194;&#8194;:" horizontal>
-                    <b-form-input type="email" maxlength="64" v-model="expandempno.email" placeholder="">
-                    </b-form-input>
+                    <FormatInput type="email" maxlength="64" v-model="expandempno.email"></FormatInput>
                   </b-form-group>
                 </b-form>
               </b-col>
@@ -188,7 +187,6 @@
     data () {
       return {
         newp:true,
-//        isnew:true,
         flag:true,
         getempnolist: [],
         fildes :fildes,
