@@ -154,7 +154,7 @@
             }).then((response)=> {
               if (response.data.errorCode === "0") {
                 for(let elem of response.data.basecodes){
-                  elem.editable = elem.hotelid.indexOf('G') < 0;
+                  elem.editable = elem.hotelid === this.$store.getters.hotel.hotelid;
                   this.items.push(elem);
                 }
               }
@@ -283,7 +283,7 @@
       },
       showlog(){
         this.$store.commit('setLogtype','Basecode');
-        this.$store.commit('setLogKey',"deletebasecode");
+        this.$store.commit('setLogKey',"Delete|"+this.cat);
         this.$root.$emit('bv::show::modal', 'maintLogModal');
       },
       showCodeLog(scope){
