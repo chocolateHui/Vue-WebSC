@@ -28,7 +28,7 @@
         </b-col>
         <b-col sm="3" class="my-1">
           <b-form-group horizontal label="状态" class="mb-0">
-            <el-select v-model="locked" clearable filterable placeholder="请选择">
+            <el-select v-model="locked" filterable placeholder="请选择">
               <el-option
                 v-for="item in state"
                 :key="item.value"
