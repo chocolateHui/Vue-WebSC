@@ -298,7 +298,7 @@
       },
       //触发父面板日志弹窗
       showLog(row){
-        let logkey = row.empno +'|'+this.groupid;
+        let logkey = this.groupid+"|"+row.empno;
         this.$store.commit('setLogtype','SysEmpno');
         this.$store.commit('setLogKey',logkey);
         this.$root.$emit('bv::show::modal', 'maintLogModal');
