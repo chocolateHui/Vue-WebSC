@@ -101,13 +101,11 @@
             </b-col>
             <b-col sm="4" class="my-1 paddingright0">
               <b-form-group horizontal label="排&#8194;序&#8194;码" class="mb-0">
-                <b-form-input
-                  type="text"
-                  v-model="pcinfo.seq"
-                  :disabled="changeshow.tablesdisabled"
-                  required
-                  placeholder="">
-                </b-form-input>
+                <FormatInput   type="number" maxlength="4"
+                               v-model="pcinfo.seq"
+                               :disabled="changeshow.tablesdisabled"
+                               placeholder="">
+                </FormatInput>
               </b-form-group>
             </b-col>
           </b-row>
@@ -434,10 +432,15 @@
               this.tableData3 = [];
               if(typeof(response.data.namedefs) != "undefined"){
                 for(let items of response.data.namedefs){
-                  var types = {};
-                  types["value"]=items.code;
-                  types["label"]=items.descript;
-                  this.namedef.push(types);
+                  if("T"===items.halt){
+                  }
+                  else{
+                    var types = {};
+                    types["value"]=items.code;
+                    types["label"]=items.descript;
+                    this.namedef.push(types);
+                  }
+
                 }
               }
             }

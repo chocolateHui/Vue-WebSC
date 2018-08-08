@@ -240,6 +240,14 @@
 </script>
 <style lang="scss"  type="text/scss">
   #Futureincome{
+    .el-input--suffix .el-input__inner {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    .el-date-editor{
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
     .el-input_icon{
       margin-top: -2px;
     }
